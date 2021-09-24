@@ -376,15 +376,16 @@
 <span id="376">376</span>
 <span id="377">377</span>
 <span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Response</span>, <span class="ident">StatusCode</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">api_error::ApiError</span>,
     <span class="ident">error</span>::{<span class="ident">Error</span>, <span class="ident">ErrorType</span>},
     <span class="ident">ratelimiting::RatelimitHeaders</span>,
 };
-<span class="kw">use</span> <span class="ident">hyper</span>::{
-    <span class="ident">body::Bytes</span>, <span class="ident">client::ResponseFuture</span> <span class="kw">as</span> <span class="ident">HyperResponseFuture</span>, <span class="ident">StatusCode</span> <span class="kw">as</span> <span class="ident">HyperStatusCode</span>,
-};
+<span class="kw">use</span> <span class="ident">hyper</span>::{<span class="ident">client::ResponseFuture</span> <span class="kw">as</span> <span class="ident">HyperResponseFuture</span>, <span class="ident">StatusCode</span> <span class="kw">as</span> <span class="ident">HyperStatusCode</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">convert::TryFrom</span>,
     <span class="ident">future::Future</span>,
@@ -418,7 +419,7 @@
 }
 
 <span class="kw">struct</span> <span class="ident">Chunking</span> {
-    <span class="ident">future</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Bytes</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">future</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">status</span>: <span class="ident">HyperStatusCode</span>,
 }
 
@@ -439,9 +440,7 @@
             <span class="prelude-val">Ok</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">error</span>,
             <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::Parsing</span> {
-                        <span class="ident">body</span>: <span class="ident">bytes</span>.<span class="ident">to_vec</span>(),
-                    },
+                    <span class="ident">kind</span>: <span class="ident">ErrorType::Parsing</span> { <span class="ident">body</span>: <span class="ident">bytes</span> },
                     <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
                 }));
             }
@@ -458,7 +457,7 @@
 
         <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
             <span class="ident">kind</span>: <span class="ident">ErrorType::Response</span> {
-                <span class="ident">body</span>: <span class="ident">bytes</span>.<span class="ident">to_vec</span>(),
+                <span class="ident">body</span>: <span class="ident">bytes</span>,
                 <span class="ident">error</span>,
                 <span class="ident">status</span>: <span class="ident">StatusCode::new</span>(<span class="self">self</span>.<span class="ident">status</span>.<span class="ident">as_u16</span>()),
             },
@@ -537,6 +536,12 @@
         <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">resp</span>.<span class="ident">status</span>();
 
         <span class="kw">if</span> <span class="ident">status</span>.<span class="ident">is_success</span>() {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="ident">resp</span>;
+            <span class="comment">// Inaccurate since end-users can only access the decompressed body.</span>
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+            <span class="ident">resp</span>.<span class="ident">headers_mut</span>().<span class="ident">remove</span>(<span class="ident">hyper::header::CONTENT_LENGTH</span>);
+
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">Response::new</span>(<span class="ident">resp</span>);
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">guild_id</span> {
@@ -560,17 +565,18 @@
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
         }
 
-        <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">Box::pin</span>(<span class="kw">async</span> {
-            <span class="ident">hyper::body::to_bytes</span>(<span class="ident">resp</span>.<span class="ident">into_body</span>())
+        <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="kw">async</span> {
+            <span class="ident">Response</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">resp</span>)
+                .<span class="ident">bytes</span>()
                 .<span class="kw">await</span>
                 .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span> {
                     <span class="ident">kind</span>: <span class="ident">ErrorType::ChunkingResponse</span>,
                     <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
                 })
-        });
+        };
 
         <span class="ident">InnerPoll::Advance</span>(<span class="ident">ResponseFutureStage::Chunking</span>(<span class="ident">Chunking</span> {
-            <span class="ident">future</span>: <span class="ident">fut</span>,
+            <span class="ident">future</span>: <span class="ident">Box::pin</span>(<span class="ident">fut</span>),
             <span class="ident">status</span>,
         }))
     }

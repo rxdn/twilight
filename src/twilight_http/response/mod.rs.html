@@ -840,6 +840,104 @@
 <span id="840">840</span>
 <span id="841">841</span>
 <span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Response utility type and related types.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The heart of the response module is the [`Response`] itself: it&#39;s a wrapper</span>
@@ -897,9 +995,9 @@
 <span class="kw">use</span> <span class="ident"><span class="self">self</span>::marker</span>::{<span class="ident">ListBody</span>, <span class="ident">MemberBody</span>, <span class="ident">MemberListBody</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::json::JsonDeserializer</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>::{
-    <span class="ident">body</span>::{<span class="self">self</span>, <span class="ident">Buf</span>, <span class="ident">Bytes</span>},
+    <span class="ident">body</span>::{<span class="self">self</span>, <span class="ident">Bytes</span>},
     <span class="ident">header</span>::{<span class="ident">HeaderValue</span>, <span class="ident">Iter</span> <span class="kw">as</span> <span class="ident">HeaderMapIter</span>},
-    <span class="ident">Body</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">HyperError</span>, <span class="ident">Response</span> <span class="kw">as</span> <span class="ident">HyperResponse</span>,
+    <span class="ident">Body</span>, <span class="ident">Response</span> <span class="kw">as</span> <span class="ident">HyperResponse</span>,
 };
 <span class="kw">use</span> <span class="ident">serde::de</span>::{<span class="ident">DeserializeOwned</span>, <span class="ident">DeserializeSeed</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -957,6 +1055,10 @@
             <span class="ident">DeserializeBodyErrorType::Chunking</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;failed to chunk response body&quot;</span>)
             }
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+            <span class="ident">DeserializeBodyErrorType::Decompressing</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;failed to decompress response body&quot;</span>)
+            }
             <span class="ident">DeserializeBodyErrorType::Deserializing</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;failed to deserialize response body&quot;</span>)
             }
@@ -984,6 +1086,9 @@
     },
     <span class="doccomment">/// Response body couldn&#39;t be chunked.</span>
     <span class="ident">Chunking</span>,
+    <span class="doccomment">/// Decompressing the response failed.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+    <span class="ident">Decompressing</span>,
     <span class="doccomment">/// Deserializing the model failed.</span>
     <span class="ident">Deserializing</span>,
 }
@@ -1075,22 +1180,29 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`text`]: Self::text</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">BytesFuture</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+        <span class="kw">let</span> <span class="ident">compressed</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">inner</span>
+            .<span class="ident">headers</span>()
+            .<span class="ident">get</span>(<span class="ident">hyper::header::CONTENT_ENCODING</span>)
+            .<span class="ident">is_some</span>();
+
         <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">into_body</span>();
 
-        <span class="comment">// We need to do additional processing here due to the return type of</span>
-        <span class="comment">// `body::aggregate` being `impl Buf`.</span>
-        <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="kw">async</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">aggregate</span> <span class="op">=</span> <span class="ident">body::aggregate</span>(<span class="ident">body</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="kw">async</span> <span class="kw">move</span> {
+            {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+                <span class="kw">if</span> <span class="ident">compressed</span> {
+                    <span class="kw">return</span> <span class="ident">decompress</span>(<span class="ident">body</span>).<span class="kw">await</span>;
+                }
 
-            <span class="comment">// Create a buffer filled with zeroes so we can copy the aggregate</span>
-            <span class="comment">// body into it.</span>
-            <span class="comment">//</span>
-            <span class="comment">// Using `vec!` is the fastest way to do this, despite it being a</span>
-            <span class="comment">// macro and having unsafe internals.</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">aggregate</span>.<span class="ident">remaining</span>()];
-            <span class="ident">aggregate</span>.<span class="ident">copy_to_slice</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>);
-
-            <span class="prelude-val">Ok</span>(<span class="ident">buf</span>)
+                <span class="ident">body::to_bytes</span>(<span class="ident">body</span>)
+                    .<span class="kw">await</span>
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DeserializeBodyError</span> {
+                        <span class="ident">kind</span>: <span class="ident">DeserializeBodyErrorType::Chunking</span>,
+                        <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+                    })
+            }
         };
 
         <span class="ident">BytesFuture</span> {
@@ -1342,7 +1454,8 @@
 <span class="doccomment">/// response body could not be entirely read.</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BytesFuture</span> {
-    <span class="ident">inner</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">HyperError</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">inner</span>:
+        <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Bytes</span>, <span class="ident">DeserializeBodyError</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">BytesFuture</span> {
@@ -1350,12 +1463,7 @@
 
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Poll::Ready</span>(<span class="ident">result</span>) <span class="op">=</span> <span class="ident">Pin::new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">inner</span>).<span class="ident">poll</span>(<span class="ident">cx</span>) {
-            <span class="comment">// Convert `hyper`&#39;s error type to our own in order to avoid</span>
-            <span class="comment">// directly exposing a dependency.</span>
-            <span class="ident">Poll::Ready</span>(<span class="ident">result</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DeserializeBodyError</span> {
-                <span class="ident">kind</span>: <span class="ident">DeserializeBodyErrorType::Chunking</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-            }))
+            <span class="ident">Poll::Ready</span>(<span class="ident">result</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>()))
         } <span class="kw">else</span> {
             <span class="ident">Poll::Pending</span>
         }
@@ -1636,6 +1744,35 @@
     }
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">decompress</span>(<span class="ident">body</span>: <span class="ident">Body</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Bytes</span>, <span class="ident">DeserializeBodyError</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">brotli::Decompressor</span>;
+    <span class="kw">use</span> <span class="ident">hyper::body::Buf</span>;
+    <span class="kw">use</span> <span class="ident">std::io::Read</span>;
+
+    <span class="kw">let</span> <span class="ident">aggregate</span> <span class="op">=</span> <span class="ident">body::aggregate</span>(<span class="ident">body</span>)
+        .<span class="kw">await</span>
+        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">DeserializeBodyError</span> {
+            <span class="ident">kind</span>: <span class="ident">DeserializeBodyErrorType::Chunking</span>,
+            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        })<span class="question-mark">?</span>;
+
+    <span class="comment">// Determine the size of the entire buffer, in order to create the</span>
+    <span class="comment">// decompressed and compressed buffers.</span>
+    <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">aggregate</span>.<span class="ident">remaining</span>();
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">size</span>);
+
+    <span class="ident">Decompressor::new</span>(<span class="ident">aggregate</span>.<span class="ident">reader</span>(), <span class="ident">size</span>)
+        .<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>)
+        .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">DeserializeBodyError</span> {
+            <span class="ident">kind</span>: <span class="ident">DeserializeBodyErrorType::Decompressing</span>,
+            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+        })<span class="question-mark">?</span>;
+
+    <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">into</span>())
+}
+
 <span class="doccomment">/// Create a `simd-json` Deserializer instance.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Errors</span>
@@ -1669,6 +1806,9 @@
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">future::Future</span>, <span class="ident">iter::FusedIterator</span>};
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{<span class="ident">channel::Message</span>, <span class="ident">guild::Emoji</span>};
 
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+    <span class="kw">use</span> <span class="ident">std::error::Error</span>;
+
     <span class="macro">assert_impl_all!</span>(<span class="ident">BytesFuture</span>: <span class="ident">Future</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">DeserializeBodyErrorType</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">DeserializeBodyError</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
@@ -1681,6 +1821,62 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">Response</span><span class="op">&lt;</span><span class="ident">MemberBody</span><span class="op">&gt;</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">Response</span><span class="op">&lt;</span><span class="ident">MemberListBody</span><span class="op">&gt;</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">TextFuture</span>: <span class="ident">Future</span>);
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_decompression</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::decompress</span>;
+        <span class="kw">use</span> <span class="ident">hyper::Body</span>;
+        <span class="kw">use</span> <span class="ident">twilight_model::invite::Invite</span>;
+
+        <span class="kw">const</span> <span class="ident">COMPRESSED</span>: [<span class="ident">u8</span>; <span class="number">685</span>] <span class="op">=</span> [
+            <span class="number">3</span>, <span class="number">160</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">228</span>, <span class="number">178</span>, <span class="number">169</span>, <span class="number">189</span>, <span class="number">190</span>, <span class="number">59</span>, <span class="number">251</span>, <span class="number">86</span>, <span class="number">18</span>, <span class="number">36</span>, <span class="number">232</span>, <span class="number">63</span>, <span class="number">98</span>, <span class="number">235</span>, <span class="number">98</span>, <span class="number">82</span>,
+            <span class="number">176</span>, <span class="number">41</span>, <span class="number">41</span>, <span class="number">85</span>, <span class="number">35</span>, <span class="number">35</span>, <span class="number">17</span>, <span class="number">115</span>, <span class="number">161</span>, <span class="number">13</span>, <span class="number">136</span>, <span class="number">164</span>, <span class="number">79</span>, <span class="number">156</span>, <span class="number">11</span>, <span class="number">128</span>, <span class="number">135</span>, <span class="number">156</span>, <span class="number">152</span>,
+            <span class="number">152</span>, <span class="number">180</span>, <span class="number">129</span>, <span class="number">13</span>, <span class="number">171</span>, <span class="number">193</span>, <span class="number">102</span>, <span class="number">195</span>, <span class="number">157</span>, <span class="number">71</span>, <span class="number">218</span>, <span class="number">254</span>, <span class="number">219</span>, <span class="number">18</span>, <span class="number">240</span>, <span class="number">113</span>, <span class="number">244</span>, <span class="number">96</span>,
+            <span class="number">217</span>, <span class="number">32</span>, <span class="number">111</span>, <span class="number">115</span>, <span class="number">13</span>, <span class="number">223</span>, <span class="number">109</span>, <span class="number">125</span>, <span class="number">34</span>, <span class="number">131</span>, <span class="number">147</span>, <span class="number">3</span>, <span class="number">127</span>, <span class="number">186</span>, <span class="number">220</span>, <span class="number">156</span>, <span class="number">31</span>, <span class="number">172</span>, <span class="number">6</span>,
+            <span class="number">165</span>, <span class="number">49</span>, <span class="number">2</span>, <span class="number">52</span>, <span class="number">31</span>, <span class="number">77</span>, <span class="number">219</span>, <span class="number">188</span>, <span class="number">30</span>, <span class="number">204</span>, <span class="number">209</span>, <span class="number">52</span>, <span class="number">35</span>, <span class="number">1</span>, <span class="number">124</span>, <span class="number">93</span>, <span class="number">154</span>, <span class="number">86</span>, <span class="number">97</span>, <span class="number">4</span>, <span class="number">63</span>,
+            <span class="number">216</span>, <span class="number">40</span>, <span class="number">140</span>, <span class="number">0</span>, <span class="number">125</span>, <span class="number">199</span>, <span class="number">13</span>, <span class="number">172</span>, <span class="number">48</span>, <span class="number">176</span>, <span class="number">29</span>, <span class="number">26</span>, <span class="number">216</span>, <span class="number">190</span>, <span class="number">107</span>, <span class="number">7</span>, <span class="number">44</span>, <span class="number">64</span>, <span class="number">2</span>, <span class="number">216</span>,
+            <span class="number">203</span>, <span class="number">78</span>, <span class="number">99</span>, <span class="number">4</span>, <span class="number">88</span>, <span class="number">126</span>, <span class="number">24</span>, <span class="number">232</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">224</span>, <span class="number">60</span>, <span class="number">182</span>, <span class="number">114</span>, <span class="number">62</span>, <span class="number">96</span>, <span class="number">4</span>, <span class="number">24</span>, <span class="number">42</span>, <span class="number">223</span>, <span class="number">218</span>,
+            <span class="number">75</span>, <span class="number">165</span>, <span class="number">246</span>, <span class="number">161</span>, <span class="number">37</span>, <span class="number">109</span>, <span class="number">47</span>, <span class="number">244</span>, <span class="number">67</span>, <span class="number">139</span>, <span class="number">186</span>, <span class="number">178</span>, <span class="number">210</span>, <span class="number">129</span>, <span class="number">148</span>, <span class="number">74</span>, <span class="number">239</span>, <span class="number">67</span>,
+            <span class="number">166</span>, <span class="number">145</span>, <span class="number">0</span>, <span class="number">46</span>, <span class="number">112</span>, <span class="number">24</span>, <span class="number">16</span>, <span class="number">65</span>, <span class="number">191</span>, <span class="number">180</span>, <span class="number">45</span>, <span class="number">1</span>, <span class="number">84</span>, <span class="number">155</span>, <span class="number">245</span>, <span class="number">199</span>, <span class="number">70</span>, <span class="number">211</span>, <span class="number">12</span>, <span class="number">253</span>,
+            <span class="number">11</span>, <span class="number">170</span>, <span class="number">169</span>, <span class="number">52</span>, <span class="number">235</span>, <span class="number">65</span>, <span class="number">43</span>, <span class="number">8</span>, <span class="number">107</span>, <span class="number">219</span>, <span class="number">213</span>, <span class="number">174</span>, <span class="number">178</span>, <span class="number">36</span>, <span class="number">11</span>, <span class="number">234</span>, <span class="number">218</span>, <span class="number">9</span>, <span class="number">153</span>,
+            <span class="number">47</span>, <span class="number">253</span>, <span class="number">58</span>, <span class="number">96</span>, <span class="number">174</span>, <span class="number">242</span>, <span class="number">105</span>, <span class="number">237</span>, <span class="number">208</span>, <span class="number">10</span>, <span class="number">9</span>, <span class="number">224</span>, <span class="number">232</span>, <span class="number">58</span>, <span class="number">198</span>, <span class="number">8</span>, <span class="number">30</span>, <span class="number">177</span>, <span class="number">220</span>,
+            <span class="number">228</span>, <span class="number">156</span>, <span class="number">139</span>, <span class="number">117</span>, <span class="number">124</span>, <span class="number">47</span>, <span class="number">202</span>, <span class="number">77</span>, <span class="number">206</span>, <span class="number">227</span>, <span class="number">181</span>, <span class="number">136</span>, <span class="number">243</span>, <span class="number">213</span>, <span class="number">38</span>, <span class="number">185</span>, <span class="number">225</span>, <span class="number">72</span>,
+            <span class="number">0</span>, <span class="number">111</span>, <span class="number">249</span>, <span class="number">229</span>, <span class="number">106</span>, <span class="number">123</span>, <span class="number">197</span>, <span class="number">69</span>, <span class="number">177</span>, <span class="number">202</span>, <span class="number">57</span>, <span class="number">79</span>, <span class="number">5</span>, <span class="number">79</span>, <span class="number">227</span>, <span class="number">211</span>, <span class="number">75</span>, <span class="number">190</span>, <span class="number">70</span>, <span class="number">2</span>,
+            <span class="number">152</span>, <span class="number">242</span>, <span class="number">219</span>, <span class="number">111</span>, <span class="number">166</span>, <span class="number">236</span>, <span class="number">120</span>, <span class="number">126</span>, <span class="number">149</span>, <span class="number">20</span>, <span class="number">69</span>, <span class="number">178</span>, <span class="number">77</span>, <span class="number">11</span>, <span class="number">36</span>, <span class="number">96</span>, <span class="number">51</span>, <span class="number">20</span>, <span class="number">175</span>,
+            <span class="number">139</span>, <span class="number">251</span>, <span class="number">109</span>, <span class="number">87</span>, <span class="number">252</span>, <span class="number">234</span>, <span class="number">148</span>, <span class="number">231</span>, <span class="number">226</span>, <span class="number">134</span>, <span class="number">231</span>, <span class="number">201</span>, <span class="number">191</span>, <span class="number">100</span>, <span class="number">21</span>, <span class="number">151</span>, <span class="number">201</span>, <span class="number">54</span>,
+            <span class="number">21</span>, <span class="number">103</span>, <span class="number">113</span>, <span class="number">201</span>, <span class="number">47</span>, <span class="number">168</span>, <span class="number">3</span>, <span class="number">252</span>, <span class="number">44</span>, <span class="number">143</span>, <span class="number">211</span>, <span class="number">164</span>, <span class="number">188</span>, <span class="number">23</span>, <span class="number">215</span>, <span class="number">249</span>, <span class="number">165</span>, <span class="number">59</span>, <span class="number">208</span>,
+            <span class="number">248</span>, <span class="number">255</span>, <span class="number">36</span>, <span class="number">233</span>, <span class="number">77</span>, <span class="number">82</span>, <span class="number">114</span>, <span class="number">81</span>, <span class="number">236</span>, <span class="number">46</span>, <span class="number">227</span>, <span class="number">98</span>, <span class="number">131</span>, <span class="number">4</span>, <span class="number">48</span>, <span class="number">78</span>, <span class="number">147</span>, <span class="number">171</span>, <span class="number">184</span>,
+            <span class="number">228</span>, <span class="number">107</span>, <span class="number">145</span>, <span class="number">172</span>, <span class="number">182</span>, <span class="number">41</span>, <span class="number">18</span>, <span class="number">192</span>, <span class="number">93</span>, <span class="number">206</span>, <span class="number">111</span>, <span class="number">18</span>, <span class="number">126</span>, <span class="number">139</span>, <span class="number">245</span>, <span class="number">140</span>, <span class="number">213</span>, <span class="number">246</span>,
+            <span class="number">234</span>, <span class="number">234</span>, <span class="number">58</span>, <span class="number">77</span>, <span class="number">202</span>, <span class="number">123</span>, <span class="number">124</span>, <span class="number">38</span>, <span class="number">128</span>, <span class="number">57</span>, <span class="number">133</span>, <span class="number">137</span>, <span class="number">159</span>, <span class="number">125</span>, <span class="number">253</span>, <span class="number">33</span>, <span class="number">24</span>, <span class="number">129</span>, <span class="number">77</span>,
+            <span class="number">0</span>, <span class="number">223</span>, <span class="number">101</span>, <span class="number">223</span>, <span class="number">152</span>, <span class="number">47</span>, <span class="number">177</span>, <span class="number">76</span>, <span class="number">173</span>, <span class="number">32</span>, <span class="number">188</span>, <span class="number">240</span>, <span class="number">67</span>, <span class="number">183</span>, <span class="number">213</span>, <span class="number">208</span>, <span class="number">105</span>, <span class="number">113</span>,
+            <span class="number">124</span>, <span class="number">127</span>, <span class="number">144</span>, <span class="number">121</span>, <span class="number">3</span>, <span class="number">46</span>, <span class="number">10</span>, <span class="number">177</span>, <span class="number">88</span>, <span class="number">198</span>, <span class="number">113</span>, <span class="number">152</span>, <span class="number">204</span>, <span class="number">65</span>, <span class="number">26</span>, <span class="number">53</span>, <span class="number">27</span>, <span class="number">218</span>, <span class="number">43</span>,
+            <span class="number">58</span>, <span class="number">221</span>, <span class="number">27</span>, <span class="number">24</span>, <span class="number">106</span>, <span class="number">224</span>, <span class="number">223</span>, <span class="number">75</span>, <span class="number">78</span>, <span class="number">76</span>, <span class="number">201</span>, <span class="number">235</span>, <span class="number">106</span>, <span class="number">168</span>, <span class="number">246</span>, <span class="number">19</span>, <span class="number">32</span>, <span class="number">95</span>, <span class="number">102</span>,
+            <span class="number">3</span>, <span class="number">109</span>, <span class="number">179</span>, <span class="number">159</span>, <span class="number">228</span>, <span class="number">212</span>, <span class="number">232</span>, <span class="number">178</span>, <span class="number">95</span>, <span class="number">109</span>, <span class="number">221</span>, <span class="number">204</span>, <span class="number">213</span>, <span class="number">48</span>, <span class="number">41</span>, <span class="number">136</span>, <span class="number">119</span>, <span class="number">201</span>,
+            <span class="number">49</span>, <span class="number">28</span>, <span class="number">140</span>, <span class="number">25</span>, <span class="number">231</span>, <span class="number">232</span>, <span class="number">228</span>, <span class="number">36</span>, <span class="number">7</span>, <span class="number">3</span>, <span class="number">142</span>, <span class="number">97</span>, <span class="number">33</span>, <span class="number">211</span>, <span class="number">131</span>, <span class="number">4</span>, <span class="number">35</span>, <span class="number">120</span>, <span class="number">252</span>, <span class="number">65</span>,
+            <span class="number">141</span>, <span class="number">71</span>, <span class="number">228</span>, <span class="number">101</span>, <span class="number">59</span>, <span class="number">165</span>, <span class="number">52</span>, <span class="number">100</span>, <span class="number">212</span>, <span class="number">98</span>, <span class="number">148</span>, <span class="number">185</span>, <span class="number">174</span>, <span class="number">47</span>, <span class="number">70</span>, <span class="number">232</span>, <span class="number">233</span>, <span class="number">120</span>,
+            <span class="number">126</span>, <span class="number">115</span>, <span class="number">174</span>, <span class="number">62</span>, <span class="number">232</span>, <span class="number">118</span>, <span class="number">132</span>, <span class="number">143</span>, <span class="number">198</span>, <span class="number">28</span>, <span class="number">64</span>, <span class="number">203</span>, <span class="number">145</span>, <span class="number">0</span>, <span class="number">234</span>, <span class="number">110</span>, <span class="number">248</span>, <span class="number">223</span>,
+            <span class="number">152</span>, <span class="number">124</span>, <span class="number">65</span>, <span class="number">96</span>, <span class="number">51</span>, <span class="number">207</span>, <span class="number">243</span>, <span class="number">3</span>, <span class="number">230</span>, <span class="number">185</span>, <span class="number">142</span>, <span class="number">31</span>, <span class="number">184</span>, <span class="number">212</span>, <span class="number">182</span>, <span class="number">220</span>, <span class="number">94</span>, <span class="number">72</span>, <span class="number">178</span>,
+            <span class="number">55</span>, <span class="number">48</span>, <span class="number">45</span>, <span class="number">179</span>, <span class="number">193</span>, <span class="number">63</span>, <span class="number">2</span>, <span class="number">112</span>, <span class="number">182</span>, <span class="number">198</span>, <span class="number">168</span>, <span class="number">231</span>, <span class="number">250</span>, <span class="number">97</span>, <span class="number">232</span>, <span class="number">50</span>, <span class="number">47</span>, <span class="number">176</span>, <span class="number">100</span>,
+            <span class="number">72</span>, <span class="number">41</span>, <span class="number">219</span>, <span class="number">55</span>, <span class="number">144</span>, <span class="number">251</span>, <span class="number">97</span>, <span class="number">49</span>, <span class="number">129</span>, <span class="number">211</span>, <span class="number">5</span>, <span class="number">84</span>, <span class="number">227</span>, <span class="number">17</span>, <span class="number">181</span>, <span class="number">123</span>, <span class="number">141</span>, <span class="number">144</span>, <span class="number">122</span>,
+            <span class="number">142</span>, <span class="number">27</span>, <span class="number">184</span>, <span class="number">14</span>, <span class="number">245</span>, <span class="number">125</span>, <span class="number">47</span>, <span class="number">100</span>, <span class="number">30</span>, <span class="number">38</span>, <span class="number">36</span>, <span class="number">114</span>, <span class="number">214</span>, <span class="number">112</span>, <span class="number">109</span>, <span class="number">207</span>, <span class="number">102</span>, <span class="number">142</span>,
+            <span class="number">239</span>, <span class="number">91</span>, <span class="number">174</span>, <span class="number">19</span>, <span class="number">80</span>, <span class="number">230</span>, <span class="number">120</span>, <span class="number">34</span>, <span class="number">228</span>, <span class="number">90</span>, <span class="number">42</span>, <span class="number">154</span>, <span class="number">20</span>, <span class="number">95</span>, <span class="number">176</span>, <span class="number">140</span>, <span class="number">74</span>, <span class="number">26</span>, <span class="number">189</span>,
+            <span class="number">240</span>, <span class="number">44</span>, <span class="number">210</span>, <span class="number">14</span>, <span class="number">175</span>, <span class="number">179</span>, <span class="number">83</span>, <span class="number">112</span>, <span class="number">168</span>, <span class="number">112</span>, <span class="number">157</span>, <span class="number">26</span>, <span class="number">192</span>, <span class="number">216</span>, <span class="number">201</span>, <span class="number">167</span>, <span class="number">69</span>, <span class="number">5</span>, <span class="number">182</span>,
+            <span class="number">122</span>, <span class="number">90</span>, <span class="number">84</span>, <span class="number">165</span>, <span class="number">237</span>, <span class="number">240</span>, <span class="number">108</span>, <span class="number">205</span>, <span class="number">9</span>, <span class="number">188</span>, <span class="number">128</span>, <span class="number">134</span>, <span class="number">140</span>, <span class="number">81</span>, <span class="number">215</span>, <span class="number">113</span>, <span class="number">68</span>, <span class="number">114</span>,
+            <span class="number">161</span>, <span class="number">245</span>, <span class="number">8</span>, <span class="number">11</span>, <span class="number">73</span>, <span class="number">137</span>, <span class="number">158</span>, <span class="number">53</span>, <span class="number">102</span>, <span class="number">179</span>, <span class="number">236</span>, <span class="number">155</span>, <span class="number">29</span>, <span class="number">44</span>, <span class="number">203</span>, <span class="number">41</span>, <span class="number">15</span>, <span class="number">255</span>, <span class="number">158</span>,
+            <span class="number">255</span>, <span class="number">8</span>, <span class="number">96</span>, <span class="number">63</span>, <span class="number">215</span>, <span class="number">31</span>, <span class="number">24</span>, <span class="number">65</span>, <span class="number">45</span>, <span class="number">219</span>, <span class="number">89</span>, <span class="number">171</span>, <span class="number">208</span>, <span class="number">234</span>, <span class="number">16</span>, <span class="number">173</span>, <span class="number">63</span>, <span class="number">2</span>, <span class="number">65</span>, <span class="number">179</span>,
+            <span class="number">58</span>, <span class="number">215</span>, <span class="number">1</span>, <span class="number">108</span>, <span class="number">54</span>, <span class="number">67</span>, <span class="number">211</span>, <span class="number">215</span>, <span class="number">3</span>, <span class="number">18</span>, <span class="number">64</span>, <span class="number">243</span>, <span class="number">53</span>, <span class="number">106</span>, <span class="number">140</span>, <span class="number">192</span>, <span class="number">250</span>, <span class="number">251</span>, <span class="number">51</span>, <span class="number">0</span>,
+            <span class="number">3</span>,
+        ];
+
+        <span class="kw">let</span> <span class="ident">decompressed</span> <span class="op">=</span> <span class="ident">decompress</span>(<span class="ident">Body::from</span>(<span class="ident">COMPRESSED</span>.<span class="ident">as_ref</span>())).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">deserialized</span> <span class="op">=</span> <span class="ident">serde_json::from_slice</span>::<span class="op">&lt;</span><span class="ident">Invite</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">decompressed</span>)<span class="question-mark">?</span>;
+
+        <span class="macro">assert_eq!</span>(<span class="ident">deserialized</span>.<span class="ident">code</span>, <span class="string">&quot;twilight-rs&quot;</span>);
+
+        <span class="prelude-val">Ok</span>(())
+    }
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
