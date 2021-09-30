@@ -798,6 +798,39 @@
 <span id="798">798</span>
 <span id="799">799</span>
 <span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight-cache-inmemory</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [![discord badge][]][discord link] [![github badge][]][github link] [![license badge][]][license link] ![rust badge]</span>
@@ -903,7 +936,7 @@
     <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Mutex</span>},
 };
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">channel</span>::{<span class="ident">Group</span>, <span class="ident">GuildChannel</span>, <span class="ident">PrivateChannel</span>, <span class="ident">StageInstance</span>},
+    <span class="ident">channel</span>::{<span class="ident">message::sticker::StickerId</span>, <span class="ident">Group</span>, <span class="ident">GuildChannel</span>, <span class="ident">PrivateChannel</span>, <span class="ident">StageInstance</span>},
     <span class="ident">gateway::event::Event</span>,
     <span class="ident">guild</span>::{<span class="ident">GuildIntegration</span>, <span class="ident">Role</span>},
     <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">EmojiId</span>, <span class="ident">GuildId</span>, <span class="ident">IntegrationId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">StageId</span>, <span class="ident">UserId</span>},
@@ -963,12 +996,14 @@
     <span class="ident">guild_presences</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">guild_roles</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">guild_stage_instances</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">StageId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">guild_stickers</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">StickerId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">integrations</span>: <span class="ident">DashMap</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">IntegrationId</span>), <span class="ident">GuildItem</span><span class="op">&lt;</span><span class="ident">GuildIntegration</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">members</span>: <span class="ident">DashMap</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">UserId</span>), <span class="ident">CachedMember</span><span class="op">&gt;</span>,
     <span class="ident">messages</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">ChannelId</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">CachedMessage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">presences</span>: <span class="ident">DashMap</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">UserId</span>), <span class="ident">CachedPresence</span><span class="op">&gt;</span>,
     <span class="ident">roles</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">RoleId</span>, <span class="ident">GuildItem</span><span class="op">&lt;</span><span class="ident">Role</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">stage_instances</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">StageId</span>, <span class="ident">GuildItem</span><span class="op">&lt;</span><span class="ident">StageInstance</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">stickers</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">StickerId</span>, <span class="ident">GuildItem</span><span class="op">&lt;</span><span class="ident">CachedSticker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">unavailable_guilds</span>: <span class="ident">DashSet</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
     <span class="ident">users</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">UserId</span>, <span class="ident">User</span><span class="op">&gt;</span>,
     <span class="ident">user_guilds</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">UserId</span>, <span class="ident">BTreeSet</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1065,11 +1100,13 @@
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_presences</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_roles</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_stage_instances</span>.<span class="ident">clear</span>();
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_stickers</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">integrations</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">members</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">messages</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">presences</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">roles</span>.<span class="ident">clear</span>();
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">stickers</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">unavailable_guilds</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">users</span>.<span class="ident">clear</span>();
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">voice_state_channels</span>.<span class="ident">clear</span>();
@@ -1269,6 +1306,21 @@
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">value</span>().<span class="ident">clone</span>())
     }
 
+    <span class="doccomment">/// Gets the set of the stickers in a guild.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is an O(m) operation, where m is the amount of stickers in the</span>
+    <span class="doccomment">/// guild. This requires the [`GUILDS`] intent and the [`STICKER`] resource</span>
+    <span class="doccomment">/// type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`GUILDS`]: twilight_model::gateway::Intents::GUILDS</span>
+    <span class="doccomment">/// [`STICKER`]: crate::config::ResourceType::STICKER</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_stickers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">StickerId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="number">0</span>
+            .<span class="ident">guild_stickers</span>
+            .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">value</span>().<span class="ident">clone</span>())
+    }
+
     <span class="doccomment">/// Gets an integration by guild ID and integration ID.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is an O(1) operation. This requires the [`GUILD_INTEGRATIONS`]</span>
@@ -1348,6 +1400,20 @@
             .<span class="ident">stage_instances</span>
             .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">stage_id</span>)
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">role</span><span class="op">|</span> <span class="ident">role</span>.<span class="ident">data</span>.<span class="ident">clone</span>())
+    }
+
+    <span class="doccomment">/// Gets a sticker by ID.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is the O(1) operation. This requires the [`GUILDS`] intent and the</span>
+    <span class="doccomment">/// [`STICKER`] resource type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`GUILDS`]: twilight_model::gateway::Intents::GUILDS</span>
+    <span class="doccomment">/// [`STICKER`]: crate::config::ResourceType::STICKER</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sticker</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">sticker_id</span>: <span class="ident">StickerId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CachedSticker</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="number">0</span>
+            .<span class="ident">stickers</span>
+            .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">sticker_id</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">sticker</span><span class="op">|</span> <span class="ident">sticker</span>.<span class="ident">data</span>.<span class="ident">clone</span>())
     }
 
     <span class="doccomment">/// Gets a user by ID.</span>

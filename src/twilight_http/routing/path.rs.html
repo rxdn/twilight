@@ -382,6 +382,14 @@
 <span id="382">382</span>
 <span id="383">383</span>
 <span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request::Method</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">convert::TryFrom</span>,
@@ -533,6 +541,7 @@
     <span class="ident">GuildsIdRegions</span>(<span class="ident">u64</span>),
     <span class="ident">GuildsIdRoles</span>(<span class="ident">u64</span>),
     <span class="ident">GuildsIdRolesId</span>(<span class="ident">u64</span>),
+    <span class="ident">GuildsIdStickers</span>(<span class="ident">u64</span>),
     <span class="ident">GuildsIdTemplates</span>(<span class="ident">u64</span>),
     <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">u64</span>),
     <span class="ident">GuildsIdThreads</span>(<span class="ident">u64</span>),
@@ -544,6 +553,8 @@
     <span class="doccomment">/// Operating on an interaction&#39;s callback.</span>
     <span class="ident">InteractionCallback</span>(<span class="ident">u64</span>),
     <span class="ident">StageInstances</span>,
+    <span class="ident">StickerPacks</span>,
+    <span class="ident">Stickers</span>,
     <span class="ident">UsersId</span>,
     <span class="ident">OauthApplicationsMe</span>,
     <span class="ident">UsersIdConnections</span>,
@@ -675,6 +686,9 @@
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;regions&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GuildsIdRegions</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;roles&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GuildsIdRoles</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;roles&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GuildsIdRolesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;stickers&quot;</span>] <span class="op">|</span> [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">GuildsIdStickers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            }
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;templates&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GuildsIdTemplates</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;templates&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;threads&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">GuildsIdThreads</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
@@ -685,6 +699,8 @@
             [<span class="string">&quot;invites&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">InvitesCode</span>,
             [<span class="string">&quot;interactions&quot;</span>, <span class="ident">id</span>, <span class="kw">_</span>, <span class="string">&quot;callback&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">InteractionCallback</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;stage-instances&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">StageInstances</span>,
+            [<span class="string">&quot;sticker-packs&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">StickerPacks</span>,
+            [<span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Stickers</span>,
             [<span class="string">&quot;oauth2&quot;</span>, <span class="string">&quot;applications&quot;</span>, <span class="string">&quot;@me&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">OauthApplicationsMe</span>,
             [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">UsersId</span>,
             [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;connections&quot;</span>] <span class="op">=</span><span class="op">&gt;</span> <span class="ident">UsersIdConnections</span>,

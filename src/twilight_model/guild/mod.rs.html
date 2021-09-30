@@ -1039,6 +1039,21 @@
 <span id="1039">1039</span>
 <span id="1040">1040</span>
 <span id="1041">1041</span>
+<span id="1042">1042</span>
+<span id="1043">1043</span>
+<span id="1044">1044</span>
+<span id="1045">1045</span>
+<span id="1046">1046</span>
+<span id="1047">1047</span>
+<span id="1048">1048</span>
+<span id="1049">1049</span>
+<span id="1050">1050</span>
+<span id="1051">1051</span>
+<span id="1052">1052</span>
+<span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">audit_log</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">member</span>;
 
@@ -1082,7 +1097,7 @@
 <span class="kw">use</span> <span class="ident"><span class="self">self</span>::member::MemberListDeserializer</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::gateway::presence::PresenceListDeserializer</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">channel</span>::{<span class="ident">GuildChannel</span>, <span class="ident">StageInstance</span>},
+    <span class="ident">channel</span>::{<span class="ident">message::sticker::Sticker</span>, <span class="ident">GuildChannel</span>, <span class="ident">StageInstance</span>},
     <span class="ident">gateway::presence::Presence</span>,
     <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
     <span class="ident">voice::voice_state::VoiceState</span>,
@@ -1146,6 +1161,8 @@
     <span class="kw">pub</span> <span class="ident">splash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">stage_instances</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StageInstance</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">stickers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Sticker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">system_channel_flags</span>: <span class="ident">SystemChannelFlags</span>,
     <span class="kw">pub</span> <span class="ident">system_channel_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
@@ -1203,6 +1220,7 @@
             <span class="ident">Roles</span>,
             <span class="ident">Splash</span>,
             <span class="ident">StageInstances</span>,
+            <span class="ident">Stickers</span>,
             <span class="ident">SystemChannelFlags</span>,
             <span class="ident">SystemChannelId</span>,
             <span class="ident">RulesChannelId</span>,
@@ -1261,6 +1279,7 @@
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">roles</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">splash</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stage_instances</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StageInstance</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stickers</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Sticker</span><span class="op">&gt;</span><span class="op">&gt;</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">system_channel_id</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">system_channel_flags</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">threads</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildChannel</span><span class="op">&gt;</span><span class="op">&gt;</span>;
@@ -1548,6 +1567,13 @@
 
                             <span class="ident">stage_instances</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
+                        <span class="ident">Field::Stickers</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="kw">if</span> <span class="ident">stickers</span>.<span class="ident">is_some</span>() {
+                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;stickers&quot;</span>));
+                            }
+
+                            <span class="ident">stickers</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                        }
                         <span class="ident">Field::SystemChannelId</span> <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="kw">if</span> <span class="ident">system_channel_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;system_channel_id&quot;</span>));
@@ -1666,6 +1692,7 @@
                 <span class="kw">let</span> <span class="ident">rules_channel_id</span> <span class="op">=</span> <span class="ident">rules_channel_id</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">splash</span> <span class="op">=</span> <span class="ident">splash</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">stage_instances</span> <span class="op">=</span> <span class="ident">stage_instances</span>.<span class="ident">unwrap_or_default</span>();
+                <span class="kw">let</span> <span class="ident">stickers</span> <span class="op">=</span> <span class="ident">stickers</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">system_channel_id</span> <span class="op">=</span> <span class="ident">system_channel_id</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">threads</span> <span class="op">=</span> <span class="ident">threads</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">unavailable</span> <span class="op">=</span> <span class="ident">unavailable</span>.<span class="ident">unwrap_or_default</span>();
@@ -1714,6 +1741,7 @@
                     <span class="question-mark">?</span><span class="ident">roles</span>,
                     <span class="question-mark">?</span><span class="ident">splash</span>,
                     <span class="question-mark">?</span><span class="ident">stage_instances</span>,
+                    <span class="question-mark">?</span><span class="ident">stickers</span>,
                     <span class="question-mark">?</span><span class="ident">system_channel_flags</span>,
                     <span class="question-mark">?</span><span class="ident">system_channel_id</span>,
                     <span class="question-mark">?</span><span class="ident">threads</span>,
@@ -1816,6 +1844,7 @@
                     <span class="ident">rules_channel_id</span>,
                     <span class="ident">splash</span>,
                     <span class="ident">stage_instances</span>,
+                    <span class="ident">stickers</span>,
                     <span class="ident">system_channel_flags</span>,
                     <span class="ident">system_channel_id</span>,
                     <span class="ident">threads</span>,
@@ -1929,6 +1958,7 @@
             <span class="ident">rules_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">6</span>)),
             <span class="ident">splash</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;splash hash&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">stage_instances</span>: <span class="ident">Vec::new</span>(),
+            <span class="ident">stickers</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">system_channel_flags</span>: <span class="ident">SystemChannelFlags::SUPPRESS_PREMIUM_SUBSCRIPTIONS</span>,
             <span class="ident">system_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">7</span>)),
             <span class="ident">threads</span>: <span class="ident">Vec::new</span>(),
