@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["command","Create a [`Command`] with a builder."]]});
