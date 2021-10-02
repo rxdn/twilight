@@ -758,13 +758,29 @@
 <span id="758">758</span>
 <span id="759">759</span>
 <span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Create a [`Command`] with a builder.</span>
 
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application::command</span>::{
-        <span class="ident">BaseCommandOptionData</span>, <span class="ident">ChoiceCommandOptionData</span>, <span class="ident">Command</span>, <span class="ident">CommandOption</span>,
-        <span class="ident">CommandOptionChoice</span>, <span class="ident">CommandType</span>, <span class="ident">Number</span>, <span class="ident">OptionsCommandOptionData</span>,
+        <span class="ident">BaseCommandOptionData</span>, <span class="ident">ChannelCommandOptionData</span>, <span class="ident">ChoiceCommandOptionData</span>, <span class="ident">Command</span>,
+        <span class="ident">CommandOption</span>, <span class="ident">CommandOptionChoice</span>, <span class="ident">CommandType</span>, <span class="ident">Number</span>, <span class="ident">OptionsCommandOptionData</span>,
     },
+    <span class="ident">channel::ChannelType</span>,
     <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">GuildId</span>},
 };
 
@@ -914,13 +930,14 @@
 <span class="doccomment">/// Create a channel option with a builder.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;should be used in a command builder&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChannelBuilder</span>(<span class="ident">BaseCommandOptionData</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChannelBuilder</span>(<span class="ident">ChannelCommandOptionData</span>);
 
 <span class="kw">impl</span> <span class="ident">ChannelBuilder</span> {
     <span class="doccomment">/// Create a new default [`ChannelBuilder`].</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;builders have no effect if unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">description</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">BaseCommandOptionData</span> {
+        <span class="self">Self</span>(<span class="ident">ChannelCommandOptionData</span> {
+            <span class="ident">channel_types</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">description</span>,
             <span class="ident">name</span>,
             <span class="ident">required</span>: <span class="bool-val">false</span>,
@@ -932,6 +949,15 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;should be used in a command builder&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CommandOption</span> {
         <span class="ident">CommandOption::Channel</span>(<span class="self">self</span>.<span class="number">0</span>)
+    }
+
+    <span class="doccomment">/// Restricts the channel choice to specific types.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Defaults to all channel types allowed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_types</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">channel_types</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">ChannelType</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">channel_types</span> <span class="op">=</span> <span class="ident">channel_types</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
+
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set whether this option is required.</span>
@@ -1425,7 +1451,8 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;user&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">true</span>,
                                 }),
-                                <span class="ident">CommandOption::Channel</span>(<span class="ident">BaseCommandOptionData</span> {
+                                <span class="ident">CommandOption::Channel</span>(<span class="ident">ChannelCommandOptionData</span> {
+                                    <span class="ident">channel_types</span>: <span class="ident">Vec::new</span>(),
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(
                                         <span class="string">&quot;The channel permissions to get. If omitted, the guild \
                                          permissions will be returned&quot;</span>,
@@ -1445,7 +1472,8 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;user&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">true</span>,
                                 }),
-                                <span class="ident">CommandOption::Channel</span>(<span class="ident">BaseCommandOptionData</span> {
+                                <span class="ident">CommandOption::Channel</span>(<span class="ident">ChannelCommandOptionData</span> {
+                                    <span class="ident">channel_types</span>: <span class="ident">Vec::new</span>(),
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(
                                         <span class="string">&quot;The channel permissions to edit. If omitted, the guild \
                                          permissions will be edited&quot;</span>,
@@ -1472,7 +1500,8 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;role&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">true</span>,
                                 }),
-                                <span class="ident">CommandOption::Channel</span>(<span class="ident">BaseCommandOptionData</span> {
+                                <span class="ident">CommandOption::Channel</span>(<span class="ident">ChannelCommandOptionData</span> {
+                                    <span class="ident">channel_types</span>: <span class="ident">Vec::new</span>(),
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(
                                         <span class="string">&quot;The channel permissions to get. If omitted, the guild \
                                          permissions will be returned&quot;</span>,
@@ -1492,7 +1521,8 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;role&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">true</span>,
                                 }),
-                                <span class="ident">CommandOption::Channel</span>(<span class="ident">BaseCommandOptionData</span> {
+                                <span class="ident">CommandOption::Channel</span>(<span class="ident">ChannelCommandOptionData</span> {
+                                    <span class="ident">channel_types</span>: <span class="ident">Vec::new</span>(),
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(
                                         <span class="string">&quot;The channel permissions to edit. If omitted, the guild \
                                          permissions will be edited&quot;</span>,

@@ -800,7 +800,57 @@
 <span id="800">800</span>
 <span id="801">801</span>
 <span id="802">802</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::util::is_false</span>;
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel::ChannelType</span>, <span class="ident">util::is_false</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
     <span class="ident">ser::Serializer</span>,
@@ -831,7 +881,7 @@
     <span class="ident">Integer</span>(<span class="ident">ChoiceCommandOptionData</span>),
     <span class="ident">Boolean</span>(<span class="ident">BaseCommandOptionData</span>),
     <span class="ident">User</span>(<span class="ident">BaseCommandOptionData</span>),
-    <span class="ident">Channel</span>(<span class="ident">BaseCommandOptionData</span>),
+    <span class="ident">Channel</span>(<span class="ident">ChannelCommandOptionData</span>),
     <span class="ident">Role</span>(<span class="ident">BaseCommandOptionData</span>),
     <span class="ident">Mentionable</span>(<span class="ident">BaseCommandOptionData</span>),
     <span class="ident">Number</span>(<span class="ident">ChoiceCommandOptionData</span>),
@@ -859,9 +909,9 @@
             <span class="ident">CommandOption::String</span>(<span class="ident">data</span>)
             <span class="op">|</span> <span class="ident">CommandOption::Integer</span>(<span class="ident">data</span>)
             <span class="op">|</span> <span class="ident">CommandOption::Number</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">data</span>.<span class="ident">required</span>,
+            <span class="ident">CommandOption::Channel</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">data</span>.<span class="ident">required</span>,
             <span class="ident">CommandOption::Boolean</span>(<span class="ident">data</span>)
             <span class="op">|</span> <span class="ident">CommandOption::User</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident">CommandOption::Channel</span>(<span class="ident">data</span>)
             <span class="op">|</span> <span class="ident">CommandOption::Role</span>(<span class="ident">data</span>)
             <span class="op">|</span> <span class="ident">CommandOption::Mentionable</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">data</span>.<span class="ident">required</span>,
         }
@@ -876,6 +926,8 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">CommandOptionEnvelope</span><span class="op">&lt;</span><span class="lifetime">&#39;ser</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">channel_types</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> [<span class="ident">ChannelType</span>]<span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">choices</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> [<span class="ident">CommandOptionChoice</span>]<span class="op">&gt;</span>,
     <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> <span class="ident">str</span>,
@@ -892,6 +944,7 @@
     <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">envelope</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::SubCommand</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::SubCommandGroup</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CommandOptionEnvelope</span> {
+                <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
                 <span class="ident">choices</span>: <span class="prelude-val">None</span>,
                 <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
                 <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
@@ -901,6 +954,7 @@
             },
             <span class="ident"><span class="self">Self</span>::String</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Number</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">CommandOptionEnvelope</span> {
+                    <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
                     <span class="ident">choices</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">as_ref</span>()),
                     <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
                     <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
@@ -909,11 +963,8 @@
                     <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
                 }
             }
-            <span class="ident"><span class="self">Self</span>::Boolean</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::User</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Channel</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Role</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Mentionable</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CommandOptionEnvelope</span> {
+            <span class="ident"><span class="self">Self</span>::Channel</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CommandOptionEnvelope</span> {
+                <span class="ident">channel_types</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">channel_types</span>.<span class="ident">as_ref</span>()),
                 <span class="ident">choices</span>: <span class="prelude-val">None</span>,
                 <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
                 <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
@@ -921,6 +972,17 @@
                 <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
                 <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
             },
+            <span class="ident"><span class="self">Self</span>::Boolean</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::User</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Role</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Mentionable</span>(<span class="ident">data</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">CommandOptionEnvelope</span> {
+                    <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">choices</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
+                    <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
+                    <span class="ident">options</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
+                    <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
+                }
+            }
         };
 
         <span class="ident">envelope</span>.<span class="ident">serialize</span>(<span class="ident">serializer</span>)
@@ -930,6 +992,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">enum</span> <span class="ident">OptionField</span> {
+    <span class="ident">ChannelTypes</span>,
     <span class="ident">Choices</span>,
     <span class="ident">Description</span>,
     <span class="ident">Name</span>,
@@ -949,6 +1012,7 @@
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_types</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ChannelType</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">choices</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandOptionChoice</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionType</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -980,6 +1044,13 @@
             };
 
             <span class="kw">match</span> <span class="ident">key</span> {
+                <span class="ident">OptionField::ChannelTypes</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="kw">if</span> <span class="ident">choices</span>.<span class="ident">is_some</span>() {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;channel_types&quot;</span>));
+                    }
+
+                    <span class="ident">channel_types</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                }
                 <span class="ident">OptionField::Choices</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="ident">choices</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;choices&quot;</span>));
@@ -1081,7 +1152,8 @@
                 <span class="ident">name</span>,
                 <span class="ident">required</span>,
             }),
-            <span class="ident">CommandOptionType::Channel</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CommandOption::Channel</span>(<span class="ident">BaseCommandOptionData</span> {
+            <span class="ident">CommandOptionType::Channel</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CommandOption::Channel</span>(<span class="ident">ChannelCommandOptionData</span> {
+                <span class="ident">channel_types</span>: <span class="ident">channel_types</span>.<span class="ident">flatten</span>().<span class="ident">unwrap_or_default</span>(),
                 <span class="ident">description</span>,
                 <span class="ident">name</span>,
                 <span class="ident">required</span>,
@@ -1171,6 +1243,25 @@
     <span class="kw">pub</span> <span class="ident">required</span>: <span class="ident">bool</span>,
 }
 
+<span class="doccomment">/// Data supplied to a [`CommandOption`] of type [`Channel`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`Channel`]: CommandOption::Channel</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChannelCommandOptionData</span> {
+    <span class="doccomment">/// Restricts the channel choice to specific types.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If no types are selected, all channel types can be sent.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">channel_types</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ChannelType</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Description of the option. It must be 100 characters or less.</span>
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Name of the option. It must be 32 characters or less.</span>
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Whether or not the option is required to be completed by a user.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">required</span>: <span class="ident">bool</span>,
+}
+
 <span class="doccomment">/// Specifies an option that a user must choose from in a dropdown.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Refer to [the discord docs] for more information.</span>
@@ -1246,10 +1337,13 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{
         <span class="kw">super</span>::{<span class="ident">Command</span>, <span class="ident">CommandType</span>},
-        <span class="ident">BaseCommandOptionData</span>, <span class="ident">ChoiceCommandOptionData</span>, <span class="ident">CommandOption</span>, <span class="ident">CommandOptionChoice</span>, <span class="ident">Number</span>,
-        <span class="ident">OptionsCommandOptionData</span>,
+        <span class="ident">BaseCommandOptionData</span>, <span class="ident">ChannelCommandOptionData</span>, <span class="ident">ChoiceCommandOptionData</span>, <span class="ident">CommandOption</span>,
+        <span class="ident">CommandOptionChoice</span>, <span class="ident">Number</span>, <span class="ident">OptionsCommandOptionData</span>,
     };
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">GuildId</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::{
+        <span class="ident">channel::ChannelType</span>,
+        <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">GuildId</span>},
+    };
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
@@ -1350,7 +1444,8 @@
                             <span class="ident">name</span>: <span class="string">&quot;user&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">required</span>: <span class="bool-val">false</span>,
                         }),
-                        <span class="ident">CommandOption::Channel</span>(<span class="ident">BaseCommandOptionData</span> {
+                        <span class="ident">CommandOption::Channel</span>(<span class="ident">ChannelCommandOptionData</span> {
+                            <span class="ident">channel_types</span>: <span class="macro">vec!</span>[<span class="ident">ChannelType::GuildText</span>],
                             <span class="ident">description</span>: <span class="string">&quot;channel desc&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">name</span>: <span class="string">&quot;channel&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">required</span>: <span class="bool-val">false</span>,
@@ -1522,8 +1617,13 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;CommandOptionEnvelope&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">3</span>,
+                    <span class="ident">len</span>: <span class="number">4</span>,
                 },
+                <span class="ident">Token::Str</span>(<span class="string">&quot;channel_types&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
+                <span class="ident">Token::U8</span>(<span class="number">0</span>),
+                <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;description&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;channel desc&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
