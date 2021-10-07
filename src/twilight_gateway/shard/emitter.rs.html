@@ -181,11 +181,6 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::json</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Event</span>, <span class="ident">EventTypeFlags</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -348,30 +343,25 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Emitter</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Event</span>, <span class="ident">EventTypeFlags</span>};
-    <span class="kw">use</span> <span class="ident">tokio::time</span>::{<span class="self">self</span>, <span class="ident">Duration</span>};
 
-    <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_bytes_send</span>() {
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_bytes_send</span>() {
         <span class="kw">let</span> (<span class="ident">emitter</span>, <span class="kw-2">mut</span> <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">Emitter::new</span>(<span class="ident">EventTypeFlags::SHARD_PAYLOAD</span>);
         <span class="ident">emitter</span>.<span class="ident">bytes</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>]);
 
-        <span class="macro">assert!</span>(<span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span>.<span class="ident">is_some</span>());
-        <span class="macro">assert!</span>(<span class="ident">time::timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="number">10</span>), <span class="ident">rx</span>.<span class="ident">recv</span>())
-            .<span class="kw">await</span>
-            .<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">rx</span>.<span class="ident">try_recv</span>().<span class="ident">is_ok</span>());
+        <span class="macro">assert!</span>(<span class="ident">rx</span>.<span class="ident">try_recv</span>().<span class="ident">is_err</span>());
     }
 
-    <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_event_sends_to_rx</span>() {
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_event_sends_to_rx</span>() {
         <span class="kw">let</span> (<span class="ident">emitter</span>, <span class="kw-2">mut</span> <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">Emitter::new</span>(<span class="ident">EventTypeFlags::default</span>());
         <span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::GatewayReconnect</span>);
 
-        <span class="macro">assert!</span>(<span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span>.<span class="ident">is_some</span>());
+        <span class="macro">assert!</span>(<span class="ident">rx</span>.<span class="ident">try_recv</span>().<span class="ident">is_ok</span>());
 
         <span class="comment">// now check that the event didn&#39;t send the event twice</span>
-        <span class="macro">assert!</span>(<span class="ident">time::timeout</span>(<span class="ident">Duration::from_millis</span>(<span class="number">10</span>), <span class="ident">rx</span>.<span class="ident">recv</span>())
-            .<span class="kw">await</span>
-            .<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">rx</span>.<span class="ident">try_recv</span>().<span class="ident">is_err</span>());
     }
 }
 </code></pre></div>
