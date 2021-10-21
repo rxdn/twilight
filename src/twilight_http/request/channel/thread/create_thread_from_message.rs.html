@@ -144,7 +144,7 @@
         <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">auto_archive_duration</span>: <span class="ident">AutoArchiveDuration</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ThreadValidationError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ThreadValidationError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">validate_inner::channel_name</span>(<span class="ident">name</span>) {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ThreadValidationError</span> {
                 <span class="ident">kind</span>: <span class="ident">ThreadValidationErrorType::NameInvalid</span>,
@@ -162,10 +162,10 @@
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::CreateThreadFromMessage</span> {
-            <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,
-            <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="number">0</span>,
+            <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="ident">get</span>(),
+            <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="ident">get</span>(),
         })
         .<span class="ident">json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>;
 
@@ -175,10 +175,10 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">request</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
         }
     }
 }

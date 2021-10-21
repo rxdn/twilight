@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ConnectionVisibility",""],["PremiumType",""]],"struct":[["Connection",""],["CurrentUser",""],["CurrentUserGuild","Information about a guild the current user is in."],["User",""],["UserFlags",""],["UserProfile",""]]});
+initSidebarItems({"enum":[["ConnectionVisibility",""],["PremiumType",""]],"struct":[["Connection",""],["CurrentUser",""],["CurrentUserGuild","Information about a guild the current user is in."],["DiscriminatorDisplay","Display formatter for a user discriminator."],["User",""],["UserFlags",""],["UserProfile",""]]});

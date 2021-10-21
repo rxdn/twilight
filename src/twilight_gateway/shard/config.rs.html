@@ -97,7 +97,7 @@
 <span class="kw">use</span> <span class="ident">twilight_gateway_queue::Queue</span>;
 <span class="kw">use</span> <span class="ident">twilight_http::Client</span>;
 <span class="kw">use</span> <span class="ident">twilight_model::gateway</span>::{
-    <span class="ident">payload</span>::{<span class="ident">identify::IdentifyProperties</span>, <span class="ident">update_presence::UpdatePresencePayload</span>},
+    <span class="ident">payload::outgoing</span>::{<span class="ident">identify::IdentifyProperties</span>, <span class="ident">update_presence::UpdatePresencePayload</span>},
     <span class="ident">Intents</span>,
 };
 
@@ -111,7 +111,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Config</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">gateway_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">http_client</span>: <span class="ident">Client</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">http_client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">identify_properties</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IdentifyProperties</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">intents</span>: <span class="ident">Intents</span>,
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">large_threshold</span>: <span class="ident">u64</span>,
@@ -125,35 +125,35 @@
 
 <span class="kw">impl</span> <span class="ident">Config</span> {
     <span class="doccomment">/// Copy of the event type flags.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">event_types</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">EventTypeFlags</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">event_types</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">EventTypeFlags</span> {
         <span class="self">self</span>.<span class="ident">event_types</span>
     }
 
     <span class="doccomment">/// Return an immutable reference to the url used to connect to the gateway.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gateway_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gateway_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">gateway_url</span>.<span class="ident">as_deref</span>()
     }
 
     <span class="doccomment">/// Return an immutable reference to the `twilight_http` client to be used</span>
     <span class="doccomment">/// by the shard.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">http_client</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Client</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http_client</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Client</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">http_client</span>
     }
 
     <span class="doccomment">/// Return an immutable reference to the identification properties the shard</span>
     <span class="doccomment">/// will use.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">identify_properties</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">IdentifyProperties</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">identify_properties</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">IdentifyProperties</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">identify_properties</span>.<span class="ident">as_ref</span>()
     }
 
     <span class="doccomment">/// Return a copy of the intents that the gateway is using.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">intents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Intents</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">intents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Intents</span> {
         <span class="self">self</span>.<span class="ident">intents</span>
     }
 
     <span class="doccomment">/// Return the maximum threshold at which point the gateway will stop</span>
     <span class="doccomment">/// sending a guild&#39;s member list in Guild Create events.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">large_threshold</span>
     }
 
@@ -162,18 +162,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will be the bot&#39;s presence. For example, setting the online status</span>
     <span class="doccomment">/// to Do Not Disturb will show the status in the bot&#39;s presence.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">presence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">UpdatePresencePayload</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">presence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">UpdatePresencePayload</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">presence</span>.<span class="ident">as_ref</span>()
     }
 
     <span class="doccomment">/// The shard&#39;s ID and the total number of shards used by the bot.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">u64</span>; <span class="number">2</span>] {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [<span class="ident">u64</span>; <span class="number">2</span>] {
         <span class="self">self</span>.<span class="ident">shard</span>
     }
 
     <span class="doccomment">/// Return an immutable reference to the token used to authenticate with</span>
     <span class="doccomment">/// when identifying with the gateway.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>
     }
 }

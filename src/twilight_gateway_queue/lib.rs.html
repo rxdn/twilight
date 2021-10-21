@@ -216,7 +216,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The returned future must resolve only when the shard can initiate the</span>
     <span class="doccomment">/// session.</span>
-    <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// A local, in-process implementation of a [`Queue`] which manages the</span>
@@ -248,14 +248,14 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LocalQueue</span>(<span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">LocalQueue</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">LocalQueue</span> {
     <span class="doccomment">/// Creates a new local queue.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">unbounded_channel</span>();
 
         <span class="ident">tokio::spawn</span>(<span class="ident">waiter</span>(<span class="ident">rx</span>));
@@ -278,7 +278,7 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
 

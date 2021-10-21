@@ -167,8 +167,8 @@
 <span class="doccomment">//! use twilight_model::id::{ChannelId, EmojiId, RoleId};</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">//! assert_eq!(EmojiId(123), EmojiId::parse(&quot;&lt;:name:123&gt;&quot;)?);</span>
-<span class="doccomment">//! assert_eq!(RoleId(456), RoleId::parse(&quot;&lt;@&amp;456&gt;&quot;)?);</span>
+<span class="doccomment">//! assert_eq!(EmojiId::new(123).expect(&quot;non zero&quot;), EmojiId::parse(&quot;&lt;:name:123&gt;&quot;)?);</span>
+<span class="doccomment">//! assert_eq!(RoleId::new(456).expect(&quot;non zero&quot;), RoleId::parse(&quot;&lt;@&amp;456&gt;&quot;)?);</span>
 <span class="doccomment">//! assert!(ChannelId::parse(&quot;&lt;#notamention&gt;&quot;).is_err());</span>
 <span class="doccomment">//! # Ok(()) }</span>
 <span class="doccomment">//! ```</span>
@@ -180,8 +180,8 @@
 <span class="doccomment">//! use twilight_model::id::UserId;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let mut iter = UserId::iter(&quot;these &lt;@123&gt; are &lt;#456&gt; mentions &lt;@789&gt;&quot;);</span>
-<span class="doccomment">//! assert!(matches!(iter.next(), Some((UserId(123), _, _))));</span>
-<span class="doccomment">//! assert!(matches!(iter.next(), Some((UserId(789), _, _))));</span>
+<span class="doccomment">//! assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 123));</span>
+<span class="doccomment">//! assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 789));</span>
 <span class="doccomment">//! assert!(iter.next().is_none());</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -236,9 +236,9 @@
 <span class="doccomment">/// use twilight_model::id::{ChannelId, RoleId, UserId};</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">/// assert_eq!(MentionType::Channel(ChannelId(123)), MentionType::parse(&quot;&lt;#123&gt;&quot;)?);</span>
-<span class="doccomment">/// assert_eq!(MentionType::Role(RoleId(123)), MentionType::parse(&quot;&lt;@&amp;123&gt;&quot;)?);</span>
-<span class="doccomment">/// assert_eq!(MentionType::User(UserId(123)), MentionType::parse(&quot;&lt;@!123&gt;&quot;)?);</span>
+<span class="doccomment">/// assert_eq!(MentionType::Channel(ChannelId::new(123).expect(&quot;non zero&quot;)), MentionType::parse(&quot;&lt;#123&gt;&quot;)?);</span>
+<span class="doccomment">/// assert_eq!(MentionType::Role(RoleId::new(123).expect(&quot;non zero&quot;)), MentionType::parse(&quot;&lt;@&amp;123&gt;&quot;)?);</span>
+<span class="doccomment">/// assert_eq!(MentionType::User(UserId::new(123).expect(&quot;non zero&quot;)), MentionType::parse(&quot;&lt;@!123&gt;&quot;)?);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let timestamp = Timestamp::new(123, None);</span>
 <span class="doccomment">/// assert_eq!(MentionType::Timestamp(timestamp), MentionType::parse(&quot;&lt;t:123&gt;&quot;)?);</span>
@@ -257,15 +257,15 @@
 <span class="doccomment">/// let buf = &quot;channel &lt;#12&gt; emoji &lt;:name:34&gt; role &lt;@&amp;56&gt; timestamp &lt;t:1624047978&gt; user &lt;@78&gt;&quot;;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let mut iter = MentionType::iter(buf);</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::Channel(ChannelId(12)), _, _))));</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::Emoji(EmojiId(34)), _, _))));</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::Role(RoleId(56)), _, _))));</span>
+<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::Channel(channel), _, _)) if channel.get() == 12));</span>
+<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::Emoji(emoji), _, _)) if emoji.get() == 34));</span>
+<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::Role(role), _, _)) if role.get() == 56));</span>
 <span class="doccomment">/// assert!(matches!(</span>
 <span class="doccomment">///     iter.next(),</span>
 <span class="doccomment">///     Some((MentionType::Timestamp(timestamp), _, _))</span>
 <span class="doccomment">///     if timestamp.unix() == 1_624_047_978 &amp;&amp; timestamp.style().is_none()</span>
 <span class="doccomment">/// ));</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::User(UserId(78)), _, _))));</span>
+<span class="doccomment">/// assert!(matches!(iter.next(), Some((MentionType::User(user), _, _)) if user.get() == 78));</span>
 <span class="doccomment">/// assert!(iter.next().is_none());</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
@@ -284,13 +284,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionType</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Channel</span>(<span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
-            <span class="ident"><span class="self">Self</span>::Emoji</span>(<span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
-            <span class="ident"><span class="self">Self</span>::Role</span>(<span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
-            <span class="ident"><span class="self">Self</span>::Timestamp</span>(<span class="ident">timestamp</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">timestamp</span>.<span class="ident">mention</span>(), <span class="ident">f</span>),
-            <span class="ident"><span class="self">Self</span>::User</span>(<span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
+            <span class="ident"><span class="self">Self</span>::Channel</span>(<span class="ident">id</span>) =&gt; <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
+            <span class="ident"><span class="self">Self</span>::Emoji</span>(<span class="ident">id</span>) =&gt; <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
+            <span class="ident"><span class="self">Self</span>::Role</span>(<span class="ident">id</span>) =&gt; <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
+            <span class="ident"><span class="self">Self</span>::Timestamp</span>(<span class="ident">timestamp</span>) =&gt; <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">timestamp</span>.<span class="ident">mention</span>(), <span class="ident">f</span>),
+            <span class="ident"><span class="self">Self</span>::User</span>(<span class="ident">id</span>) =&gt; <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>),
         }
     }
 }

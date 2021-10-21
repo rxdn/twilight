@@ -59,7 +59,7 @@
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let channel_id = ChannelId(100);</span>
+<span class="doccomment">/// let channel_id = ChannelId::new(100).expect(&quot;non zero&quot;);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let channel = client.channel(channel_id).exec().await?;</span>
 <span class="doccomment">/// # Ok(()) }</span>
@@ -71,16 +71,16 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">GetChannel</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> { <span class="ident">channel_id</span>, <span class="ident">http</span> }
     }
 
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::from_route</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetChannel</span> {
-            <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="number">0</span>,
+            <span class="ident">channel_id</span>: <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="ident">get</span>(),
         });
 
         <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>)

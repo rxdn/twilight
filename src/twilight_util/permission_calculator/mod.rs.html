@@ -675,6 +675,20 @@
 <span id="675">675</span>
 <span id="676">676</span>
 <span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Calculate the permissions of a member on a guild-level or a channel-level.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
@@ -718,8 +732,8 @@
 <span class="doccomment">//!     id::{GuildId, RoleId, UserId},</span>
 <span class="doccomment">//! };</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let guild_id = GuildId(1);</span>
-<span class="doccomment">//! let user_id = UserId(3);</span>
+<span class="doccomment">//! let guild_id = GuildId::new(1).expect(&quot;non zero&quot;);</span>
+<span class="doccomment">//! let user_id = UserId::new(3).expect(&quot;non zero&quot;);</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // Guild-level @everyone role that, by default, allows everyone to view</span>
 <span class="doccomment">//! // channels.</span>
@@ -730,7 +744,7 @@
 <span class="doccomment">//! let member_roles = &amp;[</span>
 <span class="doccomment">//!     // Guild-level permission that grants members with the role the Send</span>
 <span class="doccomment">//!     // Messages permission.</span>
-<span class="doccomment">//!     (RoleId(2), Permissions::SEND_MESSAGES),</span>
+<span class="doccomment">//!     (RoleId::new(2).expect(&quot;non zero&quot;), Permissions::SEND_MESSAGES),</span>
 <span class="doccomment">//! ];</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let channel_overwrites = &amp;[</span>
@@ -739,7 +753,7 @@
 <span class="doccomment">//!     PermissionOverwrite {</span>
 <span class="doccomment">//!         allow: Permissions::ADD_REACTIONS | Permissions::EMBED_LINKS,</span>
 <span class="doccomment">//!         deny: Permissions::empty(),</span>
-<span class="doccomment">//!         kind: PermissionOverwriteType::Role(RoleId(1)),</span>
+<span class="doccomment">//!         kind: PermissionOverwriteType::Role(RoleId::new(1).expect(&quot;non zero&quot;)),</span>
 <span class="doccomment">//!     },</span>
 <span class="doccomment">//!     // Member is denied the Send Messages permission.</span>
 <span class="doccomment">//!     PermissionOverwrite {</span>
@@ -810,10 +824,7 @@
     <span class="doccomment">/// Slice of tuples of the member&#39;s roles and their permissions.</span>
     <span class="ident">member_roles</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="ident">RoleId</span>, <span class="ident">Permissions</span>)],
     <span class="doccomment">/// ID of the owner.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// `const`: When this has a value of 0 then it logically maps to</span>
-    <span class="doccomment">/// `Option::None`, while any other value logically maps to `Option::Some`.</span>
-    <span class="ident">owner_id</span>: <span class="ident">UserId</span>,
+    <span class="ident">owner_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the user whose permissions are being calculated.</span>
     <span class="ident">user_id</span>: <span class="ident">UserId</span>,
 }
@@ -832,11 +843,11 @@
         <span class="ident">user_id</span>: <span class="ident">UserId</span>,
         <span class="ident">everyone_role</span>: <span class="ident">Permissions</span>,
         <span class="ident">member_roles</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="ident">RoleId</span>, <span class="ident">Permissions</span>)],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">everyone_role</span>,
             <span class="ident">guild_id</span>,
-            <span class="ident">owner_id</span>: <span class="ident">UserId</span>(<span class="number">0</span>),
+            <span class="ident">owner_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">member_roles</span>,
             <span class="ident">user_id</span>,
         }
@@ -853,18 +864,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`root`]: Self::root</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;calculators should be used to calculate permissions&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">owner_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">owner_id</span>: <span class="ident">UserId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">owner_id</span> <span class="op">=</span> <span class="ident">owner_id</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">owner_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">owner_id</span>: <span class="ident">UserId</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">owner_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">owner_id</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Calculate the guild-level permissions of a member.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;calculating permissions is only useful if they&#39;re used&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Permissions</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Permissions</span> {
         <span class="comment">// If the user is the owner, then we can just return all of the</span>
         <span class="comment">// permissions.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">owner_id</span>.<span class="number">0</span> <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">user_id</span>.<span class="number">0</span> {
+        <span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">owner_id</span>, <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="kw">if</span> <span class="ident">id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="self">self</span>.<span class="ident">user_id</span>.<span class="ident">get</span>()) {
             <span class="kw">return</span> <span class="ident">Permissions::all</span>();
         }
 
@@ -906,8 +917,8 @@
     <span class="doccomment">/// permissions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// **Note** that this method will not return guild-level permissions such</span>
-    <span class="doccomment">/// as [Manage Emojis]; if you need the guild-level permissions use</span>
-    <span class="doccomment">/// [`root`].</span>
+    <span class="doccomment">/// as [Manage Emojis and Stickers]; if you need the guild-level permissions</span>
+    <span class="doccomment">/// use [`root`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Conditional exclusions</span>
     <span class="doccomment">///</span>
@@ -996,7 +1007,7 @@
     <span class="doccomment">/// - [Ban Members]</span>
     <span class="doccomment">/// - [Change Nickname]</span>
     <span class="doccomment">/// - [Kick Members]</span>
-    <span class="doccomment">/// - [Manage Emojis]</span>
+    <span class="doccomment">/// - [Manage Emojis and Stickers]</span>
     <span class="doccomment">/// - [Manage Guild]</span>
     <span class="doccomment">/// - [Manage Nicknames]</span>
     <span class="doccomment">/// - [View Audit Log]</span>
@@ -1019,7 +1030,7 @@
     <span class="doccomment">/// [Deafen Members]: twilight_model::guild::Permissions::DEAFEN_MEMBERS</span>
     <span class="doccomment">/// [Embed Links]: twilight_model::guild::Permissions::EMBED_LINKS</span>
     <span class="doccomment">/// [Kick Members]: twilight_model::guild::Permissions::KICK_MEMBERS</span>
-    <span class="doccomment">/// [Manage Emojis]: twilight_model::guild::Permissions::MANAGE_EMOJIS</span>
+    <span class="doccomment">/// [Manage Emojis and Stickers]: twilight_model::guild::Permissions::MANAGE_EMOJIS_AND_STICKERS</span>
     <span class="doccomment">/// [Manage Guild]: twilight_model::guild::Permissions::MANAGE_GUILD</span>
     <span class="doccomment">/// [Manage Messages]: twilight_model::guild::Permissions::MANAGE_MESSAGES</span>
     <span class="doccomment">/// [Manage Nicknames]: twilight_model::guild::Permissions::MANAGE_NICKNAMES</span>
@@ -1044,7 +1055,7 @@
         <span class="self">self</span>,
         <span class="ident">channel_type</span>: <span class="ident">ChannelType</span>,
         <span class="ident">channel_overwrites</span>: <span class="kw-2">&amp;</span>[<span class="ident">PermissionOverwrite</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Permissions</span> {
+    ) -&gt; <span class="ident">Permissions</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">permissions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>();
 
         <span class="comment">// If the user contains the administrator privilege from the calculated</span>
@@ -1086,14 +1097,14 @@
     }
 }
 
-<span class="kw">const</span> <span class="kw">fn</span> <span class="ident">has_role</span>(<span class="ident">roles</span>: <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>, <span class="ident">Permissions</span>)], <span class="ident">role_id</span>: <span class="ident">RoleId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+<span class="kw">const</span> <span class="kw">fn</span> <span class="ident">has_role</span>(<span class="ident">roles</span>: <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>, <span class="ident">Permissions</span>)], <span class="ident">role_id</span>: <span class="ident">RoleId</span>) -&gt; <span class="ident">bool</span> {
     <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">roles</span>.<span class="ident">len</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
 
     <span class="kw">while</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">len</span> {
         <span class="kw">let</span> (<span class="ident">iter_role_id</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">roles</span>[<span class="ident">idx</span>];
 
-        <span class="kw">if</span> <span class="ident">iter_role_id</span>.<span class="number">0</span> <span class="op">=</span><span class="op">=</span> <span class="ident">role_id</span>.<span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">iter_role_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="ident">role_id</span>.<span class="ident">get</span>() {
             <span class="kw">return</span> <span class="bool-val">true</span>;
         }
 
@@ -1109,7 +1120,7 @@
     <span class="ident">member_roles</span>: <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>, <span class="ident">Permissions</span>)],
     <span class="ident">configured_guild_id</span>: <span class="ident">GuildId</span>,
     <span class="ident">configured_user_id</span>: <span class="ident">UserId</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Permissions</span> {
+) -&gt; <span class="ident">Permissions</span> {
     <span class="comment">// Hierarchy documentation:</span>
     <span class="comment">// &lt;https://discord.com/developers/docs/topics/permissions&gt;</span>
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member_allow</span> <span class="op">=</span> <span class="ident">Permissions::empty</span>();
@@ -1124,11 +1135,11 @@
         <span class="kw">let</span> <span class="ident">overwrite</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">channel_overwrites</span>[<span class="ident">idx</span>];
 
         <span class="kw">match</span> <span class="ident">overwrite</span>.<span class="ident">kind</span> {
-            <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">role</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">role</span>) =&gt; {
                 <span class="comment">// We need to process the @everyone role first, so apply it</span>
                 <span class="comment">// straight to the permissions. The other roles&#39; permissions</span>
                 <span class="comment">// will be applied later.</span>
-                <span class="kw">if</span> <span class="ident">role</span>.<span class="number">0</span> <span class="op">=</span><span class="op">=</span> <span class="ident">configured_guild_id</span>.<span class="number">0</span> {
+                <span class="kw">if</span> <span class="ident">role</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="ident">configured_guild_id</span>.<span class="ident">get</span>() {
                     <span class="ident">permissions</span> <span class="op">=</span> <span class="ident">bitops::remove</span>(<span class="ident">permissions</span>, <span class="ident">overwrite</span>.<span class="ident">deny</span>);
                     <span class="ident">permissions</span> <span class="op">=</span> <span class="ident">bitops::insert</span>(<span class="ident">permissions</span>, <span class="ident">overwrite</span>.<span class="ident">allow</span>);
 
@@ -1146,11 +1157,13 @@
                 <span class="ident">roles_allow</span> <span class="op">=</span> <span class="ident">bitops::insert</span>(<span class="ident">roles_allow</span>, <span class="ident">overwrite</span>.<span class="ident">allow</span>);
                 <span class="ident">roles_deny</span> <span class="op">=</span> <span class="ident">bitops::insert</span>(<span class="ident">roles_deny</span>, <span class="ident">overwrite</span>.<span class="ident">deny</span>);
             }
-            <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">user_id</span>) <span class="kw">if</span> <span class="ident">user_id</span>.<span class="number">0</span> <span class="op">=</span><span class="op">=</span> <span class="ident">configured_user_id</span>.<span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">user_id</span>)
+                <span class="kw">if</span> <span class="ident">user_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="ident">configured_user_id</span>.<span class="ident">get</span>() =&gt;
+            {
                 <span class="ident">member_allow</span> <span class="op">=</span> <span class="ident">bitops::insert</span>(<span class="ident">member_allow</span>, <span class="ident">overwrite</span>.<span class="ident">allow</span>);
                 <span class="ident">member_deny</span> <span class="op">=</span> <span class="ident">bitops::insert</span>(<span class="ident">member_deny</span>, <span class="ident">overwrite</span>.<span class="ident">deny</span>);
             }
-            <span class="ident">PermissionOverwriteType::Member</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
+            <span class="ident">PermissionOverwriteType::Member</span>(<span class="kw">_</span>) =&gt; {}
         }
 
         <span class="ident">idx</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
@@ -1208,8 +1221,8 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_owner_is_admin</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
         <span class="kw">let</span> <span class="ident">everyone_role</span> <span class="op">=</span> <span class="ident">Permissions::SEND_MESSAGES</span>;
         <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[];
 
@@ -1223,10 +1236,10 @@
     <span class="comment">// implicitly denies all other permissions.</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_view_channel_deny_implicit</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
         <span class="kw">let</span> <span class="ident">everyone_role</span> <span class="op">=</span> <span class="ident">Permissions::MENTION_EVERYONE</span> <span class="op">|</span> <span class="ident">Permissions::SEND_MESSAGES</span>;
-        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>(<span class="number">3</span>), <span class="ident">Permissions::empty</span>())];
+        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">Permissions::empty</span>())];
 
         {
             <span class="comment">// First, test when it&#39;s denied for an overwrite on a role the user</span>
@@ -1234,7 +1247,7 @@
             <span class="kw">let</span> <span class="ident">overwrites</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="ident">PermissionOverwrite</span> {
                 <span class="ident">allow</span>: <span class="ident">Permissions::SEND_TTS_MESSAGES</span>,
                 <span class="ident">deny</span>: <span class="ident">Permissions::VIEW_CHANNEL</span>,
-                <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId</span>(<span class="number">3</span>)),
+                <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             }];
 
             <span class="kw">let</span> <span class="ident">calculated</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">roles</span>)
@@ -1248,7 +1261,7 @@
             <span class="kw">let</span> <span class="ident">overwrites</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="ident">PermissionOverwrite</span> {
                 <span class="ident">allow</span>: <span class="ident">Permissions::SEND_TTS_MESSAGES</span>,
                 <span class="ident">deny</span>: <span class="ident">Permissions::VIEW_CHANNEL</span>,
-                <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">UserId</span>(<span class="number">2</span>)),
+                <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             }];
 
             <span class="kw">let</span> <span class="ident">calculated</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">roles</span>)
@@ -1260,10 +1273,13 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_remove_text_and_stage_perms_when_voice</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
         <span class="kw">let</span> <span class="ident">everyone_role</span> <span class="op">=</span> <span class="ident">Permissions::CONNECT</span>;
-        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>(<span class="number">3</span>), <span class="ident">Permissions::SEND_MESSAGES</span>)];
+        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(
+            <span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">Permissions::SEND_MESSAGES</span>,
+        )];
 
         <span class="kw">let</span> <span class="ident">calculated</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">roles</span>)
             .<span class="ident">in_channel</span>(<span class="ident">ChannelType::GuildVoice</span>, <span class="kw-2">&amp;</span>[]);
@@ -1273,10 +1289,13 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_remove_audio_perms_when_text</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
         <span class="kw">let</span> <span class="ident">everyone_role</span> <span class="op">=</span> <span class="ident">Permissions::CONNECT</span>;
-        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>(<span class="number">3</span>), <span class="ident">Permissions::SEND_MESSAGES</span>)];
+        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(
+            <span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">Permissions::SEND_MESSAGES</span>,
+        )];
 
         <span class="kw">let</span> <span class="ident">calculated</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">roles</span>)
             .<span class="ident">in_channel</span>(<span class="ident">ChannelType::GuildText</span>, <span class="kw-2">&amp;</span>[]);
@@ -1290,17 +1309,17 @@
     <span class="comment">// send related permissions.</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_deny_send_messages_removes_related</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
         <span class="kw">let</span> <span class="ident">everyone_role</span> <span class="op">=</span>
             <span class="ident">Permissions::MANAGE_MESSAGES</span> <span class="op">|</span> <span class="ident">Permissions::EMBED_LINKS</span> <span class="op">|</span> <span class="ident">Permissions::MENTION_EVERYONE</span>;
-        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>(<span class="number">3</span>), <span class="ident">Permissions::empty</span>())];
+        <span class="kw">let</span> <span class="ident">roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">Permissions::empty</span>())];
 
         <span class="comment">// First, test when it&#39;s denied for an overwrite on a role the user has.</span>
         <span class="kw">let</span> <span class="ident">overwrites</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="ident">PermissionOverwrite</span> {
             <span class="ident">allow</span>: <span class="ident">Permissions::ATTACH_FILES</span>,
             <span class="ident">deny</span>: <span class="ident">Permissions::SEND_MESSAGES</span>,
-            <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId</span>(<span class="number">3</span>)),
+            <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
         }];
 
         <span class="kw">let</span> <span class="ident">calculated</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">roles</span>)
@@ -1313,11 +1332,15 @@
     <span class="doccomment">/// has all denying overwrites ignored.</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_admin</span>() {
+        <span class="kw">let</span> <span class="ident">member_roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(
+            <span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">Permissions::ADMINISTRATOR</span>,
+        )];
         <span class="kw">let</span> <span class="ident">calc</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(
-            <span class="ident">GuildId</span>(<span class="number">1</span>),
-            <span class="ident">UserId</span>(<span class="number">2</span>),
+            <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">Permissions::empty</span>(),
-            <span class="kw-2">&amp;</span>[(<span class="ident">RoleId</span>(<span class="number">3</span>), <span class="ident">Permissions::ADMINISTRATOR</span>)],
+            <span class="ident">member_roles</span>,
         );
         <span class="macro">assert!</span>(<span class="ident">calc</span>.<span class="ident">root</span>().<span class="ident">is_all</span>());
 
@@ -1345,7 +1368,12 @@
         <span class="ident">everyone</span>.<span class="ident">remove</span>(<span class="ident">Permissions::ADMINISTRATOR</span>);
 
         <span class="kw">for</span> <span class="ident">kind</span> <span class="kw">in</span> <span class="ident">CHANNEL_TYPES</span> {
-            <span class="kw">let</span> <span class="ident">calc</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">GuildId</span>(<span class="number">1</span>), <span class="ident">UserId</span>(<span class="number">2</span>), <span class="ident">everyone</span>, <span class="kw-2">&amp;</span>[]);
+            <span class="kw">let</span> <span class="ident">calc</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(
+                <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">everyone</span>,
+                <span class="kw-2">&amp;</span>[],
+            );
             <span class="kw">let</span> <span class="ident">calculated</span> <span class="op">=</span> <span class="ident">calc</span>.<span class="ident">in_channel</span>(<span class="kw-2">*</span><span class="ident">kind</span>, <span class="kw-2">&amp;</span>[]);
 
             <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">calculated</span>.<span class="ident">intersects</span>(<span class="ident">PERMISSIONS_ROOT_ONLY</span>));

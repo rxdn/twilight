@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["RatelimitHeaders",""]],"mod":[["error",""]],"struct":[["Ratelimiter",""]]});
+initSidebarItems({"mod":[["headers","Parse typed headers from a response."]],"struct":[["Ratelimiter",""]]});

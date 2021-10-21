@@ -280,7 +280,7 @@
 };
 <span class="kw">use</span> <span class="ident">tokio::sync::mpsc::UnboundedSender</span>;
 <span class="kw">use</span> <span class="ident">tokio_tungstenite::tungstenite::Message</span> <span class="kw">as</span> <span class="ident">TungsteniteMessage</span>;
-<span class="kw">use</span> <span class="ident">twilight_model::gateway::payload::Heartbeat</span>;
+<span class="kw">use</span> <span class="ident">twilight_model::gateway::payload::outgoing::Heartbeat</span>;
 
 <span class="doccomment">/// Information about the latency of a [`Shard`]&#39;s websocket connection.</span>
 <span class="doccomment">///</span>
@@ -309,29 +309,29 @@
     <span class="doccomment">/// # Note</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If this is None, the shard has not received a heartbeat yet.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">average</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">average</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">average</span>
     }
 
     <span class="doccomment">/// The total number of heartbeats that have been sent during this session.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">heartbeats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">heartbeats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">heartbeats</span>
     }
 
     <span class="doccomment">/// The 5 most recent latency times.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Index 0 is the oldest, 4 is the most recent.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">recent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">recent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">recent</span>
     }
 
     <span class="doccomment">/// When the last heartbeat acknowledgement was received.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">received</span>
     }
 
     <span class="doccomment">/// When the last heartbeat was sent.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">sent</span>
     }
 }
@@ -346,7 +346,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Heartbeats</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">latency</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Latency</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">latency</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Latency</span> {
         <span class="kw">let</span> <span class="ident">iterations</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">total_iterations</span>();
         <span class="kw">let</span> <span class="ident">recent</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">recent</span>
@@ -366,7 +366,7 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_acked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_acked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">received</span>().<span class="ident">is_some</span>()
     }
 
@@ -389,7 +389,7 @@
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">recent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">recent</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;recent poisoned&quot;</span>);
 
-            <span class="kw">if</span> <span class="ident">recent</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">5</span> {
+            <span class="kw">if</span> <span class="ident">recent</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">5</span> {
                 <span class="ident">recent</span>.<span class="ident">pop_front</span>();
             }
 
@@ -405,7 +405,7 @@
             .<span class="ident">replace</span>(<span class="ident">Instant::now</span>());
     }
 
-    <span class="kw">fn</span> <span class="ident">received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
         <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">received</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;received poisoned&quot;</span>)
     }
 
@@ -416,21 +416,21 @@
             .<span class="ident">replace</span>(<span class="ident">received</span>);
     }
 
-    <span class="kw">fn</span> <span class="ident">sent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">sent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span> {
         <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">sent</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;sent poisoned&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">total_iterations</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">total_iterations</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
         <span class="self">self</span>.<span class="ident">total_iterations</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">total_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Duration</span> {
+    <span class="kw">fn</span> <span class="ident">total_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span> {
         <span class="ident">Duration::from_millis</span>(<span class="self">self</span>.<span class="ident">total_time</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Heartbeats</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">received</span>: <span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>),
             <span class="ident">recent</span>: <span class="ident">Mutex::new</span>(<span class="ident">VecDeque::with_capacity</span>(<span class="number">5</span>)),
@@ -454,7 +454,7 @@
         <span class="ident">interval</span>: <span class="ident">u64</span>,
         <span class="ident">seq</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicU64</span><span class="op">&gt;</span>,
         <span class="ident">tx</span>: <span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">TungsteniteMessage</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">heartbeats</span>,
             <span class="ident">interval</span>,
@@ -474,7 +474,7 @@
     <span class="comment">// got disconnected due to the session ending. This task should have</span>
     <span class="comment">// *also* become aborted. Log if that&#39;s the case, because that&#39;s a</span>
     <span class="comment">// programmatic error.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">try_run</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SessionSendError</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">try_run</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">SessionSendError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">duration</span> <span class="op">=</span> <span class="ident">Duration::from_millis</span>(<span class="self">self</span>.<span class="ident">interval</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last</span> <span class="op">=</span> <span class="bool-val">true</span>;

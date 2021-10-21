@@ -105,8 +105,9 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
+<span id="108">108</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DayLimiter</span>, <span class="ident">Queue</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">future::Future</span>, <span class="ident">pin::Pin</span>, <span class="ident">time::Duration</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">future::Future</span>, <span class="ident">pin::Pin</span>, <span class="ident">sync::Arc</span>, <span class="ident">time::Duration</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::{
     <span class="ident">sync</span>::{
         <span class="ident">mpsc</span>::{<span class="ident">unbounded_channel</span>, <span class="ident">UnboundedReceiver</span>, <span class="ident">UnboundedSender</span>},
@@ -114,6 +115,7 @@
     },
     <span class="ident">time::sleep</span>,
 };
+<span class="kw">use</span> <span class="ident">twilight_http::Client</span>;
 
 <span class="doccomment">/// Queue built for single-process clusters that require identifying via</span>
 <span class="doccomment">/// [Sharding for Very Large Bots].</span>
@@ -135,7 +137,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// You must provide the number of buckets Discord requires your bot to</span>
     <span class="doccomment">/// connect with.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buckets</span>: <span class="ident">usize</span>, <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="ident">twilight_http::Client</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buckets</span>: <span class="ident">usize</span>, <span class="ident">http</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queues</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">buckets</span>);
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">buckets</span> {
             <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">unbounded_channel</span>();
@@ -185,7 +187,7 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
         <span class="kw">let</span> <span class="ident">bucket</span> <span class="op">=</span> (<span class="ident">shard_id</span>[<span class="number">0</span>] <span class="op">%</span> (<span class="self">self</span>.<span class="ident">buckets</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)) <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();

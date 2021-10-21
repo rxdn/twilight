@@ -131,37 +131,37 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// assert_eq!(60, AutoArchiveDuration::Hour.number());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">number</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">number</span>(<span class="self">self</span>) -&gt; <span class="ident">u16</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Hour</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">60</span>,
-            <span class="ident"><span class="self">Self</span>::Day</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1440</span>,
-            <span class="ident"><span class="self">Self</span>::ThreeDays</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">4320</span>,
-            <span class="ident"><span class="self">Self</span>::Week</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">10080</span>,
-            <span class="ident"><span class="self">Self</span>::Unknown</span> { <span class="ident">value</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>,
+            <span class="ident"><span class="self">Self</span>::Hour</span> =&gt; <span class="number">60</span>,
+            <span class="ident"><span class="self">Self</span>::Day</span> =&gt; <span class="number">1440</span>,
+            <span class="ident"><span class="self">Self</span>::ThreeDays</span> =&gt; <span class="number">4320</span>,
+            <span class="ident"><span class="self">Self</span>::Week</span> =&gt; <span class="number">10080</span>,
+            <span class="ident"><span class="self">Self</span>::Unknown</span> { <span class="ident">value</span> } =&gt; <span class="ident">value</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AutoArchiveDuration</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u16</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">value</span> {
-            <span class="number">60</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Hour</span>,
-            <span class="number">1440</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Day</span>,
-            <span class="number">4320</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::ThreeDays</span>,
-            <span class="number">10080</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Week</span>,
-            <span class="ident">value</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Unknown</span> { <span class="ident">value</span> },
+            <span class="number">60</span> =&gt; <span class="ident"><span class="self">Self</span>::Hour</span>,
+            <span class="number">1440</span> =&gt; <span class="ident"><span class="self">Self</span>::Day</span>,
+            <span class="number">4320</span> =&gt; <span class="ident"><span class="self">Self</span>::ThreeDays</span>,
+            <span class="number">10080</span> =&gt; <span class="ident"><span class="self">Self</span>::Week</span>,
+            <span class="ident">value</span> =&gt; <span class="ident"><span class="self">Self</span>::Unknown</span> { <span class="ident">value</span> },
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">AutoArchiveDuration</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Duration</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">AutoArchiveDuration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">AutoArchiveDuration</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::from_secs</span>(<span class="ident">u64::from</span>(<span class="ident">value</span>.<span class="ident">number</span>()) <span class="op">*</span> <span class="number">60</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AutoArchiveDuration</span> {
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
         <span class="ident">deserializer</span>
             .<span class="ident">deserialize_u16</span>(<span class="ident">U16EnumVisitor::new</span>(<span class="string">&quot;auto archive duration&quot;</span>))
             .<span class="ident">map</span>(<span class="ident">u16::into</span>)
@@ -169,7 +169,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">AutoArchiveDuration</span> {
-    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
         <span class="ident">serializer</span>.<span class="ident">serialize_u16</span>(<span class="self">self</span>.<span class="ident">number</span>())
     }
 }

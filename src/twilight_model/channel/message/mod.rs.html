@@ -569,6 +569,21 @@
 <span id="569">569</span>
 <span id="570">570</span>
 <span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">allowed_mentions</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">sticker</span>;
 
@@ -593,6 +608,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">application::component::Component</span>,
     <span class="ident">channel</span>::{<span class="ident">embed::Embed</span>, <span class="ident">Attachment</span>, <span class="ident">Channel</span>, <span class="ident">ChannelMention</span>},
+    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild::PartialMember</span>,
     <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">WebhookId</span>},
     <span class="ident">user::User</span>,
@@ -617,7 +633,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">content</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">edited_timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">edited_timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">embeds</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Embed</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">flags</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageFlags</span><span class="op">&gt;</span>,
@@ -649,7 +665,8 @@
     <span class="doccomment">/// Stickers within the message.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">sticker_items</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MessageSticker</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">timestamp</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Timestamp of when the message was created.</span>
+    <span class="kw">pub</span> <span class="ident">timestamp</span>: <span class="ident">Timestamp</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">thread</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Channel</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">tts</span>: <span class="ident">bool</span>,
@@ -666,15 +683,20 @@
     };
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">channel</span>::{<span class="ident">ChannelType</span>, <span class="ident">ReactionType</span>},
+        <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">guild::PartialMember</span>,
         <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">MessageId</span>, <span class="ident">UserId</span>},
         <span class="ident">user::User</span>,
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
+    <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_message_deserialization</span>() {
+    <span class="kw">fn</span> <span class="ident">test_message_deserialization</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_micros</span>(<span class="number">1_580_608_922_020_000</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Message</span> {
             <span class="ident">activity</span>: <span class="prelude-val">None</span>,
             <span class="ident">application</span>: <span class="prelude-val">None</span>,
@@ -685,10 +707,10 @@
                 <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                 <span class="ident">bot</span>: <span class="bool-val">false</span>,
-                <span class="ident">discriminator</span>: <span class="string">&quot;0001&quot;</span>.<span class="ident">to_owned</span>(),
+                <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">None</span>,
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">id</span>: <span class="ident">UserId</span>(<span class="number">3</span>),
+                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -697,19 +719,19 @@
                 <span class="ident">system</span>: <span class="prelude-val">None</span>,
                 <span class="ident">verified</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>(<span class="number">2</span>),
+            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">components</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">content</span>: <span class="string">&quot;ping&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">edited_timestamp</span>: <span class="prelude-val">None</span>,
             <span class="ident">embeds</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageFlags::empty</span>()),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId</span>(<span class="number">1</span>)),
-            <span class="ident">id</span>: <span class="ident">MessageId</span>(<span class="number">4</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">id</span>: <span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">interaction</span>: <span class="prelude-val">None</span>,
             <span class="ident">kind</span>: <span class="ident">MessageType::Regular</span>,
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>.<span class="ident">to_owned</span>()),
+                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="ident">joined_at</span>),
                 <span class="ident">mute</span>: <span class="bool-val">false</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
@@ -726,11 +748,11 @@
             <span class="ident">reference</span>: <span class="prelude-val">None</span>,
             <span class="ident">sticker_items</span>: <span class="macro">vec!</span>[<span class="ident">MessageSticker</span> {
                 <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
-                <span class="ident">id</span>: <span class="ident">StickerId</span>(<span class="number">1</span>),
+                <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">name</span>: <span class="string">&quot;sticker name&quot;</span>.<span class="ident">to_owned</span>(),
             }],
             <span class="ident">referenced_message</span>: <span class="prelude-val">None</span>,
-            <span class="ident">timestamp</span>: <span class="string">&quot;2020-02-02T02:02:02.020000+00:00&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">timestamp</span>,
             <span class="ident">thread</span>: <span class="prelude-val">None</span>,
             <span class="ident">tts</span>: <span class="bool-val">false</span>,
             <span class="ident">webhook_id</span>: <span class="prelude-val">None</span>,
@@ -846,11 +868,17 @@
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
+
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_message_deserialization_complete</span>() {
+    <span class="kw">fn</span> <span class="ident">test_message_deserialization_complete</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">edited_timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-08-10T12:41:51.602000+00:00&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_micros</span>(<span class="number">1_580_608_922_020_000</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Message</span> {
             <span class="ident">activity</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageActivity</span> {
                 <span class="ident">kind</span>: <span class="ident">MessageActivityType::Join</span>,
@@ -860,20 +888,20 @@
                 <span class="ident">cover_image</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;cover&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">description</span>: <span class="string">&quot;a description&quot;</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">icon</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;an icon&quot;</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">id</span>: <span class="ident">ApplicationId</span>(<span class="number">1</span>),
+                <span class="ident">id</span>: <span class="ident">ApplicationId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">name</span>: <span class="string">&quot;application&quot;</span>.<span class="ident">to_owned</span>(),
             }),
-            <span class="ident">application_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ApplicationId</span>(<span class="number">1</span>)),
+            <span class="ident">application_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ApplicationId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">attachments</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">author</span>: <span class="ident">User</span> {
                 <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
                 <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                 <span class="ident">bot</span>: <span class="bool-val">false</span>,
-                <span class="ident">discriminator</span>: <span class="string">&quot;0001&quot;</span>.<span class="ident">to_owned</span>(),
+                <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">None</span>,
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">id</span>: <span class="ident">UserId</span>(<span class="number">3</span>),
+                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -882,19 +910,19 @@
                 <span class="ident">system</span>: <span class="prelude-val">None</span>,
                 <span class="ident">verified</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>(<span class="number">2</span>),
+            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">components</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">content</span>: <span class="string">&quot;ping&quot;</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">edited_timestamp</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;123&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">edited_timestamp</span>: <span class="prelude-val">Some</span>(<span class="ident">edited_timestamp</span>),
             <span class="ident">embeds</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageFlags::empty</span>()),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId</span>(<span class="number">1</span>)),
-            <span class="ident">id</span>: <span class="ident">MessageId</span>(<span class="number">4</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">id</span>: <span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">interaction</span>: <span class="prelude-val">None</span>,
             <span class="ident">kind</span>: <span class="ident">MessageType::Regular</span>,
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>.<span class="ident">to_owned</span>()),
+                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="ident">joined_at</span>),
                 <span class="ident">mute</span>: <span class="bool-val">false</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
@@ -903,8 +931,8 @@
                 <span class="ident">user</span>: <span class="prelude-val">None</span>,
             }),
             <span class="ident">mention_channels</span>: <span class="macro">vec!</span>[<span class="ident">ChannelMention</span> {
-                <span class="ident">guild_id</span>: <span class="ident">GuildId</span>(<span class="number">1</span>),
-                <span class="ident">id</span>: <span class="ident">ChannelId</span>(<span class="number">2</span>),
+                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
                 <span class="ident">name</span>: <span class="string">&quot;channel&quot;</span>.<span class="ident">to_owned</span>(),
             }],
@@ -920,21 +948,21 @@
                 <span class="ident">me</span>: <span class="bool-val">true</span>,
             }],
             <span class="ident">reference</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageReference</span> {
-                <span class="ident">channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">1</span>)),
+                <span class="ident">channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
                 <span class="ident">guild_id</span>: <span class="prelude-val">None</span>,
                 <span class="ident">message_id</span>: <span class="prelude-val">None</span>,
                 <span class="ident">fail_if_not_exists</span>: <span class="prelude-val">None</span>,
             }),
             <span class="ident">sticker_items</span>: <span class="macro">vec!</span>[<span class="ident">MessageSticker</span> {
                 <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
-                <span class="ident">id</span>: <span class="ident">StickerId</span>(<span class="number">1</span>),
+                <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">name</span>: <span class="string">&quot;sticker name&quot;</span>.<span class="ident">to_owned</span>(),
             }],
             <span class="ident">referenced_message</span>: <span class="prelude-val">None</span>,
-            <span class="ident">timestamp</span>: <span class="string">&quot;2020-02-02T02:02:02.020000+00:00&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">timestamp</span>,
             <span class="ident">thread</span>: <span class="prelude-val">None</span>,
             <span class="ident">tts</span>: <span class="bool-val">false</span>,
-            <span class="ident">webhook_id</span>: <span class="prelude-val">Some</span>(<span class="ident">WebhookId</span>(<span class="number">1</span>)),
+            <span class="ident">webhook_id</span>: <span class="prelude-val">Some</span>(<span class="ident">WebhookId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
         };
 
         <span class="ident">serde_test::assert_tokens</span>(
@@ -1013,7 +1041,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;ping&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;edited_timestamp&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;123&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-10T12:41:51.602000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;embeds&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>) },
                 <span class="ident">Token::SeqEnd</span>,
@@ -1138,6 +1166,8 @@
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
+
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

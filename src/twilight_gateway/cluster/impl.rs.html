@@ -627,19 +627,48 @@
 <span id="627">627</span>
 <span id="628">628</span>
 <span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">builder::ClusterBuilder</span>, <span class="ident">config::Config</span>, <span class="ident">event::Events</span>, <span class="ident">scheme::ShardScheme</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">cluster::event::ShardEventsWithId</span>,
-    <span class="ident">shard</span>::{<span class="ident">raw_message::Message</span>, <span class="ident">Information</span>, <span class="ident">ResumeSession</span>, <span class="ident">Shard</span>},
+    <span class="ident">shard</span>::{
+        <span class="ident">raw_message::Message</span>, <span class="ident">Command</span>, <span class="ident">Config</span> <span class="kw">as</span> <span class="ident">ShardConfig</span>, <span class="ident">Information</span>, <span class="ident">ResumeSession</span>, <span class="ident">Shard</span>,
+    },
     <span class="ident">Intents</span>,
 };
 <span class="kw">use</span> <span class="ident">futures_util</span>::{<span class="ident">future</span>, <span class="ident">stream::SelectAll</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections::HashMap</span>,
+    <span class="ident">collections</span>::{<span class="ident">hash_map::Values</span>, <span class="ident">HashMap</span>},
     <span class="ident">error::Error</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">iter::FromIterator</span>,
-    <span class="ident">sync::Arc</span>,
+    <span class="ident">iter</span>::{<span class="ident">FromIterator</span>, <span class="ident">FusedIterator</span>},
 };
 <span class="kw">use</span> <span class="ident">twilight_http::Client</span> <span class="kw">as</span> <span class="ident">HttpClient</span>;
 
@@ -653,13 +682,13 @@
 <span class="kw">impl</span> <span class="ident">ClusterCommandError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ClusterCommandErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ClusterCommandErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
@@ -667,36 +696,21 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (
+    ) -&gt; (
         <span class="ident">ClusterCommandErrorType</span>,
         <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
-
-    <span class="kw">fn</span> <span class="ident">from_send</span>(<span class="ident">error</span>: <span class="ident">ClusterSendError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">error</span>.<span class="ident">into_parts</span>();
-
-        <span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="ident">ClusterSendErrorType::Sending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span> {
-                <span class="ident">source</span>,
-                <span class="ident">kind</span>: <span class="ident">ClusterCommandErrorType::Sending</span>,
-            },
-            <span class="ident">ClusterSendErrorType::ShardNonexistent</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span> {
-                <span class="ident">source</span>,
-                <span class="ident">kind</span>: <span class="ident">ClusterCommandErrorType::ShardNonexistent</span> { <span class="ident">id</span> },
-            },
-        }
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ClusterCommandError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ClusterCommandErrorType::Sending</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ClusterCommandErrorType::Sending</span> =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;sending the message over the websocket failed&quot;</span>)
             }
-            <span class="ident">ClusterCommandErrorType::ShardNonexistent</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ClusterCommandErrorType::ShardNonexistent</span> { <span class="ident">id</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;shard &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -707,7 +721,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ClusterCommandError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
@@ -737,29 +751,29 @@
 <span class="kw">impl</span> <span class="ident">ClusterSendError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ClusterSendErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ClusterSendErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unused_self</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">ClusterSendErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">ClusterSendErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ClusterSendError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ClusterSendErrorType::Sending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;failed to send message over websocket&quot;</span>),
-            <span class="ident">ClusterSendErrorType::ShardNonexistent</span> { <span class="ident">id</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ClusterSendErrorType::Sending</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;failed to send message over websocket&quot;</span>),
+            <span class="ident">ClusterSendErrorType::ShardNonexistent</span> { <span class="ident">id</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;shard &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -770,7 +784,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ClusterSendError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
@@ -800,27 +814,27 @@
 <span class="kw">impl</span> <span class="ident">ClusterStartError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ClusterStartErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ClusterStartErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">ClusterStartErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">ClusterStartErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ClusterStartError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ClusterStartErrorType::RetrievingGatewayInfo</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ClusterStartErrorType::RetrievingGatewayInfo</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;getting the bot&#39;s gateway info failed&quot;</span>)
             }
         }
@@ -828,7 +842,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ClusterStartError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
@@ -849,27 +863,24 @@
     <span class="ident">RetrievingGatewayInfo</span>,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">ClusterRef</span> {
-    <span class="ident">config</span>: <span class="ident">Config</span>,
-    <span class="ident">shards</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Shard</span><span class="op">&gt;</span>,
-}
-
 <span class="doccomment">/// A manager for multiple shards.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The Cluster can be cloned and will point to the same cluster, so you can</span>
 <span class="doccomment">/// pass it around as needed.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// # Cloning</span>
+<span class="doccomment">/// # Using a cluster in multiple tasks</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// The cluster internally wraps its data within an Arc. This means that the</span>
-<span class="doccomment">/// cluster can be cloned and passed around tasks and threads cheaply.</span>
+<span class="doccomment">/// To use a cluster instance in multiple tasks, consider wrapping it in an</span>
+<span class="doccomment">/// [`std::sync::Arc`] or [`std::rc::Rc`].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Refer to the module-level documentation for examples.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Cluster</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">ClusterRef</span><span class="op">&gt;</span>);
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Cluster</span> {
+    <span class="ident">config</span>: <span class="ident">Config</span>,
+    <span class="ident">shards</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Shard</span><span class="op">&gt;</span>,
+}
 
 <span class="kw">impl</span> <span class="ident">Cluster</span> {
     <span class="doccomment">/// Create a new unconfigured cluster.</span>
@@ -918,13 +929,14 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">intents</span>: <span class="ident">Intents</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Events</span>), <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Events</span>), <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
         <span class="ident"><span class="self">Self</span>::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="ident">build</span>().<span class="kw">await</span>
     }
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_with_config</span>(
         <span class="kw-2">mut</span> <span class="ident">config</span>: <span class="ident">Config</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Events</span>), <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
+        <span class="ident">shard_config</span>: <span class="ident">ShardConfig</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Events</span>), <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
         <span class="kw">struct</span> <span class="ident">ShardFold</span> {
             <span class="ident">shards</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Shard</span><span class="op">&gt;</span>,
@@ -932,8 +944,8 @@
         }
 
         <span class="kw">let</span> <span class="ident">scheme</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">config</span>.<span class="ident">shard_scheme</span>() {
-            <span class="ident">ShardScheme::Auto</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::retrieve_shard_count</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>.<span class="ident">http_client</span>).<span class="kw">await</span><span class="question-mark">?</span>,
-            <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">other</span>.<span class="ident">clone</span>(),
+            <span class="ident">ShardScheme::Auto</span> =&gt; <span class="ident"><span class="self">Self</span>::retrieve_shard_count</span>(<span class="kw-2">&amp;</span><span class="ident">shard_config</span>.<span class="ident">http_client</span>).<span class="kw">await</span><span class="question-mark">?</span>,
+            <span class="ident">other</span> =&gt; <span class="ident">other</span>.<span class="ident">clone</span>(),
         };
 
         <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">scheme</span>.<span class="ident">iter</span>().<span class="ident">expect</span>(<span class="string">&quot;shard scheme is not auto&quot;</span>);
@@ -946,7 +958,7 @@
         }
 
         <span class="kw">let</span> <span class="ident">ShardFold</span> { <span class="ident">shards</span>, <span class="ident">streams</span> } <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">fold</span>(<span class="ident">ShardFold::default</span>(), <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">fold</span>, <span class="ident">idx</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shard_config</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">shard_config</span>().<span class="ident">clone</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shard_config</span> <span class="op">=</span> <span class="ident">shard_config</span>.<span class="ident">clone</span>();
             <span class="ident">shard_config</span>.<span class="ident">shard</span> <span class="op">=</span> [<span class="ident">idx</span>, <span class="ident">total</span>];
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">config</span>.<span class="ident">resume_sessions</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">idx</span>) {
@@ -965,16 +977,13 @@
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::from_iter_instead_of_collect</span>)]</span>
         <span class="kw">let</span> <span class="ident">select_all</span> <span class="op">=</span> <span class="ident">SelectAll::from_iter</span>(<span class="ident">streams</span>);
 
-        <span class="prelude-val">Ok</span>((
-            <span class="self">Self</span>(<span class="ident">Arc::new</span>(<span class="ident">ClusterRef</span> { <span class="ident">config</span>, <span class="ident">shards</span> })),
-            <span class="ident">Events::new</span>(<span class="ident">select_all</span>),
-        ))
+        <span class="prelude-val">Ok</span>((<span class="self">Self</span> { <span class="ident">config</span>, <span class="ident">shards</span> }, <span class="ident">Events::new</span>(<span class="ident">select_all</span>)))
     }
 
     <span class="doccomment">/// Retrieve the recommended number of shards from the HTTP API.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The returned shard scheme is a [`ShardScheme::Range`].</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">retrieve_shard_count</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="ident">HttpClient</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ShardScheme</span>, <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">retrieve_shard_count</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="ident">HttpClient</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ShardScheme</span>, <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">gateway</span> <span class="op">=</span> <span class="ident">http</span>
             .<span class="ident">gateway</span>()
             .<span class="ident">authed</span>()
@@ -1034,13 +1043,13 @@
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ClusterBuilder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="ident">ClusterBuilder</span> {
         <span class="ident">ClusterBuilder::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>)
     }
 
     <span class="doccomment">/// Return an immutable reference to the configuration of this cluster.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">config</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Config</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">config</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">config</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Config</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">config</span>
     }
 
     <span class="doccomment">/// Bring up the cluster, starting all of the shards that it was configured</span>
@@ -1071,12 +1080,12 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">up</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="ident">future::join_all</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">shards</span>.<span class="ident">values</span>().<span class="ident">map</span>(<span class="ident">Shard::start</span>)).<span class="kw">await</span>;
+        <span class="ident">future::join_all</span>(<span class="self">self</span>.<span class="ident">shards</span>.<span class="ident">values</span>().<span class="ident">map</span>(<span class="ident">Shard::start</span>)).<span class="kw">await</span>;
     }
 
     <span class="doccomment">/// Bring down the cluster, stopping all of the shards that it&#39;s managing.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">down</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">for</span> <span class="ident">shard</span> <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shards</span>.<span class="ident">values</span>() {
+        <span class="kw">for</span> <span class="ident">shard</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">shards</span>.<span class="ident">values</span>() {
             <span class="ident">shard</span>.<span class="ident">shutdown</span>();
         }
     }
@@ -1090,9 +1099,8 @@
     <span class="doccomment">/// **Note**: Discord only allows resuming for a few minutes after</span>
     <span class="doccomment">/// disconnection. You may also not be able to resume if you missed too many</span>
     <span class="doccomment">/// events already.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">down_resumable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">ResumeSession</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">shards</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">down_resumable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">ResumeSession</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">shards</span>
             .<span class="ident">values</span>()
             .<span class="ident">map</span>(<span class="ident">Shard::shutdown_resumable</span>)
             .<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="ident">session</span>)<span class="op">|</span> <span class="ident">session</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> (<span class="ident">id</span>, <span class="ident">s</span>)))
@@ -1100,13 +1108,15 @@
     }
 
     <span class="doccomment">/// Return a Shard by its ID.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Shard</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shards</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>).<span class="ident">cloned</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Shard</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">shards</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>)
     }
 
-    <span class="doccomment">/// Return a list of all the shards.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shards</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Shard</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shards</span>.<span class="ident">values</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>()
+    <span class="doccomment">/// Return an iterator of all the shards.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shards</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Shards</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+        <span class="ident">Shards</span> {
+            <span class="ident">iter</span>: <span class="self">self</span>.<span class="ident">shards</span>.<span class="ident">values</span>(),
+        }
     }
 
     <span class="doccomment">/// Return information about all shards.</span>
@@ -1136,15 +1146,58 @@
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Information</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>
-            .<span class="ident">shards</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Information</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">shards</span>
             .<span class="ident">iter</span>()
             .<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="ident">shard</span>)<span class="op">|</span> <span class="ident">shard</span>.<span class="ident">info</span>().<span class="ident">ok</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">info</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">id</span>, <span class="ident">info</span>)))
             .<span class="ident">collect</span>()
     }
 
     <span class="doccomment">/// Send a command to the specified shard.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Update the current user&#39;s presence on shard ID 2:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```no_run</span>
+    <span class="doccomment">/// # #[tokio::main]</span>
+    <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
+    <span class="doccomment">/// use std::env;</span>
+    <span class="doccomment">/// use twilight_gateway::{cluster::Cluster, Intents};</span>
+    <span class="doccomment">/// use twilight_model::{</span>
+    <span class="doccomment">///     gateway::{</span>
+    <span class="doccomment">///         payload::outgoing::UpdatePresence,</span>
+    <span class="doccomment">///         presence::{Activity, ActivityType, MinimalActivity, Status},</span>
+    <span class="doccomment">///     },</span>
+    <span class="doccomment">///     id::GuildId,</span>
+    <span class="doccomment">/// };</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let intents = Intents::GUILD_VOICE_STATES;</span>
+    <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let (cluster, _events) = Cluster::new(token, intents).await?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // Wait for shards to come up before sending a message to one of them.</span>
+    <span class="doccomment">/// cluster.up().await;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // Update the user&#39;s presence to a custom activity with a name of</span>
+    <span class="doccomment">/// // &quot;testing&quot;.</span>
+    <span class="doccomment">/// let activity = Activity::from(MinimalActivity {</span>
+    <span class="doccomment">///     kind: ActivityType::Custom,</span>
+    <span class="doccomment">///     name: &quot;testing&quot;.to_owned(),</span>
+    <span class="doccomment">///     url: None,</span>
+    <span class="doccomment">/// });</span>
+    <span class="doccomment">/// let request = UpdatePresence::new(</span>
+    <span class="doccomment">///     Vec::from([activity]),</span>
+    <span class="doccomment">///     false,</span>
+    <span class="doccomment">///     None,</span>
+    <span class="doccomment">///     Status::Online,</span>
+    <span class="doccomment">/// )?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // Send the request over the shard.</span>
+    <span class="doccomment">/// cluster.command(2, &amp;request).await?;</span>
+    <span class="doccomment">/// # Ok(()) }</span>
+    <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
@@ -1153,11 +1206,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns a [`ClusterCommandErrorType::ShardNonexistent`] error type if</span>
     <span class="doccomment">/// the provided shard ID does not exist in the cluster.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">command</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">id</span>: <span class="ident">u64</span>,
-        <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">serde::Serialize</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ClusterCommandError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">command</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Command</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ClusterCommandError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>(<span class="ident">id</span>).<span class="ident">ok_or</span>(<span class="ident">ClusterCommandError</span> {
             <span class="ident">kind</span>: <span class="ident">ClusterCommandErrorType::ShardNonexistent</span> { <span class="ident">id</span> },
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
@@ -1170,22 +1219,6 @@
                 <span class="ident">kind</span>: <span class="ident">ClusterCommandErrorType::Sending</span>,
                 <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
             })
-    }
-
-    <span class="doccomment">/// Send a raw command to the specified shard.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`ClusterCommandErrorType::Sending`] error type if the shard</span>
-    <span class="doccomment">/// exists, but sending it failed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`ClusterCommandErrorType::ShardNonexistent`] error type if</span>
-    <span class="doccomment">/// the provided shard ID does not exist in the cluster.</span>
-    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Use `send` which is more versatile&quot;</span>, <span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.3.0&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">command_raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ClusterCommandError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">send</span>(<span class="ident">id</span>, <span class="ident">Message::Binary</span>(<span class="ident">value</span>))
-            .<span class="kw">await</span>
-            .<span class="ident">map_err</span>(<span class="ident">ClusterCommandError::from_send</span>)
     }
 
     <span class="doccomment">/// Send a raw websocket message.</span>
@@ -1221,7 +1254,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns a [`ClusterCommandErrorType::ShardNonexistent`] error type if</span>
     <span class="doccomment">/// the provided shard ID does not exist in the cluster.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">message</span>: <span class="ident">Message</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ClusterSendError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">message</span>: <span class="ident">Message</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ClusterSendError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>(<span class="ident">id</span>).<span class="ident">ok_or</span>(<span class="ident">ClusterSendError</span> {
             <span class="ident">kind</span>: <span class="ident">ClusterSendErrorType::ShardNonexistent</span> { <span class="ident">id</span> },
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
@@ -1234,6 +1267,29 @@
                 <span class="ident">kind</span>: <span class="ident">ClusterSendErrorType::Sending</span>,
                 <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
             })
+    }
+}
+
+<span class="doccomment">/// Iterator over a [`Cluster`]&#39;s managed [shards][`Shard`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is returned by [`Cluster::shards`].</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Shards</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">iter</span>: <span class="ident">Values</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">u64</span>, <span class="ident">Shard</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">Shards</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">len</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">FusedIterator</span> <span class="kw">for</span> <span class="ident">Shards</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Shards</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Shard</span>;
+
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>()
     }
 }
 
@@ -1254,7 +1310,7 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">ClusterSendError</span>: <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">ClusterStartErrorType</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">ClusterStartError</span>: <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Cluster</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">Cluster</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

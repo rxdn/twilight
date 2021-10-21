@@ -70,7 +70,7 @@
 <span class="doccomment">/// use twilight_model::id::ApplicationId;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-<span class="doccomment">/// client.set_application_id(ApplicationId(1));</span>
+<span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let message = client</span>
 <span class="doccomment">///     .get_interaction_original(&quot;token here&quot;)?</span>
@@ -90,7 +90,7 @@
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
         <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
         <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">application_id</span>,
             <span class="ident">http</span>,
@@ -101,9 +101,9 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::from_route</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetInteractionOriginal</span> {
-            <span class="ident">application_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>.<span class="number">0</span>,
+            <span class="ident">application_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>.<span class="ident">get</span>(),
             <span class="ident">interaction_token</span>: <span class="self">self</span>.<span class="ident">token</span>,
         });
 

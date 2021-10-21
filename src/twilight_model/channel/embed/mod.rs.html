@@ -295,6 +295,17 @@
 <span id="295">295</span>
 <span id="296">296</span>
 <span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">author</span>;
 <span class="kw">mod</span> <span class="ident">field</span>;
 <span class="kw">mod</span> <span class="ident">footer</span>;
@@ -308,6 +319,7 @@
     <span class="ident">provider::EmbedProvider</span>, <span class="ident">thumbnail::EmbedThumbnail</span>, <span class="ident">video::EmbedVideo</span>,
 };
 
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::datetime::Timestamp</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -331,7 +343,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">thumbnail</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EmbedThumbnail</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">title</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -346,10 +358,14 @@
         <span class="ident">Embed</span>, <span class="ident">EmbedAuthor</span>, <span class="ident">EmbedField</span>, <span class="ident">EmbedFooter</span>, <span class="ident">EmbedImage</span>, <span class="ident">EmbedProvider</span>, <span class="ident">EmbedThumbnail</span>,
         <span class="ident">EmbedVideo</span>,
     };
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
+    <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_embed</span>() {
+    <span class="kw">fn</span> <span class="ident">test_embed</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-08-02T16:56:43.772000+00:00&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Embed</span> {
             <span class="ident">author</span>: <span class="prelude-val">None</span>,
             <span class="ident">color</span>: <span class="prelude-val">Some</span>(<span class="number">123</span>),
@@ -360,7 +376,7 @@
             <span class="ident">kind</span>: <span class="string">&quot;rich&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">provider</span>: <span class="prelude-val">None</span>,
             <span class="ident">thumbnail</span>: <span class="prelude-val">None</span>,
-            <span class="ident">timestamp</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a timestamp&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">timestamp</span>: <span class="prelude-val">Some</span>(<span class="ident">timestamp</span>),
             <span class="ident">title</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a title&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">video</span>: <span class="prelude-val">None</span>,
@@ -383,7 +399,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;rich&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;timestamp&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;a timestamp&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-02T16:56:43.772000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;title&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;a title&quot;</span>),
@@ -393,11 +409,15 @@
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
+
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_embed_complete</span>() {
+    <span class="kw">fn</span> <span class="ident">test_embed_complete</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-08-02T16:56:43.772000+00:00&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Embed</span> {
             <span class="ident">author</span>: <span class="prelude-val">Some</span>(<span class="ident">EmbedAuthor</span> {
                 <span class="ident">icon_url</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;https://example.com/1.png&quot;</span>.<span class="ident">to_owned</span>()),
@@ -434,7 +454,7 @@
                 <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;https://example.com/1.png&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">width</span>: <span class="prelude-val">Some</span>(<span class="number">2560</span>),
             }),
-            <span class="ident">timestamp</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a timestamp&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">timestamp</span>: <span class="prelude-val">Some</span>(<span class="ident">timestamp</span>),
             <span class="ident">title</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a title&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">video</span>: <span class="prelude-val">Some</span>(<span class="ident">EmbedVideo</span> {
@@ -561,7 +581,7 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;timestamp&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;a timestamp&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-02T16:56:43.772000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;title&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;a title&quot;</span>),
@@ -590,6 +610,8 @@
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
+
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

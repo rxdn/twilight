@@ -198,15 +198,15 @@
 }
 
 <span class="kw">impl</span> <span class="ident">EmitJsonError</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">EmitJsonErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">EmitJsonErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">EmitJsonError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">EmitJsonErrorType::EventTypeUnknown</span> { <span class="ident">event_type</span>, <span class="ident">op</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">EmitJsonErrorType::EventTypeUnknown</span> { <span class="ident">event_type</span>, <span class="ident">op</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided event type (&quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Debug::fmt</span>(<span class="ident">event_type</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;)/op (&quot;</span>)<span class="question-mark">?</span>;
@@ -214,13 +214,13 @@
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;) pair is unknown&quot;</span>)
             }
-            <span class="ident">EmitJsonErrorType::Parsing</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;parsing a gateway event failed&quot;</span>),
+            <span class="ident">EmitJsonErrorType::Parsing</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;parsing a gateway event failed&quot;</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">EmitJsonError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
@@ -253,7 +253,7 @@
 
 <span class="kw">impl</span> <span class="ident">Emitter</span> {
     <span class="doccomment">/// Create a new emitter for events and bytes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="self">Self</span>, <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) -&gt; (<span class="self">Self</span>, <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>) {
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc::unbounded_channel</span>();
 
         (<span class="self">Self</span> { <span class="ident">event_types</span>, <span class="ident">tx</span> }, <span class="ident">rx</span>)
@@ -261,7 +261,7 @@
 
     <span class="doccomment">/// Whether the configured event types include an individual event type.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">wants</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event_type</span>: <span class="ident">EventTypeFlags</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">wants</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event_type</span>: <span class="ident">EventTypeFlags</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">event_types</span>.<span class="ident">contains</span>(<span class="ident">event_type</span>)
     }
 
@@ -309,7 +309,7 @@
         <span class="ident">seq</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">event_type</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
         <span class="ident">json</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EmitJsonError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">EmitJsonError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">flag</span> <span class="op">=</span> <span class="ident">EventTypeFlags::try_from</span>((<span class="ident">op</span>, <span class="ident">event_type</span>)).<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">op</span>, <span class="ident">event_type</span>)<span class="op">|</span> {
             <span class="ident">EmitJsonError</span> {
                 <span class="ident">kind</span>: <span class="ident">EmitJsonErrorType::EventTypeUnknown</span> {

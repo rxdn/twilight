@@ -217,11 +217,20 @@
 <span id="217">217</span>
 <span id="218">218</span>
 <span id="219">219</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">PremiumType</span>, <span class="ident">UserFlags</span>};
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DiscriminatorDisplay</span>, <span class="ident">PremiumType</span>, <span class="ident">UserFlags</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::UserId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CurrentUser</span> {
     <span class="doccomment">/// Accent color of the user&#39;s banner.</span>
     <span class="doccomment">///</span>
@@ -247,7 +256,7 @@
     <span class="doccomment">/// integer. The field will always serialize into a string due to that being</span>
     <span class="doccomment">/// the type Discord&#39;s API uses.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;super::discriminator&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">discriminator</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">discriminator</span>: <span class="ident">u16</span>,
     <span class="doccomment">/// User&#39;s email address associated to the account.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Requires the `email` oauth scope. See [Discord&#39;s documentation] for</span>
@@ -285,12 +294,21 @@
     <span class="kw">pub</span> <span class="ident">verified</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
 }
 
+<span class="kw">impl</span> <span class="ident">CurrentUser</span> {
+    <span class="doccomment">/// Create a [`Display`] formatter for a user discriminator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Display`]: core::fmt::Display</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">discriminator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiscriminatorDisplay</span> {
+        <span class="ident">DiscriminatorDisplay::new</span>(<span class="self">self</span>.<span class="ident">discriminator</span>)
+    }
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CurrentUser</span>, <span class="ident">PremiumType</span>, <span class="ident">UserFlags</span>, <span class="ident">UserId</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
 
-    <span class="kw">fn</span> <span class="ident">user_tokens</span>(<span class="ident">discriminator_token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">user_tokens</span>(<span class="ident">discriminator_token</span>: <span class="ident">Token</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
         <span class="macro">vec!</span>[
             <span class="ident">Token::Struct</span> {
                 <span class="ident">name</span>: <span class="string">&quot;CurrentUser&quot;</span>,
@@ -331,7 +349,7 @@
         ]
     }
 
-    <span class="kw">fn</span> <span class="ident">user_tokens_complete</span>(<span class="ident">discriminator_token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">user_tokens_complete</span>(<span class="ident">discriminator_token</span>: <span class="ident">Token</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
         <span class="macro">vec!</span>[
             <span class="ident">Token::Struct</span> {
                 <span class="ident">name</span>: <span class="string">&quot;CurrentUser&quot;</span>,
@@ -385,9 +403,9 @@
             <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;avatar hash&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">banner</span>: <span class="prelude-val">None</span>,
             <span class="ident">bot</span>: <span class="bool-val">true</span>,
-            <span class="ident">discriminator</span>: <span class="string">&quot;9999&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">discriminator</span>: <span class="number">9999</span>,
             <span class="ident">email</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">UserId</span>(<span class="number">1</span>),
+            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">mfa_enabled</span>: <span class="bool-val">true</span>,
             <span class="ident">name</span>: <span class="string">&quot;test name&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">verified</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -414,9 +432,9 @@
             <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;avatar hash&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">banner</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;06c16474723fe537c283b8efa61a30c8&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">bot</span>: <span class="bool-val">true</span>,
-            <span class="ident">discriminator</span>: <span class="string">&quot;9999&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">discriminator</span>: <span class="number">9999</span>,
             <span class="ident">email</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;test@example.com&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">id</span>: <span class="ident">UserId</span>(<span class="number">1</span>),
+            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">mfa_enabled</span>: <span class="bool-val">true</span>,
             <span class="ident">name</span>: <span class="string">&quot;test name&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">verified</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),

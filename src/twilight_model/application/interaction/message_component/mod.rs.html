@@ -204,6 +204,13 @@
 <span id="204">204</span>
 <span id="205">205</span>
 <span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">data</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::data::MessageComponentInteractionData</span>;
@@ -264,7 +271,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`member`]: Self::member</span>
     <span class="doccomment">/// [`user`]: Self::user</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">author_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">author_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">member</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">member</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">member</span>.<span class="ident">user</span> {
                 <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>.<span class="ident">id</span>);
@@ -285,13 +292,14 @@
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">application</span>::{<span class="ident">component::ComponentType</span>, <span class="ident">interaction::InteractionType</span>},
         <span class="ident">channel::message</span>::{<span class="ident">Message</span>, <span class="ident">MessageType</span>},
+        <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">guild::PartialMember</span>,
         <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">InteractionId</span>, <span class="ident">MessageId</span>, <span class="ident">UserId</span>},
         <span class="ident">user::User</span>,
     };
     <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">str::FromStr</span>};
 
     <span class="macro">assert_fields!</span>(
         <span class="ident">MessageComponentInteraction</span>: <span class="ident">application_id</span>,
@@ -316,13 +324,13 @@
         <span class="ident">Sync</span>
     );
 
-    <span class="kw">fn</span> <span class="ident">user</span>(<span class="ident">id</span>: <span class="ident">UserId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">User</span> {
+    <span class="kw">fn</span> <span class="ident">user</span>(<span class="ident">id</span>: <span class="ident">UserId</span>) -&gt; <span class="ident">User</span> {
         <span class="ident">User</span> {
             <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">banner</span>: <span class="prelude-val">None</span>,
             <span class="ident">bot</span>: <span class="bool-val">false</span>,
-            <span class="ident">discriminator</span>: <span class="string">&quot;4444&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">discriminator</span>: <span class="number">4444</span>,
             <span class="ident">email</span>: <span class="prelude-val">None</span>,
             <span class="ident">flags</span>: <span class="prelude-val">None</span>,
             <span class="ident">id</span>,
@@ -337,19 +345,23 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_author_id</span>() {
-        <span class="kw">const</span> <span class="ident">USER_ID</span>: <span class="ident">UserId</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="number">7</span>);
+    <span class="kw">fn</span> <span class="ident">test_author_id</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">user_id</span>() -&gt; <span class="ident">UserId</span> {
+            <span class="ident">UserId::new</span>(<span class="number">7</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+        }
+
+        <span class="kw">let</span> <span class="ident">timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-02-02T02:02:02.020000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">in_guild</span> <span class="op">=</span> <span class="ident">MessageComponentInteraction</span> {
-            <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>(<span class="number">1</span>),
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>(<span class="number">2</span>),
+            <span class="ident">application_id</span>: <span class="ident">ApplicationId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">data</span>: <span class="ident">MessageComponentInteractionData</span> {
                 <span class="ident">custom_id</span>: <span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">component_type</span>: <span class="ident">ComponentType::Button</span>,
                 <span class="ident">values</span>: <span class="ident">Vec::from</span>([<span class="string">&quot;bar&quot;</span>.<span class="ident">to_owned</span>()]),
             },
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId</span>(<span class="number">3</span>)),
-            <span class="ident">id</span>: <span class="ident">InteractionId</span>(<span class="number">4</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">id</span>: <span class="ident">InteractionId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">kind</span>: <span class="ident">InteractionType::MessageComponent</span>,
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
@@ -359,22 +371,22 @@
                 <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
                 <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
                 <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
-                <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">USER_ID</span>)),
+                <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">user_id</span>())),
             }),
             <span class="ident">message</span>: <span class="ident">Message</span> {
                 <span class="ident">activity</span>: <span class="prelude-val">None</span>,
                 <span class="ident">application</span>: <span class="prelude-val">None</span>,
                 <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
                 <span class="ident">attachments</span>: <span class="ident">Vec::new</span>(),
-                <span class="ident">author</span>: <span class="ident">user</span>(<span class="ident">USER_ID</span>),
-                <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>(<span class="number">5</span>),
+                <span class="ident">author</span>: <span class="ident">user</span>(<span class="ident">user_id</span>()),
+                <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">5</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">components</span>: <span class="ident">Vec::new</span>(),
                 <span class="ident">content</span>: <span class="ident">String::new</span>(),
                 <span class="ident">edited_timestamp</span>: <span class="prelude-val">None</span>,
                 <span class="ident">embeds</span>: <span class="ident">Vec::new</span>(),
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId</span>(<span class="number">3</span>)),
-                <span class="ident">id</span>: <span class="ident">MessageId</span>(<span class="number">6</span>),
+                <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                <span class="ident">id</span>: <span class="ident">MessageId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                 <span class="ident">interaction</span>: <span class="prelude-val">None</span>,
                 <span class="ident">kind</span>: <span class="ident">MessageType::Regular</span>,
                 <span class="ident">member</span>: <span class="prelude-val">None</span>,
@@ -387,7 +399,7 @@
                 <span class="ident">reference</span>: <span class="prelude-val">None</span>,
                 <span class="ident">referenced_message</span>: <span class="prelude-val">None</span>,
                 <span class="ident">sticker_items</span>: <span class="ident">Vec::new</span>(),
-                <span class="ident">timestamp</span>: <span class="ident">String::new</span>(),
+                <span class="ident">timestamp</span>,
                 <span class="ident">thread</span>: <span class="prelude-val">None</span>,
                 <span class="ident">tts</span>: <span class="bool-val">false</span>,
                 <span class="ident">webhook_id</span>: <span class="prelude-val">None</span>,
@@ -396,7 +408,7 @@
             <span class="ident">user</span>: <span class="prelude-val">None</span>,
         };
 
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">USER_ID</span>), <span class="ident">in_guild</span>.<span class="ident">author_id</span>());
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">user_id</span>()), <span class="ident">in_guild</span>.<span class="ident">author_id</span>());
 
         <span class="kw">let</span> <span class="ident">in_dm</span> <span class="op">=</span> <span class="ident">MessageComponentInteraction</span> {
             <span class="ident">member</span>: <span class="prelude-val">None</span>,
@@ -404,10 +416,12 @@
                 <span class="ident">guild_id</span>: <span class="prelude-val">None</span>,
                 ..<span class="ident">in_guild</span>.<span class="ident">message</span>
             },
-            <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">USER_ID</span>)),
+            <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">user_id</span>())),
             ..<span class="ident">in_guild</span>
         };
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">USER_ID</span>), <span class="ident">in_dm</span>.<span class="ident">author_id</span>());
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">user_id</span>()), <span class="ident">in_dm</span>.<span class="ident">author_id</span>());
+
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

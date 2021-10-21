@@ -313,13 +313,13 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
@@ -327,14 +327,14 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (
+    ) -&gt; (
         <span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">trailing_arrow</span>(<span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">trailing_arrow</span>(<span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">kind</span>: <span class="ident">ParseMentionErrorType::TrailingArrow</span> { <span class="ident">found</span> },
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
@@ -343,15 +343,15 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ParseMentionErrorType::IdNotU64</span> { <span class="ident">found</span>, .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParseMentionErrorType::IdNotU64</span> { <span class="ident">found</span>, .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;id portion (&#39;&quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">found</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&#39;) of mention is not a u64&quot;</span>)
             }
-            <span class="ident">ParseMentionErrorType::LeadingArrow</span> { <span class="ident">found</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParseMentionErrorType::LeadingArrow</span> { <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;expected to find a leading arrow (&#39;&lt;&#39;) but instead found &quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">found</span> {
@@ -363,14 +363,14 @@
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;nothing&quot;</span>)
                 }
             }
-            <span class="ident">ParseMentionErrorType::PartMissing</span> { <span class="ident">expected</span>, <span class="ident">found</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParseMentionErrorType::PartMissing</span> { <span class="ident">expected</span>, <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;expected &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">expected</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; parts but only found &quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">Display::fmt</span>(<span class="ident">found</span>, <span class="ident">f</span>)
             }
-            <span class="ident">ParseMentionErrorType::Sigil</span> { <span class="ident">expected</span>, <span class="ident">found</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParseMentionErrorType::Sigil</span> { <span class="ident">expected</span>, <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;expected to find a mention sigil (&quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">sigil</span>) <span class="kw">in</span> <span class="ident">expected</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
@@ -394,13 +394,13 @@
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;nothing&quot;</span>)
                 }
             }
-            <span class="ident">ParseMentionErrorType::TimestampStyleInvalid</span> { <span class="ident">found</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParseMentionErrorType::TimestampStyleInvalid</span> { <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;timestamp style value &#39;&quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">found</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&#39; is invalid&quot;</span>)
             }
-            <span class="ident">ParseMentionErrorType::TrailingArrow</span> { <span class="ident">found</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ParseMentionErrorType::TrailingArrow</span> { <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;expected to find a trailing arrow (&#39;&gt;&#39;) but instead found &quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">found</span> {
@@ -417,7 +417,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))

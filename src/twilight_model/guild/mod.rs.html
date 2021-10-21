@@ -1054,6 +1054,16 @@
 <span id="1054">1054</span>
 <span id="1055">1055</span>
 <span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">audit_log</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">member</span>;
 
@@ -1098,6 +1108,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::gateway::presence::PresenceListDeserializer</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel</span>::{<span class="ident">message::sticker::Sticker</span>, <span class="ident">GuildChannel</span>, <span class="ident">StageInstance</span>},
+    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">gateway::presence::Presence</span>,
     <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
     <span class="ident">voice::voice_state::VoiceState</span>,
@@ -1129,7 +1140,7 @@
     <span class="kw">pub</span> <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">GuildId</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">large</span>: <span class="ident">bool</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">max_members</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
@@ -1181,7 +1192,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Guild</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
         <span class="kw">enum</span> <span class="ident">Field</span> {
@@ -1238,12 +1249,12 @@
         <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GuildVisitor</span> {
             <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Guild</span>;
 
-            <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+            <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;struct Guild&quot;</span>)
             }
 
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-            <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
+            <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">afk_channel_id</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">afk_timeout</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">application_id</span> <span class="op">=</span> <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>;
@@ -1299,13 +1310,13 @@
                     <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
                     <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
-                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
                             <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
                             <span class="ident">key</span>
                         }
-                        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
-                        <span class="prelude-val">Err</span>(<span class="ident">why</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
+                        <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                             <span class="comment">// Encountered when we run into an unknown key.</span>
                             <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
@@ -1316,56 +1327,56 @@
                     };
 
                     <span class="kw">match</span> <span class="ident">key</span> {
-                        <span class="ident">Field::AfkChannelId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::AfkChannelId</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">afk_channel_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;afk_channel_id&quot;</span>));
                             }
 
                             <span class="ident">afk_channel_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::AfkTimeout</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::AfkTimeout</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">afk_timeout</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;afk_timeout&quot;</span>));
                             }
 
                             <span class="ident">afk_timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::ApplicationId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::ApplicationId</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">application_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;application_id&quot;</span>));
                             }
 
                             <span class="ident">application_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::ApproximateMemberCount</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::ApproximateMemberCount</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">approximate_member_count</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;approximate_member_count&quot;</span>));
                             }
 
                             <span class="ident">approximate_member_count</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::ApproximatePresenceCount</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::ApproximatePresenceCount</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">approximate_presence_count</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;approximate_presence_count&quot;</span>));
                             }
 
                             <span class="ident">approximate_presence_count</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Banner</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Banner</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">banner</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;banner&quot;</span>));
                             }
 
                             <span class="ident">banner</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Channels</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Channels</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">channels</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;channels&quot;</span>));
                             }
 
                             <span class="ident">channels</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::DefaultMessageNotifications</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::DefaultMessageNotifications</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">default_message_notifications</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(
                                     <span class="string">&quot;default_message_notifications&quot;</span>,
@@ -1374,270 +1385,272 @@
 
                             <span class="ident">default_message_notifications</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Description</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Description</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">description</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;description&quot;</span>));
                             }
 
                             <span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::DiscoverySplash</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::DiscoverySplash</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">discovery_splash</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;discovery_splash&quot;</span>));
                             }
 
                             <span class="ident">discovery_splash</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Emojis</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Emojis</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">emojis</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;emojis&quot;</span>));
                             }
 
                             <span class="ident">emojis</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::ExplicitContentFilter</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::ExplicitContentFilter</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">explicit_content_filter</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;explicit_content_filter&quot;</span>));
                             }
 
                             <span class="ident">explicit_content_filter</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Features</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Features</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">features</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;features&quot;</span>));
                             }
 
                             <span class="ident">features</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Icon</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Icon</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">icon</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;icon&quot;</span>));
                             }
 
                             <span class="ident">icon</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Id</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Id</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;id&quot;</span>));
                             }
 
                             <span class="ident">id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::JoinedAt</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::JoinedAt</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">joined_at</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;joined_at&quot;</span>));
                             }
 
                             <span class="ident">joined_at</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Large</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Large</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">large</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;large&quot;</span>));
                             }
 
                             <span class="ident">large</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::MaxMembers</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::MaxMembers</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">max_members</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;max_members&quot;</span>));
                             }
 
                             <span class="ident">max_members</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::MaxPresences</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::MaxPresences</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">max_presences</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;max_presences&quot;</span>));
                             }
 
                             <span class="ident">max_presences</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::MaxVideoChannelUsers</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::MaxVideoChannelUsers</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">max_video_channel_users</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;max_video_channel_users&quot;</span>));
                             }
 
                             <span class="ident">max_video_channel_users</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::MemberCount</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::MemberCount</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">member_count</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;member_count&quot;</span>));
                             }
 
                             <span class="ident">member_count</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Members</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Members</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">members</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;members&quot;</span>));
                             }
 
-                            <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">MemberListDeserializer::new</span>(<span class="ident">GuildId</span>(<span class="number">0</span>));
+                            <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span>
+                                <span class="ident">MemberListDeserializer::new</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
 
                             <span class="ident">members</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::MfaLevel</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::MfaLevel</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">mfa_level</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;mfa_level&quot;</span>));
                             }
 
                             <span class="ident">mfa_level</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Name</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Name</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;name&quot;</span>));
                             }
 
                             <span class="ident">name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::NsfwLevel</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::NsfwLevel</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">nsfw_level</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;nsfw_level&quot;</span>));
                             }
 
                             <span class="ident">nsfw_level</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Owner</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Owner</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">owner</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;owner&quot;</span>));
                             }
 
                             <span class="ident">owner</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::OwnerId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::OwnerId</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">owner_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;owner_id&quot;</span>));
                             }
 
                             <span class="ident">owner_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Permissions</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Permissions</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">permissions</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;permissions&quot;</span>));
                             }
 
                             <span class="ident">permissions</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::PreferredLocale</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::PreferredLocale</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">preferred_locale</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;preferred_locale&quot;</span>));
                             }
 
                             <span class="ident">preferred_locale</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::PremiumSubscriptionCount</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::PremiumSubscriptionCount</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">premium_subscription_count</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;premium_subscription_count&quot;</span>));
                             }
 
                             <span class="ident">premium_subscription_count</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::PremiumTier</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::PremiumTier</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">premium_tier</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;premium_tier&quot;</span>));
                             }
 
                             <span class="ident">premium_tier</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Presences</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Presences</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">presences</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;presences&quot;</span>));
                             }
 
-                            <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">GuildId</span>(<span class="number">0</span>));
+                            <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span>
+                                <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
 
                             <span class="ident">presences</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Roles</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Roles</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">roles</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;roles&quot;</span>));
                             }
 
                             <span class="ident">roles</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Splash</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Splash</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">splash</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;splash&quot;</span>));
                             }
 
                             <span class="ident">splash</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::StageInstances</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::StageInstances</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">stage_instances</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;stage_instances&quot;</span>));
                             }
 
                             <span class="ident">stage_instances</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Stickers</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Stickers</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">stickers</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;stickers&quot;</span>));
                             }
 
                             <span class="ident">stickers</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::SystemChannelId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::SystemChannelId</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">system_channel_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;system_channel_id&quot;</span>));
                             }
 
                             <span class="ident">system_channel_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::SystemChannelFlags</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::SystemChannelFlags</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">system_channel_flags</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;system_channel_flags&quot;</span>));
                             }
 
                             <span class="ident">system_channel_flags</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::RulesChannelId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::RulesChannelId</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">rules_channel_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;rules_channel_id&quot;</span>));
                             }
 
                             <span class="ident">rules_channel_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Threads</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Threads</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">threads</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;threads&quot;</span>));
                             }
 
                             <span class="ident">threads</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Unavailable</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::Unavailable</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">unavailable</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;unavailable&quot;</span>));
                             }
 
                             <span class="ident">unavailable</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::VerificationLevel</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::VerificationLevel</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">verification_level</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;verification_level&quot;</span>));
                             }
 
                             <span class="ident">verification_level</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::VoiceStates</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::VoiceStates</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">voice_states</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;voice_states&quot;</span>));
                             }
 
                             <span class="ident">voice_states</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::VanityUrlCode</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::VanityUrlCode</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">vanity_url_code</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;vanity_url_code&quot;</span>));
                             }
 
                             <span class="ident">vanity_url_code</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::WidgetChannelId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::WidgetChannelId</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">widget_channel_id</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;widget_channel_id&quot;</span>));
                             }
 
                             <span class="ident">widget_channel_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::WidgetEnabled</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">Field::WidgetEnabled</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">widget_enabled</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;widget_enabled&quot;</span>));
                             }
@@ -1755,22 +1768,22 @@
 
                 <span class="kw">for</span> <span class="ident">channel</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">channels</span> {
                     <span class="kw">match</span> <span class="ident">channel</span> {
-                        <span class="ident">GuildChannel::Category</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::Category</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::NewsThread</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::NewsThread</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::PrivateThread</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::PrivateThread</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::PublicThread</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::PublicThread</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::Text</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::Text</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::Voice</span>(<span class="ident">c</span>) <span class="op">|</span> <span class="ident">GuildChannel::Stage</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::Voice</span>(<span class="ident">c</span>) <span class="op">|</span> <span class="ident">GuildChannel::Stage</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
                     }
@@ -1786,16 +1799,16 @@
 
                 <span class="kw">for</span> <span class="ident">thread</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">threads</span> {
                     <span class="kw">match</span> <span class="ident">thread</span> {
-                        <span class="ident">GuildChannel::NewsThread</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::NewsThread</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::PrivateThread</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::PrivateThread</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="ident">GuildChannel::PublicThread</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="ident">GuildChannel::PublicThread</span>(<span class="ident">c</span>) =&gt; {
                             <span class="ident">c</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>);
                         }
-                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="kw">_</span> =&gt; {
                             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::custom</span>(
                                 <span class="string">&quot;non-thread channel found in threads field&quot;</span>,
                             ))
@@ -1911,20 +1924,25 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
+
     <span class="kw">use</span> <span class="kw">super</span>::{
         <span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">Guild</span>,
         <span class="ident">GuildId</span>, <span class="ident">MfaLevel</span>, <span class="ident">NSFWLevel</span>, <span class="ident">Permissions</span>, <span class="ident">PremiumTier</span>, <span class="ident">SystemChannelFlags</span>, <span class="ident">UserId</span>,
         <span class="ident">VerificationLevel</span>,
     };
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
+    <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_guild</span>() {
+    <span class="kw">fn</span> <span class="ident">test_guild</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Guild</span> {
-            <span class="ident">afk_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">2</span>)),
+            <span class="ident">afk_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">afk_timeout</span>: <span class="number">900</span>,
-            <span class="ident">application_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ApplicationId</span>(<span class="number">3</span>)),
+            <span class="ident">application_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ApplicationId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">approximate_member_count</span>: <span class="prelude-val">Some</span>(<span class="number">1_200</span>),
             <span class="ident">approximate_presence_count</span>: <span class="prelude-val">Some</span>(<span class="number">900</span>),
             <span class="ident">banner</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;banner hash&quot;</span>.<span class="ident">to_owned</span>()),
@@ -1936,8 +1954,8 @@
             <span class="ident">explicit_content_filter</span>: <span class="ident">ExplicitContentFilter::MembersWithoutRole</span>,
             <span class="ident">features</span>: <span class="macro">vec!</span>[<span class="string">&quot;a feature&quot;</span>.<span class="ident">to_owned</span>()],
             <span class="ident">icon</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;icon hash&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">id</span>: <span class="ident">GuildId</span>(<span class="number">1</span>),
-            <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;timestamp&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="ident">joined_at</span>),
             <span class="ident">large</span>: <span class="bool-val">true</span>,
             <span class="ident">max_members</span>: <span class="prelude-val">Some</span>(<span class="number">25_000</span>),
             <span class="ident">max_presences</span>: <span class="prelude-val">Some</span>(<span class="number">10_000</span>),
@@ -1947,7 +1965,7 @@
             <span class="ident">mfa_level</span>: <span class="ident">MfaLevel::Elevated</span>,
             <span class="ident">name</span>: <span class="string">&quot;the name&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">nsfw_level</span>: <span class="ident">NSFWLevel::Default</span>,
-            <span class="ident">owner_id</span>: <span class="ident">UserId</span>(<span class="number">5</span>),
+            <span class="ident">owner_id</span>: <span class="ident">UserId::new</span>(<span class="number">5</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">owner</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             <span class="ident">permissions</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::SEND_MESSAGES</span>),
             <span class="ident">preferred_locale</span>: <span class="string">&quot;en-us&quot;</span>.<span class="ident">to_owned</span>(),
@@ -1955,18 +1973,18 @@
             <span class="ident">premium_tier</span>: <span class="ident">PremiumTier::Tier1</span>,
             <span class="ident">presences</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">rules_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">6</span>)),
+            <span class="ident">rules_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">splash</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;splash hash&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">stage_instances</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">stickers</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">system_channel_flags</span>: <span class="ident">SystemChannelFlags::SUPPRESS_PREMIUM_SUBSCRIPTIONS</span>,
-            <span class="ident">system_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">7</span>)),
+            <span class="ident">system_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">7</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">threads</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">unavailable</span>: <span class="bool-val">false</span>,
             <span class="ident">vanity_url_code</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">verification_level</span>: <span class="ident">VerificationLevel::Medium</span>,
             <span class="ident">voice_states</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">widget_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">8</span>)),
+            <span class="ident">widget_channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">8</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">widget_enabled</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
         };
 
@@ -2026,7 +2044,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;joined_at&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;timestamp&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;large&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;max_members&quot;</span>),
@@ -2108,6 +2126,8 @@
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
+
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

@@ -286,15 +286,6 @@
 <span id="286">286</span>
 <span id="287">287</span>
 <span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">headers::RatelimitHeaders</span>, <span class="ident">GlobalLockPair</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::routing::Path</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -332,7 +323,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Bucket</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">path</span>: <span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">path</span>: <span class="ident">Path</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">limit</span>: <span class="ident">AtomicU64::new</span>(<span class="ident">u64::max_value</span>()),
             <span class="ident">path</span>,
@@ -343,23 +334,23 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">limit</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">remaining</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">reset_after</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">time_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TimeRemaining</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">time_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TimeRemaining</span> {
         <span class="kw">let</span> <span class="ident">reset_after</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">reset_after</span>();
         <span class="kw">let</span> <span class="ident">started_at</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="ident">TimeRemaining::NotStarted</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="ident">TimeRemaining::NotStarted</span>,
         };
         <span class="kw">let</span> <span class="ident">elapsed</span> <span class="op">=</span> <span class="ident">started_at</span>.<span class="ident">elapsed</span>();
 
@@ -370,7 +361,7 @@
         <span class="ident">TimeRemaining::Some</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">reset_after</span>) <span class="op">-</span> <span class="ident">elapsed</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_reset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_reset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>).<span class="ident">is_none</span>() {
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
@@ -397,7 +388,7 @@
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">limit</span>, <span class="ident">remaining</span>, <span class="ident">reset_after</span>)) <span class="op">=</span> <span class="ident">ratelimits</span> {
-            <span class="kw">if</span> <span class="ident">bucket_limit</span> <span class="op">!</span><span class="op">=</span> <span class="ident">limit</span> <span class="op">&amp;&amp;</span> <span class="ident">bucket_limit</span> <span class="op">=</span><span class="op">=</span> <span class="ident">u64::max_value</span>() {
+            <span class="kw">if</span> <span class="ident">bucket_limit</span> <span class="op">!</span><span class="op">=</span> <span class="ident">limit</span> <span class="op">&amp;&amp;</span> <span class="ident">bucket_limit</span> <span class="op">==</span> <span class="ident">u64::max_value</span>() {
                 <span class="self">self</span>.<span class="ident">reset_after</span>.<span class="ident">store</span>(<span class="ident">reset_after</span>, <span class="ident">Ordering::SeqCst</span>);
                 <span class="self">self</span>.<span class="ident">limit</span>.<span class="ident">store</span>(<span class="ident">limit</span>, <span class="ident">Ordering::SeqCst</span>);
             }
@@ -423,18 +414,18 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">pop</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">timeout_duration</span>: <span class="ident">Duration</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rx</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
 
         <span class="kw">match</span> <span class="ident">timeout</span>(<span class="ident">timeout_duration</span>, <span class="ident">rx</span>.<span class="ident">recv</span>()).<span class="kw">await</span>.<span class="ident">ok</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">x</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">x</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BucketQueue</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc::unbounded_channel</span>();
 
         <span class="self">Self</span> {
@@ -459,7 +450,7 @@
         <span class="ident">buckets</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Path</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Bucket</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">global</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GlobalLockPair</span><span class="op">&gt;</span>,
         <span class="ident">path</span>: <span class="ident">Path</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">bucket</span>,
             <span class="ident">buckets</span>,
@@ -486,11 +477,11 @@
 
             <span class="comment">// TODO: Find a better way of handling nested types.</span>
             <span class="kw">match</span> <span class="ident">timeout</span>(<span class="ident"><span class="self">Self</span>::WAIT</span>, <span class="ident">rx</span>).<span class="kw">await</span> {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">headers</span>))) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="ident">headers</span>).<span class="kw">await</span>,
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">headers</span>))) =&gt; <span class="self">self</span>.<span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="ident">headers</span>).<span class="kw">await</span>,
                 <span class="comment">// - None was sent through the channel (request aborted)</span>
                 <span class="comment">// - channel was closed</span>
                 <span class="comment">// - timeout reached</span>
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;receiver timed out&quot;</span>);
                 }
@@ -508,24 +499,15 @@
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">RatelimitHeaders</span>) {
         <span class="kw">let</span> <span class="ident">ratelimits</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">headers</span> {
-            <span class="ident">RatelimitHeaders::GlobalLimited</span> { <span class="ident">reset_after</span> } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="self">self</span>.<span class="ident">lock_global</span>(<span class="ident">Duration::from_secs</span>(<span class="kw-2">*</span><span class="ident">reset_after</span>)).<span class="kw">await</span>;
+            <span class="ident">RatelimitHeaders::GlobalLimited</span>(<span class="ident">global_limited</span>) =&gt; {
+                <span class="self">self</span>.<span class="ident">lock_global</span>(<span class="ident">Duration::from_secs</span>(<span class="ident">global_limited</span>.<span class="ident">retry_after</span>()))
+                    .<span class="kw">await</span>;
 
                 <span class="prelude-val">None</span>
             }
-            <span class="ident">RatelimitHeaders::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
-            <span class="ident">RatelimitHeaders::Present</span> {
-                <span class="ident">global</span>,
-                <span class="ident">limit</span>,
-                <span class="ident">remaining</span>,
-                <span class="ident">reset_after</span>,
-                ..
-            } <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">global</span> {
-                    <span class="self">self</span>.<span class="ident">lock_global</span>(<span class="ident">Duration::from_secs</span>(<span class="kw-2">*</span><span class="ident">reset_after</span>)).<span class="kw">await</span>;
-                }
-
-                <span class="prelude-val">Some</span>((<span class="kw-2">*</span><span class="ident">limit</span>, <span class="kw-2">*</span><span class="ident">remaining</span>, <span class="kw-2">*</span><span class="ident">reset_after</span>))
+            <span class="ident">RatelimitHeaders::None</span> =&gt; <span class="kw">return</span>,
+            <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>) =&gt; {
+                <span class="prelude-val">Some</span>((<span class="ident">present</span>.<span class="ident">limit</span>(), <span class="ident">present</span>.<span class="ident">remaining</span>(), <span class="ident">present</span>.<span class="ident">reset_after</span>()))
             }
         };
 
@@ -545,7 +527,7 @@
         <span class="ident">drop</span>(<span class="ident">lock</span>);
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;starting to get next in queue&quot;</span>);
 
@@ -567,13 +549,13 @@
             <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;0 tickets remaining, may have to wait&quot;</span>);
 
             <span class="kw">match</span> <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">time_remaining</span>() {
-                <span class="ident">TimeRemaining::Finished</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">TimeRemaining::Finished</span> =&gt; {
                     <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">try_reset</span>();
 
                     <span class="kw">return</span>;
                 }
-                <span class="ident">TimeRemaining::NotStarted</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
-                <span class="ident">TimeRemaining::Some</span>(<span class="ident">dur</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">dur</span>,
+                <span class="ident">TimeRemaining::NotStarted</span> =&gt; <span class="kw">return</span>,
+                <span class="ident">TimeRemaining::Some</span>(<span class="ident">dur</span>) =&gt; <span class="ident">dur</span>,
             }
         };
 

@@ -416,13 +416,13 @@
 <span class="kw">impl</span> <span class="ident">CreateFollowupMessageError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">CreateFollowupMessageErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">CreateFollowupMessageErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
@@ -430,7 +430,7 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (
+    ) -&gt; (
         <span class="ident">CreateFollowupMessageErrorType</span>,
         <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
@@ -439,16 +439,16 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">CreateFollowupMessageError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">CreateFollowupMessageErrorType::ComponentCount</span> { <span class="ident">count</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CreateFollowupMessageErrorType::ComponentCount</span> { <span class="ident">count</span> } =&gt; {
                 <span class="ident">Display::fmt</span>(<span class="ident">count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; components were provided, but only &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">ComponentValidationError::COMPONENT_COUNT</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; root components are allowed&quot;</span>)
             }
-            <span class="ident">CreateFollowupMessageErrorType::ComponentInvalid</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">CreateFollowupMessageErrorType::ComponentInvalid</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a provided component is invalid&quot;</span>)
             }
         }
@@ -456,7 +456,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">CreateFollowupMessageError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
@@ -513,7 +513,7 @@
 <span class="doccomment">/// use twilight_model::id::ApplicationId;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-<span class="doccomment">/// client.set_application_id(ApplicationId(1));</span>
+<span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// client</span>
 <span class="doccomment">///     .create_followup_message(&quot;webhook token&quot;)?</span>
@@ -540,7 +540,7 @@
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
         <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
         <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">fields</span>: <span class="ident">CreateFollowupMessageFields</span> {
                 <span class="ident">avatar_url</span>: <span class="prelude-val">None</span>,
@@ -561,14 +561,14 @@
     }
 
     <span class="doccomment">/// Specify the [`AllowedMentions`] for the webhook message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">allowed_mentions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">allowed_mentions</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AllowedMentions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">allowed_mentions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">allowed_mentions</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AllowedMentions</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">allowed_mentions</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">allowed_mentions</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// The URL of the avatar of the webhook.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar_url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar_url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">avatar_url</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">avatar_url</span>);
 
         <span class="self">self</span>
@@ -588,18 +588,18 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">components</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Component</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CreateFollowupMessageError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CreateFollowupMessageError</span><span class="op">&gt;</span> {
         <span class="ident">validate_inner::components</span>(<span class="ident">components</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
             <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">inner_source</span>) <span class="op">=</span> <span class="ident">source</span>.<span class="ident">into_parts</span>();
 
             <span class="kw">match</span> <span class="ident">kind</span> {
-                <span class="ident">ComponentValidationErrorType::ComponentCount</span> { <span class="ident">count</span> } <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">ComponentValidationErrorType::ComponentCount</span> { <span class="ident">count</span> } =&gt; {
                     <span class="ident">CreateFollowupMessageError</span> {
                         <span class="ident">kind</span>: <span class="ident">CreateFollowupMessageErrorType::ComponentCount</span> { <span class="ident">count</span> },
                         <span class="ident">source</span>: <span class="ident">inner_source</span>,
                     }
                 }
-                <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CreateFollowupMessageError</span> {
+                <span class="ident">other</span> =&gt; <span class="ident">CreateFollowupMessageError</span> {
                     <span class="ident">kind</span>: <span class="ident">CreateFollowupMessageErrorType::ComponentInvalid</span> { <span class="ident">kind</span>: <span class="ident">other</span> },
                     <span class="ident">source</span>: <span class="ident">inner_source</span>,
                 },
@@ -614,21 +614,21 @@
     <span class="doccomment">/// The content of the webook&#39;s message.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Up to 2000 UTF-16 codepoints.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">content</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the list of embeds of the webhook&#39;s message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">embeds</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">embeds</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set if the followup should be ephemeral.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">ephemeral</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ephemeral</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">ephemeral</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ephemeral</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="ident">ephemeral</span> {
             <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">flags</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">MessageFlags::EPHEMERAL</span>);
         } <span class="kw">else</span> {
@@ -639,7 +639,7 @@
     }
 
     <span class="doccomment">/// Attach multiple files to the webhook.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">files</span> <span class="op">=</span> <span class="ident">files</span>;
 
         <span class="self">self</span>
@@ -663,7 +663,7 @@
     <span class="doccomment">/// use twilight_model::id::{MessageId, ApplicationId};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// client.set_application_id(ApplicationId(1));</span>
+    <span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let message = client.create_followup_message(&quot;token here&quot;)?</span>
     <span class="doccomment">///     .content(&quot;some content&quot;)</span>
@@ -687,7 +687,7 @@
     <span class="doccomment">/// use twilight_model::id::{MessageId, ApplicationId};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// client.set_application_id(ApplicationId(1));</span>
+    <span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let message = client.create_followup_message(&quot;token here&quot;)?</span>
     <span class="doccomment">///     .content(&quot;some content&quot;)</span>
@@ -703,21 +703,21 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`payload_json`]: Self::payload_json</span>
     <span class="doccomment">/// [Discord Docs/Create Message]: https://discord.com/developers/docs/resources/channel#create-message-params</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">payload_json</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">payload_json</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">payload_json</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">payload_json</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Specify true if the message is TTS.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">tts</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tts</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">tts</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tts</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">tts</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tts</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Specify the username of the webhook&#39;s message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">username</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">username</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">username</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">username</span>);
 
         <span class="self">self</span>
@@ -725,11 +725,11 @@
 
     <span class="comment">// `self` needs to be consumed and the client returned due to parameters</span>
     <span class="comment">// being consumed in request construction.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::ExecuteWebhook</span> {
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
             <span class="ident">wait</span>: <span class="prelude-val">None</span>,
-            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>.<span class="number">0</span>,
+            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>.<span class="ident">get</span>(),
         });
 
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">files</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span>.<span class="ident">is_some</span>() {
@@ -757,10 +757,10 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">request</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
         }
     }
 }

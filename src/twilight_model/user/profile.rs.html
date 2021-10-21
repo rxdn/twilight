@@ -119,10 +119,15 @@
 <span id="119">119</span>
 <span id="120">120</span>
 <span id="121">121</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">id::UserId</span>,
-    <span class="ident">user</span>::{<span class="ident">PremiumType</span>, <span class="ident">UserFlags</span>},
-};
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DiscriminatorDisplay</span>, <span class="ident">PremiumType</span>, <span class="ident">UserFlags</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::UserId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -144,7 +149,7 @@
     <span class="doccomment">/// integer. The field will always serialize into a string due to that being</span>
     <span class="doccomment">/// the type Discord&#39;s API uses.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;super::discriminator&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">discriminator</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">discriminator</span>: <span class="ident">u16</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">email</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -162,12 +167,21 @@
     <span class="kw">pub</span> <span class="ident">verified</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
 }
 
+<span class="kw">impl</span> <span class="ident">UserProfile</span> {
+    <span class="doccomment">/// Create a [`Display`] formatter for a user discriminator.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Display`]: core::fmt::Display</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">discriminator</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">DiscriminatorDisplay</span> {
+        <span class="ident">DiscriminatorDisplay::new</span>(<span class="self">self</span>.<span class="ident">discriminator</span>)
+    }
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">PremiumType</span>, <span class="ident">UserFlags</span>, <span class="ident">UserId</span>, <span class="ident">UserProfile</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
 
-    <span class="kw">fn</span> <span class="ident">user_tokens</span>(<span class="ident">discriminator_token</span>: <span class="ident">Token</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">user_tokens</span>(<span class="ident">discriminator_token</span>: <span class="ident">Token</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
         <span class="macro">vec!</span>[
             <span class="ident">Token::Struct</span> {
                 <span class="ident">name</span>: <span class="string">&quot;UserProfile&quot;</span>,
@@ -219,10 +233,10 @@
             <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;hash&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">banner</span>: <span class="prelude-val">None</span>,
             <span class="ident">bot</span>: <span class="bool-val">false</span>,
-            <span class="ident">discriminator</span>: <span class="string">&quot;0004&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">discriminator</span>: <span class="number">4</span>,
             <span class="ident">email</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;email@example.com&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">UserFlags::VERIFIED_BOT_DEVELOPER</span>),
-            <span class="ident">id</span>: <span class="ident">UserId</span>(<span class="number">1</span>),
+            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">locale</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;en-us&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">mfa_enabled</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">name</span>: <span class="string">&quot;user name&quot;</span>.<span class="ident">to_owned</span>(),

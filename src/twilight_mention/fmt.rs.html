@@ -320,6 +320,18 @@
 <span id="320">320</span>
 <span id="321">321</span>
 <span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Formatters for creating mentions.</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::timestamp::Timestamp</span>;
@@ -343,14 +355,14 @@
 <span class="doccomment">/// use twilight_mention::Mention;</span>
 <span class="doccomment">/// use twilight_model::id::UserId;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(&quot;&lt;@123&gt;&quot;, UserId(123).mention().to_string());</span>
+<span class="doccomment">/// assert_eq!(&quot;&lt;@123&gt;&quot;, UserId::new(123).expect(&quot;non zero&quot;).mention().to_string());</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">T</span>);
 
 <span class="doccomment">/// Mention a channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;#&quot;</span>)<span class="question-mark">?</span>;
         <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -360,7 +372,7 @@
 
 <span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;:emoji:&quot;</span>)<span class="question-mark">?</span>;
         <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -370,7 +382,7 @@
 
 <span class="doccomment">/// Mention a role. This will format as `&lt;@&amp;ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;@&amp;&quot;</span>)<span class="question-mark">?</span>;
         <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -381,7 +393,7 @@
 <span class="doccomment">/// Mention a user. This will format as `&lt;t:UNIX&gt;` if a style is not specified or</span>
 <span class="doccomment">/// `&lt;t:UNIX:STYLE&gt;` if a style is specified.</span>
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;t:&quot;</span>)<span class="question-mark">?</span>;
         <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">unix</span>(), <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -396,7 +408,7 @@
 
 <span class="doccomment">/// Mention a user. This will format as `&lt;@ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;@&quot;</span>)<span class="question-mark">?</span>;
         <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
@@ -418,106 +430,106 @@
 <span class="doccomment">/// use twilight_mention::Mention;</span>
 <span class="doccomment">/// use twilight_model::id::ChannelId;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(&quot;&lt;#123&gt;&quot;, ChannelId(123).mention().to_string());</span>
+<span class="doccomment">/// assert_eq!(&quot;&lt;#123&gt;&quot;, ChannelId::new(123).expect(&quot;non zero&quot;).mention().to_string());</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Mention a resource by using its ID.</span>
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">M</span>: <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">M</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">mention</span>()
     }
 }
 
 <span class="doccomment">/// Mention a channel ID. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ChannelId</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
 <span class="doccomment">/// Mention a guild category channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CategoryChannel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Channel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>())
     }
 }
 
 <span class="doccomment">/// Mention the current user. This will format as `&lt;@ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CurrentUser</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">EmojiId</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
 <span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Emoji</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a group. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Group</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a guild channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GuildChannel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>())
     }
 }
 
 <span class="doccomment">/// Mention a member&#39;s user. This will format as `&lt;@ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Member</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">user</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a private channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PrivateChannel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a role ID. This will format as `&lt;@&amp;ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RoleId</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
 <span class="doccomment">/// Mention a role ID. This will format as `&lt;@&amp;ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Role</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a guild text channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TextChannel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
@@ -525,28 +537,28 @@
 <span class="doccomment">/// Mention a timestamp. This will format as `&lt;t:UNIX&gt;` if a style is not</span>
 <span class="doccomment">/// specified or `&lt;t:UNIX:STYLE&gt;` if a style is specified.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Timestamp</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
 <span class="doccomment">/// Mention a user ID. This will format as `&lt;&amp;ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UserId</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
 <span class="doccomment">/// Mention a user. This will format as `&lt;&amp;ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">User</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
 
 <span class="doccomment">/// Mention a guild voice channel. This will format as `&lt;#ID&gt;`.</span>
 <span class="kw">impl</span> <span class="ident">Mention</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceChannel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> {
         <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
     }
 }
@@ -608,17 +620,26 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_mention_format_channel_id</span>() {
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;#123&gt;&quot;</span>, <span class="ident">ChannelId</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(
+            <span class="string">&quot;&lt;#123&gt;&quot;</span>,
+            <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>()
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_mention_format_emoji_id</span>() {
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;:emoji:123&gt;&quot;</span>, <span class="ident">EmojiId</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(
+            <span class="string">&quot;&lt;:emoji:123&gt;&quot;</span>,
+            <span class="ident">EmojiId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>()
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_mention_format_role_id</span>() {
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;@&amp;123&gt;&quot;</span>, <span class="ident">RoleId</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(
+            <span class="string">&quot;&lt;@&amp;123&gt;&quot;</span>,
+            <span class="ident">RoleId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>()
+        );
     }
 
     <span class="doccomment">/// Test that a timestamp with a style displays correctly.</span>
@@ -639,7 +660,10 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_mention_format_user_id</span>() {
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;@123&gt;&quot;</span>, <span class="ident">UserId</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(
+            <span class="string">&quot;&lt;@123&gt;&quot;</span>,
+            <span class="ident">UserId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>()
+        );
     }
 }
 </code></pre></div>

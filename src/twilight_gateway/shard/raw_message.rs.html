@@ -140,7 +140,7 @@
 <span class="doccomment">/// assert_eq!(&quot;reason here&quot;, frame.reason);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">u16</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CloseFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">code</span>, <span class="ident">reason</span>): (<span class="ident">u16</span>, <span class="ident">T</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">code</span>, <span class="ident">reason</span>): (<span class="ident">u16</span>, <span class="ident">T</span>)) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">code</span>,
             <span class="ident">reason</span>: <span class="ident">reason</span>.<span class="ident">into</span>(),
@@ -170,18 +170,18 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Message</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">into_tungstenite</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TungsteniteMessage</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">into_tungstenite</span>(<span class="self">self</span>) -&gt; <span class="ident">TungsteniteMessage</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Binary</span>(<span class="ident">bytes</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TungsteniteMessage::Binary</span>(<span class="ident">bytes</span>),
-            <span class="ident"><span class="self">Self</span>::Close</span>(<span class="ident">close</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident"><span class="self">Self</span>::Binary</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">TungsteniteMessage::Binary</span>(<span class="ident">bytes</span>),
+            <span class="ident"><span class="self">Self</span>::Close</span>(<span class="ident">close</span>) =&gt; {
                 <span class="ident">TungsteniteMessage::Close</span>(<span class="ident">close</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">close</span><span class="op">|</span> <span class="ident">TungsteniteCloseFrame</span> {
                     <span class="ident">code</span>: <span class="ident">CloseCode::from</span>(<span class="ident">close</span>.<span class="ident">code</span>),
                     <span class="ident">reason</span>: <span class="ident">close</span>.<span class="ident">reason</span>,
                 }))
             }
-            <span class="ident"><span class="self">Self</span>::Ping</span>(<span class="ident">bytes</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TungsteniteMessage::Ping</span>(<span class="ident">bytes</span>),
-            <span class="ident"><span class="self">Self</span>::Pong</span>(<span class="ident">bytes</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TungsteniteMessage::Pong</span>(<span class="ident">bytes</span>),
-            <span class="ident"><span class="self">Self</span>::Text</span>(<span class="ident">string</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">TungsteniteMessage::Text</span>(<span class="ident">string</span>),
+            <span class="ident"><span class="self">Self</span>::Ping</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">TungsteniteMessage::Ping</span>(<span class="ident">bytes</span>),
+            <span class="ident"><span class="self">Self</span>::Pong</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">TungsteniteMessage::Pong</span>(<span class="ident">bytes</span>),
+            <span class="ident"><span class="self">Self</span>::Text</span>(<span class="ident">string</span>) =&gt; <span class="ident">TungsteniteMessage::Text</span>(<span class="ident">string</span>),
         }
     }
 }

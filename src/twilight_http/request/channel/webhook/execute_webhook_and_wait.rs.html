@@ -68,7 +68,7 @@
 <span class="doccomment">/// # #[tokio::main]</span>
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
-<span class="doccomment">/// let id = WebhookId(432);</span>
+<span class="doccomment">/// let id = WebhookId::new(432).expect(&quot;non zero&quot;);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let message = client</span>
 <span class="doccomment">///     .execute_webhook(id, &quot;webhook token&quot;)</span>
@@ -92,17 +92,17 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ExecuteWebhookAndWait</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> { <span class="ident">inner</span> }
     }
 
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">request</span>(<span class="bool-val">false</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
         }
     }
 }

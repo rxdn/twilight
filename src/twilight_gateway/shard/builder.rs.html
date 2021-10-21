@@ -436,12 +436,6 @@
 <span id="436">436</span>
 <span id="437">437</span>
 <span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">config::Config</span>, <span class="ident">Events</span>, <span class="ident">Shard</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::EventTypeFlags</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -452,7 +446,7 @@
 <span class="kw">use</span> <span class="ident">twilight_gateway_queue</span>::{<span class="ident">LocalQueue</span>, <span class="ident">Queue</span>};
 <span class="kw">use</span> <span class="ident">twilight_http::Client</span> <span class="kw">as</span> <span class="ident">HttpClient</span>;
 <span class="kw">use</span> <span class="ident">twilight_model::gateway</span>::{
-    <span class="ident">payload</span>::{<span class="ident">identify::IdentifyProperties</span>, <span class="ident">update_presence::UpdatePresencePayload</span>},
+    <span class="ident">payload::outgoing</span>::{<span class="ident">identify::IdentifyProperties</span>, <span class="ident">update_presence::UpdatePresencePayload</span>},
     <span class="ident">Intents</span>,
 };
 
@@ -467,14 +461,14 @@
 <span class="kw">impl</span> <span class="ident">LargeThresholdError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">LargeThresholdErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">LargeThresholdErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unused_self</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
     }
 
@@ -482,7 +476,7 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (
+    ) -&gt; (
         <span class="ident">LargeThresholdErrorType</span>,
         <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
@@ -491,12 +485,12 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">LargeThresholdError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">LargeThresholdErrorType::TooFew</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">LargeThresholdErrorType::TooFew</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided large threshold value is fewer than 50&quot;</span>)
             }
-            <span class="ident">LargeThresholdErrorType::TooMany</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">LargeThresholdErrorType::TooMany</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided large threshold value is more than 250&quot;</span>)
             }
         }
@@ -532,28 +526,28 @@
 <span class="kw">impl</span> <span class="ident">ShardIdError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ShardIdErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ShardIdErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unused_self</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">ShardIdErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">ShardIdErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="prelude-val">None</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ShardIdError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ShardIdErrorType::IdTooLarge</span> { <span class="ident">id</span>, <span class="ident">total</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ShardIdErrorType::IdTooLarge</span> { <span class="ident">id</span>, <span class="ident">total</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided shard ID &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; is larger than the total &quot;</span>)<span class="question-mark">?</span>;
@@ -604,18 +598,18 @@
 <span class="doccomment">/// [`ShardBuilder::new`]: Self::new</span>
 <span class="doccomment">/// [`large_threshold`]: Self::large_threshold</span>
 <span class="doccomment">/// [`shard`]: Self::shard</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShardBuilder</span>(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">Config</span>);
 
 <span class="kw">impl</span> <span class="ident">ShardBuilder</span> {
     <span class="doccomment">/// Create a new builder to configure and construct a shard.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Refer to each method to learn their default values.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::_new</span>(<span class="ident">token</span>.<span class="ident">into</span>(), <span class="ident">intents</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">_new</span>(<span class="kw-2">mut</span> <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">_new</span>(<span class="kw-2">mut</span> <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bot &quot;</span>) {
             <span class="ident">token</span>.<span class="ident">insert_str</span>(<span class="number">0</span>, <span class="string">&quot;Bot &quot;</span>);
         }
@@ -623,7 +617,7 @@
         <span class="self">Self</span>(<span class="ident">Config</span> {
             <span class="ident">event_types</span>: <span class="ident">EventTypeFlags::default</span>(),
             <span class="ident">gateway_url</span>: <span class="prelude-val">None</span>,
-            <span class="ident">http_client</span>: <span class="ident">HttpClient::new</span>(<span class="ident">token</span>.<span class="ident">clone</span>()),
+            <span class="ident">http_client</span>: <span class="ident">Arc::new</span>(<span class="ident">HttpClient::new</span>(<span class="ident">token</span>.<span class="ident">clone</span>())),
             <span class="ident">identify_properties</span>: <span class="prelude-val">None</span>,
             <span class="ident">intents</span>,
             <span class="ident">large_threshold</span>: <span class="number">250</span>,
@@ -637,7 +631,7 @@
     }
 
     <span class="doccomment">/// Consume the builder, constructing a shard.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Shard</span>, <span class="ident">Events</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; (<span class="ident">Shard</span>, <span class="ident">Events</span>) {
         <span class="ident">Shard::new_with_config</span>(<span class="self">self</span>.<span class="number">0</span>)
     }
 
@@ -649,14 +643,14 @@
     <span class="doccomment">/// [`EventTypeFlags::SHARD_PAYLOAD`] is enabled.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`EventTypeFlags::SHARD_PAYLOAD`]: crate::EventTypeFlags::SHARD_PAYLOAD</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">event_types</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">event_types</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">event_types</span> <span class="op">=</span> <span class="ident">event_types</span>;
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the URL used for connecting to Discord&#39;s gateway</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gateway_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">gateway_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gateway_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">gateway_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">gateway_url</span> <span class="op">=</span> <span class="ident">gateway_url</span>.<span class="ident">map</span>(<span class="ident">String::into_boxed_str</span>);
 
         <span class="self">self</span>
@@ -667,7 +661,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is a new, unconfigured instance of an HTTP client.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http_client</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">http_client</span>: <span class="ident">HttpClient</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http_client</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">http_client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">HttpClient</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">http_client</span> <span class="op">=</span> <span class="ident">http_client</span>;
 
         <span class="self">self</span>
@@ -686,7 +680,7 @@
     <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use std::env::{self, consts::OS};</span>
     <span class="doccomment">/// use twilight_gateway::{Intents, Shard};</span>
-    <span class="doccomment">/// use twilight_model::gateway::payload::identify::IdentifyProperties;</span>
+    <span class="doccomment">/// use twilight_model::gateway::payload::outgoing::identify::IdentifyProperties;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
     <span class="doccomment">/// let properties = IdentifyProperties::new(</span>
@@ -702,7 +696,7 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identify_properties</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">identify_properties</span>: <span class="ident">IdentifyProperties</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identify_properties</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">identify_properties</span>: <span class="ident">IdentifyProperties</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">identify_properties</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">identify_properties</span>);
 
         <span class="self">self</span>
@@ -727,17 +721,17 @@
     <span class="doccomment">/// Returns a [`LargeThresholdErrorType::TooMany`] error type if the</span>
     <span class="doccomment">/// provided value is above 250.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">large_threshold</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">LargeThresholdError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">large_threshold</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">LargeThresholdError</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">large_threshold</span> {
-            <span class="number">0</span>..<span class="op">=</span><span class="number">49</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="number">0</span>..<span class="op">=</span><span class="number">49</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">LargeThresholdError</span> {
                     <span class="ident">kind</span>: <span class="ident">LargeThresholdErrorType::TooFew</span> {
                         <span class="ident">value</span>: <span class="ident">large_threshold</span>,
                     },
                 })
             }
-            <span class="number">50</span>..<span class="op">=</span><span class="number">250</span> <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="number">251</span>..<span class="op">=</span><span class="ident">u64::MAX</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="number">50</span>..<span class="op">=</span><span class="number">250</span> =&gt; {}
+            <span class="number">251</span>..<span class="op">=</span><span class="ident">u64::MAX</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">LargeThresholdError</span> {
                     <span class="ident">kind</span>: <span class="ident">LargeThresholdErrorType::TooMany</span> {
                         <span class="ident">value</span>: <span class="ident">large_threshold</span>,
@@ -764,7 +758,7 @@
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// use twilight_gateway::{Intents, Shard};</span>
     <span class="doccomment">/// use twilight_model::gateway::{</span>
-    <span class="doccomment">///     payload::update_presence::UpdatePresencePayload,</span>
+    <span class="doccomment">///     payload::outgoing::update_presence::UpdatePresencePayload,</span>
     <span class="doccomment">///     presence::{ActivityType, MinimalActivity, Status},</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
@@ -784,7 +778,7 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presence</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">presence</span>: <span class="ident">UpdatePresencePayload</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presence</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">presence</span>: <span class="ident">UpdatePresencePayload</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">presence</span>.<span class="ident">replace</span>(<span class="ident">presence</span>);
 
         <span class="self">self</span>
@@ -801,7 +795,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Cluster`]: crate::cluster::Cluster</span>
     <span class="doccomment">/// [`queue`]: crate::queue</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">queue</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Queue</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">queue</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Queue</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">queue</span> <span class="op">=</span> <span class="ident">queue</span>;
 
         <span class="self">self</span>
@@ -840,7 +834,7 @@
     <span class="doccomment">/// Returns a [`ShardIdErrorType::IdTooLarge`] error type if the shard ID to</span>
     <span class="doccomment">/// connect as is larger than the total.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">shard_total</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ShardIdError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">shard_total</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ShardIdError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">shard_id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">shard_total</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ShardIdError</span> {
                 <span class="ident">kind</span>: <span class="ident">ShardIdErrorType::IdTooLarge</span> {
@@ -857,7 +851,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardBuilder</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">token</span>, <span class="ident">intents</span>): (<span class="ident">T</span>, <span class="ident">Intents</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">token</span>, <span class="ident">intents</span>): (<span class="ident">T</span>, <span class="ident">Intents</span>)) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>)
     }
 }
@@ -875,13 +869,7 @@
     <span class="macro">assert_fields!</span>(<span class="ident">LargeThresholdErrorType::TooFew</span>: <span class="ident">value</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">LargeThresholdErrorType::TooMany</span>: <span class="ident">value</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">LargeThresholdError</span>: <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(
-        <span class="ident">ShardBuilder</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Sync</span>
-    );
+    <span class="macro">assert_impl_all!</span>(<span class="ident">ShardBuilder</span>: <span class="ident">Debug</span>, <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">ShardIdErrorType</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">ShardIdErrorType::IdTooLarge</span>: <span class="ident">id</span>, <span class="ident">total</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">ShardIdError</span>: <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);

@@ -410,13 +410,13 @@
 <span class="kw">impl</span> <span class="ident">ExecuteWebhookError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ExecuteWebhookErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ExecuteWebhookErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
@@ -424,7 +424,7 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (
+    ) -&gt; (
         <span class="ident">ExecuteWebhookErrorType</span>,
         <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
@@ -433,16 +433,16 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ExecuteWebhookError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ExecuteWebhookErrorType::ComponentCount</span> { <span class="ident">count</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ExecuteWebhookErrorType::ComponentCount</span> { <span class="ident">count</span> } =&gt; {
                 <span class="ident">Display::fmt</span>(<span class="ident">count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; components were provided, but only &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">ComponentValidationError::COMPONENT_COUNT</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; root components are allowed&quot;</span>)
             }
-            <span class="ident">ExecuteWebhookErrorType::ComponentInvalid</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ExecuteWebhookErrorType::ComponentInvalid</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a provided component is invalid&quot;</span>)
             }
         }
@@ -450,7 +450,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ExecuteWebhookError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
@@ -508,7 +508,7 @@
 <span class="doccomment">/// # #[tokio::main]</span>
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
-<span class="doccomment">/// let id = WebhookId(432);</span>
+<span class="doccomment">/// let id = WebhookId::new(432).expect(&quot;non zero&quot;);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// client</span>
 <span class="doccomment">///     .execute_webhook(id, &quot;webhook token&quot;)</span>
@@ -531,7 +531,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ExecuteWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">webhook_id</span>: <span class="ident">WebhookId</span>, <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">webhook_id</span>: <span class="ident">WebhookId</span>, <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">fields</span>: <span class="ident">ExecuteWebhookFields</span> {
                 <span class="ident">avatar_url</span>: <span class="prelude-val">None</span>,
@@ -552,14 +552,14 @@
     }
 
     <span class="doccomment">/// Specify the [`AllowedMentions`] for the webhook message.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">allowed_mentions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">allowed_mentions</span>: <span class="ident">AllowedMentions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">allowed_mentions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">allowed_mentions</span>: <span class="ident">AllowedMentions</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">allowed_mentions</span>.<span class="ident">replace</span>(<span class="ident">allowed_mentions</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// The URL of the avatar of the webhook.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar_url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar_url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">avatar_url</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">avatar_url</span>);
 
         <span class="self">self</span>
@@ -576,16 +576,16 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns an [`ExecuteWebhookErrorType::ComponentInvalid`] error</span>
     <span class="doccomment">/// type if one of the provided components is invalid.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">components</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Component</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ExecuteWebhookError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">components</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Component</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ExecuteWebhookError</span><span class="op">&gt;</span> {
         <span class="ident">validate_inner::components</span>(<span class="ident">components</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
             <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">inner_source</span>) <span class="op">=</span> <span class="ident">source</span>.<span class="ident">into_parts</span>();
 
             <span class="kw">match</span> <span class="ident">kind</span> {
-                <span class="ident">ComponentValidationErrorType::ComponentCount</span> { <span class="ident">count</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ExecuteWebhookError</span> {
+                <span class="ident">ComponentValidationErrorType::ComponentCount</span> { <span class="ident">count</span> } =&gt; <span class="ident">ExecuteWebhookError</span> {
                     <span class="ident">kind</span>: <span class="ident">ExecuteWebhookErrorType::ComponentCount</span> { <span class="ident">count</span> },
                     <span class="ident">source</span>: <span class="ident">inner_source</span>,
                 },
-                <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ExecuteWebhookError</span> {
+                <span class="ident">other</span> =&gt; <span class="ident">ExecuteWebhookError</span> {
                     <span class="ident">kind</span>: <span class="ident">ExecuteWebhookErrorType::ComponentInvalid</span> { <span class="ident">kind</span>: <span class="ident">other</span> },
                     <span class="ident">source</span>: <span class="ident">inner_source</span>,
                 },
@@ -600,21 +600,21 @@
     <span class="doccomment">/// The content of the webhook&#39;s message.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Up to 2000 UTF-16 codepoints, same as a message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">content</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the list of embeds of the webhook&#39;s message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">embeds</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">embeds</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Attach multiple files to the webhook.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">files</span> <span class="op">=</span> <span class="ident">files</span>;
 
         <span class="self">self</span>
@@ -637,7 +637,7 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// # let client = Client::new(&quot;token&quot;.to_owned());</span>
-    <span class="doccomment">/// let message = client.execute_webhook(WebhookId(1), &quot;token here&quot;)</span>
+    <span class="doccomment">/// let message = client.execute_webhook(WebhookId::new(1).expect(&quot;non zero&quot;), &quot;token here&quot;)</span>
     <span class="doccomment">///     .content(&quot;some content&quot;)</span>
     <span class="doccomment">///     .embeds(&amp;[EmbedBuilder::new().title(&quot;title&quot;).build()?])</span>
     <span class="doccomment">///     .wait()</span>
@@ -659,7 +659,7 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// # let client = Client::new(&quot;token&quot;.to_owned());</span>
-    <span class="doccomment">/// let message = client.execute_webhook(WebhookId(1), &quot;token here&quot;)</span>
+    <span class="doccomment">/// let message = client.execute_webhook(WebhookId::new(1).expect(&quot;non zero&quot;), &quot;token here&quot;)</span>
     <span class="doccomment">///     .content(&quot;some content&quot;)</span>
     <span class="doccomment">///     .payload_json(br#&quot;{ &quot;content&quot;: &quot;other content&quot;, &quot;embeds&quot;: [ { &quot;title&quot;: &quot;title&quot; } ] }&quot;#)</span>
     <span class="doccomment">///     .wait()</span>
@@ -674,28 +674,28 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`payload_json`]: Self::payload_json</span>
     <span class="doccomment">/// [Discord Docs/Create Message]: https://discord.com/developers/docs/resources/channel#create-message-params</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">payload_json</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">payload_json</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">payload_json</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">payload_json</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Execute in a thread belonging to the channel instead of the channel itself.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thread_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_id</span>: <span class="ident">ChannelId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thread_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_id</span>: <span class="ident">ChannelId</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">thread_id</span>.<span class="ident">replace</span>(<span class="ident">thread_id</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Specify true if the message is TTS.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">tts</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tts</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">tts</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tts</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">tts</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tts</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Specify the username of the webhook&#39;s message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">username</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">username</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">username</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">username</span>);
 
         <span class="self">self</span>
@@ -708,17 +708,17 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Discord Docs/Execute Webhook]: https://discord.com/developers/docs/resources/webhook#execute-webhook-querystring-params</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ExecuteWebhookAndWait</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait</span>(<span class="self">self</span>) -&gt; <span class="ident">ExecuteWebhookAndWait</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="ident">ExecuteWebhookAndWait::new</span>(<span class="self">self</span>)
     }
 
     <span class="comment">// `self` needs to be consumed and the client returned due to parameters</span>
     <span class="comment">// being consumed in request construction.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">wait</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">wait</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::ExecuteWebhook</span> {
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
             <span class="ident">wait</span>: <span class="prelude-val">Some</span>(<span class="ident">wait</span>),
-            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">webhook_id</span>.<span class="number">0</span>,
+            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">webhook_id</span>.<span class="ident">get</span>(),
         });
 
         <span class="comment">// Webhook executions don&#39;t need the authorization token, only the</span>
@@ -751,10 +751,10 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">EmptyBody</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">EmptyBody</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">request</span>(<span class="bool-val">false</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
         }
     }
 }

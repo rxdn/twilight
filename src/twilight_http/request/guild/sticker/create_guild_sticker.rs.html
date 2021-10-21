@@ -157,7 +157,7 @@
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let guild_id = GuildId(1);</span>
+<span class="doccomment">/// let guild_id = GuildId::new(1).expect(&quot;non zero&quot;);</span>
 <span class="doccomment">/// let sticker = client</span>
 <span class="doccomment">///     .create_guild_sticker(</span>
 <span class="doccomment">///         guild_id,</span>
@@ -189,7 +189,7 @@
         <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">tags</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">file</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">StickerValidationError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">StickerValidationError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">validate_inner::sticker_description</span>(<span class="ident">description</span>) {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">StickerValidationError</span> {
                 <span class="ident">kind</span>: <span class="ident">StickerValidationErrorType::DescriptionInvalid</span>,
@@ -224,9 +224,9 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Sticker</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Sticker</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::CreateGuildSticker</span> {
-            <span class="ident">guild_id</span>: <span class="self">self</span>.<span class="ident">guild_id</span>.<span class="number">0</span>,
+            <span class="ident">guild_id</span>: <span class="self">self</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>(),
         });
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> <span class="op">=</span> <span class="ident">Form::new</span>();
@@ -246,7 +246,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">AuditLogReason</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CreateGuildSticker</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">AuditLogReasonError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">AuditLogReasonError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">reason</span>.<span class="ident">replace</span>(<span class="ident">AuditLogReasonError::validate</span>(<span class="ident">reason</span>)<span class="question-mark">?</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)

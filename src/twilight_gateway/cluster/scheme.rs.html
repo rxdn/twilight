@@ -522,14 +522,14 @@
 <span class="kw">impl</span> <span class="ident">ShardSchemeRangeError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">ShardSchemeRangeErrorType</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ShardSchemeRangeErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unused_self</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
     }
 
@@ -537,7 +537,7 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (
+    ) -&gt; (
         <span class="ident">ShardSchemeRangeErrorType</span>,
         <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
@@ -546,13 +546,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ShardSchemeRangeError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">ShardSchemeRangeErrorType::BucketTooLarge</span> {
                 <span class="ident">bucket_id</span>,
                 <span class="ident">concurrency</span>,
                 ..
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;bucket ID &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">bucket_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; is larger than maximum concurrency (&quot;</span>)<span class="question-mark">?</span>;
@@ -560,7 +560,7 @@
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;)&quot;</span>)
             }
-            <span class="ident">ShardSchemeRangeErrorType::IdTooLarge</span> { <span class="ident">end</span>, <span class="ident">start</span>, <span class="ident">total</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">ShardSchemeRangeErrorType::IdTooLarge</span> { <span class="ident">end</span>, <span class="ident">start</span>, <span class="ident">total</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;The shard ID range &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">start</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;-&quot;</span>)<span class="question-mark">?</span>;
@@ -633,14 +633,14 @@
 
 <span class="kw">impl</span> <span class="ident">ShardSchemeIter</span> {
     <span class="doccomment">/// Create an iterator of shard IDs out of a scheme.</span>
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">scheme</span>: <span class="kw-2">&amp;</span><span class="ident">ShardScheme</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">scheme</span>: <span class="kw-2">&amp;</span><span class="ident">ShardScheme</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">from</span>, <span class="ident">to</span>, <span class="ident">step</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">scheme</span> {
-            <span class="ident">ShardScheme::Auto</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="ident">ShardScheme::Auto</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
             <span class="ident">ShardScheme::Bucket</span> {
                 <span class="ident">bucket_id</span>,
                 <span class="ident">concurrency</span>,
                 <span class="ident">total</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="comment">// It&#39;s reasonable to assume that no one will ever have a</span>
                 <span class="comment">// concurrency size greater than even 16 bits.</span>
                 <span class="kw">let</span> <span class="ident">concurrency</span> <span class="op">=</span> <span class="ident">usize::try_from</span>(<span class="kw-2">*</span><span class="ident">concurrency</span>)
@@ -648,7 +648,7 @@
 
                 (<span class="kw-2">*</span><span class="ident">bucket_id</span>, <span class="kw-2">*</span><span class="ident">total</span> <span class="op">-</span> <span class="number">1</span>, <span class="ident">concurrency</span>)
             }
-            <span class="ident">ShardScheme::Range</span> { <span class="ident">from</span>, <span class="ident">to</span>, .. } <span class="op">=</span><span class="op">&gt;</span> (<span class="kw-2">*</span><span class="ident">from</span>, <span class="kw-2">*</span><span class="ident">to</span>, <span class="number">1</span>),
+            <span class="ident">ShardScheme::Range</span> { <span class="ident">from</span>, <span class="ident">to</span>, .. } =&gt; (<span class="kw-2">*</span><span class="ident">from</span>, <span class="kw-2">*</span><span class="ident">to</span>, <span class="number">1</span>),
         };
 
         <span class="prelude-val">Some</span>(<span class="self">Self</span> {
@@ -660,7 +660,7 @@
 <span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ShardSchemeIter</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">u64</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>()
     }
 }
@@ -738,7 +738,7 @@
     <span class="doccomment">/// variant.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Auto`]: Self::Auto</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ShardSchemeIter</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ShardSchemeIter</span><span class="op">&gt;</span> {
         <span class="ident">ShardSchemeIter::new</span>(<span class="self">self</span>)
     }
 
@@ -747,11 +747,11 @@
     <span class="doccomment">/// In the case of the [`Auto`] variant the total is unknown.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Auto`]: Self::Auto</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Auto</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident"><span class="self">Self</span>::Bucket</span> { <span class="ident">bucket_id</span>, .. } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">bucket_id</span>),
-            <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">from</span>, .. } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">from</span>),
+            <span class="ident"><span class="self">Self</span>::Auto</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="ident"><span class="self">Self</span>::Bucket</span> { <span class="ident">bucket_id</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">bucket_id</span>),
+            <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">from</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">from</span>),
         }
     }
 
@@ -760,10 +760,10 @@
     <span class="doccomment">/// In the case of the [`Auto`] variant the total is unknown.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Auto`]: Self::Auto</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">total</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">total</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Auto</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
-            <span class="ident"><span class="self">Self</span>::Bucket</span> { <span class="ident">total</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">total</span>, .. } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">total</span>),
+            <span class="ident"><span class="self">Self</span>::Auto</span> =&gt; <span class="prelude-val">None</span>,
+            <span class="ident"><span class="self">Self</span>::Bucket</span> { <span class="ident">total</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">total</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">total</span>),
         }
     }
 
@@ -772,27 +772,27 @@
     <span class="doccomment">/// In the case of the [`Auto`] variant the total is unknown.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Auto`]: Self::Auto</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Auto</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="ident"><span class="self">Self</span>::Auto</span> =&gt; <span class="prelude-val">None</span>,
             <span class="ident"><span class="self">Self</span>::Bucket</span> {
                 <span class="ident">bucket_id</span>,
                 <span class="ident">concurrency</span>,
                 <span class="ident">total</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> {
+            } =&gt; {
                 <span class="kw">let</span> <span class="ident">buckets</span> <span class="op">=</span> <span class="ident">total</span> <span class="op">/</span> <span class="ident">concurrency</span>;
 
                 <span class="comment">// Total is 1-indexed but shards are 0-indexed, so we need to</span>
                 <span class="comment">// subtract 1 here.</span>
                 <span class="prelude-val">Some</span>(<span class="ident">total</span> <span class="op">-</span> (<span class="ident">buckets</span> <span class="op">-</span> <span class="ident">bucket_id</span>) <span class="op">-</span> <span class="number">1</span>)
             }
-            <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">to</span>, .. } <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">to</span>),
+            <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">to</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">to</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ShardScheme</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Auto</span>
     }
 }
@@ -800,16 +800,16 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RangeBounds</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardScheme</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ShardSchemeRangeError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">range</span>, <span class="ident">total</span>): (<span class="ident">T</span>, <span class="ident">u64</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">range</span>, <span class="ident">total</span>): (<span class="ident">T</span>, <span class="ident">u64</span>)) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">start_bound</span>() {
-            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">num</span> <span class="op">-</span> <span class="number">1</span>,
-            <span class="ident">Bound::Included</span>(<span class="ident">num</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">num</span>,
-            <span class="ident">Bound::Unbounded</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">0</span>,
+            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span> <span class="op">-</span> <span class="number">1</span>,
+            <span class="ident">Bound::Included</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span>,
+            <span class="ident">Bound::Unbounded</span> =&gt; <span class="number">0</span>,
         };
         <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">end_bound</span>() {
-            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">num</span> <span class="op">-</span> <span class="number">1</span>,
-            <span class="ident">Bound::Included</span>(<span class="ident">num</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">num</span>,
-            <span class="ident">Bound::Unbounded</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">total</span> <span class="op">-</span> <span class="number">1</span>,
+            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span> <span class="op">-</span> <span class="number">1</span>,
+            <span class="ident">Bound::Included</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span>,
+            <span class="ident">Bound::Unbounded</span> =&gt; <span class="ident">total</span> <span class="op">-</span> <span class="number">1</span>,
         };
 
         <span class="kw">if</span> <span class="ident">start</span> <span class="op">&gt;</span> <span class="ident">end</span> {
@@ -852,7 +852,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardScheme</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ShardSchemeRangeError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">bucket_id</span>, <span class="ident">concurrency</span>, <span class="ident">total</span>): (<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">bucket_id</span>, <span class="ident">concurrency</span>, <span class="ident">total</span>): (<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">buckets</span> <span class="op">=</span> <span class="ident">total</span> <span class="op">/</span> <span class="ident">concurrency</span>;
 
         <span class="kw">if</span> <span class="ident">bucket_id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">buckets</span> {
@@ -896,7 +896,7 @@
     );
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_scheme</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">test_scheme</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="macro">assert_eq!</span>(
             <span class="ident">ShardScheme::Range</span> {
                 <span class="ident">from</span>: <span class="number">0</span>,
@@ -1004,7 +1004,7 @@
             <span class="ident">ShardScheme::try_from</span>((<span class="number">25</span>, <span class="number">16</span>, <span class="number">320</span>)).<span class="ident">unwrap_err</span>(),
             <span class="ident">ShardSchemeRangeError</span> {
                 <span class="ident">kind</span>: <span class="ident">ShardSchemeRangeErrorType::BucketTooLarge</span> { <span class="ident">bucket_id</span>, <span class="ident">concurrency</span>, <span class="ident">total</span> }}
-            <span class="kw">if</span> <span class="ident">bucket_id</span> <span class="op">=</span><span class="op">=</span> <span class="number">25</span> <span class="op">&amp;&amp;</span> <span class="ident">concurrency</span> <span class="op">=</span><span class="op">=</span> <span class="number">16</span> <span class="op">&amp;&amp;</span> <span class="ident">total</span> <span class="op">=</span><span class="op">=</span> <span class="number">320</span>
+            <span class="kw">if</span> <span class="ident">bucket_id</span> <span class="op">==</span> <span class="number">25</span> <span class="op">&amp;&amp;</span> <span class="ident">concurrency</span> <span class="op">==</span> <span class="number">16</span> <span class="op">&amp;&amp;</span> <span class="ident">total</span> <span class="op">==</span> <span class="number">320</span>
         ));
     }
 }

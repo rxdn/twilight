@@ -109,6 +109,11 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span>,
@@ -131,7 +136,7 @@
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// # let client = Client::new(&quot;token&quot;.to_owned());</span>
 <span class="doccomment">/// client</span>
-<span class="doccomment">///     .delete_webhook_message(WebhookId(1), &quot;token here&quot;, MessageId(2))</span>
+<span class="doccomment">///     .delete_webhook_message(WebhookId::new(1).expect(&quot;non zero&quot;), &quot;token here&quot;, MessageId::new(2).expect(&quot;non zero&quot;))</span>
 <span class="doccomment">///     .reason(&quot;reason here&quot;)?</span>
 <span class="doccomment">///     .exec()</span>
 <span class="doccomment">///     .await?;</span>
@@ -152,7 +157,7 @@
         <span class="ident">webhook_id</span>: <span class="ident">WebhookId</span>,
         <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">http</span>,
             <span class="ident">message_id</span>,
@@ -164,11 +169,11 @@
 
     <span class="comment">// `self` needs to be consumed and the client returned due to parameters</span>
     <span class="comment">// being consumed in request construction.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::DeleteWebhookMessage</span> {
-            <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="number">0</span>,
+            <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="ident">get</span>(),
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
-            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">webhook_id</span>.<span class="number">0</span>,
+            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">webhook_id</span>.<span class="ident">get</span>(),
         })
         .<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>);
 
@@ -182,16 +187,16 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">EmptyBody</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">EmptyBody</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">request</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
         }
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">AuditLogReason</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DeleteWebhookMessage</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">AuditLogReasonError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">AuditLogReasonError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">reason</span>.<span class="ident">replace</span>(<span class="ident">AuditLogReasonError::validate</span>(<span class="ident">reason</span>)<span class="question-mark">?</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
@@ -207,7 +212,12 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_request</span>() {
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Client::new</span>(<span class="string">&quot;token&quot;</span>.<span class="ident">to_owned</span>());
-        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">DeleteWebhookMessage::new</span>(<span class="kw-2">&amp;</span><span class="ident">client</span>, <span class="ident">WebhookId</span>(<span class="number">1</span>), <span class="string">&quot;token&quot;</span>, <span class="ident">MessageId</span>(<span class="number">2</span>));
+        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">DeleteWebhookMessage::new</span>(
+            <span class="kw-2">&amp;</span><span class="ident">client</span>,
+            <span class="ident">WebhookId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="string">&quot;token&quot;</span>,
+            <span class="ident">MessageId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+        );
         <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">request</span>().<span class="ident">expect</span>(<span class="string">&quot;failed to create request&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">Request::from_route</span>(<span class="kw-2">&amp;</span><span class="ident">Route::DeleteWebhookMessage</span> {

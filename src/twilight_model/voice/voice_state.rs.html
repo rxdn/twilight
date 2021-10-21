@@ -467,7 +467,27 @@
 <span id="467">467</span>
 <span id="468">468</span>
 <span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild::member</span>::{<span class="ident">Member</span>, <span class="ident">OptionalMemberDeserializer</span>},
     <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
 };
@@ -497,7 +517,13 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="ident">UserId</span>,
-    <span class="kw">pub</span> <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// When the user requested to speak.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # serde</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is serialized as an ISO 8601 timestamp in the format of</span>
+    <span class="doccomment">/// &quot;2021-01-01T01-01-01.010000+00:00&quot;.</span>
+    <span class="kw">pub</span> <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
@@ -523,12 +549,12 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceStateVisitor</span> {
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">VoiceState</span>;
 
-    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;struct VoiceState&quot;</span>)
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">deaf</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -551,13 +577,13 @@
             <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
             <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
                     <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
                     <span class="ident">key</span>
                 }
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
-                <span class="prelude-val">Err</span>(<span class="ident">why</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
+                <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                     <span class="comment">// Encountered when we run into an unknown key.</span>
                     <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
@@ -568,93 +594,94 @@
             };
 
             <span class="kw">match</span> <span class="ident">key</span> {
-                <span class="ident">Field::ChannelId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::ChannelId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">channel_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;channel_id&quot;</span>));
                     }
 
                     <span class="ident">channel_id</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                 }
-                <span class="ident">Field::Deaf</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::Deaf</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">deaf</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;deaf&quot;</span>));
                     }
 
                     <span class="ident">deaf</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::GuildId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::GuildId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">guild_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;guild_id&quot;</span>));
                     }
 
                     <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                 }
-                <span class="ident">Field::Member</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::Member</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">member</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;member&quot;</span>));
                     }
 
-                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">OptionalMemberDeserializer::new</span>(<span class="ident">GuildId</span>(<span class="number">0</span>));
+                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span>
+                        <span class="ident">OptionalMemberDeserializer::new</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
 
                     <span class="ident">member</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
                 }
-                <span class="ident">Field::Mute</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::Mute</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">mute</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;mute&quot;</span>));
                     }
 
                     <span class="ident">mute</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::SelfDeaf</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::SelfDeaf</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">self_deaf</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;self_deaf&quot;</span>));
                     }
 
                     <span class="ident">self_deaf</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::SelfMute</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::SelfMute</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">self_mute</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;self_mute&quot;</span>));
                     }
 
                     <span class="ident">self_mute</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::SelfStream</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::SelfStream</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">self_stream</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;self_stream&quot;</span>));
                     }
 
                     <span class="ident">self_stream</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::SessionId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::SessionId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">session_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;session_id&quot;</span>));
                     }
 
                     <span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::Suppress</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::Suppress</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">suppress</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;suppress&quot;</span>));
                     }
 
                     <span class="ident">suppress</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::Token</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::Token</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;token&quot;</span>));
                     }
 
                     <span class="ident">token</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                 }
-                <span class="ident">Field::UserId</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::UserId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">user_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;user_id&quot;</span>));
                     }
 
                     <span class="ident">user_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="ident">Field::RequestToSpeakTimestamp</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">Field::RequestToSpeakTimestamp</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">request_to_speak_timestamp</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;request_to_speak_timestamp&quot;</span>));
                     }
@@ -710,7 +737,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceState</span> {
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
         <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
             <span class="string">&quot;channel_id&quot;</span>,
             <span class="string">&quot;deaf&quot;</span>,
@@ -734,15 +761,20 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">Member</span>, <span class="ident">UserId</span>, <span class="ident">VoiceState</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">id::RoleId</span>, <span class="ident">user::User</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::{
+        <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
+        <span class="ident">id::RoleId</span>,
+        <span class="ident">user::User</span>,
+    };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
+    <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_voice_state</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">VoiceState</span> {
-            <span class="ident">channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">1</span>)),
+            <span class="ident">channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId</span>(<span class="number">2</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">member</span>: <span class="prelude-val">None</span>,
             <span class="ident">mute</span>: <span class="bool-val">true</span>,
             <span class="ident">self_deaf</span>: <span class="bool-val">false</span>,
@@ -751,7 +783,7 @@
             <span class="ident">session_id</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">suppress</span>: <span class="bool-val">true</span>,
             <span class="ident">token</span>: <span class="prelude-val">None</span>,
-            <span class="ident">user_id</span>: <span class="ident">UserId</span>(<span class="number">3</span>),
+            <span class="ident">user_id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-val">None</span>,
         };
 
@@ -796,30 +828,34 @@
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_voice_state_complete</span>() {
+    <span class="kw">fn</span> <span class="ident">test_voice_state_complete</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">premium_since</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-03-16T14:29:19.046000+00:00&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">request_to_speak_timestamp</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-04-21T22:16:50.000000+00:00&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">VoiceState</span> {
-            <span class="ident">channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId</span>(<span class="number">1</span>)),
+            <span class="ident">channel_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId</span>(<span class="number">2</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">Member</span> {
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                <span class="ident">guild_id</span>: <span class="ident">GuildId</span>(<span class="number">2</span>),
-                <span class="ident">hoisted_role</span>: <span class="prelude-val">Some</span>(<span class="ident">RoleId</span>(<span class="number">2</span>)),
-                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;timestamp&quot;</span>.<span class="ident">to_owned</span>()),
+                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">hoisted_role</span>: <span class="prelude-val">Some</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="ident">joined_at</span>),
                 <span class="ident">mute</span>: <span class="bool-val">true</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">pending</span>: <span class="bool-val">false</span>,
-                <span class="ident">premium_since</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;timestamp&quot;</span>.<span class="ident">to_owned</span>()),
+                <span class="ident">premium_since</span>: <span class="prelude-val">Some</span>(<span class="ident">premium_since</span>),
                 <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
                 <span class="ident">user</span>: <span class="ident">User</span> {
                     <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                     <span class="ident">bot</span>: <span class="bool-val">false</span>,
-                    <span class="ident">discriminator</span>: <span class="string">&quot;0001&quot;</span>.<span class="ident">to_owned</span>(),
+                    <span class="ident">discriminator</span>: <span class="number">1</span>,
                     <span class="ident">email</span>: <span class="prelude-val">None</span>,
                     <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">id</span>: <span class="ident">UserId</span>(<span class="number">3</span>),
+                    <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
                     <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                     <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                     <span class="ident">name</span>: <span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>(),
@@ -836,8 +872,8 @@
             <span class="ident">session_id</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">suppress</span>: <span class="bool-val">true</span>,
             <span class="ident">token</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;abc&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">user_id</span>: <span class="ident">UserId</span>(<span class="number">3</span>),
-            <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;2021-04-21T22:16:50+0000&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">user_id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-val">Some</span>(<span class="ident">request_to_speak_timestamp</span>),
         };
 
         <span class="ident">serde_test::assert_tokens</span>(
@@ -874,7 +910,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;joined_at&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;timestamp&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;mute&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;nick&quot;</span>),
@@ -884,7 +920,7 @@
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;premium_since&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;timestamp&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-03-16T14:29:19.046000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;roles&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>) },
                 <span class="ident">Token::SeqEnd</span>,
@@ -930,10 +966,12 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;3&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;request_to_speak_timestamp&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-04-21T22:16:50+0000&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-04-21T22:16:50.000000+00:00&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
+
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

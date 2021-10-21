@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["RatelimitErrorType",""]],"struct":[["RatelimitError",""]],"type":[["RatelimitResult",""]]});
