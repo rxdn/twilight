@@ -253,6 +253,8 @@
 <span id="253">253</span>
 <span id="254">254</span>
 <span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Message stickers.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! See the [Discord documentation] for more information.</span>
@@ -283,7 +285,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;is_false&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">available</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// Description of the sticker.</span>
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Format type.</span>
     <span class="kw">pub</span> <span class="ident">format_type</span>: <span class="ident">StickerFormatType</span>,
     <span class="doccomment">/// ID of the guild that owns the sticker.</span>
@@ -351,7 +353,7 @@
     <span class="kw">fn</span> <span class="ident">test_minimal</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Sticker</span> {
             <span class="ident">available</span>: <span class="bool-val">false</span>,
-            <span class="ident">description</span>: <span class="string">&quot;foo2&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">description</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;foo2&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
             <span class="ident">guild_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
@@ -371,6 +373,7 @@
                     <span class="ident">len</span>: <span class="number">6</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;description&quot;</span>),
+                <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;foo2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;format_type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="ident">StickerFormatType::Png</span> <span class="kw">as</span> <span class="ident">u8</span>),
@@ -393,7 +396,7 @@
     <span class="kw">fn</span> <span class="ident">test_full</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Sticker</span> {
             <span class="ident">available</span>: <span class="bool-val">true</span>,
-            <span class="ident">description</span>: <span class="string">&quot;sticker&quot;</span>.<span class="ident">into</span>(),
+            <span class="ident">description</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;sticker&quot;</span>.<span class="ident">into</span>()),
             <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
             <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
             <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
@@ -431,6 +434,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;available&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;description&quot;</span>),
+                <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;sticker&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;format_type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="ident">StickerFormatType::Png</span> <span class="kw">as</span> <span class="ident">u8</span>),
