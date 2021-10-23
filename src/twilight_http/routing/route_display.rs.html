@@ -1120,6 +1120,20 @@
 <span id="1120">1120</span>
 <span id="1121">1121</span>
 <span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::route::Route</span>;
 <span class="kw">use</span> <span class="ident">percent_encoding</span>::{<span class="ident">utf8_percent_encode</span>, <span class="ident">NON_ALPHANUMERIC</span>};
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
@@ -2062,7 +2076,7 @@
             } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;channels/&quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">channel_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;/threads/archived/public&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;/threads/archived/public?&quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">before</span>) <span class="op">=</span> <span class="ident">before</span> {
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;before=&quot;</span>)<span class="question-mark">?</span>;
@@ -2240,6 +2254,20 @@
         };
 
         <span class="macro">assert_eq!</span>(<span class="string">&quot;applications/1/commands/2&quot;</span>, <span class="ident">route</span>.<span class="ident">display</span>().<span class="ident">to_string</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_get_public_archived_threads</span>() {
+        <span class="kw">let</span> <span class="ident">route</span> <span class="op">=</span> <span class="ident">Route::GetPublicArchivedThreads</span> {
+            <span class="ident">channel_id</span>: <span class="number">1</span>,
+            <span class="ident">before</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;2021-01-01T00:00:00Z&quot;</span>),
+            <span class="ident">limit</span>: <span class="prelude-val">None</span>,
+        };
+
+        <span class="macro">assert_eq!</span>(
+            <span class="string">&quot;channels/1/threads/archived/public?before=2021-01-01T00:00:00Z&quot;</span>,
+            <span class="ident">route</span>.<span class="ident">display</span>().<span class="ident">to_string</span>()
+        );
     }
 }
 </code></pre></div>
