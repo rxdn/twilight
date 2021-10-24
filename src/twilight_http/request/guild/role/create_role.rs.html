@@ -138,6 +138,32 @@
 <span id="138">138</span>
 <span id="139">139</span>
 <span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">request</span>::{<span class="self">self</span>, <span class="ident">AuditLogReason</span>, <span class="ident">AuditLogReasonError</span>, <span class="ident">Request</span>},
@@ -157,11 +183,15 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">hoist</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">mentionable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">permissions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">unicode_emoji</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Create a role in a guild.</span>
@@ -198,9 +228,11 @@
             <span class="ident">fields</span>: <span class="ident">CreateRoleFields</span> {
                 <span class="ident">color</span>: <span class="prelude-val">None</span>,
                 <span class="ident">hoist</span>: <span class="prelude-val">None</span>,
+                <span class="ident">icon</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mentionable</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="prelude-val">None</span>,
                 <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
+                <span class="ident">unicode_emoji</span>: <span class="prelude-val">None</span>,
             },
             <span class="ident">guild_id</span>,
             <span class="ident">http</span>,
@@ -218,6 +250,19 @@
     <span class="doccomment">/// If true, display the role in the members list.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">hoist</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">hoist</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">hoist</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">hoist</span>);
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set the icon of the role.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Only works if the guild has the `ROLE_ICONS` feature.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [Discord Docs/Image Data].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [Discord Docs/Image Data]: https://discord.com/developers/docs/reference#image-data</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">icon</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">icon</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">icon</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">icon</span>);
 
         <span class="self">self</span>
     }
@@ -241,6 +286,13 @@
     <span class="doccomment">/// Set the allowed permissions of this role.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">permissions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">permissions</span>: <span class="ident">Permissions</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">permissions</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">permissions</span>);
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set the unicode emoji of a role.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">unicode_emoji</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">unicode_emoji</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">unicode_emoji</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">unicode_emoji</span>);
 
         <span class="self">self</span>
     }
