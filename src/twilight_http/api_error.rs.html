@@ -1000,6 +1000,21 @@
 <span id="1000">1000</span>
 <span id="1001">1001</span>
 <span id="1002">1002</span>
+<span id="1003">1003</span>
+<span id="1004">1004</span>
+<span id="1005">1005</span>
+<span id="1006">1006</span>
+<span id="1007">1007</span>
+<span id="1008">1008</span>
+<span id="1009">1009</span>
+<span id="1010">1010</span>
+<span id="1011">1011</span>
+<span id="1012">1012</span>
+<span id="1013">1013</span>
+<span id="1014">1014</span>
+<span id="1015">1015</span>
+<span id="1016">1016</span>
+<span id="1017">1017</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">Visitor</span>},
     <span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Serialize</span>, <span class="ident">Serializer</span>,
@@ -1142,7 +1157,7 @@
     <span class="ident">MaximumServerCategoriesReached</span>,
     <span class="doccomment">/// Guild already has a template</span>
     <span class="ident">GuildTemplateAlreadyExist</span>,
-    <span class="doccomment">/// Max number of thread participants has been reached</span>
+    <span class="doccomment">/// Max number of thread participants has been reached (1000)</span>
     <span class="ident">ThreadMaxParticipants</span>,
     <span class="doccomment">/// Maximum number of bans for non-guild members have been exceeded</span>
     <span class="ident">MaximumNonGuildBansReached</span>,
@@ -1152,6 +1167,8 @@
     <span class="ident">MaximumStickersReached</span>,
     <span class="doccomment">/// Maximum number of prune requests has been reached. Try again later</span>
     <span class="ident">MaximumPruneRequestsReached</span>,
+    <span class="doccomment">/// Maximum number of guild widget settings updates has been reached. Try again later</span>
+    <span class="ident">MaximumGuildWidgets</span>,
     <span class="doccomment">/// Unauthorized. Provide a valid token and try again</span>
     <span class="ident">Unauthorized</span>,
     <span class="doccomment">/// You need to verify your account in order to perform this action</span>
@@ -1248,6 +1265,8 @@
     <span class="ident">ServerNotAvailableLocation</span>,
     <span class="doccomment">/// This server needs monetization enabled in order to perform this action</span>
     <span class="ident">ServerNeedsMonetiazation</span>,
+    <span class="doccomment">/// This server needs more boosts to perform this action</span>
+    <span class="ident">ServerNeedsBoosts</span>,
     <span class="doccomment">/// Two factor is required for this operation.</span>
     <span class="ident">TwoFactorRequired</span>,
     <span class="doccomment">/// No users with DiscordTag exist</span>
@@ -1258,6 +1277,8 @@
     <span class="ident">ApiResourceOverloaded</span>,
     <span class="doccomment">/// The Stage is already open</span>
     <span class="ident">StageAlreadyOpen</span>,
+    <span class="doccomment">/// Cannot reply without permission to read message history</span>
+    <span class="ident">CannotReplyWithoutMessageHistory</span>,
     <span class="doccomment">/// A thread has already been created for this message</span>
     <span class="ident">ThreadAlreadyCreated</span>,
     <span class="doccomment">/// Thread is locked</span>
@@ -1347,6 +1368,7 @@
             <span class="ident"><span class="self">Self</span>::MaximumGuildBansFetchesReached</span> =&gt; <span class="number">30037</span>,
             <span class="ident"><span class="self">Self</span>::MaximumStickersReached</span> =&gt; <span class="number">30039</span>,
             <span class="ident"><span class="self">Self</span>::MaximumPruneRequestsReached</span> =&gt; <span class="number">30040</span>,
+            <span class="ident"><span class="self">Self</span>::MaximumGuildWidgets</span> =&gt; <span class="number">30042</span>,
             <span class="ident"><span class="self">Self</span>::Unauthorized</span> =&gt; <span class="number">40001</span>,
             <span class="ident"><span class="self">Self</span>::AccountNeedsVerification</span> =&gt; <span class="number">40002</span>,
             <span class="ident"><span class="self">Self</span>::OpeningDirectMessageRateLimitReached</span> =&gt; <span class="number">40003</span>,
@@ -1394,11 +1416,13 @@
             <span class="ident"><span class="self">Self</span>::ThreadInvalidBeforeValue</span> =&gt; <span class="number">50085</span>,
             <span class="ident"><span class="self">Self</span>::ServerNotAvailableLocation</span> =&gt; <span class="number">50095</span>,
             <span class="ident"><span class="self">Self</span>::ServerNeedsMonetiazation</span> =&gt; <span class="number">50097</span>,
+            <span class="ident"><span class="self">Self</span>::ServerNeedsBoosts</span> =&gt; <span class="number">50101</span>,
             <span class="ident"><span class="self">Self</span>::TwoFactorRequired</span> =&gt; <span class="number">60003</span>,
             <span class="ident"><span class="self">Self</span>::NoSuchUser</span> =&gt; <span class="number">80004</span>,
             <span class="ident"><span class="self">Self</span>::ReactionBlocked</span> =&gt; <span class="number">90001</span>,
             <span class="ident"><span class="self">Self</span>::ApiResourceOverloaded</span> =&gt; <span class="number">130_000</span>,
             <span class="ident"><span class="self">Self</span>::StageAlreadyOpen</span> =&gt; <span class="number">150_006</span>,
+            <span class="ident"><span class="self">Self</span>::CannotReplyWithoutMessageHistory</span> =&gt; <span class="number">160_002</span>,
             <span class="ident"><span class="self">Self</span>::ThreadAlreadyCreated</span> =&gt; <span class="number">160_004</span>,
             <span class="ident"><span class="self">Self</span>::ThreadLocked</span> =&gt; <span class="number">160_005</span>,
             <span class="ident"><span class="self">Self</span>::MaxActiveThreads</span> =&gt; <span class="number">160_006</span>,
@@ -1483,6 +1507,7 @@
             <span class="number">30037</span> =&gt; <span class="ident"><span class="self">Self</span>::MaximumGuildBansFetchesReached</span>,
             <span class="number">30039</span> =&gt; <span class="ident"><span class="self">Self</span>::MaximumStickersReached</span>,
             <span class="number">30040</span> =&gt; <span class="ident"><span class="self">Self</span>::MaximumPruneRequestsReached</span>,
+            <span class="number">30042</span> =&gt; <span class="ident"><span class="self">Self</span>::MaximumGuildWidgets</span>,
             <span class="number">40001</span> =&gt; <span class="ident"><span class="self">Self</span>::Unauthorized</span>,
             <span class="number">40002</span> =&gt; <span class="ident"><span class="self">Self</span>::AccountNeedsVerification</span>,
             <span class="number">40003</span> =&gt; <span class="ident"><span class="self">Self</span>::OpeningDirectMessageRateLimitReached</span>,
@@ -1530,11 +1555,13 @@
             <span class="number">50085</span> =&gt; <span class="ident"><span class="self">Self</span>::ThreadInvalidBeforeValue</span>,
             <span class="number">50095</span> =&gt; <span class="ident"><span class="self">Self</span>::ServerNotAvailableLocation</span>,
             <span class="number">50097</span> =&gt; <span class="ident"><span class="self">Self</span>::ServerNeedsMonetiazation</span>,
+            <span class="number">50101</span> =&gt; <span class="ident"><span class="self">Self</span>::ServerNeedsBoosts</span>,
             <span class="number">60003</span> =&gt; <span class="ident"><span class="self">Self</span>::TwoFactorRequired</span>,
             <span class="number">80004</span> =&gt; <span class="ident"><span class="self">Self</span>::NoSuchUser</span>,
             <span class="number">90001</span> =&gt; <span class="ident"><span class="self">Self</span>::ReactionBlocked</span>,
             <span class="number">130_000</span> =&gt; <span class="ident"><span class="self">Self</span>::ApiResourceOverloaded</span>,
             <span class="number">150_006</span> =&gt; <span class="ident"><span class="self">Self</span>::StageAlreadyOpen</span>,
+            <span class="number">160_002</span> =&gt; <span class="ident"><span class="self">Self</span>::CannotReplyWithoutMessageHistory</span>,
             <span class="number">160_004</span> =&gt; <span class="ident"><span class="self">Self</span>::ThreadAlreadyCreated</span>,
             <span class="number">160_005</span> =&gt; <span class="ident"><span class="self">Self</span>::ThreadLocked</span>,
             <span class="number">160_006</span> =&gt; <span class="ident"><span class="self">Self</span>::MaxActiveThreads</span>,
@@ -1614,11 +1641,12 @@
             <span class="ident"><span class="self">Self</span>::MaximumGuildMembersReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of server members reached&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MaximumServerCategoriesReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of server categories has been reached&quot;</span>),
             <span class="ident"><span class="self">Self</span>::GuildTemplateAlreadyExist</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Guild already has a template&quot;</span>),
-            <span class="ident"><span class="self">Self</span>::ThreadMaxParticipants</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Max number of thread participants has been reached&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::ThreadMaxParticipants</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Max number of thread participants has been reached (1000)&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MaximumNonGuildBansReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of bans for non-guild members have been exceeded&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MaximumGuildBansFetchesReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of bans fetches has been reached&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MaximumStickersReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of stickers reached&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MaximumPruneRequestsReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of prune requests has been reached. Try again later&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::MaximumGuildWidgets</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of guild widget settings updates has been reached. Try again later&quot;</span>),
             <span class="ident"><span class="self">Self</span>::Unauthorized</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Unauthorized. Provide a valid token and try again&quot;</span>),
             <span class="ident"><span class="self">Self</span>::AccountNeedsVerification</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;You need to verify your account in order to perform this action&quot;</span>),
             <span class="ident"><span class="self">Self</span>::OpeningDirectMessageRateLimitReached</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;You are opening direct messages too fast&quot;</span>),
@@ -1666,11 +1694,13 @@
             <span class="ident"><span class="self">Self</span>::ThreadInvalidBeforeValue</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;`before` value is earlier than the thread creation date&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ServerNotAvailableLocation</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;This server is not available in your location&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ServerNeedsMonetiazation</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;This server needs monetization enabled in order to perform this action&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::ServerNeedsBoosts</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;This server needs more boosts to perform this action&quot;</span>),
             <span class="ident"><span class="self">Self</span>::TwoFactorRequired</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Two factor is required for this operation&quot;</span>),
             <span class="ident"><span class="self">Self</span>::NoSuchUser</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;No users with DiscordTag exist&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ReactionBlocked</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Reaction was blocked&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ApiResourceOverloaded</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;API resource is currently overloaded. Try again a little later&quot;</span>),
             <span class="ident"><span class="self">Self</span>::StageAlreadyOpen</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;The Stage is already open&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::CannotReplyWithoutMessageHistory</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Cannot reply without permission to read message history&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ThreadAlreadyCreated</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;A thread has already been created for this message&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ThreadLocked</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Thread is locked&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MaxActiveThreads</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Maximum number of active threads reached&quot;</span>),
