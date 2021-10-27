@@ -562,7 +562,7 @@
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
     <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>,
 };
-<span class="kw">use</span> <span class="ident">serde_value::Value</span>;
+<span class="kw">use</span> <span class="ident">serde_value</span>::{<span class="ident">DeserializerError</span>, <span class="ident">Value</span>};
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
 
 <span class="doccomment">/// Payload received when a user executes an interaction.</span>
@@ -773,7 +773,7 @@
                 <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data</span>
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;data&quot;</span>))<span class="question-mark">?</span>
                     .<span class="ident">deserialize_into</span>()
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">DeError::custom</span>(<span class="string">&quot;expected CommandData struct&quot;</span>))<span class="question-mark">?</span>;
+                    .<span class="ident">map_err</span>(<span class="ident">DeserializerError::into_error</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">guild_id</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="ident">member</span>.<span class="ident">unwrap_or_default</span>();
