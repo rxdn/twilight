@@ -766,6 +766,8 @@
 <span id="766">766</span>
 <span id="767">767</span>
 <span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Create a [`Command`] with a builder.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
@@ -800,7 +802,7 @@
         <span class="ident">CommandOption</span>, <span class="ident">CommandOptionChoice</span>, <span class="ident">CommandType</span>, <span class="ident">Number</span>, <span class="ident">OptionsCommandOptionData</span>,
     },
     <span class="ident">channel::ChannelType</span>,
-    <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">GuildId</span>},
+    <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">CommandVersionId</span>, <span class="ident">GuildId</span>},
 };
 
 <span class="doccomment">/// Builder to create a [`Command`].</span>
@@ -812,7 +814,7 @@
 <span class="kw">impl</span> <span class="ident">CommandBuilder</span> {
     <span class="doccomment">/// Create a new default [`Command`] builder.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;builders have no effect if unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">description</span>: <span class="ident">String</span>, <span class="ident">kind</span>: <span class="ident">CommandType</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">description</span>: <span class="ident">String</span>, <span class="ident">kind</span>: <span class="ident">CommandType</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">Command</span> {
             <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">default_permission</span>: <span class="prelude-val">None</span>,
@@ -822,6 +824,7 @@
             <span class="ident">kind</span>,
             <span class="ident">name</span>,
             <span class="ident">options</span>: <span class="ident">Vec::new</span>(),
+            <span class="ident">version</span>: <span class="ident">CommandVersionId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
         })
     }
 
@@ -1429,15 +1432,15 @@
             <span class="ident">default_permission</span>: <span class="prelude-val">None</span>,
             <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Get or edit permissions for a user or a role&quot;</span>),
             <span class="ident">id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">options</span>: <span class="macro">vec!</span>[
+            <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                 <span class="ident">CommandOption::SubCommandGroup</span>(<span class="ident">OptionsCommandOptionData</span> {
                     <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Get or edit permissions for a user&quot;</span>),
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;user&quot;</span>),
-                    <span class="ident">options</span>: <span class="macro">vec!</span>[
+                    <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                         <span class="ident">CommandOption::SubCommand</span>(<span class="ident">OptionsCommandOptionData</span> {
                             <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Get permissions for a user&quot;</span>),
                             <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;get&quot;</span>),
-                            <span class="ident">options</span>: <span class="macro">vec!</span>[
+                            <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                                 <span class="ident">CommandOption::User</span>(<span class="ident">BaseCommandOptionData</span> {
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;The user to get&quot;</span>),
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;user&quot;</span>),
@@ -1452,12 +1455,12 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;channel&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">false</span>,
                                 }),
-                            ],
+                            ]),
                         }),
                         <span class="ident">CommandOption::SubCommand</span>(<span class="ident">OptionsCommandOptionData</span> {
                             <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Edit permissions for a user&quot;</span>),
                             <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;edit&quot;</span>),
-                            <span class="ident">options</span>: <span class="macro">vec!</span>[
+                            <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                                 <span class="ident">CommandOption::User</span>(<span class="ident">BaseCommandOptionData</span> {
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;The user to edit&quot;</span>),
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;user&quot;</span>),
@@ -1472,18 +1475,18 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;channel&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">false</span>,
                                 }),
-                            ],
+                            ]),
                         }),
-                    ],
+                    ]),
                 }),
                 <span class="ident">CommandOption::SubCommandGroup</span>(<span class="ident">OptionsCommandOptionData</span> {
                     <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Get or edit permissions for a role&quot;</span>),
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;role&quot;</span>),
-                    <span class="ident">options</span>: <span class="macro">vec!</span>[
+                    <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                         <span class="ident">CommandOption::SubCommand</span>(<span class="ident">OptionsCommandOptionData</span> {
                             <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Get permissions for a role&quot;</span>),
                             <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;get&quot;</span>),
-                            <span class="ident">options</span>: <span class="macro">vec!</span>[
+                            <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                                 <span class="ident">CommandOption::Role</span>(<span class="ident">BaseCommandOptionData</span> {
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;The role to get&quot;</span>),
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;role&quot;</span>),
@@ -1498,12 +1501,12 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;channel&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">false</span>,
                                 }),
-                            ],
+                            ]),
                         }),
                         <span class="ident">CommandOption::SubCommand</span>(<span class="ident">OptionsCommandOptionData</span> {
                             <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;Edit permissions for a role&quot;</span>),
                             <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;edit&quot;</span>),
-                            <span class="ident">options</span>: <span class="macro">vec!</span>[
+                            <span class="ident">options</span>: <span class="ident">Vec::from</span>([
                                 <span class="ident">CommandOption::Role</span>(<span class="ident">BaseCommandOptionData</span> {
                                     <span class="ident">description</span>: <span class="ident">String::from</span>(<span class="string">&quot;The role to edit&quot;</span>),
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;role&quot;</span>),
@@ -1524,11 +1527,12 @@
                                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;position&quot;</span>),
                                     <span class="ident">required</span>: <span class="bool-val">false</span>,
                                 }),
-                            ],
+                            ]),
                         }),
-                    ],
+                    ]),
                 }),
-            ],
+            ]),
+            <span class="ident">version</span>: <span class="ident">CommandVersionId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
         };
 
         <span class="macro">assert_eq!</span>(<span class="ident">command</span>, <span class="ident">command_manual</span>);

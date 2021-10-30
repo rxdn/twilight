@@ -51,6 +51,8 @@
 <span id="51">51</span>
 <span id="52">52</span>
 <span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Used for building commands to send to Discord.</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">permissions</span>;
@@ -66,7 +68,7 @@
     },
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">GuildId</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">CommandVersionId</span>, <span class="ident">GuildId</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// Data sent to discord to create a command.</span>
@@ -84,10 +86,6 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Command</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ApplicationId</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Guild ID of the command, if not global.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">default_permission</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Description of the command.</span>
@@ -97,12 +95,18 @@
     <span class="doccomment">/// [`User`]: CommandType::User</span>
     <span class="doccomment">/// [`Message`]: CommandType::Message</span>
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Guild ID of the command, if not global.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandId</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">CommandType</span>,
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">options</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandOption</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Autoincrementing version identifier.</span>
+    <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">CommandVersionId</span>,
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>
