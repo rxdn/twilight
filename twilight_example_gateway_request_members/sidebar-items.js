@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["main","simple example of how to request one or more members from the gateway"]]});
