@@ -846,6 +846,107 @@
 <span id="846">846</span>
 <span id="847">847</span>
 <span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel::ChannelType</span>, <span class="ident">util::is_false</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
@@ -874,13 +975,13 @@
     <span class="ident">SubCommand</span>(<span class="ident">OptionsCommandOptionData</span>),
     <span class="ident">SubCommandGroup</span>(<span class="ident">OptionsCommandOptionData</span>),
     <span class="ident">String</span>(<span class="ident">ChoiceCommandOptionData</span>),
-    <span class="ident">Integer</span>(<span class="ident">ChoiceCommandOptionData</span>),
+    <span class="ident">Integer</span>(<span class="ident">NumberCommandOptionData</span>),
     <span class="ident">Boolean</span>(<span class="ident">BaseCommandOptionData</span>),
     <span class="ident">User</span>(<span class="ident">BaseCommandOptionData</span>),
     <span class="ident">Channel</span>(<span class="ident">ChannelCommandOptionData</span>),
     <span class="ident">Role</span>(<span class="ident">BaseCommandOptionData</span>),
     <span class="ident">Mentionable</span>(<span class="ident">BaseCommandOptionData</span>),
-    <span class="ident">Number</span>(<span class="ident">ChoiceCommandOptionData</span>),
+    <span class="ident">Number</span>(<span class="ident">NumberCommandOptionData</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">CommandOption</span> {
@@ -902,9 +1003,8 @@
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">CommandOption::SubCommand</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">CommandOption::SubCommandGroup</span>(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
-            <span class="ident">CommandOption::String</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident">CommandOption::Integer</span>(<span class="ident">data</span>)
-            <span class="op">|</span> <span class="ident">CommandOption::Number</span>(<span class="ident">data</span>) =&gt; <span class="ident">data</span>.<span class="ident">required</span>,
+            <span class="ident">CommandOption::String</span>(<span class="ident">data</span>) =&gt; <span class="ident">data</span>.<span class="ident">required</span>,
+            <span class="ident">CommandOption::Integer</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident">CommandOption::Number</span>(<span class="ident">data</span>) =&gt; <span class="ident">data</span>.<span class="ident">required</span>,
             <span class="ident">CommandOption::Channel</span>(<span class="ident">data</span>) =&gt; <span class="ident">data</span>.<span class="ident">required</span>,
             <span class="ident">CommandOption::Boolean</span>(<span class="ident">data</span>)
             <span class="op">|</span> <span class="ident">CommandOption::User</span>(<span class="ident">data</span>)
@@ -927,6 +1027,10 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">choices</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> [<span class="ident">CommandOptionChoice</span>]<span class="op">&gt;</span>,
     <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> <span class="ident">str</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">max_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionValue</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">min_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionValue</span><span class="op">&gt;</span>,
     <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> <span class="ident">str</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;ser</span> [<span class="ident">CommandOption</span>]<span class="op">&gt;</span>,
@@ -943,26 +1047,41 @@
                 <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
                 <span class="ident">choices</span>: <span class="prelude-val">None</span>,
                 <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
+                <span class="ident">min_value</span>: <span class="prelude-val">None</span>,
+                <span class="ident">max_value</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
                 <span class="ident">options</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">options</span>.<span class="ident">as_ref</span>()),
                 <span class="ident">required</span>: <span class="bool-val">false</span>,
                 <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
             },
-            <span class="ident"><span class="self">Self</span>::String</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Number</span>(<span class="ident">data</span>) =&gt; {
-                <span class="ident">CommandOptionEnvelope</span> {
-                    <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">choices</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">as_ref</span>()),
-                    <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
-                    <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
-                    <span class="ident">options</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
-                    <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
-                }
-            }
+            <span class="ident"><span class="self">Self</span>::String</span>(<span class="ident">data</span>) =&gt; <span class="ident">CommandOptionEnvelope</span> {
+                <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
+                <span class="ident">choices</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">as_ref</span>()),
+                <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
+                <span class="ident">min_value</span>: <span class="prelude-val">None</span>,
+                <span class="ident">max_value</span>: <span class="prelude-val">None</span>,
+                <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
+                <span class="ident">options</span>: <span class="prelude-val">None</span>,
+                <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
+                <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
+            },
+            <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">data</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Number</span>(<span class="ident">data</span>) =&gt; <span class="ident">CommandOptionEnvelope</span> {
+                <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
+                <span class="ident">choices</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">choices</span>.<span class="ident">as_ref</span>()),
+                <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
+                <span class="ident">min_value</span>: <span class="ident">data</span>.<span class="ident">min_value</span>,
+                <span class="ident">max_value</span>: <span class="ident">data</span>.<span class="ident">max_value</span>,
+                <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
+                <span class="ident">options</span>: <span class="prelude-val">None</span>,
+                <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
+                <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>(),
+            },
             <span class="ident"><span class="self">Self</span>::Channel</span>(<span class="ident">data</span>) =&gt; <span class="ident">CommandOptionEnvelope</span> {
                 <span class="ident">channel_types</span>: <span class="prelude-val">Some</span>(<span class="ident">data</span>.<span class="ident">channel_types</span>.<span class="ident">as_ref</span>()),
                 <span class="ident">choices</span>: <span class="prelude-val">None</span>,
                 <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
+                <span class="ident">min_value</span>: <span class="prelude-val">None</span>,
+                <span class="ident">max_value</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
                 <span class="ident">options</span>: <span class="prelude-val">None</span>,
                 <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
@@ -973,6 +1092,8 @@
                     <span class="ident">channel_types</span>: <span class="prelude-val">None</span>,
                     <span class="ident">choices</span>: <span class="prelude-val">None</span>,
                     <span class="ident">description</span>: <span class="ident">data</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>(),
+                    <span class="ident">min_value</span>: <span class="prelude-val">None</span>,
+                    <span class="ident">max_value</span>: <span class="prelude-val">None</span>,
                     <span class="ident">name</span>: <span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>(),
                     <span class="ident">options</span>: <span class="prelude-val">None</span>,
                     <span class="ident">required</span>: <span class="ident">data</span>.<span class="ident">required</span>,
@@ -991,6 +1112,8 @@
     <span class="ident">ChannelTypes</span>,
     <span class="ident">Choices</span>,
     <span class="ident">Description</span>,
+    <span class="ident">MaxValue</span>,
+    <span class="ident">MinValue</span>,
     <span class="ident">Name</span>,
     <span class="ident">Options</span>,
     <span class="ident">Required</span>,
@@ -1012,6 +1135,8 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">choices</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandOptionChoice</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionType</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">min_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandOption</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">required</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -1060,6 +1185,20 @@
                     }
 
                     <span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                }
+                <span class="ident">OptionField::MaxValue</span> =&gt; {
+                    <span class="kw">if</span> <span class="ident">max_value</span>.<span class="ident">is_some</span>() {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;max_value&quot;</span>));
+                    }
+
+                    <span class="ident">max_value</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                }
+                <span class="ident">OptionField::MinValue</span> =&gt; {
+                    <span class="kw">if</span> <span class="ident">min_value</span>.<span class="ident">is_some</span>() {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;min_value&quot;</span>));
+                    }
+
+                    <span class="ident">min_value</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
                 <span class="ident">OptionField::Name</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">is_some</span>() {
@@ -1130,10 +1269,12 @@
                 <span class="ident">name</span>,
                 <span class="ident">required</span>,
             }),
-            <span class="ident">CommandOptionType::Integer</span> =&gt; <span class="ident">CommandOption::Integer</span>(<span class="ident">ChoiceCommandOptionData</span> {
+            <span class="ident">CommandOptionType::Integer</span> =&gt; <span class="ident">CommandOption::Integer</span>(<span class="ident">NumberCommandOptionData</span> {
                 <span class="ident">choices</span>: <span class="ident">choices</span>.<span class="ident">flatten</span>().<span class="ident">unwrap_or_default</span>(),
                 <span class="ident">description</span>,
                 <span class="ident">name</span>,
+                <span class="ident">max_value</span>: <span class="ident">max_value</span>.<span class="ident">flatten</span>(),
+                <span class="ident">min_value</span>: <span class="ident">min_value</span>.<span class="ident">flatten</span>(),
                 <span class="ident">required</span>,
             }),
             <span class="ident">CommandOptionType::Boolean</span> =&gt; <span class="ident">CommandOption::Boolean</span>(<span class="ident">BaseCommandOptionData</span> {
@@ -1162,9 +1303,11 @@
                 <span class="ident">name</span>,
                 <span class="ident">required</span>,
             }),
-            <span class="ident">CommandOptionType::Number</span> =&gt; <span class="ident">CommandOption::Number</span>(<span class="ident">ChoiceCommandOptionData</span> {
+            <span class="ident">CommandOptionType::Number</span> =&gt; <span class="ident">CommandOption::Number</span>(<span class="ident">NumberCommandOptionData</span> {
                 <span class="ident">choices</span>: <span class="ident">choices</span>.<span class="ident">flatten</span>().<span class="ident">unwrap_or_default</span>(),
                 <span class="ident">description</span>,
+                <span class="ident">max_value</span>: <span class="ident">max_value</span>.<span class="ident">flatten</span>(),
+                <span class="ident">min_value</span>: <span class="ident">min_value</span>.<span class="ident">flatten</span>(),
                 <span class="ident">name</span>,
                 <span class="ident">required</span>,
             }),
@@ -1211,10 +1354,9 @@
     <span class="kw">pub</span> <span class="ident">options</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandOption</span><span class="op">&gt;</span>,
 }
 
-<span class="doccomment">/// Data supplied to a [`CommandOption`] of type [`String`] or [`Integer`].</span>
+<span class="doccomment">/// Data supplied to a [`CommandOption`] of type [`String`].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`String`]: CommandOption::String</span>
-<span class="doccomment">/// [`Integer`]: CommandOption::Integer</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChoiceCommandOptionData</span> {
     <span class="doccomment">/// Predetermined choices may be defined for a user to select.</span>
@@ -1253,6 +1395,35 @@
     <span class="kw">pub</span> <span class="ident">required</span>: <span class="ident">bool</span>,
 }
 
+<span class="doccomment">/// Data supplied to a [`CommandOption`] of type [`Integer`] or [`Number`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`Integer`]: CommandOption::Integer</span>
+<span class="doccomment">/// [`Number`]: CommandOption::Number</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NumberCommandOptionData</span> {
+    <span class="doccomment">/// Predetermined choices may be defined for a user to select.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When completing this option, the user is prompted with a selector of all</span>
+    <span class="doccomment">/// available choices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If no choices are available, the user must input a value manually.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">choices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandOptionChoice</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Description of the option. It must be 100 characters or less.</span>
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Maximum value permitted.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">max_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionValue</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Minimum value permitted.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">min_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CommandOptionValue</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Name of the option. It must be 32 characters or less.</span>
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Whether or not the option is required to be completed by a user.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">required</span>: <span class="ident">bool</span>,
+}
+
 <span class="doccomment">/// Specifies an option that a user must choose from in a dropdown.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Refer to [the discord docs] for more information.</span>
@@ -1264,6 +1435,18 @@
     <span class="ident">String</span> { <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">value</span>: <span class="ident">String</span> },
     <span class="ident">Int</span> { <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">value</span>: <span class="ident">i64</span> },
     <span class="ident">Number</span> { <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">value</span>: <span class="ident">Number</span> },
+}
+
+<span class="doccomment">/// Type used in `max_value` and `min_value` command option field.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Refer to [the discord docs] for more information.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CommandOptionValue</span> {
+    <span class="ident">Integer</span>(<span class="ident">i64</span>),
+    <span class="ident">Number</span>(<span class="ident">Number</span>),
 }
 
 <span class="doccomment">/// Type of a [`CommandOption`].</span>
@@ -1329,7 +1512,8 @@
     <span class="kw">use</span> <span class="kw">super</span>::{
         <span class="kw">super</span>::{<span class="ident">Command</span>, <span class="ident">CommandType</span>},
         <span class="ident">BaseCommandOptionData</span>, <span class="ident">ChannelCommandOptionData</span>, <span class="ident">ChoiceCommandOptionData</span>, <span class="ident">CommandOption</span>,
-        <span class="ident">CommandOptionChoice</span>, <span class="ident">Number</span>, <span class="ident">OptionsCommandOptionData</span>,
+        <span class="ident">CommandOptionChoice</span>, <span class="ident">CommandOptionValue</span>, <span class="ident">Number</span>, <span class="ident">NumberCommandOptionData</span>,
+        <span class="ident">OptionsCommandOptionData</span>,
     };
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">channel::ChannelType</span>,
@@ -1415,12 +1599,14 @@
                             <span class="ident">name</span>: <span class="string">&quot;string&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">required</span>: <span class="bool-val">false</span>,
                         }),
-                        <span class="ident">CommandOption::Integer</span>(<span class="ident">ChoiceCommandOptionData</span> {
+                        <span class="ident">CommandOption::Integer</span>(<span class="ident">NumberCommandOptionData</span> {
                             <span class="ident">choices</span>: <span class="macro">vec!</span>[<span class="ident">CommandOptionChoice::Int</span> {
                                 <span class="ident">name</span>: <span class="string">&quot;choice2&quot;</span>.<span class="ident">into</span>(),
                                 <span class="ident">value</span>: <span class="number">2</span>,
                             }],
                             <span class="ident">description</span>: <span class="string">&quot;int desc&quot;</span>.<span class="ident">into</span>(),
+                            <span class="ident">max_value</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandOptionValue::Integer</span>(<span class="number">20</span>)),
+                            <span class="ident">min_value</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandOptionValue::Integer</span>(<span class="number">10</span>)),
                             <span class="ident">name</span>: <span class="string">&quot;int&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">required</span>: <span class="bool-val">false</span>,
                         }),
@@ -1450,12 +1636,14 @@
                             <span class="ident">name</span>: <span class="string">&quot;mentionable&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">required</span>: <span class="bool-val">false</span>,
                         }),
-                        <span class="ident">CommandOption::Number</span>(<span class="ident">ChoiceCommandOptionData</span> {
+                        <span class="ident">CommandOption::Number</span>(<span class="ident">NumberCommandOptionData</span> {
                             <span class="ident">choices</span>: <span class="macro">vec!</span>[<span class="ident">CommandOptionChoice::Number</span> {
                                 <span class="ident">name</span>: <span class="string">&quot;choice3&quot;</span>.<span class="ident">into</span>(),
                                 <span class="ident">value</span>: <span class="ident">Number</span>(<span class="number">2.0</span>),
                             }],
                             <span class="ident">description</span>: <span class="string">&quot;number desc&quot;</span>.<span class="ident">into</span>(),
+                            <span class="ident">max_value</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandOptionValue::Number</span>(<span class="ident">Number</span>(<span class="number">5.5</span>))),
+                            <span class="ident">min_value</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandOptionValue::Number</span>(<span class="ident">Number</span>(<span class="number">10.0</span>))),
                             <span class="ident">name</span>: <span class="string">&quot;number&quot;</span>.<span class="ident">into</span>(),
                             <span class="ident">required</span>: <span class="bool-val">false</span>,
                         }),
@@ -1560,7 +1748,7 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;CommandOptionEnvelope&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">4</span>,
+                    <span class="ident">len</span>: <span class="number">6</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;choices&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -1577,6 +1765,12 @@
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;description&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;int desc&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;max_value&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::I64</span>(<span class="number">20</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;min_value&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::I64</span>(<span class="number">10</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;int&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
@@ -1644,7 +1838,7 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;CommandOptionEnvelope&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">4</span>,
+                    <span class="ident">len</span>: <span class="number">6</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;choices&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -1662,6 +1856,14 @@
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;description&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;number desc&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;max_value&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Number&quot;</span> },
+                <span class="ident">Token::F64</span>(<span class="number">5.5</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;min_value&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Number&quot;</span> },
+                <span class="ident">Token::F64</span>(<span class="number">10.0</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;number&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
