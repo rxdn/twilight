@@ -450,9 +450,47 @@
 <span id="450">450</span>
 <span id="451">451</span>
 <span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">channel</span>;
 <span class="kw">mod</span> <span class="ident">guild</span>;
-<span class="kw">mod</span> <span class="ident">metadata</span>;
 <span class="kw">mod</span> <span class="ident">stage_instance</span>;
 <span class="kw">mod</span> <span class="ident">target_type</span>;
 <span class="kw">mod</span> <span class="ident">welcome_screen</span>;
@@ -460,7 +498,6 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
     <span class="ident">channel::InviteChannel</span>,
     <span class="ident">guild::InviteGuild</span>,
-    <span class="ident">metadata::InviteMetadata</span>,
     <span class="ident">stage_instance</span>::{<span class="ident">InviteStageInstance</span>, <span class="ident">InviteStageInstanceMember</span>},
     <span class="ident">target_type::TargetType</span>,
     <span class="ident">welcome_screen</span>::{<span class="ident">WelcomeScreen</span>, <span class="ident">WelcomeScreenChannel</span>},
@@ -479,17 +516,27 @@
     <span class="kw">pub</span> <span class="ident">channel</span>: <span class="ident">InviteChannel</span>,
     <span class="kw">pub</span> <span class="ident">code</span>: <span class="ident">String</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">created_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">expires_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">guild</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InviteGuild</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">inviter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">max_age</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">max_uses</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">stage_instance</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InviteStageInstance</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">target_type</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TargetType</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">target_user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">temporary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">uses</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -514,12 +561,17 @@
         <span class="ident">approximate_presence_count</span>,
         <span class="ident">channel</span>,
         <span class="ident">code</span>,
+        <span class="ident">created_at</span>,
         <span class="ident">expires_at</span>,
         <span class="ident">guild</span>,
         <span class="ident">inviter</span>,
+        <span class="ident">max_age</span>,
+        <span class="ident">max_uses</span>,
         <span class="ident">stage_instance</span>,
         <span class="ident">target_type</span>,
-        <span class="ident">target_user</span>
+        <span class="ident">target_user</span>,
+        <span class="ident">temporary</span>,
+        <span class="ident">uses</span>
     );
 
     <span class="macro">assert_impl_all!</span>(
@@ -544,12 +596,17 @@
                 <span class="ident">name</span>: <span class="prelude-val">None</span>,
             },
             <span class="ident">code</span>: <span class="string">&quot;uniquecode&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">created_at</span>: <span class="prelude-val">None</span>,
             <span class="ident">expires_at</span>: <span class="prelude-val">None</span>,
             <span class="ident">guild</span>: <span class="prelude-val">None</span>,
             <span class="ident">inviter</span>: <span class="prelude-val">None</span>,
+            <span class="ident">max_age</span>: <span class="prelude-val">None</span>,
+            <span class="ident">max_uses</span>: <span class="prelude-val">None</span>,
             <span class="ident">stage_instance</span>: <span class="prelude-val">None</span>,
             <span class="ident">target_type</span>: <span class="prelude-val">Some</span>(<span class="ident">TargetType::Stream</span>),
             <span class="ident">target_user</span>: <span class="prelude-val">None</span>,
+            <span class="ident">temporary</span>: <span class="prelude-val">None</span>,
+            <span class="ident">uses</span>: <span class="prelude-val">None</span>,
         };
 
         <span class="ident">serde_test::assert_tokens</span>(
@@ -589,6 +646,7 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_invite_complete</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">created_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-08-03T16:08:36.325000+00:00&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">expires_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2021-08-10T16:08:36.325000+00:00&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
@@ -601,6 +659,8 @@
                 <span class="ident">name</span>: <span class="prelude-val">None</span>,
             },
             <span class="ident">code</span>: <span class="string">&quot;uniquecode&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">created_at</span>: <span class="prelude-val">Some</span>(<span class="ident">created_at</span>),
+            <span class="ident">expires_at</span>: <span class="prelude-val">Some</span>(<span class="ident">expires_at</span>),
             <span class="ident">guild</span>: <span class="prelude-val">Some</span>(<span class="ident">InviteGuild</span> {
                 <span class="ident">banner</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;banner hash&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">description</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a description&quot;</span>.<span class="ident">to_owned</span>()),
@@ -629,7 +689,6 @@
                     ],
                 }),
             }),
-            <span class="ident">expires_at</span>: <span class="prelude-val">Some</span>(<span class="ident">expires_at</span>),
             <span class="ident">inviter</span>: <span class="prelude-val">Some</span>(<span class="ident">User</span> {
                 <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
                 <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
@@ -647,6 +706,8 @@
                 <span class="ident">system</span>: <span class="prelude-val">None</span>,
                 <span class="ident">verified</span>: <span class="prelude-val">None</span>,
             }),
+            <span class="ident">max_age</span>: <span class="prelude-val">Some</span>(<span class="number">86_400</span>),
+            <span class="ident">max_uses</span>: <span class="prelude-val">Some</span>(<span class="number">10</span>),
             <span class="ident">stage_instance</span>: <span class="prelude-val">Some</span>(<span class="ident">InviteStageInstance</span> {
                 <span class="ident">members</span>: <span class="ident">Vec::from</span>([<span class="ident">InviteStageInstanceMember</span> {
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
@@ -695,6 +756,8 @@
                 <span class="ident">system</span>: <span class="prelude-val">None</span>,
                 <span class="ident">verified</span>: <span class="prelude-val">None</span>,
             }),
+            <span class="ident">temporary</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
+            <span class="ident">uses</span>: <span class="prelude-val">Some</span>(<span class="number">3</span>),
         };
 
         <span class="ident">serde_test::assert_tokens</span>(
@@ -702,7 +765,7 @@
             <span class="kw-2">&amp;</span>[
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;Invite&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">10</span>,
+                    <span class="ident">len</span>: <span class="number">15</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;approximate_member_count&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -723,6 +786,9 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;code&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;uniquecode&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;created_at&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-03T16:08:36.325000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;expires_at&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-10T16:08:36.325000+00:00&quot;</span>),
@@ -826,6 +892,12 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;test&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
+                <span class="ident">Token::Str</span>(<span class="string">&quot;max_age&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::U64</span>(<span class="number">86_400</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;max_uses&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::U64</span>(<span class="number">10</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;stage_instance&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Struct</span> {
@@ -895,6 +967,12 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;test&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
+                <span class="ident">Token::Str</span>(<span class="string">&quot;temporary&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;uses&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::U64</span>(<span class="number">3</span>),
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
