@@ -230,6 +230,13 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application::interaction::application_command::InteractionMember</span>,
@@ -246,7 +253,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">deaf</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">joined_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">mute</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">pending</span>: <span class="ident">bool</span>,
@@ -273,7 +280,7 @@
 
     <span class="doccomment">/// [`Timestamp`] of this member&#39;s join date.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">joined_at</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">joined_at</span>
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">joined_at</span>)
     }
 
     <span class="doccomment">/// Whether the member is muted in a voice channel.</span>
@@ -375,6 +382,7 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::CachedMember</span>;
     <span class="kw">use</span> <span class="ident">static_assertions::assert_fields</span>;
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{
+        <span class="ident">datetime::Timestamp</span>,
         <span class="ident">guild</span>::{<span class="ident">Member</span>, <span class="ident">PartialMember</span>},
         <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
         <span class="ident">user::User</span>,
@@ -393,11 +401,13 @@
     );
 
     <span class="kw">fn</span> <span class="ident">cached_member</span>() -&gt; <span class="ident">CachedMember</span> {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_secs</span>(<span class="number">1_632_072_645</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+
         <span class="ident">CachedMember</span> {
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">joined_at</span>: <span class="prelude-val">None</span>,
+            <span class="ident">joined_at</span>,
             <span class="ident">mute</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">pending</span>: <span class="bool-val">false</span>,
@@ -429,11 +439,13 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_eq_member</span>() {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_secs</span>(<span class="number">1_632_072_645</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+
         <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="ident">Member</span> {
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
             <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">joined_at</span>: <span class="prelude-val">None</span>,
+            <span class="ident">joined_at</span>,
             <span class="ident">mute</span>: <span class="bool-val">true</span>,
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">pending</span>: <span class="bool-val">false</span>,
@@ -447,10 +459,12 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_eq_partial_member</span>() {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_secs</span>(<span class="number">1_632_072_645</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+
         <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="ident">PartialMember</span> {
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-            <span class="ident">joined_at</span>: <span class="prelude-val">None</span>,
+            <span class="ident">joined_at</span>,
             <span class="ident">mute</span>: <span class="bool-val">true</span>,
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">permissions</span>: <span class="prelude-val">None</span>,

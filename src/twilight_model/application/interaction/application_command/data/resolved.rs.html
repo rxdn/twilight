@@ -614,9 +614,6 @@
 <span id="614">614</span>
 <span id="615">615</span>
 <span id="616">616</span>
-<span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel</span>::{<span class="ident">thread::ThreadMetadata</span>, <span class="ident">ChannelType</span>, <span class="ident">Message</span>},
     <span class="ident">datetime::Timestamp</span>,
@@ -849,8 +846,7 @@
     <span class="kw">pub</span> <span class="ident">hoisted_role</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing</span>)]</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">UserId</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -862,7 +858,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">InteractionMemberEnvelope</span> {
     <span class="kw">pub</span> <span class="ident">hoisted_role</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
     <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
@@ -906,7 +902,7 @@
             <span class="ident">members</span>: <span class="ident">Vec::from</span>([<span class="ident">InteractionMember</span> {
                 <span class="ident">hoisted_role</span>: <span class="prelude-val">None</span>,
                 <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="ident">joined_at</span>),
+                <span class="ident">joined_at</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">None</span>,
                 <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
                 <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
@@ -946,7 +942,7 @@
                 <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                    <span class="ident">joined_at</span>: <span class="prelude-val">Some</span>(<span class="ident">joined_at</span>),
+                    <span class="ident">joined_at</span>,
                     <span class="ident">mute</span>: <span class="bool-val">false</span>,
                     <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
@@ -1041,7 +1037,6 @@
                     <span class="ident">len</span>: <span class="number">1</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;joined_at&quot;</span>),
-                <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-10T12:18:37.000000+00:00&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::MapEnd</span>,
@@ -1109,7 +1104,6 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;deaf&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;joined_at&quot;</span>),
-                <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2021-08-10T12:18:37.000000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;mute&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
