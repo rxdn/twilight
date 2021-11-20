@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["UpdateCurrentMemberErrorType","Type of [`UpdateCurrentMemberError`] that occurred."]],"struct":[["UpdateCurrentMember","Update the user’s member in a guild."],["UpdateCurrentMemberError","Error emitted when the member can not be updated as configured."]]});

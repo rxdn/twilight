@@ -1449,6 +1449,14 @@
 <span id="1449">1449</span>
 <span id="1450">1450</span>
 <span id="1451">1451</span>
+<span id="1452">1452</span>
+<span id="1453">1453</span>
+<span id="1454">1454</span>
+<span id="1455">1455</span>
+<span id="1456">1456</span>
+<span id="1457">1457</span>
+<span id="1458">1458</span>
+<span id="1459">1459</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">path::Path</span>, <span class="ident">route_display::RouteDisplay</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request</span>::{<span class="ident">channel::reaction::RequestReactionType</span>, <span class="ident">Method</span>};
 <span class="kw">use</span> <span class="ident">twilight_model::id::RoleId</span>;
@@ -2267,6 +2275,11 @@
         <span class="doccomment">/// The ID of the guild.</span>
         <span class="ident">guild_id</span>: <span class="ident">u64</span>,
     },
+    <span class="doccomment">/// Route information to update the current member.</span>
+    <span class="ident">UpdateCurrentMember</span> {
+        <span class="doccomment">/// ID of the guild.</span>
+        <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+    },
     <span class="doccomment">/// Route information to update the current user.</span>
     <span class="ident">UpdateCurrentUser</span>,
     <span class="doccomment">/// Route information to update the current user&#39;s voice state.</span>
@@ -2560,6 +2573,7 @@
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetWebhookMessage</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::SearchGuildMembers</span> { .. } =&gt; <span class="ident">Method::Get</span>,
             <span class="ident"><span class="self">Self</span>::UpdateChannel</span> { .. }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateCurrentMember</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateCurrentUser</span>
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateCurrentUserVoiceState</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateEmoji</span> { .. }
@@ -2821,7 +2835,9 @@
             }
             <span class="ident"><span class="self">Self</span>::GetGuildIntegrations</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdIntegrations</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),
             <span class="ident"><span class="self">Self</span>::GetGuildInvites</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdInvites</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),
-            <span class="ident"><span class="self">Self</span>::GetGuildMembers</span> { <span class="ident">guild_id</span>, .. } =&gt; <span class="ident">Path::GuildsIdMembers</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),
+            <span class="ident"><span class="self">Self</span>::GetGuildMembers</span> { <span class="ident">guild_id</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateCurrentMember</span> { <span class="ident">guild_id</span>, .. } =&gt; {
+                <span class="ident">Path::GuildsIdMembers</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>)
+            }
             <span class="ident"><span class="self">Self</span>::GetGuildPreview</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdPreview</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),
             <span class="ident"><span class="self">Self</span>::GetGuildVanityUrl</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdVanityUrl</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),
             <span class="ident"><span class="self">Self</span>::GetGuildVoiceRegions</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdRegions</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),

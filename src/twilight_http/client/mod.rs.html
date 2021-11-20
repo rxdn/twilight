@@ -2858,10 +2858,19 @@
 <span id="2858">2858</span>
 <span id="2859">2859</span>
 <span id="2860">2860</span>
+<span id="2861">2861</span>
+<span id="2862">2862</span>
+<span id="2863">2863</span>
+<span id="2864">2864</span>
+<span id="2865">2865</span>
+<span id="2866">2866</span>
+<span id="2867">2867</span>
+<span id="2868">2868</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">builder</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::builder::ClientBuilder</span>;
 
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">error</span>::{<span class="ident">Error</span>, <span class="ident">ErrorType</span>},
     <span class="ident">ratelimiting::Ratelimiter</span>,
@@ -2929,8 +2938,8 @@
             <span class="ident">CreateGuild</span>, <span class="ident">CreateGuildChannel</span>, <span class="ident">CreateGuildPrune</span>, <span class="ident">DeleteGuild</span>, <span class="ident">GetActiveThreads</span>,
             <span class="ident">GetAuditLog</span>, <span class="ident">GetGuild</span>, <span class="ident">GetGuildChannels</span>, <span class="ident">GetGuildInvites</span>, <span class="ident">GetGuildPreview</span>,
             <span class="ident">GetGuildPruneCount</span>, <span class="ident">GetGuildVanityUrl</span>, <span class="ident">GetGuildVoiceRegions</span>, <span class="ident">GetGuildWebhooks</span>,
-            <span class="ident">GetGuildWelcomeScreen</span>, <span class="ident">GetGuildWidget</span>, <span class="ident">UpdateCurrentUserNick</span>, <span class="ident">UpdateGuild</span>,
-            <span class="ident">UpdateGuildChannelPositions</span>, <span class="ident">UpdateGuildWelcomeScreen</span>, <span class="ident">UpdateGuildWidget</span>,
+            <span class="ident">GetGuildWelcomeScreen</span>, <span class="ident">GetGuildWidget</span>, <span class="ident">UpdateCurrentMember</span>, <span class="ident">UpdateCurrentUserNick</span>,
+            <span class="ident">UpdateGuild</span>, <span class="ident">UpdateGuildChannelPositions</span>, <span class="ident">UpdateGuildWelcomeScreen</span>, <span class="ident">UpdateGuildWidget</span>,
         },
         <span class="ident">sticker</span>::{<span class="ident">GetNitroStickerPacks</span>, <span class="ident">GetSticker</span>},
         <span class="ident">template</span>::{
@@ -3457,6 +3466,8 @@
     }
 
     <span class="doccomment">/// Changes the user&#39;s nickname in a guild.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;use update_current_member instead&quot;</span>, <span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.7.2&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_current_user_nick</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
@@ -3849,6 +3860,11 @@
         <span class="ident">user_id</span>: <span class="ident">UserId</span>,
     ) -&gt; <span class="ident">UpdateGuildMember</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">UpdateGuildMember::new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">user_id</span>)
+    }
+
+    <span class="doccomment">/// Update the user&#39;s member in a guild.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_current_member</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="ident">UpdateCurrentMember</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+        <span class="ident">UpdateCurrentMember::new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>)
     }
 
     <span class="doccomment">/// Add a role to a member in a guild.</span>
