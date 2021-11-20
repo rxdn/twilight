@@ -500,6 +500,24 @@
 <span id="500">500</span>
 <span id="501">501</span>
 <span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Update a message created by a webhook via execution.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -508,13 +526,14 @@
     <span class="ident">request</span>::{
         <span class="self">self</span>,
         <span class="ident">validate_inner</span>::{<span class="self">self</span>, <span class="ident">ComponentValidationError</span>, <span class="ident">ComponentValidationErrorType</span>},
-        <span class="ident">AuditLogReason</span>, <span class="ident">AuditLogReasonError</span>, <span class="ident">Form</span>, <span class="ident">NullableField</span>, <span class="ident">Request</span>,
+        <span class="ident">AttachmentFile</span>, <span class="ident">AuditLogReason</span>, <span class="ident">AuditLogReasonError</span>, <span class="ident">Form</span>, <span class="ident">NullableField</span>, <span class="ident">Request</span>,
     },
     <span class="ident">response</span>::{<span class="ident">marker::EmptyBody</span>, <span class="ident">ResponseFuture</span>},
     <span class="ident">routing::Route</span>,
 };
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">borrow::Cow</span>,
     <span class="ident">error::Error</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
 };
@@ -671,8 +690,8 @@
 <span class="doccomment">/// [`DeleteWebhookMessage`]: super::DeleteWebhookMessage</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UpdateWebhookMessage</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">attachments</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">AttachmentFile</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>]<span class="op">&gt;</span>,
     <span class="ident">fields</span>: <span class="ident">UpdateWebhookMessageFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])],
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
     <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
     <span class="ident">reason</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
@@ -699,7 +718,7 @@
                 <span class="ident">embeds</span>: <span class="prelude-val">None</span>,
                 <span class="ident">payload_json</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">files</span>: <span class="kw-2">&amp;</span>[],
+            <span class="ident">attachments</span>: <span class="ident">Cow::Borrowed</span>(<span class="kw-2">&amp;</span>[]),
             <span class="ident">http</span>,
             <span class="ident">message_id</span>,
             <span class="ident">reason</span>: <span class="prelude-val">None</span>,
@@ -868,11 +887,22 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Attach multiple files to the webhook.</span>
+    <span class="doccomment">/// Attach multiple files to the message.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Calling this method will clear any previous calls.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">files</span> <span class="op">=</span> <span class="ident">files</span>;
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span> <span class="comment">// False positive</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attach</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">attachments</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">AttachmentFile</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>]) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">attachments</span> <span class="op">=</span> <span class="ident">Cow::Borrowed</span>(<span class="ident">attachments</span>);
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Attach multiple files to the message.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Calling this method will clear any previous calls.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.7.1&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Use attach instead&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">attachments</span> <span class="op">=</span> <span class="ident">Cow::Owned</span>(<span class="ident">AttachmentFile::from_pairs</span>(<span class="ident">files</span>));
 
         <span class="self">self</span>
     }
@@ -902,11 +932,17 @@
         })
         .<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>);
 
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">files</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span>.<span class="ident">is_some</span>() {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span>.<span class="ident">is_some</span>() {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> <span class="op">=</span> <span class="ident">Form::new</span>();
 
-            <span class="kw">for</span> (<span class="ident">index</span>, (<span class="ident">name</span>, <span class="ident">file</span>)) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="ident">form</span>.<span class="ident">file</span>(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">index</span>).<span class="ident">as_bytes</span>(), <span class="ident">name</span>.<span class="ident">as_bytes</span>(), <span class="ident">file</span>);
+            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">is_empty</span>() {
+                <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">attachment</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                    <span class="ident">form</span>.<span class="ident">attach</span>(
+                        <span class="ident">index</span> <span class="kw">as</span> <span class="ident">u64</span>,
+                        <span class="ident">attachment</span>.<span class="ident">filename</span>.<span class="ident">as_bytes</span>(),
+                        <span class="ident">attachment</span>.<span class="ident">file</span>,
+                    );
+                }
             }
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> {

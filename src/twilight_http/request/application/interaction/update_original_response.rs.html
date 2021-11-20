@@ -438,6 +438,26 @@
 <span id="438">438</span>
 <span id="439">439</span>
 <span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Update a original response create for a interaction.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -446,13 +466,14 @@
     <span class="ident">request</span>::{
         <span class="self">self</span>,
         <span class="ident">validate_inner</span>::{<span class="self">self</span>, <span class="ident">ComponentValidationError</span>, <span class="ident">ComponentValidationErrorType</span>},
-        <span class="ident">Form</span>, <span class="ident">NullableField</span>, <span class="ident">Request</span>,
+        <span class="ident">AttachmentFile</span>, <span class="ident">Form</span>, <span class="ident">NullableField</span>, <span class="ident">Request</span>,
     },
     <span class="ident">response::ResponseFuture</span>,
     <span class="ident">routing::Route</span>,
 };
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">borrow::Cow</span>,
     <span class="ident">error::Error</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
 };
@@ -613,8 +634,8 @@
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UpdateOriginalResponse</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+    <span class="ident">attachments</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">AttachmentFile</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>]<span class="op">&gt;</span>,
     <span class="ident">fields</span>: <span class="ident">UpdateOriginalResponseFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])],
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
     <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
 }
@@ -638,7 +659,7 @@
                 <span class="ident">embeds</span>: <span class="prelude-val">None</span>,
                 <span class="ident">payload_json</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">files</span>: <span class="kw-2">&amp;</span>[],
+            <span class="ident">attachments</span>: <span class="ident">Cow::Borrowed</span>(<span class="kw-2">&amp;</span>[]),
             <span class="ident">http</span>,
             <span class="ident">token</span>: <span class="ident">interaction_token</span>,
         }
@@ -811,9 +832,22 @@
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Attach multiple files to the original response.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">files</span> <span class="op">=</span> <span class="ident">files</span>;
+    <span class="doccomment">/// Attach multiple files to the message.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Calling this method will clear any previous calls.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span> <span class="comment">// False positive</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attach</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">attachments</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">AttachmentFile</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>]) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">attachments</span> <span class="op">=</span> <span class="ident">Cow::Borrowed</span>(<span class="ident">attachments</span>);
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Attach multiple files to the message.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Calling this method will clear any previous calls.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.7.1&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Use attach instead&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])]) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">attachments</span> <span class="op">=</span> <span class="ident">Cow::Owned</span>(<span class="ident">AttachmentFile::from_pairs</span>(<span class="ident">files</span>));
 
         <span class="self">self</span>
     }
@@ -821,10 +855,10 @@
     <span class="doccomment">/// JSON encoded body of any additional request fields.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If this method is called, all other fields are ignored, except for</span>
-    <span class="doccomment">/// [`files`]. See [Discord Docs/Create Message] and</span>
+    <span class="doccomment">/// [`attach`]. See [Discord Docs/Create Message] and</span>
     <span class="doccomment">/// [`CreateFollowupMessage::payload_json`].</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`files`]: Self::files</span>
+    <span class="doccomment">/// [`attach`]: Self::attach</span>
     <span class="doccomment">/// [`CreateFollowupMessage::payload_json`]: super::CreateFollowupMessage::payload_json</span>
     <span class="doccomment">/// [Discord Docs/Create Message]: https://discord.com/developers/docs/resources/channel#create-message-params</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">payload_json</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">payload_json</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
@@ -841,11 +875,17 @@
             <span class="ident">interaction_token</span>: <span class="self">self</span>.<span class="ident">token</span>,
         });
 
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">files</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span>.<span class="ident">is_some</span>() {
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span>.<span class="ident">is_some</span>() {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> <span class="op">=</span> <span class="ident">Form::new</span>();
 
-            <span class="kw">for</span> (<span class="ident">index</span>, (<span class="ident">name</span>, <span class="ident">file</span>)) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="ident">form</span>.<span class="ident">file</span>(<span class="ident">index</span>.<span class="ident">to_be_bytes</span>().<span class="ident">as_ref</span>(), <span class="ident">name</span>.<span class="ident">as_bytes</span>(), <span class="ident">file</span>);
+            <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">is_empty</span>() {
+                <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">attachment</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">attachments</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                    <span class="ident">form</span>.<span class="ident">attach</span>(
+                        <span class="ident">index</span> <span class="kw">as</span> <span class="ident">u64</span>,
+                        <span class="ident">attachment</span>.<span class="ident">filename</span>.<span class="ident">as_bytes</span>(),
+                        <span class="ident">attachment</span>.<span class="ident">file</span>,
+                    );
+                }
             }
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> {
