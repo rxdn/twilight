@@ -429,6 +429,27 @@
 <span id="429">429</span>
 <span id="430">430</span>
 <span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">resolved</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::resolved</span>::{<span class="ident">CommandInteractionDataResolved</span>, <span class="ident">InteractionChannel</span>, <span class="ident">InteractionMember</span>};
@@ -471,6 +492,8 @@
 <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-interaction-data-option-structure</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CommandDataOption</span> {
+    <span class="doccomment">/// [`true`] if this autocomplete option is currently highlighted.</span>
+    <span class="kw">pub</span> <span class="ident">focused</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">CommandOptionValue</span>,
 }
@@ -484,9 +507,13 @@
                 <span class="kw">if</span> <span class="ident">o</span>.<span class="ident">is_empty</span>()
         );
 
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="number">2</span> <span class="op">+</span> <span class="op">!</span><span class="ident">subcommand_is_empty</span> <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="number">2</span> <span class="op">+</span> <span class="op">!</span><span class="ident">subcommand_is_empty</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">focused</span> <span class="kw">as</span> <span class="ident">usize</span>;
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">serializer</span>.<span class="ident">serialize_struct</span>(<span class="string">&quot;CommandDataOption&quot;</span>, <span class="ident">len</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">focused</span> {
+            <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;focused&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">focused</span>)<span class="question-mark">?</span>;
+        }
 
         <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)<span class="question-mark">?</span>;
 
@@ -520,8 +547,9 @@
         <span class="kw">enum</span> <span class="ident">Fields</span> {
             <span class="ident">Name</span>,
             <span class="ident">Type</span>,
-            <span class="ident">Options</span>,
             <span class="ident">Value</span>,
+            <span class="ident">Options</span>,
+            <span class="ident">Focused</span>,
         }
 
         <span class="comment">// Id before string such that IDs will always be interpreted</span>
@@ -562,6 +590,7 @@
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind_opt</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value_opt</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">focused</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
                 <span class="kw">loop</span> {
                     <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
@@ -591,6 +620,13 @@
 
                             <span class="ident">kind_opt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
+                        <span class="ident">Fields::Value</span> =&gt; {
+                            <span class="kw">if</span> <span class="ident">value_opt</span>.<span class="ident">is_some</span>() {
+                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;value&quot;</span>));
+                            }
+
+                            <span class="ident">value_opt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                        }
                         <span class="ident">Fields::Options</span> =&gt; {
                             <span class="kw">if</span> <span class="op">!</span><span class="ident">options</span>.<span class="ident">is_empty</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;options&quot;</span>));
@@ -598,12 +634,12 @@
 
                             <span class="ident">options</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                         }
-                        <span class="ident">Fields::Value</span> =&gt; {
-                            <span class="kw">if</span> <span class="ident">value_opt</span>.<span class="ident">is_some</span>() {
-                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;value&quot;</span>));
+                        <span class="ident">Fields::Focused</span> =&gt; {
+                            <span class="kw">if</span> <span class="ident">focused</span>.<span class="ident">is_some</span>() {
+                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;focused&quot;</span>));
                             }
 
-                            <span class="ident">value_opt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                            <span class="ident">focused</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                         }
                     }
                 }
@@ -717,7 +753,11 @@
                     }
                 };
 
-                <span class="prelude-val">Ok</span>(<span class="ident">CommandDataOption</span> { <span class="ident">name</span>, <span class="ident">value</span> })
+                <span class="prelude-val">Ok</span>(<span class="ident">CommandDataOption</span> {
+                    <span class="ident">name</span>,
+                    <span class="ident">value</span>,
+                    <span class="ident">focused</span>: <span class="ident">focused</span>.<span class="ident">unwrap_or_default</span>(),
+                })
             }
         }
 
@@ -800,6 +840,7 @@
             <span class="ident">id</span>: <span class="ident">CommandId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
             <span class="ident">name</span>: <span class="string">&quot;photo&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">options</span>: <span class="ident">Vec::from</span>([<span class="ident">CommandDataOption</span> {
+                <span class="ident">focused</span>: <span class="bool-val">false</span>,
                 <span class="ident">name</span>: <span class="string">&quot;cat&quot;</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">value</span>: <span class="ident">CommandOptionValue::SubCommand</span>(<span class="ident">Vec::new</span>()),
             }]),
@@ -838,6 +879,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">numbers</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandDataOption</span> {
+            <span class="ident">focused</span>: <span class="bool-val">false</span>,
             <span class="ident">name</span>: <span class="string">&quot;opt&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">value</span>: <span class="ident">CommandOptionValue::Number</span>(<span class="ident">Number</span>(<span class="number">5.0</span>)),
         };
