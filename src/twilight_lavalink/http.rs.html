@@ -499,6 +499,46 @@
 <span id="498">498</span>
 <span id="499">499</span>
 <span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Models to deserialize responses into and functions to create `http` crate</span>
 <span class="doccomment">//! requests.</span>
 
@@ -507,8 +547,11 @@
     <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>, <span class="ident">Request</span>,
 };
 <span class="kw">use</span> <span class="ident">percent_encoding::NON_ALPHANUMERIC</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::net</span>::{<span class="ident">IpAddr</span>, <span class="ident">SocketAddr</span>};
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">convert::TryFrom</span>,
+    <span class="ident">net</span>::{<span class="ident">IpAddr</span>, <span class="ident">SocketAddr</span>},
+};
 
 <span class="doccomment">/// The type of search result given.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -570,8 +613,20 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PlaylistInfo</span> {
     <span class="doccomment">/// The name of the playlist, if available.</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The selected track, if one was selected.</span>
+    <span class="doccomment">/// The selected track within the playlist, if available.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;deserialize_selected_track&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">selected_track</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+}
+
+<span class="comment">// Any negative value should be treated as None.</span>
+<span class="kw">fn</span> <span class="ident">deserialize_selected_track</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">D::Error</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+{
+    <span class="prelude-val">Ok</span>(<span class="prelude-ty">Option</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span><span class="ident">::deserialize</span>(<span class="ident">deserializer</span>)
+        .<span class="ident">ok</span>()
+        .<span class="ident">flatten</span>()
+        .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">selected</span><span class="op">|</span> <span class="ident">u64::try_from</span>(<span class="ident">selected</span>).<span class="ident">ok</span>()))
 }
 
 <span class="doccomment">/// Possible track results for a query.</span>
@@ -799,6 +854,7 @@
         <span class="ident">TrackInfo</span>,
     };
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+    <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
@@ -998,7 +1054,31 @@
         <span class="ident">Serialize</span>,
         <span class="ident">Sync</span>
     );
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_deserialize_playlist_info_negative_selected_track</span>() {
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">PlaylistInfo</span> {
+            <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;Test Playlist&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">selected_track</span>: <span class="prelude-val">None</span>,
+        };
+
+        <span class="ident">serde_test::assert_de_tokens</span>(
+            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+            <span class="kw-2">&amp;</span>[
+                <span class="ident">Token::Struct</span> {
+                    <span class="ident">name</span>: <span class="string">&quot;PlaylistInfo&quot;</span>,
+                    <span class="ident">len</span>: <span class="number">13</span>,
+                },
+                <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
+                <span class="ident">Token::Some</span>,
+                <span class="ident">Token::Str</span>(<span class="string">&quot;Test Playlist&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;selectedTrack&quot;</span>),
+                <span class="ident">Token::I64</span>(<span class="op">-</span><span class="number">1</span>),
+                <span class="ident">Token::StructEnd</span>,
+            ],
+        );
+    }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_lavalink" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (db9d361a4 2021-11-28)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_lavalink" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (207c80f10 2021-11-30)" ></div>
 </body></html>
