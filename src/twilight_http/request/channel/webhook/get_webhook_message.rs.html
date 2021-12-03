@@ -47,10 +47,21 @@
 <span id="46">46</span>
 <span id="47">47</span>
 <span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">client::Client</span>, <span class="ident">request::Request</span>, <span class="ident">response::ResponseFuture</span>, <span class="ident">routing::Route</span>};
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel::Message</span>,
-    <span class="ident">id</span>::{<span class="ident">MessageId</span>, <span class="ident">WebhookId</span>},
+    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">MessageId</span>, <span class="ident">WebhookId</span>},
 };
 
 <span class="doccomment">/// Get a webhook message by [`WebhookId`], token, and [`MessageId`].</span>
@@ -61,6 +72,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetWebhookMessage</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
     <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
+    <span class="ident">thread_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span>,
     <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     <span class="ident">webhook_id</span>: <span class="ident">WebhookId</span>,
 }
@@ -75,9 +87,18 @@
         <span class="self">Self</span> {
             <span class="ident">http</span>,
             <span class="ident">message_id</span>,
+            <span class="ident">thread_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">token</span>,
             <span class="ident">webhook_id</span>,
         }
+    }
+
+    <span class="doccomment">/// Get a message in a thread belonging to the channel instead of the</span>
+    <span class="doccomment">/// channel itself.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thread_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_id</span>: <span class="ident">ChannelId</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">thread_id</span>.<span class="ident">replace</span>(<span class="ident">thread_id</span>);
+
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
@@ -86,6 +107,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetWebhookMessage</span> {
             <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="ident">get</span>(),
+            <span class="ident">thread_id</span>: <span class="self">self</span>.<span class="ident">thread_id</span>.<span class="ident">map</span>(<span class="ident">ChannelId::get</span>),
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
             <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">webhook_id</span>.<span class="ident">get</span>(),
         })
@@ -96,5 +118,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (207c80f10 2021-11-30)" ></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (acbe4443c 2021-12-02)" ></div>
 </body></html>
