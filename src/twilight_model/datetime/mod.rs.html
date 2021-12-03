@@ -389,133 +389,7 @@
 <span id="388">388</span>
 <span id="389">389</span>
 <span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Utilities for parsing and format ISO 8601 timestamps returned by the API.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Utilities for parsing and formatting ISO 8601 timestamps.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
 <span class="doccomment">//!</span>
@@ -536,7 +410,8 @@
 <span class="doccomment">//! Format a timestamp as an ISO 8601 string used by the Discord API:</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
-<span class="doccomment">//! # fn foo() -&gt; Option&lt;()&gt; {</span>
+<span class="doccomment">//! # use std::error::Error;</span>
+<span class="doccomment">//! # fn foo() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {</span>
 <span class="doccomment">//! use twilight_model::datetime::Timestamp;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let timestamp = Timestamp::from_secs(1_580_608_922)?;</span>
@@ -545,24 +420,17 @@
 <span class="doccomment">//!     &quot;2020-02-02T02:02:02.000000+00:00&quot;,</span>
 <span class="doccomment">//!     timestamp.iso_8601().to_string(),</span>
 <span class="doccomment">//! );</span>
-<span class="doccomment">//! # None }</span>
+<span class="doccomment">//! # Ok(()) }</span>
 <span class="doccomment">//! ```</span>
 
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">clippy::missing_docs_in_private_items</span>)]</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">error</span>;
 
-<span class="kw">mod</span> <span class="ident">constant</span>;
 <span class="kw">mod</span> <span class="ident">display</span>;
-
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::datetime::constant</span>::{<span class="ident">MINUTES_PER_HOUR</span>, <span class="ident">SECONDS_PER_MINUTE</span>};
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{<span class="ident">display::TimestampIso8601Display</span>, <span class="ident">error::TimestampParseError</span>};
 
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::constant</span>::{
-    <span class="ident">Month</span>, <span class="ident">DAYS_PER_YEAR</span>, <span class="ident">EPOCH_UNIX</span>, <span class="ident">MICROSECONDS_PER_SECOND</span>, <span class="ident">SECONDS_PER_DAY</span>, <span class="ident">SECONDS_PER_HOUR</span>,
-    <span class="ident">YEAR_MAX</span>, <span class="ident">YEAR_MIN</span>,
-};
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">Visitor</span>},
     <span class="ident">ser</span>::{<span class="ident">Serialize</span>, <span class="ident">Serializer</span>},
@@ -570,14 +438,17 @@
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">convert::TryFrom</span>,
     <span class="ident">fmt</span>::{<span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">num::NonZeroU64</span>,
     <span class="ident">str::FromStr</span>,
 };
+<span class="kw">use</span> <span class="ident">time</span>::{<span class="ident">format_description::well_known::Rfc3339</span>, <span class="ident">OffsetDateTime</span>, <span class="ident">PrimitiveDateTime</span>};
 
-<span class="doccomment">/// Byte value of the number 0.</span>
-<span class="kw">const</span> <span class="ident">ZERO_BYTE</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="string">b&#39;0&#39;</span>;
+<span class="doccomment">/// Number of microseconds in a second.</span>
+<span class="kw">const</span> <span class="ident">MICROSECONDS_PER_SECOND</span>: <span class="ident">i64</span> <span class="op">=</span> <span class="number">1_000_000</span>;
 
-<span class="doccomment">/// Representation of a Unix timestamp with milliseconds.</span>
+<span class="doccomment">/// Number of nanoseconds in a microsecond.</span>
+<span class="kw">const</span> <span class="ident">NANOSECONDS_PER_MICROSECOND</span>: <span class="ident">i64</span> <span class="op">=</span> <span class="number">1_000</span>;
+
+<span class="doccomment">/// Representation of a Unix timestamp.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Display</span>
 <span class="doccomment">///</span>
@@ -591,34 +462,41 @@
 <span class="doccomment">/// [retrieving an ISO 8601 formatter]: Self::iso_8601</span>
 <span class="doccomment">/// [microseconds precision]: Self::as_micros</span>
 <span class="doccomment">/// [seconds precision]: Self::as_secs</span>
+<span class="comment">// We use a [`PrimitiveDateTime`] here since it does not store an offset, and</span>
+<span class="comment">// the API only operates in UTC. Additionally, it is four bytes smaller than an</span>
+<span class="comment">// [`OffsetDateTime`].</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Timestamp</span>(<span class="ident">NonZeroU64</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Timestamp</span>(<span class="ident">PrimitiveDateTime</span>);
 
 <span class="kw">impl</span> <span class="ident">Timestamp</span> {
-    <span class="doccomment">/// Create a non-zero timestamp from a Unix timestamp with microseconds</span>
-    <span class="doccomment">/// precision if the value is not zero.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">from_micros</span>(<span class="ident">unix_microseconds</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="comment">// `const`: Clippy suggests using `Option::map_or` which isn&#39;t const.</span>
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::option_if_let_else</span>)]</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">NonZeroU64::new</span>(<span class="ident">unix_microseconds</span>) {
-            <span class="prelude-val">Some</span>(<span class="self">Self</span>(<span class="ident">value</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+    <span class="doccomment">/// Create a timestamp from a Unix timestamp with microseconds precision.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a [`TimestampParseErrorType::Parsing`] error type if the parsing</span>
+    <span class="doccomment">/// failed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`TimestampParseErrorType::Parsing`]: self::error::TimestampParseErrorType::Parsing</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_micros</span>(<span class="ident">unix_microseconds</span>: <span class="ident">i64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">nanoseconds</span> <span class="op">=</span> <span class="ident">i128::from</span>(<span class="ident">unix_microseconds</span>) <span class="op">*</span> <span class="ident">i128::from</span>(<span class="ident">NANOSECONDS_PER_MICROSECOND</span>);
+
+        <span class="ident">OffsetDateTime::from_unix_timestamp_nanos</span>(<span class="ident">nanoseconds</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">offset</span><span class="op">|</span> <span class="self">Self</span>(<span class="ident">PrimitiveDateTime::new</span>(<span class="ident">offset</span>.<span class="ident">date</span>(), <span class="ident">offset</span>.<span class="ident">time</span>())))
+            .<span class="ident">map_err</span>(<span class="ident">TimestampParseError::from_component_range</span>)
     }
 
-    <span class="doccomment">/// Create a non-zero timestamp from a Unix timestamp with seconds precision</span>
-    <span class="doccomment">/// if the value is not zero.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">from_secs</span>(<span class="ident">unix_seconds</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">micros</span> <span class="op">=</span> <span class="ident">unix_seconds</span> <span class="op">*</span> <span class="ident">MICROSECONDS_PER_SECOND</span>;
-
-        <span class="comment">// `const`: Clippy suggests using `Option::map_or` which isn&#39;t const.</span>
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::option_if_let_else</span>)]</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">NonZeroU64::new</span>(<span class="ident">micros</span>) {
-            <span class="prelude-val">Some</span>(<span class="self">Self</span>(<span class="ident">value</span>))
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        }
+    <span class="doccomment">/// Create a timestamp from a Unix timestamp with seconds precision.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a [`TimestampParseErrorType::Parsing`] error type if the parsing</span>
+    <span class="doccomment">/// failed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`TimestampParseErrorType::Parsing`]: self::error::TimestampParseErrorType::Parsing</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_secs</span>(<span class="ident">unix_seconds</span>: <span class="ident">i64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="ident">OffsetDateTime::from_unix_timestamp</span>(<span class="ident">unix_seconds</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">offset</span><span class="op">|</span> <span class="self">Self</span>(<span class="ident">PrimitiveDateTime::new</span>(<span class="ident">offset</span>.<span class="ident">date</span>(), <span class="ident">offset</span>.<span class="ident">time</span>())))
+            .<span class="ident">map_err</span>(<span class="ident">TimestampParseError::from_component_range</span>)
     }
 
     <span class="doccomment">/// Parse a timestamp from an ISO 8601 datetime string emitted by Discord.</span>
@@ -652,24 +530,13 @@
     <span class="doccomment">/// Returns a [`TimestampParseErrorType::Format`] error type if the provided</span>
     <span class="doccomment">/// string is too short to be an ISO 8601 datetime without a time offset.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`TimestampParseErrorType::Range`] error type if one of the</span>
-    <span class="doccomment">/// provided datetime segment values is not within an acceptable range.</span>
+    <span class="doccomment">/// Returns a [`TimestampParseErrorType::Parsing`] error type if the parsing</span>
+    <span class="doccomment">/// failed.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`TimestampParseErrorType::Format`]: error::TimestampParseErrorType::Format</span>
-    <span class="doccomment">/// [`TimestampParseErrorType::Range`]: error::TimestampParseErrorType::Range</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">datetime</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">micros</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">parse_iso8601</span>(<span class="ident">datetime</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">micros</span>) =&gt; <span class="ident">micros</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>),
-        };
-
-        <span class="comment">// `const`: Clippy suggests using `Option::map_or` which isn&#39;t const.</span>
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::option_if_let_else</span>)]</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">timestamp</span>) <span class="op">=</span> <span class="ident">Timestamp::from_micros</span>(<span class="ident">micros</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">timestamp</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::ZERO</span>)
-        }
+    <span class="doccomment">/// [`TimestampParseErrorType::Format`]: self::error::TimestampParseErrorType::Format</span>
+    <span class="doccomment">/// [`TimestampParseErrorType::Parsing`]: self::error::TimestampParseErrorType::Parsing</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">datetime</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="ident">parse_iso8601</span>(<span class="ident">datetime</span>).<span class="ident">map</span>(<span class="self">Self</span>)
     }
 
     <span class="doccomment">/// Total number of seconds within the timestamp.</span>
@@ -688,8 +555,8 @@
     <span class="doccomment">/// assert_eq!(1_628_594_197, timestamp.as_secs());</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">as_secs</span>(<span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>() <span class="op">/</span> <span class="ident">MICROSECONDS_PER_SECOND</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">as_secs</span>(<span class="self">self</span>) -&gt; <span class="ident">i64</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">assume_utc</span>().<span class="ident">unix_timestamp</span>()
     }
 
     <span class="doccomment">/// Total number of microseconds within the timestamp.</span>
@@ -708,8 +575,10 @@
     <span class="doccomment">/// assert_eq!(1_628_594_197_123_456, timestamp.as_micros());</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">as_micros</span>(<span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>()
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">as_micros</span>(<span class="self">self</span>) -&gt; <span class="ident">i64</span> {
+        <span class="kw">let</span> <span class="ident">utc</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">assume_utc</span>();
+
+        (<span class="ident">utc</span>.<span class="ident">unix_timestamp</span>() <span class="op">*</span> <span class="ident">MICROSECONDS_PER_SECOND</span>) <span class="op">+</span> (<span class="ident">utc</span>.<span class="ident">microsecond</span>() <span class="kw">as</span> <span class="ident">i64</span>)
     }
 
     <span class="doccomment">/// Create a Display implementation to format the timestamp as an ISO 8601</span>
@@ -816,15 +685,8 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Errors</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Returns a [`TimestampParseErrorType::Format`] error type if the provided string</span>
-<span class="doccomment">/// is too short to be an ISO 8601 datetime without a time offset.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns a [`TimestampParseErrorType::Range`] error type if one of the provided</span>
-<span class="doccomment">/// datetime segment values is not within an acceptable range.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`TimestampParseErrorType::Format`]: error::TimestampParseErrorType::Format</span>
-<span class="doccomment">/// [`TimestampParseErrorType::Range`]: error::TimestampParseErrorType::Range</span>
-<span class="kw">const</span> <span class="kw">fn</span> <span class="ident">parse_iso8601</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+<span class="doccomment">/// Returns a [`TimestampParseErrorType::Parsing`] if the parsing failed.</span>
+<span class="kw">fn</span> <span class="ident">parse_iso8601</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PrimitiveDateTime</span>, <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Discord sends some timestamps with the microseconds and some without.</span>
     <span class="kw">const</span> <span class="ident">TIMESTAMP_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="string">&quot;2021-01-01T01:01:01+00:00&quot;</span>.<span class="ident">len</span>();
 
@@ -832,134 +694,18 @@
         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::FORMAT</span>);
     }
 
-    <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">as_bytes</span>();
-
-    <span class="comment">// Years.</span>
-    <span class="comment">//</span>
-    <span class="comment">// Input: 2021-01-01T01:01:01.010000+00:00</span>
-    <span class="comment">//       |----|</span>
-    <span class="comment">//</span>
-    <span class="comment">// First we take the first two digits - the thousands and hundreds - and</span>
-    <span class="comment">// multiply them by 100, followed by adding the tens and ones.</span>
-    <span class="kw">let</span> <span class="ident">year</span> <span class="op">=</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">0</span>], <span class="ident">bytes</span>[<span class="number">1</span>]) <span class="kw">as</span> <span class="ident">u16</span> <span class="op">*</span> <span class="number">100</span> <span class="op">+</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">2</span>], <span class="ident">bytes</span>[<span class="number">3</span>]) <span class="kw">as</span> <span class="ident">u16</span>;
-
-    <span class="kw">if</span> <span class="ident">year</span> <span class="op">&gt;</span> <span class="ident">YEAR_MAX</span> <span class="op">|</span><span class="op">|</span> <span class="ident">year</span> <span class="op">&lt;</span> <span class="ident">YEAR_MIN</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::year</span>(<span class="ident">year</span>));
-    }
-
-    <span class="kw">let</span> <span class="ident">month</span> <span class="op">=</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">5</span>], <span class="ident">bytes</span>[<span class="number">6</span>]) <span class="op">-</span> <span class="number">1</span>;
-
-        <span class="kw">match</span> <span class="ident">Month::new</span>(<span class="ident">value</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">month</span>) =&gt; <span class="ident">month</span>,
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::month</span>(<span class="ident">value</span>));
-            }
-        }
-    };
-
-    <span class="kw">let</span> <span class="ident">day</span> <span class="op">=</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">8</span>], <span class="ident">bytes</span>[<span class="number">9</span>]);
-
-    <span class="kw">let</span> <span class="ident">is_leap_year</span> <span class="op">=</span> <span class="ident">constant::is_leap_year</span>(<span class="ident">year</span> <span class="kw">as</span> <span class="ident">u64</span>);
-
-    <span class="kw">if</span> <span class="ident">day</span> <span class="op">&gt;</span> <span class="ident">month</span>.<span class="ident">days</span>(<span class="ident">is_leap_year</span>) {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::day</span>(<span class="ident">year</span>, <span class="ident">month</span>.<span class="ident">legible</span>(), <span class="ident">day</span>));
-    }
-
-    <span class="kw">let</span> <span class="ident">hour</span> <span class="op">=</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">11</span>], <span class="ident">bytes</span>[<span class="number">12</span>]);
-
-    <span class="kw">if</span> <span class="ident">hour</span> <span class="op">&gt;</span> <span class="number">23</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::hour</span>(<span class="ident">hour</span>));
-    }
-
-    <span class="kw">let</span> <span class="ident">minute</span> <span class="op">=</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">14</span>], <span class="ident">bytes</span>[<span class="number">15</span>]);
-
-    <span class="kw">if</span> <span class="ident">minute</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">MINUTES_PER_HOUR</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::minute</span>(<span class="ident">minute</span>));
-    }
-    <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">digits</span>(<span class="ident">bytes</span>[<span class="number">17</span>], <span class="ident">bytes</span>[<span class="number">18</span>]);
-
-    <span class="kw">if</span> <span class="ident">second</span> <span class="op">&gt;</span> <span class="ident">SECONDS_PER_MINUTE</span> {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TimestampParseError::second</span>(<span class="ident">second</span>));
-    }
-
-    <span class="comment">// 10 leap years before the Discord epoch.</span>
-    <span class="kw">let</span> <span class="ident">leap_years</span> <span class="op">=</span> <span class="number">10</span> <span class="op">+</span> (<span class="ident">year</span> <span class="op">-</span> <span class="number">2009</span>) <span class="op">/</span> <span class="number">4</span>;
-
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">running_year_days</span> <span class="op">=</span> <span class="ident">month</span>.<span class="ident">running_total</span>(<span class="ident">is_leap_year</span>);
-
-    <span class="comment">// We subtract one because the calendar is 1-indexed, but we&#39;re</span>
-    <span class="comment">// computationally working off of a 0-indexed day.</span>
-    <span class="ident">running_year_days</span> <span class="op">+</span><span class="op">=</span> <span class="ident">day</span> <span class="kw">as</span> <span class="ident">u16</span> <span class="op">-</span> <span class="number">1</span>;
-
-    <span class="comment">// `const`: we can&#39;t implement `Ord` on `Month` and do an ordered check</span>
-    <span class="comment">// because it isn&#39;t const.</span>
-    <span class="kw">if</span> <span class="ident">is_leap_year</span> <span class="op">&amp;&amp;</span> <span class="ident">month</span>.<span class="ident">legible</span>() <span class="op">&gt;</span> <span class="ident">Month::February</span>.<span class="ident">legible</span>() {
-        <span class="ident">running_year_days</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-    }
-
-    <span class="kw">let</span> <span class="ident">days</span> <span class="op">=</span> (<span class="ident">year</span> <span class="op">-</span> <span class="ident">EPOCH_UNIX</span>) <span class="op">*</span> <span class="ident">DAYS_PER_YEAR</span> <span class="op">+</span> <span class="ident">leap_years</span> <span class="op">+</span> <span class="ident">running_year_days</span>;
-
-    <span class="comment">// Active multiplier for the current byte.</span>
-    <span class="comment">//</span>
-    <span class="comment">// The first byte will be the hundred-thousands, so we need to multiply it by</span>
-    <span class="comment">// that. The second is ten-thousands, so after the first iteration it needs</span>
-    <span class="comment">// to be divided by 10, and so on.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">multiplier</span> <span class="op">=</span> <span class="ident">MICROSECONDS_PER_SECOND</span> <span class="op">/</span> <span class="number">10</span>;
-
-    <span class="comment">// Milliseconds.</span>
-    <span class="comment">//</span>
-    <span class="comment">// 2021-01-01T01:01:01.010000+00:00</span>
-    <span class="comment">//                    |---|</span>
-    <span class="comment">//</span>
-    <span class="comment">// The API only works in milliseconds - not microseconds - so we can ignore</span>
-    <span class="comment">// the last three digits due to them always being zeroes.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">microseconds</span> <span class="op">=</span> <span class="number">0</span>;
-
-    <span class="kw">if</span> <span class="ident">bytes</span>[<span class="number">19</span>] <span class="op">==</span> <span class="string">b&#39;.&#39;</span> {
-        <span class="comment">// `const`: `for` loops can&#39;t be used so we need to use a `while`.</span>
-        <span class="comment">//</span>
-        <span class="comment">// The microseconds starts at index 20 of the input.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">milliseconds_idx</span> <span class="op">=</span> <span class="number">20</span>;
-
-        <span class="kw">while</span> <span class="ident">milliseconds_idx</span> <span class="op">&lt;</span> <span class="number">26</span> {
-            <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">bytes</span>[<span class="ident">milliseconds_idx</span>];
-
-            <span class="ident">microseconds</span> <span class="op">+</span><span class="op">=</span> <span class="ident">multiplier</span> <span class="op">*</span> (<span class="ident">byte</span> <span class="op">-</span> <span class="ident">ZERO_BYTE</span>) <span class="kw">as</span> <span class="ident">u64</span>;
-
-            <span class="comment">// Remove a magnitude from the multiplier.</span>
-            <span class="ident">multiplier</span> <span class="op">/</span><span class="op">=</span> <span class="number">10</span>;
-
-            <span class="ident">milliseconds_idx</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        }
-    }
-
-    <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">second</span> <span class="kw">as</span> <span class="ident">u64</span>
-        <span class="op">+</span> <span class="ident">minute</span> <span class="kw">as</span> <span class="ident">u64</span> <span class="op">*</span> <span class="ident">MINUTES_PER_HOUR</span> <span class="kw">as</span> <span class="ident">u64</span>
-        <span class="op">+</span> <span class="ident">hour</span> <span class="kw">as</span> <span class="ident">u64</span> <span class="op">*</span> (<span class="ident">SECONDS_PER_HOUR</span> <span class="kw">as</span> <span class="ident">u64</span>);
-
-    <span class="comment">// The Discord API doesn&#39;t send timestamps in any offset other than +00:00,</span>
-    <span class="comment">// so we can just add up what we&#39;ve got and call good.</span>
-    <span class="kw">let</span> <span class="ident">seconds</span> <span class="op">=</span> <span class="ident">time</span> <span class="op">+</span> <span class="ident">days</span> <span class="kw">as</span> <span class="ident">u64</span> <span class="op">*</span> <span class="ident">SECONDS_PER_DAY</span>;
-
-    <span class="prelude-val">Ok</span>(<span class="ident">seconds</span> <span class="op">*</span> <span class="ident">MICROSECONDS_PER_SECOND</span> <span class="op">+</span> <span class="ident">microseconds</span>)
-}
-
-<span class="doccomment">/// Parse two bytes into digits and then add them together, multiplying the</span>
-<span class="doccomment">/// first by a magnitude.</span>
-<span class="kw">const</span> <span class="kw">fn</span> <span class="ident">digits</span>(<span class="ident">first</span>: <span class="ident">u8</span>, <span class="ident">second</span>: <span class="ident">u8</span>) -&gt; <span class="ident">u8</span> {
-    <span class="kw">let</span> <span class="ident">tens</span> <span class="op">=</span> (<span class="ident">first</span> <span class="op">-</span> <span class="ident">ZERO_BYTE</span>) <span class="op">*</span> <span class="number">10</span>;
-    <span class="kw">let</span> <span class="ident">ones</span> <span class="op">=</span> <span class="ident">second</span> <span class="op">-</span> <span class="ident">ZERO_BYTE</span>;
-
-    <span class="ident">tens</span> <span class="op">+</span> <span class="ident">ones</span>
+    <span class="ident">OffsetDateTime::parse</span>(<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="ident">Rfc3339</span>)
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">offset</span><span class="op">|</span> <span class="ident">PrimitiveDateTime::new</span>(<span class="ident">offset</span>.<span class="ident">date</span>(), <span class="ident">offset</span>.<span class="ident">time</span>()))
+        .<span class="ident">map_err</span>(<span class="ident">TimestampParseError::from_parse</span>)
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>};
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_impl_all</span>, <span class="ident">const_assert_eq</span>};
+    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert::TryFrom</span>, <span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">str::FromStr</span>};
+    <span class="kw">use</span> <span class="ident">time</span>::{<span class="ident">OffsetDateTime</span>, <span class="ident">PrimitiveDateTime</span>};
 
     <span class="macro">assert_impl_all!</span>(
         <span class="ident">Timestamp</span>: <span class="ident">Clone</span>,
@@ -975,21 +721,23 @@
         <span class="ident">Sync</span>,
         <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
     );
-    <span class="macro">const_assert_eq!</span>(<span class="number">17</span>, <span class="ident"><span class="kw">super</span>::digits</span>(<span class="string">b&#39;1&#39;</span>, <span class="string">b&#39;7&#39;</span>));
-    <span class="macro">const_assert_eq!</span>(<span class="number">3</span>, <span class="ident"><span class="kw">super</span>::digits</span>(<span class="string">b&#39;0&#39;</span>, <span class="string">b&#39;3&#39;</span>));
 
     <span class="doccomment">/// Test a variety of supported ISO 8601 datetime formats.</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_parse_iso8601</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
         <span class="comment">// With milliseconds.</span>
+        <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">OffsetDateTime::from_unix_timestamp_nanos</span>(<span class="number">1_580_608_922_020_000_000</span>).<span class="ident">unwrap</span>();
+
         <span class="macro">assert_eq!</span>(
-            <span class="number">1_580_608_922_020_000</span>,
+            <span class="ident">PrimitiveDateTime::new</span>(<span class="ident">offset</span>.<span class="ident">date</span>(), <span class="ident">offset</span>.<span class="ident">time</span>()),
             <span class="ident"><span class="kw">super</span>::parse_iso8601</span>(<span class="string">&quot;2020-02-02T02:02:02.020000+00:00&quot;</span>)<span class="question-mark">?</span>
         );
 
         <span class="comment">// Without milliseconds.</span>
+        <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">OffsetDateTime::from_unix_timestamp_nanos</span>(<span class="number">1_580_608_922_000_000_000</span>).<span class="ident">unwrap</span>();
+
         <span class="macro">assert_eq!</span>(
-            <span class="number">1_580_608_922_000_000</span>,
+            <span class="ident">PrimitiveDateTime::new</span>(<span class="ident">offset</span>.<span class="ident">date</span>(), <span class="ident">offset</span>.<span class="ident">time</span>()),
             <span class="ident"><span class="kw">super</span>::parse_iso8601</span>(<span class="string">&quot;2020-02-02T02:02:02+00:00&quot;</span>)<span class="question-mark">?</span>
         );
 

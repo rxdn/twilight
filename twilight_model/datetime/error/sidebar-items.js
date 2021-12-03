@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["RangeField","Field that is out of range."],["TimestampParseErrorType","Type of [`TimestampParseError`] that occurred."]],"struct":[["TimestampParseError","Reason that an ISO 8601 format couldn’t be parsed."]]});
+initSidebarItems({"enum":[["TimestampParseErrorType","Type of [`TimestampParseError`] that occurred."]],"struct":[["TimestampParseError","Reason that an ISO 8601 format couldn’t be parsed."]]});
