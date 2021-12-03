@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["InMemoryRatelimiter","Default ratelimiter implementation used in twilight that stores ratelimit information in an in-memory mapping."]]});

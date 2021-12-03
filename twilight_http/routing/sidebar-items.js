@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Path","An enum representing a path, most useful for ratelimiting implementations."],["PathParseErrorType",""],["Route",""]],"struct":[["PathParseError",""],["RouteDisplay",""]]});
+initSidebarItems({"enum":[["Path","An enum representing a path, most useful for ratelimiting implementations."],["PathParseErrorType","Type of [`PathParseError`] specifying what failed to parse."],["Route",""]],"struct":[["PathParseError","Error returned when a [`Path`] could not be parsed from a string."],["RouteDisplay",""]]});

@@ -127,33 +127,6 @@
 <span id="126">126</span>
 <span id="127">127</span>
 <span id="128">128</span>
-<span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Create embed authors.</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::image_source::ImageSource</span>;
@@ -169,11 +142,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EmbedAuthorBuilder</span>(<span class="ident">EmbedAuthor</span>);
 
 <span class="kw">impl</span> <span class="ident">EmbedAuthorBuilder</span> {
-    <span class="doccomment">/// Create a new default embed author builder.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
+    <span class="doccomment">/// Create a new embed author builder.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">EmbedAuthor</span> {
             <span class="ident">icon_url</span>: <span class="prelude-val">None</span>,
-            <span class="ident">name</span>: <span class="prelude-val">None</span>,
+            <span class="ident">name</span>,
             <span class="ident">proxy_icon_url</span>: <span class="prelude-val">None</span>,
             <span class="ident">url</span>: <span class="prelude-val">None</span>,
         })
@@ -203,8 +176,9 @@
         <span class="self">self</span>.<span class="ident">_name</span>(<span class="ident">name</span>.<span class="ident">into</span>())
     }
 
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="kw">fn</span> <span class="ident">_name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">name</span>.<span class="ident">replace</span>(<span class="ident">name</span>);
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>;
 
         <span class="self">self</span>
     }
@@ -218,12 +192,6 @@
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">url</span>.<span class="ident">replace</span>(<span class="ident">url</span>);
 
         <span class="self">self</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">EmbedAuthorBuilder</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::new</span>()
     }
 }
 
@@ -244,33 +212,12 @@
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
     <span class="kw">use</span> <span class="ident">twilight_model::channel::embed::EmbedAuthor</span>;
 
-    <span class="macro">assert_impl_all!</span>(
-        <span class="ident">EmbedAuthorBuilder</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Default</span>,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Sync</span>
-    );
+    <span class="macro">assert_impl_all!</span>(<span class="ident">EmbedAuthorBuilder</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">EmbedAuthor</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">EmbedAuthorBuilder</span><span class="op">&gt;</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_defaults</span>() {
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">EmbedAuthor</span> {
-            <span class="ident">icon_url</span>: <span class="prelude-val">None</span>,
-            <span class="ident">name</span>: <span class="prelude-val">None</span>,
-            <span class="ident">proxy_icon_url</span>: <span class="prelude-val">None</span>,
-            <span class="ident">url</span>: <span class="prelude-val">None</span>,
-        };
-
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">EmbedAuthorBuilder::new</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">EmbedAuthorBuilder::new</span>().<span class="number">0</span>, <span class="ident">EmbedAuthorBuilder::default</span>().<span class="number">0</span>);
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_name_empty</span>() {
-        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EmbedBuilder::new</span>().<span class="ident">author</span>(<span class="ident">EmbedAuthorBuilder::new</span>().<span class="ident">name</span>(<span class="string">&quot;&quot;</span>));
+        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EmbedBuilder::new</span>().<span class="ident">author</span>(<span class="ident">EmbedAuthorBuilder::new</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_owned</span>()));
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">builder</span>.<span class="ident">build</span>().<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
@@ -280,10 +227,10 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_name_too_long</span>() {
-        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EmbedBuilder::new</span>().<span class="ident">author</span>(<span class="ident">EmbedAuthorBuilder::new</span>().<span class="ident">name</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">256</span>)));
+        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EmbedBuilder::new</span>().<span class="ident">author</span>(<span class="ident">EmbedAuthorBuilder::new</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">256</span>)));
         <span class="macro">assert!</span>(<span class="ident">builder</span>.<span class="ident">build</span>().<span class="ident">is_ok</span>());
 
-        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EmbedBuilder::new</span>().<span class="ident">author</span>(<span class="ident">EmbedAuthorBuilder::new</span>().<span class="ident">name</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">257</span>)));
+        <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EmbedBuilder::new</span>().<span class="ident">author</span>(<span class="ident">EmbedAuthorBuilder::new</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">257</span>)));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">builder</span>.<span class="ident">build</span>().<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
             <span class="ident">EmbedErrorType::AuthorNameTooLong</span> { .. }
@@ -294,15 +241,14 @@
     <span class="kw">fn</span> <span class="ident">test_builder</span>() {
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">EmbedAuthor</span> {
             <span class="ident">icon_url</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;https://example.com/1.png&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;an author&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">name</span>: <span class="string">&quot;an author&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">proxy_icon_url</span>: <span class="prelude-val">None</span>,
             <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>()),
         };
 
         <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">ImageSource::url</span>(<span class="string">&quot;https://example.com/1.png&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">EmbedAuthorBuilder::new</span>()
+        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">EmbedAuthorBuilder::new</span>(<span class="string">&quot;an author&quot;</span>.<span class="ident">to_owned</span>())
             .<span class="ident">icon_url</span>(<span class="ident">source</span>)
-            .<span class="ident">name</span>(<span class="string">&quot;an author&quot;</span>)
             .<span class="ident">url</span>(<span class="string">&quot;https://example.com&quot;</span>)
             .<span class="ident">build</span>();
 

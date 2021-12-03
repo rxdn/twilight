@@ -152,7 +152,22 @@
 <span id="151">151</span>
 <span id="152">152</span>
 <span id="153">153</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Ratelimiting functionality for queueing new gateway sessions.</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+</pre><pre class="rust"><code><span class="doccomment">//! # twilight-gateway-queue</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Ratelimiting functionality for queueing new gateway sessions.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The gateway ratelimits how often clients can initialize new sessions.</span>
 <span class="doccomment">//! Instances of a queue are given to shards so that they can request to</span>
@@ -165,7 +180,7 @@
 <span class="doccomment">//! the two processes must use some unified form of ratelimiting: this can</span>
 <span class="doccomment">//! either mean using IPC to communicate ratelimiting or a broker.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! # Provided queues</span>
+<span class="doccomment">//! ## Provided queues</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Most users only need the [`LocalQueue`]: it&#39;s a single-process queue for</span>
 <span class="doccomment">//! smaller bots. Larger bots need the [`LargeBotQueue`], which supports</span>
@@ -176,13 +191,21 @@
 <span class="doccomment">//! can override this in the `ClusterBuilder::queue` and `ShardBuilder::queue`</span>
 <span class="doccomment">//! configuration methods.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! # Advanced use cases</span>
+<span class="doccomment">//! ## Advanced use cases</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Large bots, and smaller bots out of design, may need to implement their own</span>
 <span class="doccomment">//! queue. The most common reason to need this is if you have clusters in</span>
 <span class="doccomment">//! multiple processes. You&#39;ll need a broker to manage ratelimiting across them</span>
 <span class="doccomment">//! all so a [`Queue`] trait is provided that shards can use to make requests to</span>
 <span class="doccomment">//! create sessions.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Features</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Tracing</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `tracing` feature enables logging via the [`tracing`] crate.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This is enabled by default.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [Sharding for Very Large Bots]: https://discord.com/developers/docs/topics/gateway#sharding-for-very-large-bots</span>
 
@@ -269,6 +292,7 @@
     <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">err</span>);
         }
         <span class="ident">sleep</span>(<span class="ident">DUR</span>).<span class="kw">await</span>;
@@ -284,10 +308,12 @@
             <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>().<span class="ident">send</span>(<span class="ident">tx</span>) {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">err</span>);
                 <span class="kw">return</span>;
             }
 
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::info!</span>(<span class="string">&quot;shard {}/{} waiting for allowance&quot;</span>, <span class="ident">id</span>, <span class="ident">total</span>);
 
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="kw">await</span>;

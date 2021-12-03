@@ -719,6 +719,27 @@
 <span id="718">718</span>
 <span id="719">719</span>
 <span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Nodes for communicating with a Lavalink server.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Using nodes, you can send events to a server and receive events.</span>
@@ -1073,9 +1094,14 @@
             <span class="ident">op</span>: <span class="ident">Opcode::Stats</span>,
             <span class="ident">uptime</span>: <span class="number">0</span>,
         });
+
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;starting connection to {}&quot;</span>, <span class="ident">config</span>.<span class="ident">address</span>);
+
         <span class="kw">let</span> (<span class="ident">conn_loop</span>, <span class="ident">lavalink_tx</span>, <span class="ident">lavalink_rx</span>) <span class="op">=</span>
             <span class="ident">Connection::connect</span>(<span class="ident">config</span>.<span class="ident">clone</span>(), <span class="ident">players</span>.<span class="ident">clone</span>(), <span class="ident">bilock_right</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;started connection to {}&quot;</span>, <span class="ident">config</span>.<span class="ident">address</span>);
 
         <span class="ident">tokio::spawn</span>(<span class="ident">conn_loop</span>.<span class="ident">run</span>());
@@ -1201,12 +1227,14 @@
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">incoming</span>)) <span class="op">=</span> <span class="ident">incoming</span> {
                         <span class="self">self</span>.<span class="ident">incoming</span>(<span class="ident">incoming</span>).<span class="kw">await</span><span class="question-mark">?</span>;
                     } <span class="kw">else</span> {
+                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::debug!</span>(<span class="string">&quot;connection to {} closed, reconnecting&quot;</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">address</span>);
                         <span class="self">self</span>.<span class="ident">connection</span> <span class="op">=</span> <span class="ident">reconnect</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">config</span>).<span class="kw">await</span><span class="question-mark">?</span>;
                     }
                 }
                 <span class="ident">outgoing</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">node_from</span>.<span class="ident">recv</span>() =&gt; {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">outgoing</span>) <span class="op">=</span> <span class="ident">outgoing</span> {
+                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::debug!</span>(
                             <span class="string">&quot;forwarding event to {}: {:?}&quot;</span>,
                             <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">address</span>,
@@ -1220,6 +1248,7 @@
                         <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Message::Text</span>(<span class="ident">payload</span>);
                         <span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">send</span>(<span class="ident">msg</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
                     } <span class="kw">else</span> {
+                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::debug!</span>(<span class="string">&quot;node {} closed, ending connection&quot;</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">address</span>);
 
                         <span class="kw">break</span>;
@@ -1232,6 +1261,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">incoming</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">incoming</span>: <span class="ident">Message</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">NodeError</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(
             <span class="string">&quot;received message from {}: {:?}&quot;</span>,
             <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">address</span>,
@@ -1240,12 +1270,14 @@
 
         <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">incoming</span> {
             <span class="ident">Message::Close</span>(<span class="kw">_</span>) =&gt; {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::debug!</span>(<span class="string">&quot;got close, closing connection&quot;</span>);
                 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">send</span>(<span class="ident">Message::Close</span>(<span class="prelude-val">None</span>)).<span class="kw">await</span>;
 
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>);
             }
             <span class="ident">Message::Ping</span>(<span class="ident">data</span>) =&gt; {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::debug!</span>(<span class="string">&quot;got ping, sending pong&quot;</span>);
                 <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">Message::Pong</span>(<span class="ident">data</span>);
 
@@ -1255,16 +1287,20 @@
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
             }
             <span class="ident">Message::Text</span>(<span class="ident">text</span>) =&gt; <span class="ident">text</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="ident">other</span> =&gt; {
                 <span class="macro">tracing::debug!</span>(<span class="string">&quot;got pong or bytes payload: {:?}&quot;</span>, <span class="ident">other</span>);
 
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
             }
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>))]</span>
+            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>),
         };
 
         <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">event</span>) =&gt; <span class="ident">event</span>,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;unknown message from lavalink node: {}&quot;</span>, <span class="ident">text</span>);
 
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
@@ -1290,6 +1326,7 @@
         <span class="kw">let</span> <span class="ident">player</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">players</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">update</span>.<span class="ident">guild_id</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">player</span>) =&gt; <span class="ident">player</span>,
             <span class="prelude-val">None</span> =&gt; {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::warn!</span>(
                     <span class="string">&quot;invalid player update for guild {}: {:?}&quot;</span>,
                     <span class="ident">update</span>.<span class="ident">guild_id</span>,
@@ -1350,6 +1387,7 @@
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">get</span>(<span class="ident">header</span>) {
             <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">as_bytes</span>() <span class="op">==</span> <span class="string">b&quot;false&quot;</span> {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::debug!</span>(<span class="string">&quot;session to node {} didn&#39;t resume&quot;</span>, <span class="ident">config</span>.<span class="ident">address</span>);
 
                 <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="macro">serde_json::json!</span>({
@@ -1361,6 +1399,7 @@
 
                 <span class="ident">stream</span>.<span class="ident">send</span>(<span class="ident">msg</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
             } <span class="kw">else</span> {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::debug!</span>(<span class="string">&quot;session to {} resumed&quot;</span>, <span class="ident">config</span>.<span class="ident">address</span>);
             }
         }
@@ -1380,6 +1419,7 @@
         <span class="kw">match</span> <span class="ident">tokio_tungstenite::connect_async</span>(<span class="ident">req</span>).<span class="kw">await</span> {
             <span class="prelude-val">Ok</span>((<span class="ident">stream</span>, <span class="ident">res</span>)) =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>((<span class="ident">stream</span>, <span class="ident">res</span>)),
             <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;failed to connect to node {}: {:?}&quot;</span>, <span class="ident">source</span>, <span class="ident">config</span>.<span class="ident">address</span>);
 
                 <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">source</span>, <span class="ident">TungsteniteError::Http</span>(<span class="kw-2">ref</span> <span class="ident">resp</span>) <span class="kw">if</span> <span class="ident">resp</span>.<span class="ident">status</span>() <span class="op">==</span> <span class="ident">StatusCode::UNAUTHORIZED</span>)
@@ -1394,6 +1434,7 @@
                 }
 
                 <span class="kw">if</span> <span class="ident">seconds</span> <span class="op">&gt;</span> <span class="number">64</span> {
+                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::debug!</span>(<span class="string">&quot;no longer trying to connect to node {}&quot;</span>, <span class="ident">config</span>.<span class="ident">address</span>);
 
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">NodeError</span> {
@@ -1402,6 +1443,7 @@
                     });
                 }
 
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::debug!</span>(
                     <span class="string">&quot;waiting {} seconds before attempting to connect to node {} again&quot;</span>,
                     <span class="ident">seconds</span>,

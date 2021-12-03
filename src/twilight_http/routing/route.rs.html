@@ -1468,7 +1468,64 @@
 <span id="1467">1467</span>
 <span id="1468">1468</span>
 <span id="1469">1469</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">path::Path</span>, <span class="ident">route_display::RouteDisplay</span>};
+<span id="1470">1470</span>
+<span id="1471">1471</span>
+<span id="1472">1472</span>
+<span id="1473">1473</span>
+<span id="1474">1474</span>
+<span id="1475">1475</span>
+<span id="1476">1476</span>
+<span id="1477">1477</span>
+<span id="1478">1478</span>
+<span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
+<span id="1484">1484</span>
+<span id="1485">1485</span>
+<span id="1486">1486</span>
+<span id="1487">1487</span>
+<span id="1488">1488</span>
+<span id="1489">1489</span>
+<span id="1490">1490</span>
+<span id="1491">1491</span>
+<span id="1492">1492</span>
+<span id="1493">1493</span>
+<span id="1494">1494</span>
+<span id="1495">1495</span>
+<span id="1496">1496</span>
+<span id="1497">1497</span>
+<span id="1498">1498</span>
+<span id="1499">1499</span>
+<span id="1500">1500</span>
+<span id="1501">1501</span>
+<span id="1502">1502</span>
+<span id="1503">1503</span>
+<span id="1504">1504</span>
+<span id="1505">1505</span>
+<span id="1506">1506</span>
+<span id="1507">1507</span>
+<span id="1508">1508</span>
+<span id="1509">1509</span>
+<span id="1510">1510</span>
+<span id="1511">1511</span>
+<span id="1512">1512</span>
+<span id="1513">1513</span>
+<span id="1514">1514</span>
+<span id="1515">1515</span>
+<span id="1516">1516</span>
+<span id="1517">1517</span>
+<span id="1518">1518</span>
+<span id="1519">1519</span>
+<span id="1520">1520</span>
+<span id="1521">1521</span>
+<span id="1522">1522</span>
+<span id="1523">1523</span>
+<span id="1524">1524</span>
+<span id="1525">1525</span>
+<span id="1526">1526</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">route_display::RouteDisplay</span>, <span class="ident">Path</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request</span>::{<span class="ident">channel::reaction::RequestReactionType</span>, <span class="ident">Method</span>};
 <span class="kw">use</span> <span class="ident">twilight_model::id::RoleId</span>;
 
@@ -2660,7 +2717,7 @@
 
     <span class="doccomment">/// Typed path of the route.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Paths are used with the [`Ratelimiter`].</span>
+    <span class="doccomment">/// Paths are used with a [`Ratelimiter`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -2668,16 +2725,17 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # #[tokio::main]</span>
-    <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use twilight_http::{ratelimiting::Ratelimiter, routing::Route};</span>
+    <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error + Send + Sync&gt;&gt; {</span>
+    <span class="doccomment">/// use twilight_http::routing::Route;</span>
+    <span class="doccomment">/// use twilight_http_ratelimiting::{InMemoryRatelimiter, Ratelimiter};</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let ratelimiter = Ratelimiter::new();</span>
+    <span class="doccomment">/// let ratelimiter = InMemoryRatelimiter::new();</span>
     <span class="doccomment">/// let route = Route::CreateMessage {</span>
     <span class="doccomment">///     channel_id: 123,</span>
     <span class="doccomment">///  };</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // Take a ticket from the ratelimiter.</span>
-    <span class="doccomment">/// let rx = ratelimiter.ticket(route.path());</span>
+    <span class="doccomment">/// let rx = ratelimiter.ticket(route.path()).await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // Wait to be told that a request can be made...</span>
     <span class="doccomment">/// let _tx = rx.await;</span>
@@ -2686,9 +2744,9 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Ratelimiter`]: crate::ratelimiting::Ratelimiter</span>
+    <span class="doccomment">/// [`Ratelimiter`]: twilight_http_ratelimiting::Ratelimiter</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Path</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Path</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::AddGuildMember</span> { <span class="ident">guild_id</span>, .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetMember</span> { <span class="ident">guild_id</span>, .. }
@@ -2717,8 +2775,10 @@
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::SetGlobalCommands</span> { <span class="ident">application_id</span> } =&gt; {
                 <span class="ident">Path::ApplicationCommand</span>(<span class="kw-2">*</span><span class="ident">application_id</span>)
             }
-            <span class="ident"><span class="self">Self</span>::CreateGuild</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::CreateGuildFromTemplate</span> { .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetTemplate</span> { .. } =&gt; {
-                <span class="ident">Path::Guilds</span>
+            <span class="ident"><span class="self">Self</span>::CreateGuild</span> =&gt; <span class="ident">Path::Guilds</span>,
+            <span class="ident"><span class="self">Self</span>::CreateGuildFromTemplate</span> { <span class="ident">template_code</span>, .. }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetTemplate</span> { <span class="ident">template_code</span>, .. } =&gt; {
+                <span class="ident">Path::GuildsTemplatesCode</span>((<span class="kw-2">*</span><span class="ident">template_code</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>())
             }
             <span class="ident"><span class="self">Self</span>::CreateGuildCommand</span> { <span class="ident">application_id</span>, .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::DeleteGuildCommand</span> { <span class="ident">application_id</span>, .. }
@@ -2784,12 +2844,29 @@
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildIntegration</span> { <span class="ident">guild_id</span>, .. } =&gt; {
                 <span class="ident">Path::GuildsIdIntegrationsId</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>)
             }
-            <span class="ident"><span class="self">Self</span>::DeleteInteractionOriginal</span> { <span class="ident">application_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetFollowupMessage</span> { <span class="ident">application_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetInteractionOriginal</span> { <span class="ident">application_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateInteractionOriginal</span> { <span class="ident">application_id</span>, .. } =&gt; {
-                <span class="ident">Path::WebhooksIdTokenMessagesId</span>(<span class="kw-2">*</span><span class="ident">application_id</span>)
+            <span class="ident"><span class="self">Self</span>::DeleteInteractionOriginal</span> {
+                <span class="ident">application_id</span>,
+                <span class="ident">interaction_token</span>,
+                ..
             }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetFollowupMessage</span> {
+                <span class="ident">application_id</span>,
+                <span class="ident">interaction_token</span>,
+                ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetInteractionOriginal</span> {
+                <span class="ident">application_id</span>,
+                <span class="ident">interaction_token</span>,
+                ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateInteractionOriginal</span> {
+                <span class="ident">application_id</span>,
+                <span class="ident">interaction_token</span>,
+                ..
+            } =&gt; <span class="ident">Path::WebhooksIdTokenMessagesId</span>(
+                <span class="kw-2">*</span><span class="ident">application_id</span>,
+                (<span class="kw-2">*</span><span class="ident">interaction_token</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>(),
+            ),
             <span class="ident"><span class="self">Self</span>::DeleteInvite</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetInvite</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetInviteWithExpiration</span> { .. } =&gt; <span class="ident">Path::InvitesCode</span>,
@@ -2809,16 +2886,53 @@
             <span class="ident"><span class="self">Self</span>::DeleteRole</span> { <span class="ident">guild_id</span>, .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateRole</span> { <span class="ident">guild_id</span>, .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateRolePositions</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdRolesId</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>),
-            <span class="ident"><span class="self">Self</span>::DeleteTemplate</span> { <span class="ident">guild_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::SyncTemplate</span> { <span class="ident">guild_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateTemplate</span> { <span class="ident">guild_id</span>, .. } =&gt; (<span class="ident">Path::GuildsIdTemplatesCode</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>)),
-            <span class="ident"><span class="self">Self</span>::DeleteWebhookMessage</span> { <span class="ident">webhook_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetWebhookMessage</span> { <span class="ident">webhook_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateWebhookMessage</span> { <span class="ident">webhook_id</span>, .. } =&gt; {
-                <span class="ident">Path::WebhooksIdTokenMessagesId</span>(<span class="kw-2">*</span><span class="ident">webhook_id</span>)
+            <span class="ident"><span class="self">Self</span>::DeleteTemplate</span> {
+                <span class="ident">guild_id</span>,
+                <span class="ident">template_code</span>,
+                ..
             }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::SyncTemplate</span> {
+                <span class="ident">guild_id</span>,
+                <span class="ident">template_code</span>,
+                ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateTemplate</span> {
+                <span class="ident">guild_id</span>,
+                <span class="ident">template_code</span>,
+                ..
+            } =&gt; <span class="ident">Path::GuildsIdTemplatesCode</span>(
+                <span class="kw-2">*</span><span class="ident">guild_id</span>,
+                (<span class="kw-2">*</span><span class="ident">template_code</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>(),
+            ),
+            <span class="ident"><span class="self">Self</span>::DeleteWebhookMessage</span> {
+                <span class="ident">webhook_id</span>, <span class="ident">token</span>, ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetWebhookMessage</span> {
+                <span class="ident">webhook_id</span>, <span class="ident">token</span>, ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateWebhookMessage</span> {
+                <span class="ident">webhook_id</span>, <span class="ident">token</span>, ..
+            } =&gt; {
+                <span class="ident">Path::WebhooksIdTokenMessagesId</span>(<span class="kw-2">*</span><span class="ident">webhook_id</span>, (<span class="kw-2">*</span><span class="ident">token</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>())
+            }
+            <span class="ident"><span class="self">Self</span>::DeleteWebhook</span> {
+                <span class="ident">webhook_id</span>,
+                <span class="ident">token</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>),
+                ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ExecuteWebhook</span> {
+                <span class="ident">webhook_id</span>, <span class="ident">token</span>, ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetWebhook</span> {
+                <span class="ident">webhook_id</span>,
+                <span class="ident">token</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>),
+                ..
+            }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateWebhook</span> {
+                <span class="ident">webhook_id</span>,
+                <span class="ident">token</span>: <span class="prelude-val">Some</span>(<span class="ident">token</span>),
+            } =&gt; <span class="ident">Path::WebhooksIdToken</span>(<span class="kw-2">*</span><span class="ident">webhook_id</span>, (<span class="kw-2">*</span><span class="ident">token</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>()),
             <span class="ident"><span class="self">Self</span>::DeleteWebhook</span> { <span class="ident">webhook_id</span>, .. }
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ExecuteWebhook</span> { <span class="ident">webhook_id</span>, .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetWebhook</span> { <span class="ident">webhook_id</span>, .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateWebhook</span> { <span class="ident">webhook_id</span>, .. } =&gt; (<span class="ident">Path::WebhooksId</span>(<span class="kw-2">*</span><span class="ident">webhook_id</span>)),
             <span class="ident"><span class="self">Self</span>::FollowNewsChannel</span> { <span class="ident">channel_id</span> } =&gt; <span class="ident">Path::ChannelsIdFollowers</span>(<span class="kw-2">*</span><span class="ident">channel_id</span>),

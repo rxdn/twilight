@@ -99,6 +99,23 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ThreadValidationError</span>, <span class="ident">ThreadValidationErrorType</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
@@ -115,7 +132,8 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">CreateThreadFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">auto_archive_duration</span>: <span class="ident">AutoArchiveDuration</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">auto_archive_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AutoArchiveDuration</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">invitable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
@@ -146,7 +164,6 @@
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
         <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-        <span class="ident">auto_archive_duration</span>: <span class="ident">AutoArchiveDuration</span>,
         <span class="ident">kind</span>: <span class="ident">ChannelType</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ThreadValidationError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">validate_inner::channel_name</span>(<span class="ident">name</span>) {
@@ -164,13 +181,30 @@
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">channel_id</span>,
             <span class="ident">fields</span>: <span class="ident">CreateThreadFields</span> {
-                <span class="ident">auto_archive_duration</span>,
+                <span class="ident">auto_archive_duration</span>: <span class="prelude-val">None</span>,
                 <span class="ident">invitable</span>: <span class="prelude-val">None</span>,
                 <span class="ident">kind</span>,
                 <span class="ident">name</span>,
             },
             <span class="ident">http</span>,
         })
+    }
+
+    <span class="doccomment">/// Set the thread&#39;s auto archive duration.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Values of [`ThreeDays`] and [`Week`] require the guild to be boosted.</span>
+    <span class="doccomment">/// The guild&#39;s features will indicate if a guild is able to use these</span>
+    <span class="doccomment">/// settings.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`ThreeDays`]: twilight_model::channel::thread::AutoArchiveDuration::ThreeDays</span>
+    <span class="doccomment">/// [`Week`]: twilight_model::channel::thread::AutoArchiveDuration::Week</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">auto_archive_duration</span>(
+        <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">auto_archive_duration</span>: <span class="ident">AutoArchiveDuration</span>,
+    ) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">auto_archive_duration</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">auto_archive_duration</span>);
+
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Whether non-moderators can add other non-moderators to a thread.</span>

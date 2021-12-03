@@ -1257,6 +1257,26 @@
 <span id="1256">1256</span>
 <span id="1257">1257</span>
 <span id="1258">1258</span>
+<span id="1259">1259</span>
+<span id="1260">1260</span>
+<span id="1261">1261</span>
+<span id="1262">1262</span>
+<span id="1263">1263</span>
+<span id="1264">1264</span>
+<span id="1265">1265</span>
+<span id="1266">1266</span>
+<span id="1267">1267</span>
+<span id="1268">1268</span>
+<span id="1269">1269</span>
+<span id="1270">1270</span>
+<span id="1271">1271</span>
+<span id="1272">1272</span>
+<span id="1273">1273</span>
+<span id="1274">1274</span>
+<span id="1275">1275</span>
+<span id="1276">1276</span>
+<span id="1277">1277</span>
+<span id="1278">1278</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">embed</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">message</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">permission_overwrite</span>;
@@ -1507,25 +1527,38 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_limit</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">video_quality_mode</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing guild channel&quot;</span>);
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
 
         <span class="kw">loop</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="kw">let</span> <span class="ident">span_child</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
             <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
+                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
                     <span class="ident">key</span>
                 }
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                     <span class="comment">// Encountered when we run into an unknown key.</span>
                     <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
                     <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {:?}&quot;</span>, <span class="ident">why</span>);
+
+                    <span class="kw">continue</span>;
+                }
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>))]</span>
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                    <span class="comment">// Encountered when we run into an unknown key.</span>
+                    <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
                     <span class="kw">continue</span>;
                 }
@@ -1705,6 +1738,7 @@
         <span class="kw">let</span> <span class="ident">nsfw</span> <span class="op">=</span> <span class="ident">nsfw</span>.<span class="ident">unwrap_or_default</span>();
         <span class="kw">let</span> <span class="ident">parent_id</span> <span class="op">=</span> <span class="ident">parent_id</span>.<span class="ident">unwrap_or_default</span>();
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::trace!</span>(
             <span class="op">%</span><span class="ident">id</span>,
             <span class="question-mark">?</span><span class="ident">kind</span>,
@@ -1720,6 +1754,7 @@
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;permission_overwrites&quot;</span>))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;position&quot;</span>))<span class="question-mark">?</span>;
 
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">permission_overwrites</span>, <span class="op">%</span><span class="ident">position</span>, <span class="string">&quot;handling category channel&quot;</span>);
 
                 <span class="ident">GuildChannel::Category</span>(<span class="ident">CategoryChannel</span> {
@@ -1739,6 +1774,7 @@
                 <span class="kw">let</span> <span class="ident">rtc_region</span> <span class="op">=</span> <span class="ident">rtc_region</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">user_limit</span> <span class="op">=</span> <span class="ident">user_limit</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;user_limit&quot;</span>))<span class="question-mark">?</span>;
 
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(
                     <span class="op">%</span><span class="ident">bitrate</span>,
                     <span class="question-mark">?</span><span class="ident">permission_overwrites</span>,
@@ -1775,6 +1811,7 @@
                 <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;position&quot;</span>))<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="ident">topic</span> <span class="op">=</span> <span class="ident">topic</span>.<span class="ident">unwrap_or_default</span>();
 
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(
                     <span class="question-mark">?</span><span class="ident">last_message_id</span>,
                     <span class="question-mark">?</span><span class="ident">last_pin_timestamp</span>,
@@ -1814,6 +1851,7 @@
 
                 <span class="kw">match</span> <span class="ident">kind</span> {
                     <span class="ident">ChannelType::GuildNewsThread</span> =&gt; {
+                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::trace!</span>(
                             <span class="question-mark">?</span><span class="ident">default_auto_archive_duration</span>,
                             <span class="question-mark">?</span><span class="ident">last_message_id</span>,
@@ -1845,6 +1883,7 @@
                         <span class="kw">let</span> <span class="ident">invitable</span> <span class="op">=</span> <span class="ident">invitable</span>.<span class="ident">unwrap_or_default</span>();
                         <span class="kw">let</span> <span class="ident">permission_overwrites</span> <span class="op">=</span> <span class="ident">permission_overwrites</span>.<span class="ident">unwrap_or_default</span>();
 
+                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::trace!</span>(
                             <span class="question-mark">?</span><span class="ident">default_auto_archive_duration</span>,
                             <span class="question-mark">?</span><span class="ident">invitable</span>,
@@ -1877,6 +1916,7 @@
                         })
                     }
                     <span class="ident">ChannelType::GuildPublicThread</span> =&gt; {
+                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::trace!</span>(
                             <span class="question-mark">?</span><span class="ident">default_auto_archive_duration</span>,
                             <span class="question-mark">?</span><span class="ident">last_message_id</span>,

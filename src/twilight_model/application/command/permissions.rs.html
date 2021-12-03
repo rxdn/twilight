@@ -117,6 +117,10 @@
 <span id="116">116</span>
 <span id="117">117</span>
 <span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">GenericId</span>, <span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de::Deserializer</span>, <span class="ident">ser::Serializer</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">serde_repr</span>::{<span class="ident">Deserialize_repr</span>, <span class="ident">Serialize_repr</span>};
@@ -160,18 +164,22 @@
     <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">CommandPermissionsData::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing command permission&quot;</span>);
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
 
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">kind</span> {
             <span class="ident">CommandPermissionsDataType::Role</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">RoleId</span>(<span class="ident">data</span>.<span class="ident">id</span>.<span class="number">0</span>);
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="number">0</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">CommandPermissionsType::Role</span>(<span class="ident">id</span>)
             }
             <span class="ident">CommandPermissionsDataType::User</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">UserId</span>(<span class="ident">data</span>.<span class="ident">id</span>.<span class="number">0</span>);
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="number">0</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">CommandPermissionsType::User</span>(<span class="ident">id</span>)

@@ -555,6 +555,31 @@
 <span id="554">554</span>
 <span id="555">555</span>
 <span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Used when receiving interactions through gateway or webhooks.</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">application_command</span>;
@@ -667,25 +692,38 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InteractionType</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing interaction&quot;</span>);
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
 
         <span class="kw">loop</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="kw">let</span> <span class="ident">span_child</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over interaction&quot;</span>);
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
             <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
+                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
                     <span class="ident">key</span>
                 }
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                     <span class="comment">// Encountered when we run into an unknown key.</span>
                     <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
                     <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {:?}&quot;</span>, <span class="ident">why</span>);
+
+                    <span class="kw">continue</span>;
+                }
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>))]</span>
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                    <span class="comment">// Encountered when we run into an unknown key.</span>
+                    <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
                     <span class="kw">continue</span>;
                 }
@@ -771,6 +809,7 @@
         <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;token&quot;</span>))<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">kind</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;kind&quot;</span>))<span class="question-mark">?</span>;
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::trace!</span>(
             <span class="op">%</span><span class="ident">application_id</span>,
             <span class="op">%</span><span class="ident">id</span>,
@@ -781,6 +820,7 @@
 
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">kind</span> {
             <span class="ident">InteractionType::Ping</span> =&gt; {
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;handling ping&quot;</span>);
 
                 <span class="ident"><span class="self">Self</span>::Value::Ping</span>(<span class="ident">Box::new</span>(<span class="ident">Ping</span> {
@@ -802,6 +842,7 @@
                 <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="ident">member</span>.<span class="ident">unwrap_or_default</span>();
                 <span class="kw">let</span> <span class="ident">user</span> <span class="op">=</span> <span class="ident">user</span>.<span class="ident">unwrap_or_default</span>();
 
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">channel_id</span>, <span class="string">&quot;handling application command&quot;</span>);
 
                 <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">ApplicationCommand</span> {
@@ -874,7 +915,7 @@
         <span class="ident">user::User</span>,
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
-    <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">str::FromStr</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
@@ -893,34 +934,40 @@
                     <span class="ident">value</span>: <span class="ident">CommandOptionValue::User</span>(<span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
                 }]),
                 <span class="ident">resolved</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandInteractionDataResolved</span> {
-                    <span class="ident">channels</span>: <span class="ident">Vec::new</span>(),
-                    <span class="ident">members</span>: <span class="macro">vec!</span>[<span class="ident">InteractionMember</span> {
-                        <span class="ident">hoisted_role</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                        <span class="ident">joined_at</span>,
-                        <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;nickname&quot;</span>.<span class="ident">into</span>()),
-                        <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
-                    }],
-                    <span class="ident">messages</span>: <span class="ident">Vec::new</span>(),
-                    <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
-                    <span class="ident">users</span>: <span class="macro">vec!</span>[<span class="ident">User</span> {
-                        <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;avatar string&quot;</span>.<span class="ident">into</span>()),
-                        <span class="ident">banner</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">bot</span>: <span class="bool-val">false</span>,
-                        <span class="ident">discriminator</span>: <span class="number">1111</span>,
-                        <span class="ident">email</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                        <span class="ident">locale</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">name</span>: <span class="string">&quot;username&quot;</span>.<span class="ident">into</span>(),
-                        <span class="ident">premium_type</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">public_flags</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">system</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">verified</span>: <span class="prelude-val">None</span>,
-                    }],
+                    <span class="ident">channels</span>: <span class="ident">HashMap::new</span>(),
+                    <span class="ident">members</span>: <span class="ident">IntoIterator::into_iter</span>([(
+                        <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">InteractionMember</span> {
+                            <span class="ident">joined_at</span>,
+                            <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;nickname&quot;</span>.<span class="ident">into</span>()),
+                            <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
+                        },
+                    )])
+                    .<span class="ident">collect</span>(),
+                    <span class="ident">messages</span>: <span class="ident">HashMap::new</span>(),
+                    <span class="ident">roles</span>: <span class="ident">HashMap::new</span>(),
+                    <span class="ident">users</span>: <span class="ident">IntoIterator::into_iter</span>([(
+                        <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">User</span> {
+                            <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;avatar string&quot;</span>.<span class="ident">into</span>()),
+                            <span class="ident">banner</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">bot</span>: <span class="bool-val">false</span>,
+                            <span class="ident">discriminator</span>: <span class="number">1111</span>,
+                            <span class="ident">email</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">flags</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                            <span class="ident">locale</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">name</span>: <span class="string">&quot;username&quot;</span>.<span class="ident">into</span>(),
+                            <span class="ident">premium_type</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">public_flags</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">system</span>: <span class="prelude-val">None</span>,
+                            <span class="ident">verified</span>: <span class="prelude-val">None</span>,
+                        },
+                    )])
+                    .<span class="ident">collect</span>(),
                 }),
             },
             <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">400</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
@@ -1008,14 +1055,17 @@
                 <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;600&quot;</span>),
                 <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;InteractionMemberEnvelope&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">2</span>,
+                    <span class="ident">name</span>: <span class="string">&quot;InteractionMember&quot;</span>,
+                    <span class="ident">len</span>: <span class="number">3</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;joined_at&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;nick&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;nickname&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;roles&quot;</span>),
+                <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>) },
+                <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::MapEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;users&quot;</span>),

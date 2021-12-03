@@ -240,6 +240,10 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">guild::Permissions</span>,
     <span class="ident">id</span>::{<span class="ident">RoleId</span>, <span class="ident">UserId</span>},
@@ -315,18 +319,22 @@
     <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">PermissionOverwriteData::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing permission overwrite&quot;</span>);
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
 
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">kind</span> {
             <span class="ident">PermissionOverwriteTargetType::Member</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">UserId::new</span>(<span class="ident">data</span>.<span class="ident">id</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="number">0</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">id</span>)
             }
             <span class="ident">PermissionOverwriteTargetType::Role</span> =&gt; {
                 <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">RoleId::new</span>(<span class="ident">data</span>.<span class="ident">id</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="number">0</span>, <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">id</span>)

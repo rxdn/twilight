@@ -824,28 +824,6 @@
 <span id="823">823</span>
 <span id="824">824</span>
 <span id="825">825</span>
-<span id="826">826</span>
-<span id="827">827</span>
-<span id="828">828</span>
-<span id="829">829</span>
-<span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
-<span id="835">835</span>
-<span id="836">836</span>
-<span id="837">837</span>
-<span id="838">838</span>
-<span id="839">839</span>
-<span id="840">840</span>
-<span id="841">841</span>
-<span id="842">842</span>
-<span id="843">843</span>
-<span id="844">844</span>
-<span id="845">845</span>
-<span id="846">846</span>
-<span id="847">847</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Create a [`Command`] with a builder.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
@@ -881,7 +859,7 @@
         <span class="ident">NumberCommandOptionData</span>, <span class="ident">OptionsCommandOptionData</span>,
     },
     <span class="ident">channel::ChannelType</span>,
-    <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">CommandVersionId</span>, <span class="ident">GuildId</span>},
+    <span class="ident">id</span>::{<span class="ident">CommandVersionId</span>, <span class="ident">GuildId</span>},
 };
 
 <span class="doccomment">/// Builder to create a [`Command`].</span>
@@ -914,15 +892,6 @@
         <span class="self">self</span>.<span class="number">0</span>
     }
 
-    <span class="doccomment">/// Set the application ID of the command.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Defaults to [`None`].</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">application_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">application_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">application_id</span>);
-
-        <span class="self">self</span>
-    }
-
     <span class="doccomment">/// Set the guild ID of the command.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
@@ -937,15 +906,6 @@
     <span class="doccomment">/// Defaults to [`None`].</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">default_permission</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">default_permission</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">default_permission</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">default_permission</span>);
-
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Set the ID of the command.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Defaults to [`None`].</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">CommandId</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>);
 
         <span class="self">self</span>
     }
@@ -1429,11 +1389,11 @@
         <span class="ident">CommandOption::SubCommandGroup</span>(<span class="self">self</span>.<span class="number">0</span>)
     }
 
-    <span class="doccomment">/// Add a sub command option to the sub command group.</span>
+    <span class="doccomment">/// Set the list of sub commands to the group.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Defaults to an empty list.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">option</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">option</span>: <span class="ident">SubCommandBuilder</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">options</span>.<span class="ident">push</span>(<span class="ident">option</span>.<span class="ident">into</span>());
+    <span class="doccomment">/// Defaults to no subcommands.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommands</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">subcommands</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">SubCommandBuilder</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">options</span> <span class="op">=</span> <span class="ident">subcommands</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Into::into</span>).<span class="ident">collect</span>();
 
         <span class="self">self</span>
     }
@@ -1511,7 +1471,7 @@
         )
         .<span class="ident">option</span>(
             <span class="ident">SubCommandGroupBuilder::new</span>(<span class="string">&quot;user&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;Get or edit permissions for a user&quot;</span>.<span class="ident">into</span>())
-                .<span class="ident">option</span>(
+                .<span class="ident">subcommands</span>([
                     <span class="ident">SubCommandBuilder::new</span>(<span class="string">&quot;get&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;Get permissions for a user&quot;</span>.<span class="ident">into</span>())
                         .<span class="ident">option</span>(
                             <span class="ident">UserBuilder::new</span>(<span class="string">&quot;user&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;The user to get&quot;</span>.<span class="ident">into</span>())
@@ -1523,8 +1483,6 @@
                              will be returned&quot;</span>
                                 .<span class="ident">into</span>(),
                         )),
-                )
-                .<span class="ident">option</span>(
                     <span class="ident">SubCommandBuilder::new</span>(<span class="string">&quot;edit&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;Edit permissions for a user&quot;</span>.<span class="ident">into</span>())
                         .<span class="ident">option</span>(
                             <span class="ident">UserBuilder::new</span>(<span class="string">&quot;user&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;The user to edit&quot;</span>.<span class="ident">into</span>())
@@ -1536,11 +1494,11 @@
                              will be edited&quot;</span>
                                 .<span class="ident">into</span>(),
                         )),
-                ),
+                ]),
         )
         .<span class="ident">option</span>(
             <span class="ident">SubCommandGroupBuilder::new</span>(<span class="string">&quot;role&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;Get or edit permissions for a role&quot;</span>.<span class="ident">into</span>())
-                .<span class="ident">option</span>(
+                .<span class="ident">subcommands</span>([
                     <span class="ident">SubCommandBuilder::new</span>(<span class="string">&quot;get&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;Get permissions for a role&quot;</span>.<span class="ident">into</span>())
                         .<span class="ident">option</span>(
                             <span class="ident">RoleBuilder::new</span>(<span class="string">&quot;role&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;The role to get&quot;</span>.<span class="ident">into</span>())
@@ -1552,8 +1510,6 @@
                              will be returned&quot;</span>
                                 .<span class="ident">into</span>(),
                         )),
-                )
-                .<span class="ident">option</span>(
                     <span class="ident">SubCommandBuilder::new</span>(<span class="string">&quot;edit&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;Edit permissions for a role&quot;</span>.<span class="ident">into</span>())
                         .<span class="ident">option</span>(
                             <span class="ident">RoleBuilder::new</span>(<span class="string">&quot;role&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;The role to edit&quot;</span>.<span class="ident">into</span>())
@@ -1572,7 +1528,7 @@
                             )
                             .<span class="ident">autocomplete</span>(<span class="bool-val">true</span>),
                         ),
-                ),
+                ]),
         )
         .<span class="ident">build</span>();
 
