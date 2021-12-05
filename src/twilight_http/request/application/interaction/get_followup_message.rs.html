@@ -106,6 +106,14 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">client::Client</span>, <span class="ident">request::Request</span>, <span class="ident">response::ResponseFuture</span>, <span class="ident">routing::Route</span>};
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel::Message</span>,
@@ -157,12 +165,14 @@
     }
 
     <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Request</span> {
-        <span class="ident">Request::from_route</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetFollowupMessage</span> {
+        <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetFollowupMessage</span> {
             <span class="ident">application_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>.<span class="ident">get</span>(),
             <span class="ident">interaction_token</span>: <span class="self">self</span>.<span class="ident">interaction_token</span>,
             <span class="ident">thread_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">message_id</span>: <span class="self">self</span>.<span class="ident">message_id</span>.<span class="ident">get</span>(),
         })
+        .<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>)
+        .<span class="ident">build</span>()
     }
 
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
@@ -199,16 +209,22 @@
         <span class="ident">client</span>.<span class="ident">set_application_id</span>(<span class="ident">application_id</span>());
 
         <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">followup_message</span>(<span class="ident">TOKEN</span>, <span class="ident">message_id</span>())<span class="question-mark">?</span>.<span class="ident">request</span>();
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">Request::from_route</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetFollowupMessage</span> {
+        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetFollowupMessage</span> {
             <span class="ident">application_id</span>: <span class="ident">application_id</span>().<span class="ident">get</span>(),
             <span class="ident">interaction_token</span>: <span class="ident">TOKEN</span>,
             <span class="ident">thread_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">message_id</span>: <span class="ident">message_id</span>().<span class="ident">get</span>(),
-        });
+        })
+        .<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>)
+        .<span class="ident">build</span>();
 
         <span class="macro">assert!</span>(<span class="ident">expected</span>.<span class="ident">body</span>().<span class="ident">is_none</span>());
         <span class="macro">assert_eq!</span>(<span class="ident">expected</span>.<span class="ident">path</span>(), <span class="ident">actual</span>.<span class="ident">path</span>());
         <span class="macro">assert_eq!</span>(<span class="ident">expected</span>.<span class="ident">ratelimit_path</span>(), <span class="ident">actual</span>.<span class="ident">ratelimit_path</span>());
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">expected</span>.<span class="ident">use_authorization_token</span>(),
+            <span class="ident">actual</span>.<span class="ident">use_authorization_token</span>()
+        );
 
         <span class="prelude-val">Ok</span>(())
     }
