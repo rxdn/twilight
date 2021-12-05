@@ -291,9 +291,9 @@
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">waiter</span>(<span class="kw-2">mut</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>) {
     <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">_source</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-            <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">err</span>);
+            <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">_source</span>);
         }
         <span class="ident">sleep</span>(<span class="ident">DUR</span>).<span class="kw">await</span>;
     }
@@ -303,18 +303,18 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">_id</span>, <span class="ident">_total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>().<span class="ident">send</span>(<span class="ident">tx</span>) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">_source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>().<span class="ident">send</span>(<span class="ident">tx</span>) {
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-                <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">err</span>);
+                <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">_source</span>);
                 <span class="kw">return</span>;
             }
 
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-            <span class="macro">tracing::info!</span>(<span class="string">&quot;shard {}/{} waiting for allowance&quot;</span>, <span class="ident">id</span>, <span class="ident">total</span>);
+            <span class="macro">tracing::info!</span>(<span class="string">&quot;shard {}/{} waiting for allowance&quot;</span>, <span class="ident">_id</span>, <span class="ident">_total</span>);
 
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="kw">await</span>;
         })
