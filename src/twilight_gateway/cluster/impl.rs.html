@@ -657,6 +657,11 @@
 <span id="655">655</span>
 <span id="656">656</span>
 <span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">builder::ClusterBuilder</span>, <span class="ident">config::Config</span>, <span class="ident">event::Events</span>, <span class="ident">scheme::ShardScheme</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">cluster::event::ShardEventsWithId</span>,
@@ -677,8 +682,8 @@
 <span class="doccomment">/// Sending a command to a shard failed.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClusterCommandError</span> {
-    <span class="ident">kind</span>: <span class="ident">ClusterCommandErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">kind</span>: <span class="ident">ClusterCommandErrorType</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ClusterCommandError</span> {
@@ -809,8 +814,8 @@
 <span class="doccomment">/// Starting a cluster failed.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClusterStartError</span> {
-    <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ClusterStartError</span> {
@@ -839,6 +844,9 @@
             <span class="ident">ClusterStartErrorType::RetrievingGatewayInfo</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;getting the bot&#39;s gateway info failed&quot;</span>)
             }
+            <span class="ident">ClusterStartErrorType::Tls</span> =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;creating the TLS connector resulted in a error&quot;</span>)
+            }
         }
     }
 }
@@ -863,6 +871,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [automatic sharding]: ShardScheme::Auto</span>
     <span class="ident">RetrievingGatewayInfo</span>,
+    <span class="doccomment">/// Creating the TLS connector resulted in a error.</span>
+    <span class="ident">Tls</span>,
 }
 
 <span class="doccomment">/// A manager for multiple shards.</span>
