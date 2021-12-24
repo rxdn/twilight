@@ -325,19 +325,6 @@
 <span id="323">323</span>
 <span id="324">324</span>
 <span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
 </pre><pre class="rust"><code><span class="doccomment">//! [`Bucket`] management used by the [`super::InMemoryRatelimiter`] internally.</span>
 <span class="doccomment">//! Each bucket has an associated [`BucketQueue`] to queue an API request, which is</span>
 <span class="doccomment">//! consumed by the [`BucketQueueTask`] that manages the ratelimit for the bucket</span>
@@ -387,7 +374,7 @@
     <span class="kw">pub</span> <span class="ident">remaining</span>: <span class="ident">AtomicU64</span>,
     <span class="doccomment">/// Duration after the [`Self::started_at`] time the bucket will refresh.</span>
     <span class="kw">pub</span> <span class="ident">reset_after</span>: <span class="ident">AtomicU64</span>,
-    <span class="doccomment">/// When the bucket&#39;s ratelimit refresh countdown started.</span>
+    <span class="doccomment">/// When the bucket last had its headers updated.</span>
     <span class="kw">pub</span> <span class="ident">started_at</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
@@ -414,7 +401,7 @@
         <span class="self">self</span>.<span class="ident">remaining</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>)
     }
 
-    <span class="doccomment">/// Duration after the [`started_at`] time the bucket will refresh.</span>
+    <span class="doccomment">/// Duration after the last response that the bucket will refresh.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`started_at`]: Self::started_at</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
@@ -459,26 +446,15 @@
 
     <span class="doccomment">/// Update this bucket&#39;s ratelimit data after a request has been made.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ratelimits</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">bucket_limit</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">limit</span>();
-
-        {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">started_at</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>);
-
-            <span class="kw">if</span> <span class="ident">started_at</span>.<span class="ident">is_none</span>() {
-                <span class="ident">started_at</span>.<span class="ident">replace</span>(<span class="ident">Instant::now</span>());
-            }
-        }
-
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">limit</span>, <span class="ident">remaining</span>, <span class="ident">reset_after</span>)) <span class="op">=</span> <span class="ident">ratelimits</span> {
-            <span class="kw">if</span> <span class="ident">bucket_limit</span> <span class="op">!</span><span class="op">=</span> <span class="ident">limit</span> <span class="op">&amp;&amp;</span> <span class="ident">bucket_limit</span> <span class="op">==</span> <span class="ident">u64::max_value</span>() {
-                <span class="self">self</span>.<span class="ident">reset_after</span>.<span class="ident">store</span>(<span class="ident">reset_after</span>, <span class="ident">Ordering::SeqCst</span>);
-                <span class="self">self</span>.<span class="ident">limit</span>.<span class="ident">store</span>(<span class="ident">limit</span>, <span class="ident">Ordering::SeqCst</span>);
-            }
-
             <span class="self">self</span>.<span class="ident">remaining</span>.<span class="ident">store</span>(<span class="ident">remaining</span>, <span class="ident">Ordering::Relaxed</span>);
+            <span class="self">self</span>.<span class="ident">reset_after</span>.<span class="ident">store</span>(<span class="ident">reset_after</span>, <span class="ident">Ordering::SeqCst</span>);
+            <span class="self">self</span>.<span class="ident">limit</span>.<span class="ident">store</span>(<span class="ident">limit</span>, <span class="ident">Ordering::SeqCst</span>);
         } <span class="kw">else</span> {
             <span class="self">self</span>.<span class="ident">remaining</span>.<span class="ident">fetch_sub</span>(<span class="number">1</span>, <span class="ident">Ordering::Relaxed</span>);
-        }
+        };
+
+        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>) <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Instant::now</span>());
     }
 }
 
@@ -531,8 +507,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">BucketQueueTask</span> {
-    <span class="doccomment">/// Timeout to wait for response headers after initiating a request.</span>
-    <span class="kw">const</span> <span class="ident">WAIT</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">10</span>);
+    <span class="doccomment">/// Timeout to wait for a new request before removing the bucket.</span>
+    <span class="kw">const</span> <span class="ident">REMOVAL_DELAY</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">2</span>);
 
     <span class="doccomment">/// Create a new task to manage the ratelimit for a [`Bucket`].</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
@@ -569,15 +545,11 @@
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;starting to wait for response headers&quot;</span>,);
 
-            <span class="kw">match</span> <span class="ident">timeout</span>(<span class="ident"><span class="self">Self</span>::WAIT</span>, <span class="ident">ticket_headers</span>).<span class="kw">await</span> {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">headers</span>))) =&gt; <span class="self">self</span>.<span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="ident">headers</span>).<span class="kw">await</span>,
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)) =&gt; {
+            <span class="kw">match</span> <span class="ident">ticket_headers</span>.<span class="kw">await</span> {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">headers</span>)) =&gt; <span class="self">self</span>.<span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="ident">headers</span>).<span class="kw">await</span>,
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; {
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;request aborted&quot;</span>);
-                }
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-                    <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;ticket channel closed&quot;</span>);
                 }
                 <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
                     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -634,7 +606,9 @@
 
         <span class="self">self</span>.<span class="ident">wait_if_needed</span>().<span class="kw">await</span>;
 
-        <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">queue</span>.<span class="ident">pop</span>(<span class="ident"><span class="self">Self</span>::WAIT</span>).<span class="kw">await</span>
+        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">Duration::from_millis</span>(<span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">reset_after</span>()) <span class="op">+</span> <span class="ident"><span class="self">Self</span>::REMOVAL_DELAY</span>;
+
+        <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">queue</span>.<span class="ident">pop</span>(<span class="ident">wait</span>).<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Wait for this bucket to refresh if it isn&#39;t ready yet.</span>
@@ -677,5 +651,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (23f69235a 2021-12-20)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (c09a9529c 2021-12-23)" ></div>
 </body></html>
