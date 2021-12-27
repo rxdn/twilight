@@ -377,11 +377,6 @@
 <span id="375">375</span>
 <span id="376">376</span>
 <span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Response</span>, <span class="ident">StatusCode</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">api_error::ApiError</span>,
@@ -403,11 +398,6 @@
 <span class="kw">use</span> <span class="ident">tokio::time</span>::{<span class="self">self</span>, <span class="ident">Timeout</span>};
 <span class="kw">use</span> <span class="ident">twilight_http_ratelimiting</span>::{<span class="ident">ticket::TicketSender</span>, <span class="ident">RatelimitHeaders</span>, <span class="ident">WaitForTicketFuture</span>};
 <span class="kw">use</span> <span class="ident">twilight_model::id::GuildId</span>;
-
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InvalidToken</span> {
-    <span class="ident">Forget</span>,
-    <span class="ident">Remember</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span>),
-}
 
 <span class="kw">type</span> <span class="ident">Output</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
@@ -478,7 +468,7 @@
 <span class="kw">struct</span> <span class="ident">InFlight</span> {
     <span class="ident">future</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Timeout</span><span class="op">&lt;</span><span class="ident">HyperResponseFuture</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
-    <span class="ident">invalid_token</span>: <span class="ident">InvalidToken</span>,
+    <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">tx</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TicketSender</span><span class="op">&gt;</span>,
 }
 
@@ -512,8 +502,8 @@
         <span class="comment">// configured token is permanently invalid and future requests must be</span>
         <span class="comment">// ignored to avoid API bans.</span>
         <span class="kw">if</span> <span class="ident">resp</span>.<span class="ident">status</span>() <span class="op">==</span> <span class="ident">HyperStatusCode::UNAUTHORIZED</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">InvalidToken::Remember</span>(<span class="ident">state</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">invalid_token</span> {
-                <span class="ident">state</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering::Relaxed</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">invalid_token</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">invalid_token</span> {
+                <span class="ident">invalid_token</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering::Relaxed</span>);
             }
         }
 
@@ -588,7 +578,7 @@
 
 <span class="kw">struct</span> <span class="ident">RatelimitQueue</span> {
     <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
-    <span class="ident">invalid_token</span>: <span class="ident">InvalidToken</span>,
+    <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">request_timeout</span>: <span class="ident">Duration</span>,
     <span class="ident">response_future</span>: <span class="ident">HyperResponseFuture</span>,
     <span class="ident">wait_for_sender</span>: <span class="ident">WaitForTicketFuture</span>,
@@ -674,7 +664,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">invalid_token</span>: <span class="ident">InvalidToken</span>,
+        <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">future</span>: <span class="ident">Timeout</span><span class="op">&lt;</span><span class="ident">HyperResponseFuture</span><span class="op">&gt;</span>,
         <span class="ident">ratelimit_tx</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TicketSender</span><span class="op">&gt;</span>,
     ) -&gt; <span class="self">Self</span> {
@@ -698,7 +688,7 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ratelimit</span>(
         <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
-        <span class="ident">invalid_token</span>: <span class="ident">InvalidToken</span>,
+        <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">wait_for_sender</span>: <span class="ident">WaitForTicketFuture</span>,
         <span class="ident">request_timeout</span>: <span class="ident">Duration</span>,
         <span class="ident">response_future</span>: <span class="ident">HyperResponseFuture</span>,

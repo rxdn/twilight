@@ -208,6 +208,11 @@
 <span id="206">206</span>
 <span id="207">207</span>
 <span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Client</span>;
 <span class="kw">use</span> <span class="ident">hyper::header::HeaderMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -274,14 +279,19 @@
 
         <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="ident">hyper::client::Builder::default</span>().<span class="ident">build</span>(<span class="ident">connector</span>);
 
+        <span class="kw">let</span> <span class="ident">token_invalidated</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">remember_invalid_token</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>)))
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        };
+
         <span class="ident">Client</span> {
             <span class="ident">http</span>,
             <span class="ident">default_headers</span>: <span class="self">self</span>.<span class="ident">default_headers</span>,
             <span class="ident">proxy</span>: <span class="self">self</span>.<span class="ident">proxy</span>,
             <span class="ident">ratelimiter</span>: <span class="self">self</span>.<span class="ident">ratelimiter</span>,
-            <span class="ident">remember_invalid_token</span>: <span class="self">self</span>.<span class="ident">remember_invalid_token</span>,
             <span class="ident">timeout</span>: <span class="self">self</span>.<span class="ident">timeout</span>,
-            <span class="ident">token_invalid</span>: <span class="ident">Arc::new</span>(<span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>)),
+            <span class="ident">token_invalidated</span>,
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
             <span class="ident">application_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>,
             <span class="ident">default_allowed_mentions</span>: <span class="self">self</span>.<span class="ident">default_allowed_mentions</span>,
