@@ -294,6 +294,50 @@
 <span id="292">292</span>
 <span id="293">293</span>
 <span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
@@ -306,7 +350,10 @@
     <span class="ident">error::Error</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
 };
-<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>};
+<span class="kw">use</span> <span class="ident">twilight_model</span>::{
+    <span class="ident">datetime::Timestamp</span>,
+    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+};
 
 <span class="doccomment">/// The error created when the member can not be updated as configured.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -346,6 +393,9 @@
             <span class="ident">UpdateGuildMemberErrorType::NicknameInvalid</span> =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the nickname length is invalid&quot;</span>)
             }
+            <span class="ident">UpdateGuildMemberErrorType::TimeoutExpiryTimestampInvalid</span> =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the timeout expiry is more than 28 days from the current time&quot;</span>)
+            }
         }
     }
 }
@@ -358,6 +408,8 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UpdateGuildMemberErrorType</span> {
     <span class="doccomment">/// The nickname is either empty or the length is more than 32 UTF-16 characters.</span>
     <span class="ident">NicknameInvalid</span>,
+    <span class="doccomment">/// The timeout expiry timestamp is more than 28 days from the current timestamp</span>
+    <span class="ident">TimeoutExpiryTimestampInvalid</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
@@ -365,6 +417,8 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::option_option</span>)]</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">channel_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NullableField</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">communication_disabled_util</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NullableField</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">deaf</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -394,6 +448,7 @@
         <span class="self">Self</span> {
             <span class="ident">fields</span>: <span class="ident">UpdateGuildMemberFields</span> {
                 <span class="ident">channel_id</span>: <span class="prelude-val">None</span>,
+                <span class="ident">communication_disabled_util</span>: <span class="prelude-val">None</span>,
                 <span class="ident">deaf</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mute</span>: <span class="prelude-val">None</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">None</span>,
@@ -411,6 +466,36 @@
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">channel_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">NullableField</span>(<span class="ident">channel_id</span>));
 
         <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set the member&#39;s [Guild Timeout].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The timestamp indicates when the user will be able to communicate again.</span>
+    <span class="doccomment">/// It can be up to 28 days in the future. Set to [`None`] to remove the</span>
+    <span class="doccomment">/// timeout. Requires the [`MODERATE_MEMBERS`] permission.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [Guild Timeout]: https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ</span>
+    <span class="doccomment">/// [`MODERATE_MEMBERS`]: twilight_model::guild::Permissions::MODERATE_MEMBERS</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">/// Returns an [`UpdateGuildMemberErrorType::TimeoutExpiryTimestampInvalid`]</span>
+    <span class="doccomment">/// error type if the expiry timestamp is more than 28 days from the current time.</span>
+    <span class="doccomment">///</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">communication_disabled_until</span>(
+        <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">UpdateGuildMemberError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">timestamp</span>) <span class="op">=</span> <span class="ident">timestamp</span> {
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">validate_inner::communication_disabled_until</span>(<span class="ident">timestamp</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">UpdateGuildMemberError</span> {
+                    <span class="ident">kind</span>: <span class="ident">UpdateGuildMemberErrorType::TimeoutExpiryTimestampInvalid</span>,
+                });
+            }
+        }
+
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">communication_disabled_util</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">NullableField</span>(<span class="ident">timestamp</span>));
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// If true, restrict the member&#39;s ability to hear sound from a voice channel.</span>
@@ -523,6 +608,7 @@
 
         <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">UpdateGuildMemberFields</span> {
             <span class="ident">channel_id</span>: <span class="prelude-val">None</span>,
+            <span class="ident">communication_disabled_util</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">mute</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">nick</span>: <span class="prelude-val">None</span>,
@@ -548,6 +634,7 @@
 
         <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">UpdateGuildMemberFields</span> {
             <span class="ident">channel_id</span>: <span class="prelude-val">None</span>,
+            <span class="ident">communication_disabled_util</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="prelude-val">None</span>,
             <span class="ident">mute</span>: <span class="prelude-val">None</span>,
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="ident">NullableField</span>(<span class="prelude-val">None</span>)),
@@ -572,6 +659,7 @@
 
         <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">UpdateGuildMemberFields</span> {
             <span class="ident">channel_id</span>: <span class="prelude-val">None</span>,
+            <span class="ident">communication_disabled_util</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="prelude-val">None</span>,
             <span class="ident">mute</span>: <span class="prelude-val">None</span>,
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="ident">NullableField</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>))),
@@ -589,5 +677,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (c09a9529c 2021-12-23)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (f8abed9ed 2021-12-26)" ></div>
 </body></html>
