@@ -377,6 +377,90 @@
 <span id="375">375</span>
 <span id="376">376</span>
 <span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Response</span>, <span class="ident">StatusCode</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">api_error::ApiError</span>,
@@ -579,6 +663,7 @@
 <span class="kw">struct</span> <span class="ident">RatelimitQueue</span> {
     <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
     <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicBool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">pre_flight_check</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">request_timeout</span>: <span class="ident">Duration</span>,
     <span class="ident">response_future</span>: <span class="ident">HyperResponseFuture</span>,
     <span class="ident">wait_for_sender</span>: <span class="ident">WaitForTicketFuture</span>,
@@ -598,12 +683,24 @@
                 <span class="kw">return</span> <span class="ident">InnerPoll::Pending</span>(<span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="self">Self</span> {
                     <span class="ident">guild_id</span>: <span class="self">self</span>.<span class="ident">guild_id</span>,
                     <span class="ident">invalid_token</span>: <span class="self">self</span>.<span class="ident">invalid_token</span>,
+                    <span class="ident">pre_flight_check</span>: <span class="self">self</span>.<span class="ident">pre_flight_check</span>,
                     <span class="ident">request_timeout</span>: <span class="self">self</span>.<span class="ident">request_timeout</span>,
                     <span class="ident">response_future</span>: <span class="self">self</span>.<span class="ident">response_future</span>,
                     <span class="ident">wait_for_sender</span>: <span class="self">self</span>.<span class="ident">wait_for_sender</span>,
                 }))
             }
         };
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pre_flight_check</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">pre_flight_check</span> {
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">pre_flight_check</span>() {
+                <span class="kw">return</span> <span class="ident">InnerPoll::Advance</span>(<span class="ident">ResponseFutureStage::Failed</span>(<span class="ident">Failed</span> {
+                    <span class="ident">source</span>: <span class="ident">Error</span> {
+                        <span class="ident">kind</span>: <span class="ident">ErrorType::RequestCanceled</span>,
+                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                    },
+                }));
+            }
+        }
 
         <span class="ident">InnerPoll::Advance</span>(<span class="ident">ResponseFutureStage::InFlight</span>(<span class="ident">InFlight</span> {
             <span class="ident">future</span>: <span class="ident">Box::pin</span>(<span class="ident">time::timeout</span>(<span class="self">self</span>.<span class="ident">request_timeout</span>, <span class="self">self</span>.<span class="ident">response_future</span>)),
@@ -624,8 +721,15 @@
 
 <span class="doccomment">/// Future that will resolve to a [`Response`].</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// # Errors</span>
+<span class="doccomment">/// # Canceling a response future pre-flight</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// Response futures can be canceled pre-flight via</span>
+<span class="doccomment">/// [`ResponseFuture::set_pre_flight`]. This allows you to cancel requests that</span>
+<span class="doccomment">/// are no longer necessary once they have been cleared by the ratelimit queue,</span>
+<span class="doccomment">/// which may be necessary in scenarios where requests are being spammed. Refer</span>
+<span class="doccomment">/// to its documentation for more information.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Errors</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Returns an [`ErrorType::Json`] error type if serializing the response body</span>
 <span class="doccomment">/// of the request failed.</span>
@@ -679,6 +783,69 @@
         }
     }
 
+    <span class="doccomment">/// Set a function to call after clearing the ratelimiter but prior to</span>
+    <span class="doccomment">/// sending the request to determine if the request is still valid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function will be a no-op if the request has failed, has already</span>
+    <span class="doccomment">/// passed the ratelimiter, or if there is no ratelimiter configured.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns whether the pre flight function was set.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Delete a message, but immediately before sending the request check if</span>
+    <span class="doccomment">/// the request should still be sent:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```no_run</span>
+    <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
+    <span class="doccomment">/// use std::{collections::HashSet, env, sync::{Arc, Mutex}};</span>
+    <span class="doccomment">/// use twilight_http::{error::ErrorType, Client};</span>
+    <span class="doccomment">/// use twilight_model::id::{ChannelId, MessageId};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let channel_id = ChannelId::new(1).expect(&quot;non zero id&quot;);</span>
+    <span class="doccomment">/// let message_id = MessageId::new(2).expect(&quot;non zero id&quot;);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let channels_ignored = {</span>
+    <span class="doccomment">///     let mut map = HashSet::new();</span>
+    <span class="doccomment">///     map.insert(channel_id);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///     Arc::new(Mutex::new(map))</span>
+    <span class="doccomment">/// };</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
+    <span class="doccomment">/// let mut req = client.delete_message(channel_id, message_id).exec();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let channels_ignored_clone = channels_ignored.clone();</span>
+    <span class="doccomment">/// req.set_pre_flight(Box::new(move || {</span>
+    <span class="doccomment">///     // imagine you have some logic here to external state that checks</span>
+    <span class="doccomment">///     // whether the request should still be performed</span>
+    <span class="doccomment">///     let channels_ignored = channels_ignored_clone</span>
+    <span class="doccomment">///         .lock()</span>
+    <span class="doccomment">///         .expect(&quot;channels poisoned&quot;);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///     !channels_ignored.contains(&amp;channel_id)</span>
+    <span class="doccomment">/// }));</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // the pre-flight check will cancel the request</span>
+    <span class="doccomment">/// assert!(matches!(</span>
+    <span class="doccomment">///     req.await.unwrap_err().kind(),</span>
+    <span class="doccomment">///     ErrorType::RequestCanceled,</span>
+    <span class="doccomment">/// ));</span>
+    <span class="doccomment">/// # Ok(()) }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_pre_flight</span>(
+        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+        <span class="ident">pre_flight</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">queue</span>) <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span> {
+            <span class="ident">queue</span>.<span class="ident">pre_flight_check</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">pre_flight</span>);
+
+            <span class="bool-val">true</span>
+        } <span class="kw">else</span> {
+            <span class="bool-val">false</span>
+        }
+    }
+
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="ident">source</span>: <span class="ident">Error</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
@@ -698,6 +865,7 @@
             <span class="ident">stage</span>: <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">RatelimitQueue</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">invalid_token</span>,
+                <span class="ident">pre_flight_check</span>: <span class="prelude-val">None</span>,
                 <span class="ident">request_timeout</span>,
                 <span class="ident">response_future</span>,
                 <span class="ident">wait_for_sender</span>,
