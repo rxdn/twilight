@@ -520,7 +520,7 @@
         };
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ApiError::General</span>(<span class="kw-2">ref</span> <span class="ident">general</span>) <span class="op">=</span> <span class="ident">error</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ApiError::General</span>(<span class="ident">general</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">error</span> {
             <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::api_error::ErrorCode</span>;
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ErrorCode::Other</span>(<span class="ident">num</span>) <span class="op">=</span> <span class="ident">general</span>.<span class="ident">code</span> {
@@ -837,7 +837,7 @@
         <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
         <span class="ident">pre_flight</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">queue</span>) <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">queue</span>) <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span> {
             <span class="ident">queue</span>.<span class="ident">pre_flight_check</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">pre_flight</span>);
 
             <span class="bool-val">true</span>
@@ -878,10 +878,10 @@
     <span class="doccomment">/// Necessary for [`MemberBody`] and [`MemberListBody`] deserialization.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_guild_id</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) {
         <span class="kw">match</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span> {
-            <span class="ident">ResponseFutureStage::InFlight</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">stage</span>) =&gt; {
+            <span class="ident">ResponseFutureStage::InFlight</span>(<span class="ident">stage</span>) =&gt; {
                 <span class="ident">stage</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">guild_id</span>);
             }
-            <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">stage</span>) =&gt; {
+            <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">stage</span>) =&gt; {
                 <span class="ident">stage</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">guild_id</span>);
             }
             <span class="kw">_</span> =&gt; {}
