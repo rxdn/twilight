@@ -1526,6 +1526,13 @@
 <span id="1524">1524</span>
 <span id="1525">1525</span>
 <span id="1526">1526</span>
+<span id="1527">1527</span>
+<span id="1528">1528</span>
+<span id="1529">1529</span>
+<span id="1530">1530</span>
+<span id="1531">1531</span>
+<span id="1532">1532</span>
+<span id="1533">1533</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">route_display::RouteDisplay</span>, <span class="ident">Path</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request</span>::{<span class="ident">channel::reaction::RequestReactionType</span>, <span class="ident">Method</span>};
 <span class="kw">use</span> <span class="ident">twilight_model::id::RoleId</span>;
@@ -1915,6 +1922,11 @@
     <span class="ident">GetCurrentUserApplicationInfo</span>,
     <span class="doccomment">/// Route information to get the current user.</span>
     <span class="ident">GetCurrentUser</span>,
+    <span class="doccomment">/// Route information to get the current user as a member object within a guild.</span>
+    <span class="ident">GetCurrentUserGuildMember</span> {
+        <span class="doccomment">/// ID of the guild.</span>
+        <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+    },
     <span class="doccomment">/// Route information to get an emoji by ID within a guild.</span>
     <span class="ident">GetEmoji</span> {
         <span class="doccomment">/// The ID of the emoji.</span>
@@ -2602,6 +2614,7 @@
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetCommandPermissions</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetCurrentUserApplicationInfo</span>
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetCurrentUser</span>
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetCurrentUserGuildMember</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetEmoji</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetEmojis</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetGateway</span>
@@ -2959,6 +2972,7 @@
             }
             <span class="ident"><span class="self">Self</span>::GetCurrentUserApplicationInfo</span> =&gt; <span class="ident">Path::OauthApplicationsMe</span>,
             <span class="ident"><span class="self">Self</span>::GetCurrentUser</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GetUser</span> { .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateCurrentUser</span> =&gt; <span class="ident">Path::UsersId</span>,
+            <span class="ident"><span class="self">Self</span>::GetCurrentUserGuildMember</span> { .. } =&gt; <span class="ident">Path::UsersIdGuildsIdMember</span>,
             <span class="ident"><span class="self">Self</span>::GetEmoji</span> { <span class="ident">guild_id</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateEmoji</span> { <span class="ident">guild_id</span>, .. } =&gt; {
                 <span class="ident">Path::GuildsIdEmojisId</span>(<span class="kw-2">*</span><span class="ident">guild_id</span>)
             }

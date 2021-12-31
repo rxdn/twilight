@@ -2985,6 +2985,21 @@
 <span id="2983">2983</span>
 <span id="2984">2984</span>
 <span id="2985">2985</span>
+<span id="2986">2986</span>
+<span id="2987">2987</span>
+<span id="2988">2988</span>
+<span id="2989">2989</span>
+<span id="2990">2990</span>
+<span id="2991">2991</span>
+<span id="2992">2992</span>
+<span id="2993">2993</span>
+<span id="2994">2994</span>
+<span id="2995">2995</span>
+<span id="2996">2996</span>
+<span id="2997">2997</span>
+<span id="2998">2998</span>
+<span id="2999">2999</span>
+<span id="3000">3000</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::route::Route</span>;
 <span class="kw">use</span> <span class="ident">percent_encoding</span>::{<span class="ident">utf8_percent_encode</span>, <span class="ident">NON_ALPHANUMERIC</span>};
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
@@ -3657,6 +3672,12 @@
             }
             <span class="ident">Route::GetCurrentUserApplicationInfo</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;oauth2/applications/@me&quot;</span>),
             <span class="ident">Route::GetCurrentUser</span> <span class="op">|</span> <span class="ident">Route::UpdateCurrentUser</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;users/@me&quot;</span>),
+            <span class="ident">Route::GetCurrentUserGuildMember</span> { <span class="ident">guild_id</span> } =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;users/@me/guilds/&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Display::fmt</span>(<span class="ident">guild_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;/member&quot;</span>)
+            }
             <span class="ident">Route::GetGateway</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;gateway&quot;</span>),
             <span class="ident">Route::GetGuild</span> {
                 <span class="ident">guild_id</span>,
@@ -5399,6 +5420,15 @@
     <span class="kw">fn</span> <span class="ident">test_get_current_user</span>() {
         <span class="kw">let</span> <span class="ident">route</span> <span class="op">=</span> <span class="ident">Route::GetCurrentUser</span>;
         <span class="macro">assert_eq!</span>(<span class="ident">route</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(), <span class="string">&quot;users/@me&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_get_current_user_guild_member</span>() {
+        <span class="kw">let</span> <span class="ident">route</span> <span class="op">=</span> <span class="ident">Route::GetCurrentUserGuildMember</span> { <span class="ident">guild_id</span>: <span class="ident">GUILD_ID</span> };
+        <span class="macro">assert_eq!</span>(
+            <span class="ident">route</span>.<span class="ident">display</span>().<span class="ident">to_string</span>(),
+            <span class="macro">format!</span>(<span class="string">&quot;users/@me/guilds/{guild_id}/member&quot;</span>, <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GUILD_ID</span>)
+        )
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
