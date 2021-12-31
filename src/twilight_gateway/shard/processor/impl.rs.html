@@ -1049,6 +1049,58 @@
 <span id="1047">1047</span>
 <span id="1048">1048</span>
 <span id="1049">1049</span>
+<span id="1050">1050</span>
+<span id="1051">1051</span>
+<span id="1052">1052</span>
+<span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="kw">super</span>::{
         <span class="ident">config::Config</span>,
@@ -1224,6 +1276,9 @@
             <span class="ident">ReceivingEventErrorType::AuthorizationInvalid</span> { .. }
                 <span class="op">|</span> <span class="ident">ReceivingEventErrorType::IntentsDisallowed</span> { .. }
                 <span class="op">|</span> <span class="ident">ReceivingEventErrorType::IntentsInvalid</span> { .. }
+                <span class="op">|</span> <span class="ident">ReceivingEventErrorType::InvalidApiVersion</span>
+                <span class="op">|</span> <span class="ident">ReceivingEventErrorType::InvalidShard</span> { .. }
+                <span class="op">|</span> <span class="ident">ReceivingEventErrorType::ShardingRequired</span>
         )
     }
 
@@ -1267,6 +1322,23 @@
             <span class="ident">ReceivingEventErrorType::EventStreamEnded</span> =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;event stream from gateway ended&quot;</span>)
             }
+            <span class="ident">ReceivingEventErrorType::InvalidApiVersion</span> =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;invalid api version was used for identifying&quot;</span>)
+            }
+            <span class="ident">ReceivingEventErrorType::InvalidShard</span> {
+                <span class="ident">shard_count</span>,
+                <span class="ident">shard_id</span>,
+            } =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;The shard [&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Debug::fmt</span>(<span class="ident">shard_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Debug::fmt</span>(<span class="ident">shard_count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;] is invalid&quot;</span>)
+            }
+            <span class="ident">ReceivingEventErrorType::ShardingRequired</span> =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;session handles too many guilds, sharding required&quot;</span>)
+            }
         }
     }
 }
@@ -1307,6 +1379,17 @@
         <span class="doccomment">/// ID of the shard.</span>
         <span class="ident">shard_id</span>: <span class="ident">u64</span>,
     },
+    <span class="doccomment">/// Invalid API version was used for identify.</span>
+    <span class="ident">InvalidApiVersion</span>,
+    <span class="doccomment">/// Attempting to identify a invalid shard.</span>
+    <span class="ident">InvalidShard</span> {
+        <span class="doccomment">/// Shard count.</span>
+        <span class="ident">shard_count</span>: <span class="ident">u64</span>,
+        <span class="doccomment">/// ID of the shard.</span>
+        <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+    },
+    <span class="doccomment">/// Sharding is required for the bot.</span>
+    <span class="ident">ShardingRequired</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>)]</span>
@@ -1863,6 +1946,27 @@
                             <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
                             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">token</span>().<span class="ident">to_owned</span>(),
                         },
+                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                    });
+                }
+                <span class="ident">CloseCode::Library</span>(<span class="number">4010</span>) =&gt; {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
+                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::InvalidShard</span> {
+                            <span class="ident">shard_count</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
+                            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+                        },
+                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                    });
+                }
+                <span class="ident">CloseCode::Library</span>(<span class="number">4011</span>) =&gt; {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
+                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::ShardingRequired</span>,
+                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                    });
+                }
+                <span class="ident">CloseCode::Library</span>(<span class="number">4012</span>) =&gt; {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
+                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::InvalidApiVersion</span>,
                         <span class="ident">source</span>: <span class="prelude-val">None</span>,
                     });
                 }
