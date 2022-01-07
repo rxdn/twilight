@@ -911,12 +911,27 @@
 <span id="909">909</span>
 <span id="910">910</span>
 <span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::change_key::AuditLogChangeKey</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel</span>::{
         <span class="ident">message::sticker::StickerFormatType</span>, <span class="ident">permission_overwrite::PermissionOverwrite</span>,
         <span class="ident">stage_instance::PrivacyLevel</span>, <span class="ident">thread::AutoArchiveDuration</span>,
     },
+    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild</span>::{
         <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">MfaLevel</span>, <span class="ident">NSFWLevel</span>, <span class="ident">Permissions</span>,
         <span class="ident">VerificationLevel</span>,
@@ -1072,6 +1087,15 @@
         <span class="doccomment">/// Old role color.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
         <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    },
+    <span class="doccomment">/// Member timeout state changed.</span>
+    <span class="ident">CommunicationDisabledUntil</span> {
+        <span class="doccomment">/// New timeout timestamp.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// Old timeout timestamp.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Whether a member is guild deafened.</span>
     <span class="ident">Deaf</span> {
@@ -1613,6 +1637,9 @@
             <span class="ident"><span class="self">Self</span>::ChannelId</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::ChannelId</span>,
             <span class="ident"><span class="self">Self</span>::Code</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Code</span>,
             <span class="ident"><span class="self">Self</span>::Color</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Color</span>,
+            <span class="ident"><span class="self">Self</span>::CommunicationDisabledUntil</span> { .. } =&gt; {
+                <span class="ident">AuditLogChangeKey::CommunicationDisabledUntil</span>
+            }
             <span class="ident"><span class="self">Self</span>::Deaf</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Deaf</span>,
             <span class="ident"><span class="self">Self</span>::DefaultAutoArchiveDuration</span> { .. } =&gt; {
                 <span class="ident">AuditLogChangeKey::DefaultAutoArchiveDuration</span>
@@ -1697,6 +1724,7 @@
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::ChannelId</span>: <span class="ident">new</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Code</span>: <span class="ident">new</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Color</span>: <span class="ident">new</span>, <span class="ident">old</span>);
+    <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::CommunicationDisabledUntil</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Deaf</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::DefaultMessageNotifications</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Deny</span>: <span class="ident">new</span>);
