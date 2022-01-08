@@ -277,6 +277,9 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="kw">super</span>::{<span class="ident">json</span>, <span class="ident">stage::Stage</span>},
     <span class="ident">heartbeat</span>::{<span class="ident">Heartbeater</span>, <span class="ident">Heartbeats</span>},
@@ -416,7 +419,7 @@
             .<span class="ident">store</span>(<span class="ident">new_heartbeat_interval</span>, <span class="ident">Ordering::Release</span>);
 
         <span class="comment">// Number of commands allotted to the user per reset period.</span>
-        <span class="kw">let</span> <span class="ident">commands_allotted</span> <span class="op">=</span> <span class="ident">f64::from</span>(<span class="ident">heartbeats_per_reset</span>(<span class="ident">new_heartbeat_interval</span>));
+        <span class="kw">let</span> <span class="ident">commands_allotted</span> <span class="op">=</span> <span class="ident">f64::from</span>(<span class="ident">available_commands_per_interval</span>(<span class="ident">new_heartbeat_interval</span>));
 
         <span class="comment">// We can ignore an error if the ratelimiter has already been set.</span>
         <span class="kw">let</span> <span class="ident">_result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ratelimit</span>.<span class="ident">set</span>(
@@ -497,12 +500,15 @@
     }
 }
 
-<span class="doccomment">/// Calculate the number of heartbeats to allot in a given reset period while</span>
+<span class="doccomment">/// Calculate the number of commands to allot in a given reset period while</span>
 <span class="doccomment">/// taking the heartbeat interval into account.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// For example, when the heartbeat interval is 42500 milliseconds then 118</span>
-<span class="doccomment">/// heartbeats will be allotted per reset period.</span>
-<span class="kw">fn</span> <span class="ident">heartbeats_per_reset</span>(<span class="ident">heartbeat_interval</span>: <span class="ident">u64</span>) -&gt; <span class="ident">u8</span> {
+<span class="doccomment">/// This is reserving twice as much as needed for heartbeats, to account for</span>
+<span class="doccomment">/// Discord sending us a heartbeat and expecting a heartbeat in response.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For example, when the heartbeat interval is 42500 milliseconds then 116</span>
+<span class="doccomment">/// commands will be allotted per reset period.</span>
+<span class="kw">fn</span> <span class="ident">available_commands_per_interval</span>(<span class="ident">heartbeat_interval</span>: <span class="ident">u64</span>) -&gt; <span class="ident">u8</span> {
     <span class="comment">// Number of commands allowed in a given reset period.</span>
     <span class="comment">//</span>
     <span class="comment">// API documentation with details:</span>
@@ -541,19 +547,19 @@
         <span class="ident">ALLOT_ON_FAIL</span>
     };
 
-    <span class="ident">COMMANDS_PER_RESET</span>.<span class="ident">saturating_sub</span>(<span class="ident">heartbeats_converted</span>)
+    <span class="ident">COMMANDS_PER_RESET</span>.<span class="ident">saturating_sub</span>(<span class="ident">heartbeats_converted</span> <span class="op">*</span> <span class="number">2</span>)
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_heartbeats_per_reset</span>() {
-        <span class="macro">assert_eq!</span>(<span class="number">119</span>, <span class="ident"><span class="kw">super</span>::heartbeats_per_reset</span>(<span class="number">60_000</span>));
-        <span class="macro">assert_eq!</span>(<span class="number">118</span>, <span class="ident"><span class="kw">super</span>::heartbeats_per_reset</span>(<span class="number">42_500</span>));
-        <span class="macro">assert_eq!</span>(<span class="number">118</span>, <span class="ident"><span class="kw">super</span>::heartbeats_per_reset</span>(<span class="number">30_000</span>));
-        <span class="macro">assert_eq!</span>(<span class="number">117</span>, <span class="ident"><span class="kw">super</span>::heartbeats_per_reset</span>(<span class="number">29_999</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">118</span>, <span class="ident"><span class="kw">super</span>::available_commands_per_interval</span>(<span class="number">60_000</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">116</span>, <span class="ident"><span class="kw">super</span>::available_commands_per_interval</span>(<span class="number">42_500</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">116</span>, <span class="ident"><span class="kw">super</span>::available_commands_per_interval</span>(<span class="number">30_000</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">114</span>, <span class="ident"><span class="kw">super</span>::available_commands_per_interval</span>(<span class="number">29_999</span>));
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (cfa4ac66c 2022-01-06)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (e012a191d 2022-01-06)" ></div>
 </body></html>
