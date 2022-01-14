@@ -926,6 +926,17 @@
 <span id="923">923</span>
 <span id="924">924</span>
 <span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::change_key::AuditLogChangeKey</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel</span>::{
@@ -1240,6 +1251,15 @@
         <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GenericId</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
         <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GenericId</span><span class="op">&gt;</span>,
+    },
+    <span class="doccomment">/// Invitable state of a private thread.</span>
+    <span class="ident">Invitable</span> {
+        <span class="doccomment">/// New threads invitable state.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// Old threads invitable state.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// ID of the user who created an invite.</span>
     <span class="ident">InviterId</span> {
@@ -1661,6 +1681,7 @@
             <span class="ident"><span class="self">Self</span>::Hoist</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Hoist</span>,
             <span class="ident"><span class="self">Self</span>::IconHash</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::IconHash</span>,
             <span class="ident"><span class="self">Self</span>::Id</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Id</span>,
+            <span class="ident"><span class="self">Self</span>::Invitable</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Invitable</span>,
             <span class="ident"><span class="self">Self</span>::InviterId</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::InviterId</span>,
             <span class="ident"><span class="self">Self</span>::Location</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Location</span>,
             <span class="ident"><span class="self">Self</span>::Locked</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Locked</span>,
@@ -1738,6 +1759,7 @@
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Hoist</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::IconHash</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Id</span>: <span class="ident">new</span>);
+    <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Invitable</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::InviterId</span>: <span class="ident">new</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::MaxAge</span>: <span class="ident">new</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::MaxUses</span>: <span class="ident">new</span>);
