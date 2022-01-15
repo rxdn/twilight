@@ -804,6 +804,7 @@
 <span id="801">801</span>
 <span id="802">802</span>
 <span id="803">803</span>
+<span id="804">804</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">builder::ShardBuilder</span>,
     <span class="ident">command::Command</span>,
@@ -1339,7 +1340,7 @@
                     }
                 })<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">tokio::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+        <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">tokio::spawn</span>(<span class="kw">async</span> {
             <span class="ident">processor</span>.<span class="ident">run</span>().<span class="kw">await</span>;
 
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -1551,9 +1552,10 @@
 
         <span class="kw">let</span> <span class="ident">shard_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>().<span class="ident">shard</span>()[<span class="number">0</span>];
 
-        <span class="kw">let</span> <span class="ident">session</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">session</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">session</span>) =&gt; <span class="ident">session</span>,
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> (<span class="ident">shard_id</span>, <span class="prelude-val">None</span>),
+        <span class="kw">let</span> <span class="ident">session</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">session</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">session</span>() {
+            <span class="ident">session</span>
+        } <span class="kw">else</span> {
+            <span class="kw">return</span> (<span class="ident">shard_id</span>, <span class="prelude-val">None</span>);
         };
 
         <span class="kw">let</span> <span class="ident">_res</span> <span class="op">=</span> <span class="ident">session</span>.<span class="ident">close</span>(<span class="prelude-val">Some</span>(<span class="ident">TungsteniteCloseFrame</span> {
