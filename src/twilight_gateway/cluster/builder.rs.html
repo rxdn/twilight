@@ -273,6 +273,23 @@
 <span id="267">267</span>
 <span id="268">268</span>
 <span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config::Config</span> <span class="kw">as</span> <span class="ident">ClusterConfig</span>,
     <span class="ident">event::Events</span>,
@@ -322,9 +339,10 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(
             <span class="ident">ClusterConfig</span> {
-                <span class="ident">shard_scheme</span>: <span class="ident">ShardScheme::Auto</span>,
                 <span class="ident">queue</span>: <span class="ident">Arc::new</span>(<span class="ident">LocalQueue::new</span>()),
                 <span class="ident">resume_sessions</span>: <span class="ident">HashMap::new</span>(),
+                <span class="ident">shard_presence</span>: <span class="prelude-val">None</span>,
+                <span class="ident">shard_scheme</span>: <span class="ident">ShardScheme::Auto</span>,
             },
             <span class="ident">ShardBuilder::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>),
         )
@@ -455,6 +473,22 @@
     <span class="doccomment">/// Refer to the shard&#39;s [`ShardBuilder::presence`] for more information.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presence</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">presence</span>: <span class="ident">UpdatePresencePayload</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">presence</span>(<span class="ident">presence</span>);
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set specific shard presences to use when identifying with the gateway.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Accepts a closure. The closure accepts a [`u64`] and returns an</span>
+    <span class="doccomment">/// [`Option&lt;UpdatePresencePayload&gt;`]. This presence will override any set</span>
+    <span class="doccomment">/// by [`presence`], even if the provided closure returns [`None`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`presence`]: Self::presence</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard_presence</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">shard_presence</span>: <span class="ident">F</span>) -&gt; <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">u64</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UpdatePresencePayload</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shard_presence</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">shard_presence</span>));
 
         <span class="self">self</span>
     }
