@@ -361,87 +361,15 @@
 <span id="355">355</span>
 <span id="356">356</span>
 <span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
-<span id="392">392</span>
-<span id="393">393</span>
-<span id="394">394</span>
-<span id="395">395</span>
-<span id="396">396</span>
-<span id="397">397</span>
-<span id="398">398</span>
-<span id="399">399</span>
-<span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
-<span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
-    <span class="ident">request</span>::{
-        <span class="ident">validate_inner</span>::{<span class="self">self</span>, <span class="ident">ComponentValidationError</span>, <span class="ident">ComponentValidationErrorType</span>},
-        <span class="ident">AttachmentFile</span>, <span class="ident">Form</span>, <span class="ident">PartialAttachment</span>, <span class="ident">Request</span>,
-    },
+    <span class="ident">request</span>::{<span class="ident">AttachmentFile</span>, <span class="ident">Form</span>, <span class="ident">PartialAttachment</span>, <span class="ident">Request</span>, <span class="ident">TryIntoRequest</span>},
     <span class="ident">response::ResponseFuture</span>,
     <span class="ident">routing::Route</span>,
 };
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow::Cow</span>,
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-};
+<span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application::component::Component</span>,
     <span class="ident">channel</span>::{
@@ -449,81 +377,12 @@
         <span class="ident">message</span>::{<span class="ident">AllowedMentions</span>, <span class="ident">MessageFlags</span>},
         <span class="ident">Message</span>,
     },
-    <span class="ident">id::ApplicationId</span>,
+    <span class="ident">id</span>::{<span class="ident">marker::ApplicationMarker</span>, <span class="ident">Id</span>},
 };
-
-<span class="doccomment">/// A followup message can not be created as configured.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreateFollowupMessageError</span> {
-    <span class="ident">kind</span>: <span class="ident">CreateFollowupMessageErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">CreateFollowupMessageError</span> {
-    <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">CreateFollowupMessageErrorType</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
-    }
-
-    <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">source</span>
-    }
-
-    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
-        <span class="self">self</span>,
-    ) -&gt; (
-        <span class="ident">CreateFollowupMessageErrorType</span>,
-        <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) {
-        (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">CreateFollowupMessageError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">CreateFollowupMessageErrorType::ComponentCount</span> { <span class="ident">count</span> } =&gt; {
-                <span class="ident">Display::fmt</span>(<span class="ident">count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; components were provided, but only &quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">ComponentValidationError::COMPONENT_COUNT</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; root components are allowed&quot;</span>)
-            }
-            <span class="ident">CreateFollowupMessageErrorType::ComponentInvalid</span> { .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a provided component is invalid&quot;</span>)
-            }
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">CreateFollowupMessageError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
-    }
-}
-
-<span class="doccomment">/// Type of [`CreateFollowupMessageError`] that occurred.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CreateFollowupMessageErrorType</span> {
-    <span class="doccomment">/// An invalid message component was provided.</span>
-    <span class="ident">ComponentInvalid</span> {
-        <span class="doccomment">/// Additional details about the validation failure type.</span>
-        <span class="ident">kind</span>: <span class="ident">ComponentValidationErrorType</span>,
-    },
-    <span class="doccomment">/// Too many message components were provided.</span>
-    <span class="ident">ComponentCount</span> {
-        <span class="doccomment">/// Number of components that were provided.</span>
-        <span class="ident">count</span>: <span class="ident">usize</span>,
-    },
-}
+<span class="kw">use</span> <span class="ident">twilight_validate::message</span>::{
+    <span class="ident">components</span> <span class="kw">as</span> <span class="ident">validate_components</span>, <span class="ident">content</span> <span class="kw">as</span> <span class="ident">validate_content</span>, <span class="ident">embeds</span> <span class="kw">as</span> <span class="ident">validate_embeds</span>,
+    <span class="ident">MessageValidationError</span>,
+};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">CreateFollowupMessageFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -554,14 +413,15 @@
 <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// use std::env;</span>
 <span class="doccomment">/// use twilight_http::Client;</span>
-<span class="doccomment">/// use twilight_model::id::ApplicationId;</span>
+<span class="doccomment">/// use twilight_model::id::Id;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-<span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
+<span class="doccomment">/// let application_id = Id::new(1);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// client</span>
-<span class="doccomment">///     .create_followup_message(&quot;webhook token&quot;)?</span>
-<span class="doccomment">///     .content(&quot;Pinkie...&quot;)</span>
+<span class="doccomment">///     .interaction(application_id)</span>
+<span class="doccomment">///     .create_followup_message(&quot;webhook token&quot;)</span>
+<span class="doccomment">///     .content(&quot;Pinkie...&quot;)?</span>
 <span class="doccomment">///     .exec()</span>
 <span class="doccomment">///     .await?;</span>
 <span class="doccomment">/// # Ok(()) }</span>
@@ -572,7 +432,7 @@
 <span class="doccomment">/// [`files`]: Self::files</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreateFollowupMessage</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+    <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
     <span class="ident">attachments</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">AttachmentFile</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>]<span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">fields</span>: <span class="ident">CreateFollowupMessageFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
@@ -582,7 +442,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CreateFollowupMessage</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-        <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+        <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
         <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
@@ -616,31 +476,14 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an [`CreateFollowupMessageErrorType::ComponentCount`] error type</span>
-    <span class="doccomment">/// if too many components are provided.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an [`CreateFollowupMessageErrorType::ComponentInvalid`] error</span>
-    <span class="doccomment">/// type if one of the provided components is invalid.</span>
+    <span class="doccomment">/// Refer to the errors section of</span>
+    <span class="doccomment">/// [`twilight_validate::component::component`] for a list of errors that</span>
+    <span class="doccomment">/// may be returned as a result of validating each provided component.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">components</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Component</span>],
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CreateFollowupMessageError</span><span class="op">&gt;</span> {
-        <span class="ident">validate_inner::components</span>(<span class="ident">components</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
-            <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">inner_source</span>) <span class="op">=</span> <span class="ident">source</span>.<span class="ident">into_parts</span>();
-
-            <span class="kw">match</span> <span class="ident">kind</span> {
-                <span class="ident">ComponentValidationErrorType::ComponentCount</span> { <span class="ident">count</span> } =&gt; {
-                    <span class="ident">CreateFollowupMessageError</span> {
-                        <span class="ident">kind</span>: <span class="ident">CreateFollowupMessageErrorType::ComponentCount</span> { <span class="ident">count</span> },
-                        <span class="ident">source</span>: <span class="ident">inner_source</span>,
-                    }
-                }
-                <span class="ident">other</span> =&gt; <span class="ident">CreateFollowupMessageError</span> {
-                    <span class="ident">kind</span>: <span class="ident">CreateFollowupMessageErrorType::ComponentInvalid</span> { <span class="ident">kind</span>: <span class="ident">other</span> },
-                    <span class="ident">source</span>: <span class="ident">inner_source</span>,
-                },
-            }
-        })<span class="question-mark">?</span>;
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">MessageValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_components</span>(<span class="ident">components</span>)<span class="question-mark">?</span>;
 
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">components</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">components</span>);
 
@@ -650,17 +493,38 @@
     <span class="doccomment">/// The content of the webhook&#39;s message.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Up to 2000 UTF-16 codepoints.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`ContentInvalid`] if the content length is too</span>
+    <span class="doccomment">/// long.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`ContentInvalid`]: twilight_validate::message::MessageValidationErrorType::ContentInvalid</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">MessageValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_content</span>(<span class="ident">content</span>)<span class="question-mark">?</span>;
+
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">content</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>);
 
-        <span class="self">self</span>
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Set the list of embeds of the webhook&#39;s message.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) -&gt; <span class="self">Self</span> {
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`TooManyEmbeds`] if there are too many embeds.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Otherwise, refer to the errors section of [`embed`] for a list of errors</span>
+    <span class="doccomment">/// that may occur.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`TooManyEmbeds`]: twilight_validate::message::MessageValidationErrorType::TooManyEmbeds</span>
+    <span class="doccomment">/// [`embed`]: twilight_validate::embed::embed</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">MessageValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_embeds</span>(<span class="ident">embeds</span>)<span class="question-mark">?</span>;
+
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">embeds</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">embeds</span>);
 
-        <span class="self">self</span>
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Set if the followup should be ephemeral.</span>
@@ -709,14 +573,16 @@
     <span class="doccomment">/// use std::env;</span>
     <span class="doccomment">/// use twilight_embed_builder::EmbedBuilder;</span>
     <span class="doccomment">/// use twilight_http::Client;</span>
-    <span class="doccomment">/// use twilight_model::id::{MessageId, ApplicationId};</span>
+    <span class="doccomment">/// use twilight_model::id::Id;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
+    <span class="doccomment">/// let application_id = Id::new(1);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let message = client.create_followup_message(&quot;token here&quot;)?</span>
-    <span class="doccomment">///     .content(&quot;some content&quot;)</span>
-    <span class="doccomment">///     .embeds(&amp;[EmbedBuilder::new().title(&quot;title&quot;).build()?])</span>
+    <span class="doccomment">/// let message = client</span>
+    <span class="doccomment">///     .interaction(application_id)</span>
+    <span class="doccomment">///     .create_followup_message(&quot;token here&quot;)</span>
+    <span class="doccomment">///     .content(&quot;some content&quot;)?</span>
+    <span class="doccomment">///     .embeds(&amp;[EmbedBuilder::new().title(&quot;title&quot;).build()?])?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?</span>
     <span class="doccomment">///     .model()</span>
@@ -733,13 +599,15 @@
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use std::env;</span>
     <span class="doccomment">/// use twilight_http::Client;</span>
-    <span class="doccomment">/// use twilight_model::id::{MessageId, ApplicationId};</span>
+    <span class="doccomment">/// use twilight_model::id::Id;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// client.set_application_id(ApplicationId::new(1).expect(&quot;non zero&quot;));</span>
+    <span class="doccomment">/// let application_id = Id::new(1);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let message = client.create_followup_message(&quot;token here&quot;)?</span>
-    <span class="doccomment">///     .content(&quot;some content&quot;)</span>
+    <span class="doccomment">/// let message = client</span>
+    <span class="doccomment">///     .interaction(application_id)</span>
+    <span class="doccomment">///     .create_followup_message(&quot;token here&quot;)</span>
+    <span class="doccomment">///     .content(&quot;some content&quot;)?</span>
     <span class="doccomment">///     .payload_json(br#&quot;{ &quot;content&quot;: &quot;other content&quot;, &quot;embeds&quot;: [ { &quot;title&quot;: &quot;title&quot; } ] }&quot;#)</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?</span>
@@ -766,9 +634,21 @@
         <span class="self">self</span>
     }
 
-    <span class="comment">// `self` needs to be consumed and the client returned due to parameters</span>
-    <span class="comment">// being consumed in request construction.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Response`]: crate::response::Response</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http</span>;
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_into_request</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">CreateFollowupMessage</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::ExecuteWebhook</span> {
             <span class="ident">thread_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
@@ -808,36 +688,26 @@
 
         <span class="prelude-val">Ok</span>(<span class="ident">request</span>.<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>).<span class="ident">build</span>())
     }
-
-    <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">request</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
-        }
-    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::client::Client</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">client::Client</span>, <span class="ident">request::TryIntoRequest</span>};
     <span class="kw">use</span> <span class="ident">std::error::Error</span>;
     <span class="kw">use</span> <span class="ident">twilight_http_ratelimiting::Path</span>;
-    <span class="kw">use</span> <span class="ident">twilight_model::id::ApplicationId</span>;
+    <span class="kw">use</span> <span class="ident">twilight_model::id::Id</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_create_followup_message</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">application_id</span> <span class="op">=</span> <span class="ident">ApplicationId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero id&quot;</span>);
-        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>().<span class="ident">into_boxed_str</span>();
+        <span class="kw">let</span> <span class="ident">application_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
+        <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>();
 
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Client::new</span>(<span class="ident">String::new</span>());
-        <span class="ident">client</span>.<span class="ident">set_application_id</span>(<span class="ident">application_id</span>);
         <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">client</span>
-            .<span class="ident">create_followup_message</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>)<span class="question-mark">?</span>
-            .<span class="ident">content</span>(<span class="string">&quot;test&quot;</span>)
-            .<span class="ident">request</span>()<span class="question-mark">?</span>;
+            .<span class="ident">interaction</span>(<span class="ident">application_id</span>)
+            .<span class="ident">create_followup_message</span>(<span class="kw-2">&amp;</span><span class="ident">token</span>)
+            .<span class="ident">content</span>(<span class="string">&quot;test&quot;</span>)<span class="question-mark">?</span>
+            .<span class="ident">try_into_request</span>()<span class="question-mark">?</span>;
 
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">req</span>.<span class="ident">use_authorization_token</span>());
         <span class="macro">assert_eq!</span>(

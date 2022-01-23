@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["UpdateMessageErrorType","Type of [`UpdateMessageError`] that occurred."]],"struct":[["UpdateMessage","Update a message by [`ChannelId`] and [`MessageId`]."],["UpdateMessageError","The error created when a message can not be updated as configured."]]});
+initSidebarItems({"struct":[["UpdateMessage","Update a message by [`Id<ChannelMarker>`] and [`Id<MessageMarker>`]."]]});

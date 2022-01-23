@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["CreateFollowupMessageErrorType","Type of [`CreateFollowupMessageError`] that occurred."]],"struct":[["CreateFollowupMessage","Create a followup message to an interaction."],["CreateFollowupMessageError","A followup message can not be created as configured."]]});

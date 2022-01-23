@@ -440,9 +440,6 @@
 <span id="434">434</span>
 <span id="435">435</span>
 <span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">config::Config</span>, <span class="ident">Events</span>, <span class="ident">Shard</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::EventTypeFlags</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -612,11 +609,7 @@
     <span class="doccomment">/// Create a new builder to configure and construct a shard.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Refer to each method to learn their default values.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::_new</span>(<span class="ident">token</span>.<span class="ident">into</span>(), <span class="ident">intents</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">_new</span>(<span class="kw-2">mut</span> <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bot &quot;</span>) {
             <span class="ident">token</span>.<span class="ident">insert_str</span>(<span class="number">0</span>, <span class="string">&quot;Bot &quot;</span>);
         }
@@ -764,6 +757,7 @@
     <span class="doccomment">/// commands&quot;:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```no_run</span>
+    <span class="doccomment">/// use std::env;</span>
     <span class="doccomment">/// use twilight_gateway::{Intents, Shard};</span>
     <span class="doccomment">/// use twilight_model::gateway::{</span>
     <span class="doccomment">///     payload::outgoing::update_presence::UpdatePresencePayload,</span>
@@ -771,7 +765,7 @@
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// let shard = Shard::builder(&quot;token&quot;, Intents::empty())</span>
+    <span class="doccomment">/// let shard = Shard::builder(env::var(&quot;DISCORD_TOKEN&quot;)?, Intents::empty())</span>
     <span class="doccomment">///     .presence(UpdatePresencePayload::new(</span>
     <span class="doccomment">///         vec![MinimalActivity {</span>
     <span class="doccomment">///             kind: ActivityType::Playing,</span>
@@ -858,8 +852,8 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardBuilder</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">token</span>, <span class="ident">intents</span>): (<span class="ident">T</span>, <span class="ident">Intents</span>)) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardBuilder</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">token</span>, <span class="ident">intents</span>): (<span class="ident">String</span>, <span class="ident">Intents</span>)) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>)
     }
 }

@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["GetGuildMembersErrorType","Type of [`GetGuildMembersError`] that occurred."]],"struct":[["GetGuildMembers","Get the members of a guild, by id."],["GetGuildMembersError","The error created when the members can not be fetched as configured."]]});

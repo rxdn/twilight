@@ -504,6 +504,12 @@
 <span id="498">498</span>
 <span id="499">499</span>
 <span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Request parameters for ratelimiting.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module contains the type definitions for parameters</span>
@@ -514,7 +520,6 @@
 
 <span class="kw">use</span> <span class="ident">http::Method</span> <span class="kw">as</span> <span class="ident">HttpMethod</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">convert::TryFrom</span>,
     <span class="ident">error::Error</span>,
     <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
     <span class="ident">str::FromStr</span>,
@@ -539,7 +544,7 @@
 <span class="kw">impl</span> <span class="ident">Method</span> {
     <span class="doccomment">/// Convert the method into the equivalent [`http::Method`].</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">into_http</span>(<span class="self">self</span>) -&gt; <span class="ident">HttpMethod</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">to_http</span>(<span class="self">self</span>) -&gt; <span class="ident">HttpMethod</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Delete</span> =&gt; <span class="ident">HttpMethod::DELETE</span>,
             <span class="ident"><span class="self">Self</span>::Get</span> =&gt; <span class="ident">HttpMethod::GET</span>,
@@ -719,14 +724,20 @@
     <span class="ident">GuildsIdRoles</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Operating on a role of one of the user&#39;s guilds.</span>
     <span class="ident">GuildsIdRolesId</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Operating on the guild&#39;s scheduled events.</span>
+    <span class="ident">GuildsIdScheduledEvents</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Operating on a particular guild&#39;s scheduled events.</span>
+    <span class="ident">GuildsIdScheduledEventsId</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// Operating on a particular guild&#39;s scheduled event users.</span>
+    <span class="ident">GuildsIdScheduledEventsIdUsers</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; stickers.</span>
     <span class="ident">GuildsIdStickers</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; templates.</span>
     <span class="ident">GuildsIdTemplates</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Operating on a guild template.</span>
-    <span class="ident">GuildsTemplatesCode</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>),
+    <span class="ident">GuildsTemplatesCode</span>(<span class="ident">String</span>),
     <span class="doccomment">/// Operating on a template from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">u64</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>),
+    <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">u64</span>, <span class="ident">String</span>),
     <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; threads.</span>
     <span class="ident">GuildsIdThreads</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; vanity URL.</span>
@@ -766,9 +777,9 @@
     <span class="doccomment">/// Operating on a webhook as a bot.</span>
     <span class="ident">WebhooksId</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Operating on a webhook as a webhook.</span>
-    <span class="ident">WebhooksIdToken</span>(<span class="ident">u64</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>),
+    <span class="ident">WebhooksIdToken</span>(<span class="ident">u64</span>, <span class="ident">String</span>),
     <span class="doccomment">/// Operating on a message created by a webhook.</span>
-    <span class="ident">WebhooksIdTokenMessagesId</span>(<span class="ident">u64</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>),
+    <span class="ident">WebhooksIdTokenMessagesId</span>(<span class="ident">u64</span>, <span class="ident">String</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Path</span> {
@@ -808,7 +819,7 @@
 
         <span class="kw">let</span> <span class="ident">parts</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;/&#39;</span>).<span class="ident">skip</span>(<span class="ident">skip</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">parts</span>.<span class="ident">as_slice</span>() {
+        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">parts</span>[..] {
             [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;commands&quot;</span>] =&gt; <span class="ident">ApplicationCommand</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">ApplicationCommandId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>]
@@ -863,9 +874,7 @@
             [<span class="string">&quot;gateway&quot;</span>] =&gt; <span class="ident">Gateway</span>,
             [<span class="string">&quot;gateway&quot;</span>, <span class="string">&quot;bot&quot;</span>] =&gt; <span class="ident">GatewayBot</span>,
             [<span class="string">&quot;guilds&quot;</span>] =&gt; <span class="ident">Guilds</span>,
-            [<span class="string">&quot;guilds&quot;</span>, <span class="string">&quot;templates&quot;</span>, <span class="ident">code</span>] =&gt; {
-                <span class="ident">GuildsTemplatesCode</span>((<span class="kw-2">*</span><span class="ident">code</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>())
-            }
+            [<span class="string">&quot;guilds&quot;</span>, <span class="string">&quot;templates&quot;</span>, <span class="ident">code</span>] =&gt; <span class="ident">GuildsTemplatesCode</span>(<span class="ident">code</span>.<span class="ident">to_string</span>()),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>] =&gt; <span class="ident">GuildsId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;audit-logs&quot;</span>] =&gt; <span class="ident">GuildsIdAuditLogs</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;bans&quot;</span>] =&gt; <span class="ident">GuildsIdBans</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
@@ -888,12 +897,17 @@
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;regions&quot;</span>] =&gt; <span class="ident">GuildsIdRegions</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;roles&quot;</span>] =&gt; <span class="ident">GuildsIdRoles</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;roles&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdRolesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;scheduled-events&quot;</span>] =&gt; <span class="ident">GuildsIdScheduledEvents</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;scheduled-events&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdScheduledEventsId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;scheduled-events&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;users&quot;</span>] =&gt; {
+                <span class="ident">GuildsIdScheduledEventsIdUsers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            }
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;stickers&quot;</span>] <span class="op">|</span> [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] =&gt; {
                 <span class="ident">GuildsIdStickers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
             }
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;templates&quot;</span>] =&gt; <span class="ident">GuildsIdTemplates</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;templates&quot;</span>, <span class="ident">code</span>] =&gt; {
-                <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, (<span class="kw-2">*</span><span class="ident">code</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>())
+                <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, <span class="ident">code</span>.<span class="ident">to_string</span>())
             }
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;threads&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdThreads</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
             [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;vanity-url&quot;</span>] =&gt; <span class="ident">GuildsIdVanityUrl</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
@@ -914,11 +928,9 @@
             [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;member&quot;</span>] =&gt; <span class="ident">UsersIdGuildsIdMember</span>,
             [<span class="string">&quot;voice&quot;</span>, <span class="string">&quot;regions&quot;</span>] =&gt; <span class="ident">VoiceRegions</span>,
             [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>] =&gt; <span class="ident">WebhooksId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>, <span class="ident">token</span>] =&gt; {
-                <span class="ident">WebhooksIdToken</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, (<span class="kw-2">*</span><span class="ident">token</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>())
-            }
+            [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>, <span class="ident">token</span>] =&gt; <span class="ident">WebhooksIdToken</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, <span class="ident">token</span>.<span class="ident">to_string</span>()),
             [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>, <span class="ident">token</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">WebhooksIdTokenMessagesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, (<span class="kw-2">*</span><span class="ident">token</span>).<span class="ident">to_string</span>().<span class="ident">into_boxed_str</span>())
+                <span class="ident">WebhooksIdTokenMessagesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, <span class="ident">token</span>.<span class="ident">to_string</span>())
             }
             <span class="kw">_</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PathParseError</span> {
@@ -953,7 +965,7 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request::Method</span>;
     <span class="kw">use</span> <span class="ident">http::Method</span> <span class="kw">as</span> <span class="ident">HttpMethod</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert::TryFrom</span>, <span class="ident">error::Error</span>, <span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">str::FromStr</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error::Error</span>, <span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">str::FromStr</span>};
 
     <span class="macro">assert_fields!</span>(<span class="ident">PathParseErrorType::MessageIdWithoutMethod</span>: <span class="ident">channel_id</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">PathParseErrorType</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
@@ -997,11 +1009,11 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_method_conversions</span>() {
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::DELETE</span>, <span class="ident">Method::Delete</span>.<span class="ident">into_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::GET</span>, <span class="ident">Method::Get</span>.<span class="ident">into_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::PATCH</span>, <span class="ident">Method::Patch</span>.<span class="ident">into_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::POST</span>, <span class="ident">Method::Post</span>.<span class="ident">into_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::PUT</span>, <span class="ident">Method::Put</span>.<span class="ident">into_http</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::DELETE</span>, <span class="ident">Method::Delete</span>.<span class="ident">to_http</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::GET</span>, <span class="ident">Method::Get</span>.<span class="ident">to_http</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::PATCH</span>, <span class="ident">Method::Patch</span>.<span class="ident">to_http</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::POST</span>, <span class="ident">Method::Post</span>.<span class="ident">to_http</span>());
+        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::PUT</span>, <span class="ident">Method::Put</span>.<span class="ident">to_http</span>());
     }
 }
 </code></pre></div>

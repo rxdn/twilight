@@ -62,6 +62,9 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">data</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::data</span>::{
@@ -72,7 +75,10 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::InteractionType</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">guild::PartialMember</span>,
-    <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">InteractionId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>},
+        <span class="ident">Id</span>,
+    },
     <span class="ident">user::User</span>,
 };
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
@@ -85,14 +91,14 @@
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span>(<span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;Interaction&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ApplicationCommand</span> {
     <span class="doccomment">/// ID of the associated application.</span>
-    <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+    <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// The channel the interaction was triggered from.</span>
-    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Data from the invoked command.</span>
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">CommandData</span>,
     <span class="doccomment">/// ID of the guild the interaction was triggered from.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Guild&#39;s preferred locale.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Present when the command is used in a guild.</span>
@@ -101,7 +107,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">guild_locale</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the interaction.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">InteractionId</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Kind of the interaction.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">InteractionType</span>,

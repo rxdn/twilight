@@ -287,9 +287,6 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config::Config</span> <span class="kw">as</span> <span class="ident">ClusterConfig</span>,
     <span class="ident">event::Events</span>,
@@ -336,7 +333,7 @@
 
 <span class="kw">impl</span> <span class="ident">ClusterBuilder</span> {
     <span class="doccomment">/// Create a new builder to construct and configure a cluster.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(
             <span class="ident">ClusterConfig</span> {
                 <span class="ident">queue</span>: <span class="ident">Arc::new</span>(<span class="ident">LocalQueue::new</span>()),
@@ -509,10 +506,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// use twilight_gateway::{cluster::{Cluster, ShardScheme}, Intents};</span>
-    <span class="doccomment">/// use std::{</span>
-    <span class="doccomment">///     convert::TryFrom,</span>
-    <span class="doccomment">///     env,</span>
-    <span class="doccomment">/// };</span>
+    <span class="doccomment">/// use std::env;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
@@ -561,8 +555,8 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ClusterBuilder</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">token</span>, <span class="ident">intents</span>): (<span class="ident">T</span>, <span class="ident">Intents</span>)) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ClusterBuilder</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">token</span>, <span class="ident">intents</span>): (<span class="ident">String</span>, <span class="ident">Intents</span>)) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>)
     }
 }

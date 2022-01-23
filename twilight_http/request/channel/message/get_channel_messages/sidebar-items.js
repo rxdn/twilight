@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["GetChannelMessagesErrorType","Type of [`GetChannelMessagesError`] that occurred."]],"struct":[["GetChannelMessages","Get channel messages, by [`ChannelId`]."],["GetChannelMessagesError","The error returned if the request can not be created as configured."]]});

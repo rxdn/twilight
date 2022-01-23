@@ -92,7 +92,17 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">datetime::Timestamp</span>, <span class="ident">id::RoleId</span>, <span class="ident">user::User</span>};
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">datetime::Timestamp</span>,
+    <span class="ident">id</span>::{<span class="ident">marker::RoleMarker</span>, <span class="ident">Id</span>},
+    <span class="ident">user::User</span>,
+    <span class="ident">util::image_hash::ImageHash</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -113,7 +123,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InviteStageInstanceMember</span> {
     <span class="doccomment">/// Guild specific avatar hash.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="doccomment">/// When the member joined the guild.</span>
     <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
     <span class="doccomment">/// Member&#39;s nickname, if there is one.</span>
@@ -127,7 +137,7 @@
     <span class="kw">pub</span> <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="doccomment">/// List of role IDs the user has.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// User data for the member.</span>
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="ident">User</span>,
 }

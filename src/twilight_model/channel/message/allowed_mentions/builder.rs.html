@@ -167,12 +167,12 @@
 <span id="161">161</span>
 <span id="162">162</span>
 <span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel::message::allowed_mentions</span>::{<span class="ident">AllowedMentions</span>, <span class="ident">ParseTypes</span>},
-    <span class="ident">id</span>::{<span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
@@ -210,13 +210,13 @@
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Allow parsing of specific [`RoleId`]s.</span>
+    <span class="doccomment">/// Allow parsing of specific [`Id&lt;RoleMarker&gt;`]s.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`roles`] and this method are mutually exclusive. The builder will favor</span>
     <span class="doccomment">/// specific role ids.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`roles`]: Self::roles</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">role_ids</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">role_ids</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">RoleId</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">role_ids</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">role_ids</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">roles</span>.<span class="ident">extend</span>(<span class="ident">role_ids</span>);
 
         <span class="self">self</span>
@@ -229,13 +229,13 @@
         <span class="self">self</span>
     }
 
-    <span class="doccomment">/// Allow parsing of  specific [`UserId`]s.</span>
+    <span class="doccomment">/// Allow parsing of  specific [`Id&lt;UserMarker&gt;`]s.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`users`] and this method are mutually exclusive. The builder will favor</span>
     <span class="doccomment">/// specific user ids.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`users`]: Self::users</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_ids</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">user_ids</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">UserId</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_ids</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">user_ids</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">users</span>.<span class="ident">extend</span>(<span class="ident">user_ids</span>);
 
         <span class="self">self</span>
@@ -276,7 +276,7 @@
         <span class="kw">super</span>::{<span class="ident">AllowedMentions</span>, <span class="ident">ParseTypes</span>},
         <span class="ident">AllowedMentionsBuilder</span>,
     };
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">RoleId</span>, <span class="ident">UserId</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
@@ -314,23 +314,17 @@
     <span class="kw">fn</span> <span class="ident">test_validation</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">AllowedMentionsBuilder::new</span>()
             .<span class="ident">users</span>()
-            .<span class="ident">user_ids</span>(<span class="macro">vec!</span>[
-                <span class="ident">UserId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                <span class="ident">UserId::new</span>(<span class="number">200</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            ])
+            .<span class="ident">user_ids</span>(<span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">100</span>), <span class="ident">Id::new</span>(<span class="number">200</span>)])
             .<span class="ident">roles</span>()
-            .<span class="ident">role_ids</span>(<span class="macro">vec!</span>[<span class="ident">RoleId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)])
+            .<span class="ident">role_ids</span>(<span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">300</span>)])
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq!</span>(
             <span class="ident">value</span>,
             <span class="ident">AllowedMentions</span> {
                 <span class="ident">parse</span>: <span class="macro">vec!</span>[],
-                <span class="ident">users</span>: <span class="macro">vec!</span>[
-                    <span class="ident">UserId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                    <span class="ident">UserId::new</span>(<span class="number">200</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-                ],
-                <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">RoleId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)],
+                <span class="ident">users</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">100</span>), <span class="ident">Id::new</span>(<span class="number">200</span>)],
+                <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">300</span>)],
                 <span class="ident">replied_user</span>: <span class="bool-val">false</span>,
             },
         );

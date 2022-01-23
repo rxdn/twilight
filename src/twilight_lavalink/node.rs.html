@@ -791,7 +791,7 @@
     <span class="ident">tungstenite</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">TungsteniteError</span>, <span class="ident">Message</span>},
     <span class="ident">MaybeTlsStream</span>, <span class="ident">WebSocketStream</span>,
 };
-<span class="kw">use</span> <span class="ident">twilight_model::id::UserId</span>;
+<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::UserMarker</span>, <span class="ident">Id</span>};
 
 <span class="doccomment">/// An error occurred while either initializing a connection or while running</span>
 <span class="doccomment">/// its event loop.</span>
@@ -984,7 +984,7 @@
     <span class="doccomment">/// The number of shards in use by the bot.</span>
     <span class="kw">pub</span> <span class="ident">shard_count</span>: <span class="ident">u64</span>,
     <span class="doccomment">/// The user ID of the bot.</span>
-    <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+    <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Configuration for a session which can be resumed.</span>
@@ -1021,7 +1021,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Lavalink`]: crate::client::Lavalink</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
         <span class="ident">shard_count</span>: <span class="ident">u64</span>,
         <span class="ident">address</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span>,
         <span class="ident">authorization</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -1037,7 +1037,7 @@
     }
 
     <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">_new</span>(
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
         <span class="ident">shard_count</span>: <span class="ident">u64</span>,
         <span class="ident">address</span>: <span class="ident">SocketAddr</span>,
         <span class="ident">authorization</span>: <span class="ident">String</span>,
@@ -1342,7 +1342,7 @@
             }
         };
 
-        <span class="ident">player</span>.<span class="ident">set_position</span>(<span class="ident">update</span>.<span class="ident">state</span>.<span class="ident">position</span>);
+        <span class="ident">player</span>.<span class="ident">set_position</span>(<span class="ident">update</span>.<span class="ident">state</span>.<span class="ident">position</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>));
         <span class="ident">player</span>.<span class="ident">set_time</span>(<span class="ident">update</span>.<span class="ident">state</span>.<span class="ident">time</span>);
 
         <span class="prelude-val">Ok</span>(())

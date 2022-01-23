@@ -461,11 +461,18 @@
 <span id="455">455</span>
 <span id="456">456</span>
 <span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel</span>::{<span class="ident">thread::ThreadMetadata</span>, <span class="ident">ChannelType</span>, <span class="ident">Message</span>},
     <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild</span>::{<span class="ident">Permissions</span>, <span class="ident">Role</span>},
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">MessageMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
     <span class="ident">user::User</span>,
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -474,25 +481,25 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CommandInteractionDataResolved</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">channels</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">ChannelId</span>, <span class="ident">InteractionChannel</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">channels</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">InteractionChannel</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">members</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">UserId</span>, <span class="ident">InteractionMember</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">members</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">InteractionMember</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">messages</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">MessageId</span>, <span class="ident">Message</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">messages</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">Message</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">RoleId</span>, <span class="ident">Role</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>, <span class="ident">Role</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">UserId</span>, <span class="ident">User</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InteractionChannel</span> {
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">ChannelId</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ChannelType</span>,
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">parent_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">parent_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="ident">Permissions</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">thread_metadata</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ThreadMetadata</span><span class="op">&gt;</span>,
@@ -514,7 +521,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -523,14 +530,15 @@
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">channel</span>::{
             <span class="ident">message</span>::{
-                <span class="ident">sticker</span>::{<span class="ident">MessageSticker</span>, <span class="ident">StickerFormatType</span>, <span class="ident">StickerId</span>},
+                <span class="ident">sticker</span>::{<span class="ident">MessageSticker</span>, <span class="ident">StickerFormatType</span>},
                 <span class="ident">MessageFlags</span>, <span class="ident">MessageType</span>,
             },
             <span class="ident">ChannelType</span>, <span class="ident">Message</span>,
         },
         <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">guild</span>::{<span class="ident">PartialMember</span>, <span class="ident">Permissions</span>, <span class="ident">Role</span>},
-        <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
+        <span class="ident">test::image_hash</span>,
         <span class="ident">user</span>::{<span class="ident">PremiumType</span>, <span class="ident">User</span>, <span class="ident">UserFlags</span>},
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
@@ -544,9 +552,9 @@
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandInteractionDataResolved</span> {
             <span class="ident">channels</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                <span class="ident">ChannelId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">Id::new</span>(<span class="number">100</span>),
                 <span class="ident">InteractionChannel</span> {
-                    <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">100</span>),
                     <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
                     <span class="ident">name</span>: <span class="string">&quot;channel name&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
@@ -556,7 +564,7 @@
             )])
             .<span class="ident">collect</span>(),
             <span class="ident">members</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                <span class="ident">UserId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">Id::new</span>(<span class="number">300</span>),
                 <span class="ident">InteractionMember</span> {
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
@@ -570,7 +578,7 @@
             )])
             .<span class="ident">collect</span>(),
             <span class="ident">messages</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                <span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">Id::new</span>(<span class="number">4</span>),
                 <span class="ident">Message</span> {
                     <span class="ident">activity</span>: <span class="prelude-val">None</span>,
                     <span class="ident">application</span>: <span class="prelude-val">None</span>,
@@ -578,13 +586,13 @@
                     <span class="ident">attachments</span>: <span class="ident">Vec::new</span>(),
                     <span class="ident">author</span>: <span class="ident">User</span> {
                         <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                         <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                         <span class="ident">bot</span>: <span class="bool-val">false</span>,
                         <span class="ident">discriminator</span>: <span class="number">1</span>,
                         <span class="ident">email</span>: <span class="prelude-val">None</span>,
                         <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
                         <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                         <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                         <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -593,14 +601,14 @@
                         <span class="ident">system</span>: <span class="prelude-val">None</span>,
                         <span class="ident">verified</span>: <span class="prelude-val">None</span>,
                     },
-                    <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                     <span class="ident">components</span>: <span class="ident">Vec::new</span>(),
                     <span class="ident">content</span>: <span class="string">&quot;ping&quot;</span>.<span class="ident">to_owned</span>(),
                     <span class="ident">edited_timestamp</span>: <span class="prelude-val">None</span>,
                     <span class="ident">embeds</span>: <span class="ident">Vec::new</span>(),
                     <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageFlags::empty</span>()),
-                    <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-                    <span class="ident">id</span>: <span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">4</span>),
                     <span class="ident">interaction</span>: <span class="prelude-val">None</span>,
                     <span class="ident">kind</span>: <span class="ident">MessageType::Regular</span>,
                     <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
@@ -624,7 +632,7 @@
                     <span class="ident">reference</span>: <span class="prelude-val">None</span>,
                     <span class="ident">sticker_items</span>: <span class="macro">vec!</span>[<span class="ident">MessageSticker</span> {
                         <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
-                        <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                         <span class="ident">name</span>: <span class="string">&quot;sticker name&quot;</span>.<span class="ident">to_owned</span>(),
                     }],
                     <span class="ident">referenced_message</span>: <span class="prelude-val">None</span>,
@@ -636,12 +644,12 @@
             )])
             .<span class="ident">collect</span>(),
             <span class="ident">roles</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                <span class="ident">RoleId::new</span>(<span class="number">400</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">Id::new</span>(<span class="number">400</span>),
                 <span class="ident">Role</span> {
                     <span class="ident">color</span>: <span class="number">0</span>,
                     <span class="ident">hoist</span>: <span class="bool-val">true</span>,
                     <span class="ident">icon</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">id</span>: <span class="ident">RoleId::new</span>(<span class="number">400</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">400</span>),
                     <span class="ident">managed</span>: <span class="bool-val">false</span>,
                     <span class="ident">mentionable</span>: <span class="bool-val">true</span>,
                     <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -653,16 +661,16 @@
             )])
             .<span class="ident">collect</span>(),
             <span class="ident">users</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                <span class="ident">UserId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">Id::new</span>(<span class="number">300</span>),
                 <span class="ident">User</span> {
                     <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>.<span class="ident">to_owned</span>()),
+                    <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                     <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                     <span class="ident">bot</span>: <span class="bool-val">false</span>,
                     <span class="ident">discriminator</span>: <span class="number">1</span>,
                     <span class="ident">email</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;address@example.com&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">UserFlags::PREMIUM_EARLY_SUPPORTER</span> <span class="op">|</span> <span class="ident">UserFlags::VERIFIED_DEVELOPER</span>),
-                    <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">300</span>),
                     <span class="ident">locale</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;en-us&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">mfa_enabled</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                     <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -686,14 +694,14 @@
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;channels&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;ChannelId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;100&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;InteractionChannel&quot;</span>,
                     <span class="ident">len</span>: <span class="number">4</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;ChannelId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;100&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="number">0</span>),
@@ -705,7 +713,7 @@
                 <span class="ident">Token::MapEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;members&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;300&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;InteractionMember&quot;</span>,
@@ -728,7 +736,7 @@
                 <span class="ident">Token::MapEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;messages&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;MessageId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;4&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;Message&quot;</span>,
@@ -746,7 +754,7 @@
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;avatar&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::AVATAR_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;banner&quot;</span>),
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;bot&quot;</span>),
@@ -754,13 +762,13 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;0001&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;3&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;test&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;channel_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;ChannelId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;content&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;ping&quot;</span>),
@@ -774,10 +782,10 @@
                 <span class="ident">Token::U64</span>(<span class="number">0</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;MessageId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;4&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="number">0</span>),
@@ -825,7 +833,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;format_type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="number">1</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;StickerId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;sticker name&quot;</span>),
@@ -839,7 +847,7 @@
                 <span class="ident">Token::MapEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;roles&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;400&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;Role&quot;</span>,
@@ -850,7 +858,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;hoist&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;400&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;managed&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
@@ -866,7 +874,7 @@
                 <span class="ident">Token::MapEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;users&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;300&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;User&quot;</span>,
@@ -876,7 +884,7 @@
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;avatar&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::AVATAR_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;banner&quot;</span>),
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;bot&quot;</span>),
@@ -890,7 +898,7 @@
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::U64</span>(<span class="number">131_584</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;300&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;locale&quot;</span>),
                 <span class="ident">Token::Some</span>,

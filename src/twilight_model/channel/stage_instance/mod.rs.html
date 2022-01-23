@@ -61,18 +61,24 @@
 <span id="55">55</span>
 <span id="56">56</span>
 <span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">privacy_level</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::privacy_level::PrivacyLevel</span>;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">StageId</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{
+    <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">StageMarker</span>},
+    <span class="ident">Id</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StageInstance</span> {
-    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">StageId</span>,
+    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StageMarker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">privacy_level</span>: <span class="ident">PrivacyLevel</span>,
     <span class="kw">pub</span> <span class="ident">topic</span>: <span class="ident">String</span>,
 }
@@ -80,15 +86,15 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">PrivacyLevel</span>, <span class="ident">StageInstance</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">StageId</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_stage_instance</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">StageInstance</span> {
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">200</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">id</span>: <span class="ident">StageId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">100</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">200</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">300</span>),
             <span class="ident">privacy_level</span>: <span class="ident">PrivacyLevel::GuildOnly</span>,
             <span class="ident">topic</span>: <span class="string">&quot;a topic&quot;</span>.<span class="ident">into</span>(),
         };
@@ -101,13 +107,13 @@
                     <span class="ident">len</span>: <span class="number">5</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;channel_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;ChannelId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;100&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;200&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;StageId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;300&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;privacy_level&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="number">2</span>),

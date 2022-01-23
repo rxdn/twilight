@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["UpdateThread","Update a thread."]]});

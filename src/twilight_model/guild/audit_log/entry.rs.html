@@ -129,8 +129,12 @@
 <span id="123">123</span>
 <span id="124">124</span>
 <span id="125">125</span>
+<span id="126">126</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">AuditLogChange</span>, <span class="ident">AuditLogEventType</span>, <span class="ident">AuditLogOptionalEntryInfo</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">AuditLogEntryId</span>, <span class="ident">GenericId</span>, <span class="ident">UserId</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{
+    <span class="ident">marker</span>::{<span class="ident">AuditLogEntryMarker</span>, <span class="ident">GenericMarker</span>, <span class="ident">UserMarker</span>},
+    <span class="ident">Id</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// Entry in an [`AuditLog`] possibly containing a number of detailed changes.</span>
@@ -144,7 +148,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">changes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuditLogChange</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the entire entry.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">AuditLogEntryId</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AuditLogEntryMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Optional information about the entry.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">options</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AuditLogOptionalEntryInfo</span><span class="op">&gt;</span>,
@@ -153,11 +157,11 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">reason</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the target entity.</span>
-    <span class="kw">pub</span> <span class="ident">target_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GenericId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">target_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the [user] that performed the action.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [user]: crate::user::User</span>
-    <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -166,7 +170,7 @@
         <span class="kw">super</span>::{<span class="ident">AuditLogChange</span>, <span class="ident">AuditLogEventType</span>},
         <span class="ident">AuditLogEntry</span>,
     };
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">AuditLogEntryId</span>, <span class="ident">GenericId</span>, <span class="ident">UserId</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
@@ -204,11 +208,11 @@
                 <span class="ident">new</span>: <span class="prelude-val">None</span>,
                 <span class="ident">old</span>: <span class="prelude-val">Some</span>(<span class="ident">OLD</span>.<span class="ident">to_owned</span>()),
             }]),
-            <span class="ident">id</span>: <span class="ident">AuditLogEntryId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
             <span class="ident">options</span>: <span class="prelude-val">None</span>,
             <span class="ident">reason</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;some reason&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">target_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GenericId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">target_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
+            <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
         };
 
         <span class="ident">serde_test::assert_tokens</span>(
@@ -234,20 +238,18 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;AuditLogEntryId&quot;</span>,
-                },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;3&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;reason&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;some reason&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;target_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GenericId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;user_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
             ],

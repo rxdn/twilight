@@ -996,6 +996,7 @@
 <span id="990">990</span>
 <span id="991">991</span>
 <span id="992">992</span>
+<span id="993">993</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CategoryFields</span>, <span class="ident">GuildChannelFields</span>, <span class="ident">RoleFields</span>, <span class="ident">TextFields</span>, <span class="ident">VoiceFields</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">error::Error</span>,
@@ -1004,7 +1005,10 @@
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::{<span class="ident">permission_overwrite::PermissionOverwrite</span>, <span class="ident">ChannelType</span>},
     <span class="ident">guild::Permissions</span>,
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">RoleId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">RoleMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 
 <span class="doccomment">/// Error building role fields.</span>
@@ -1078,16 +1082,14 @@
     <span class="doccomment">/// [`color`]: Self::color</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">COLOR_MAXIMUM</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0xff_ff_ff</span>;
 
-    <span class="kw">fn</span> <span class="ident">role_id</span>() -&gt; <span class="ident">RoleId</span> {
-        <span class="ident">RoleId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-    }
+    <span class="kw">const</span> <span class="ident">ROLE_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
 
     <span class="doccomment">/// Create a new default role field builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">RoleFields</span> {
             <span class="ident">color</span>: <span class="prelude-val">None</span>,
             <span class="ident">hoist</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident"><span class="self">Self</span>::role_id</span>(),
+            <span class="ident">id</span>: <span class="ident"><span class="self">Self</span>::ROLE_ID</span>,
             <span class="ident">mentionable</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>,
             <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
@@ -1134,8 +1136,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns a [`RoleFieldsErrorType::IdInvalid`] error type if the ID is set</span>
     <span class="doccomment">/// to 1.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">RoleId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">RoleFieldsError</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">id</span> <span class="op">==</span> <span class="ident"><span class="self">Self</span>::role_id</span>() {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">RoleFieldsError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">id</span> <span class="op">==</span> <span class="ident"><span class="self">Self</span>::ROLE_ID</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RoleFieldsError</span> {
                 <span class="ident">kind</span>: <span class="ident">RoleFieldsErrorType::IdInvalid</span>,
             });
@@ -1308,7 +1310,7 @@
         }
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>(<span class="ident">TextFields</span> {
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
             <span class="ident">name</span>,
             <span class="ident">nsfw</span>: <span class="prelude-val">None</span>,
@@ -1482,7 +1484,7 @@
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>(<span class="ident">VoiceFields</span> {
             <span class="ident">bitrate</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildVoice</span>,
             <span class="ident">name</span>,
             <span class="ident">permission_overwrites</span>: <span class="prelude-val">None</span>,
@@ -1633,7 +1635,7 @@
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">fields</span>: <span class="ident">CategoryFields</span> {
-                <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">name</span>,
                 <span class="ident">kind</span>: <span class="ident">ChannelType::GuildCategory</span>,
                 <span class="ident">permission_overwrites</span>: <span class="prelude-val">None</span>,
@@ -1642,7 +1644,7 @@
         })
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">ChannelId</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildChannelFields</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildChannelFields</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="ident">channel</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">channels</span> {
             <span class="kw">match</span> <span class="ident">channel</span> {
                 <span class="ident">GuildChannelFields::Text</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">parent_id</span>.<span class="ident">replace</span>(<span class="ident">id</span>),
@@ -1712,9 +1714,9 @@
             .<span class="ident">iter</span>()
             .<span class="ident">rev</span>()
             .<span class="ident">find</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">c</span>, <span class="ident">GuildChannelFields::Category</span>(<span class="kw">_</span>)))
-            .<span class="ident">map_or</span>(<span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">GuildChannelFields::id</span>);
+            .<span class="ident">map_or</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="ident">GuildChannelFields::id</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channels</span> <span class="op">=</span> <span class="ident">channel</span>.<span class="ident">build</span>(<span class="ident">ChannelId::new</span>(<span class="ident">last_id</span>.<span class="ident">get</span>() <span class="op">+</span> <span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channels</span> <span class="op">=</span> <span class="ident">channel</span>.<span class="ident">build</span>(<span class="ident">Id::new</span>(<span class="ident">last_id</span>.<span class="ident">get</span>() <span class="op">+</span> <span class="number">1</span>));
 
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="ident">channels</span>);
 
@@ -1738,7 +1740,7 @@
             <span class="ident">ChannelType</span>,
         },
         <span class="ident">guild::Permissions</span>,
-        <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">RoleId</span>},
+        <span class="ident">id::Id</span>,
     };
 
     <span class="macro">assert_impl_all!</span>(<span class="ident">RoleFieldsBuilder</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
@@ -1770,7 +1772,7 @@
         <span class="ident">PermissionOverwrite</span> {
             <span class="ident">allow</span>: <span class="ident">perms</span>(),
             <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-            <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
         }
     }
 
@@ -1797,7 +1799,7 @@
             .<span class="ident">color</span>(<span class="number">0x12_34_56</span>)
             .<span class="ident">unwrap</span>()
             .<span class="ident">hoist</span>()
-            .<span class="ident">id</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
+            .<span class="ident">id</span>(<span class="ident">Id::new</span>(<span class="number">2</span>))
             .<span class="ident">unwrap</span>()
             .<span class="ident">mentionable</span>()
             .<span class="ident">permissions</span>(<span class="ident">Permissions::empty</span>())
@@ -1808,7 +1810,7 @@
             <span class="ident">RoleFields</span> {
                 <span class="ident">color</span>: <span class="prelude-val">Some</span>(<span class="number">0x12_34_56</span>),
                 <span class="ident">hoist</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
-                <span class="ident">id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                 <span class="ident">mentionable</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;rolename&quot;</span>),
                 <span class="ident">permissions</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::empty</span>()),
@@ -1829,13 +1831,13 @@
             <span class="ident">voice</span>(),
             <span class="ident">VoiceFields</span> {
                 <span class="ident">bitrate</span>: <span class="prelude-val">Some</span>(<span class="number">96_000</span>),
-                <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">kind</span>: <span class="ident">ChannelType::GuildVoice</span>,
                 <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;voicename&quot;</span>),
                 <span class="ident">permission_overwrites</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">PermissionOverwrite</span> {
                     <span class="ident">allow</span>: <span class="ident">perms</span>(),
                     <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                 }]),
                 <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
                 <span class="ident">user_limit</span>: <span class="prelude-val">Some</span>(<span class="number">40</span>),
@@ -1866,14 +1868,14 @@
         <span class="macro">assert_eq!</span>(
             <span class="ident">text</span>(),
             <span class="ident">TextFields</span> {
-                <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
                 <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;textname&quot;</span>),
                 <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="ident">permission_overwrites</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">PermissionOverwrite</span> {
                     <span class="ident">allow</span>: <span class="ident">perms</span>(),
                     <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                 }]),
                 <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
                 <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
@@ -1904,13 +1906,13 @@
             <span class="ident">channels</span>.<span class="ident">build</span>(),
             <span class="macro">vec!</span>[
                 <span class="ident">GuildChannelFields::Category</span>(<span class="ident">CategoryFields</span> {
-                    <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                     <span class="ident">kind</span>: <span class="ident">ChannelType::GuildCategory</span>,
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;category&quot;</span>),
                     <span class="ident">permission_overwrites</span>: <span class="prelude-val">None</span>,
                 }),
                 <span class="ident">GuildChannelFields::Text</span>(<span class="ident">TextFields</span> {
-                    <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;textname&quot;</span>),
                     <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -1919,15 +1921,15 @@
                             <span class="op">|</span> <span class="ident">Permissions::SPEAK</span>
                             <span class="op">|</span> <span class="ident">Permissions::SEND_TTS_MESSAGES</span>,
                         <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                     }]),
-                    <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                    <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                     <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
                     <span class="ident">topic</span>: <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;a topic&quot;</span>)),
                 }),
                 <span class="ident">GuildChannelFields::Voice</span>(<span class="ident">VoiceFields</span> {
                     <span class="ident">bitrate</span>: <span class="prelude-val">Some</span>(<span class="number">96_000</span>),
-                    <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">kind</span>: <span class="ident">ChannelType::GuildVoice</span>,
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;voicename&quot;</span>),
                     <span class="ident">permission_overwrites</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">PermissionOverwrite</span> {
@@ -1935,9 +1937,9 @@
                             <span class="op">|</span> <span class="ident">Permissions::SPEAK</span>
                             <span class="op">|</span> <span class="ident">Permissions::SEND_TTS_MESSAGES</span>,
                         <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                     }]),
-                    <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                    <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                     <span class="ident">user_limit</span>: <span class="prelude-val">Some</span>(<span class="number">40</span>),
                 }),
             ]
@@ -1954,7 +1956,7 @@
             <span class="ident">channels</span>.<span class="ident">build</span>(),
             <span class="macro">vec!</span>[
                 <span class="ident">GuildChannelFields::Text</span>(<span class="ident">TextFields</span> {
-                    <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;textname&quot;</span>),
                     <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -1963,7 +1965,7 @@
                             <span class="op">|</span> <span class="ident">Permissions::SPEAK</span>
                             <span class="op">|</span> <span class="ident">Permissions::SEND_TTS_MESSAGES</span>,
                         <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                     }]),
                     <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
                     <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
@@ -1971,7 +1973,7 @@
                 }),
                 <span class="ident">GuildChannelFields::Voice</span>(<span class="ident">VoiceFields</span> {
                     <span class="ident">bitrate</span>: <span class="prelude-val">Some</span>(<span class="number">96_000</span>),
-                    <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">kind</span>: <span class="ident">ChannelType::GuildVoice</span>,
                     <span class="ident">name</span>: <span class="ident">String::from</span>(<span class="string">&quot;voicename&quot;</span>),
                     <span class="ident">permission_overwrites</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">PermissionOverwrite</span> {
@@ -1979,7 +1981,7 @@
                             <span class="op">|</span> <span class="ident">Permissions::SPEAK</span>
                             <span class="op">|</span> <span class="ident">Permissions::SEND_TTS_MESSAGES</span>,
                         <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                        <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
                     }]),
                     <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
                     <span class="ident">user_limit</span>: <span class="prelude-val">Some</span>(<span class="number">40</span>),

@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["UpdateChannelErrorType",""]],"struct":[["UpdateChannel","Update a channel."],["UpdateChannelError","Returned when the channel can not be updated as configured."]]});

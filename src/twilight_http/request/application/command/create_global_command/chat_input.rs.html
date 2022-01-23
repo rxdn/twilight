@@ -117,32 +117,21 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
-<span id="114">114</span>
-<span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
-<span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span></span>::{
-    <span class="kw">super</span>::{<span class="ident">InteractionError</span>, <span class="ident">InteractionErrorType</span>},
-    <span class="ident">CommandBorrowed</span>,
-};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span>::CommandBorrowed</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
-    <span class="ident">request</span>::{<span class="ident">validate_inner</span>, <span class="ident">Request</span>, <span class="ident">RequestBuilder</span>},
+    <span class="ident">request</span>::{<span class="ident">Request</span>, <span class="ident">RequestBuilder</span>, <span class="ident">TryIntoRequest</span>},
     <span class="ident">response::ResponseFuture</span>,
     <span class="ident">routing::Route</span>,
 };
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application::command</span>::{<span class="ident">Command</span>, <span class="ident">CommandOption</span>, <span class="ident">CommandType</span>},
-    <span class="ident">id::ApplicationId</span>,
+    <span class="ident">id</span>::{<span class="ident">marker::ApplicationMarker</span>, <span class="ident">Id</span>},
+};
+<span class="kw">use</span> <span class="ident">twilight_validate::command</span>::{
+    <span class="ident">chat_input_name</span> <span class="kw">as</span> <span class="ident">validate_chat_input_name</span>, <span class="ident">description</span> <span class="kw">as</span> <span class="ident">validate_description</span>,
+    <span class="ident">options</span> <span class="kw">as</span> <span class="ident">validate_options</span>, <span class="ident">CommandValidationError</span>,
 };
 
 <span class="doccomment">/// Create a new chat input global command.</span>
@@ -154,7 +143,7 @@
 <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#create-global-application-command</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreateGlobalChatInputCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+    <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
     <span class="ident">default_permission</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
@@ -165,15 +154,13 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CreateGlobalChatInputCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-        <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+        <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">InteractionError</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">validate_inner::command_description</span>(<span class="kw-2">&amp;</span><span class="ident">description</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InteractionError</span> {
-                <span class="ident">kind</span>: <span class="ident">InteractionErrorType::CommandDescriptionValidationFailed</span>,
-            });
-        }
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_description</span>(<span class="kw-2">&amp;</span><span class="ident">description</span>)<span class="question-mark">?</span>;
+
+        <span class="ident">validate_chat_input_name</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">application_id</span>,
@@ -189,33 +176,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Required command options must be added before optional options.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Errors</span>
+    <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an [`InteractionErrorType::CommandOptionsRequiredFirst`]</span>
-    <span class="doccomment">/// if a required option was added after an optional option. The problem</span>
-    <span class="doccomment">/// option&#39;s index is provided.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">command_options</span>(
+    <span class="doccomment">/// Returns an error of type [`OptionsRequiredFirst`] if a required option</span>
+    <span class="doccomment">/// was added after an optional option. The problem option&#39;s index is</span>
+    <span class="doccomment">/// provided.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`OptionsRequiredFirst`]: twilight_validate::command::CommandValidationErrorType::OptionsRequiredFirst</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">command_options</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">CommandOption</span>],
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">InteractionError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">optional_option_added</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">idx</span> <span class="op">=</span> <span class="number">0</span>;
-
-        <span class="kw">while</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">options</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">option</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">options</span>[<span class="ident">idx</span>];
-
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">optional_option_added</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">option</span>.<span class="ident">is_required</span>() {
-                <span class="ident">optional_option_added</span> <span class="op">=</span> <span class="bool-val">true</span>
-            }
-
-            <span class="kw">if</span> <span class="ident">option</span>.<span class="ident">is_required</span>() <span class="op">&amp;&amp;</span> <span class="ident">optional_option_added</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InteractionError</span> {
-                    <span class="ident">kind</span>: <span class="ident">InteractionErrorType::CommandOptionsRequiredFirst</span> { <span class="ident">index</span>: <span class="ident">idx</span> },
-                });
-            }
-
-            <span class="ident">idx</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-        }
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_options</span>(<span class="ident">options</span>)<span class="question-mark">?</span>;
 
         <span class="self">self</span>.<span class="ident">options</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">options</span>);
 
@@ -229,7 +201,21 @@
         <span class="self">self</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Response`]: crate::response::Response</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http</span>;
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_into_request</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">CreateGlobalChatInputCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
         <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::CreateGlobalCommand</span> {
             <span class="ident">application_id</span>: <span class="self">self</span>.<span class="ident">application_id</span>.<span class="ident">get</span>(),
         })
@@ -242,16 +228,6 @@
             <span class="ident">options</span>: <span class="self">self</span>.<span class="ident">options</span>,
         })
         .<span class="ident">map</span>(<span class="ident">RequestBuilder::build</span>)
-    }
-
-    <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Command</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">request</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
-        }
     }
 }
 </code></pre></div>

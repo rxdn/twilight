@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["InteractionErrorType",""]],"mod":[["command",""],["interaction",""]],"struct":[["InteractionError","The error created if the creation of interaction fails."]]});
+initSidebarItems({"mod":[["command",""],["interaction",""]]});

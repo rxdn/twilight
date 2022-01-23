@@ -58,8 +58,24 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::execute_webhook::ExecuteWebhook</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::response::ResponseFuture</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">error::Error</span>,
+    <span class="ident">request</span>::{<span class="ident">Request</span>, <span class="ident">TryIntoRequest</span>},
+    <span class="ident">response::ResponseFuture</span>,
+};
 <span class="kw">use</span> <span class="ident">twilight_model::channel::Message</span>;
 
 <span class="doccomment">/// Execute a webhook, sending a message to its channel, and then wait for the</span>
@@ -69,16 +85,16 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```no_run</span>
 <span class="doccomment">/// use twilight_http::Client;</span>
-<span class="doccomment">/// use twilight_model::id::WebhookId;</span>
+<span class="doccomment">/// use twilight_model::id::Id;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # #[tokio::main]</span>
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
-<span class="doccomment">/// let id = WebhookId::new(432).expect(&quot;non zero&quot;);</span>
+<span class="doccomment">/// let id = Id::new(432);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let message = client</span>
 <span class="doccomment">///     .execute_webhook(id, &quot;webhook token&quot;)</span>
-<span class="doccomment">///     .content(&quot;Pinkie...&quot;)</span>
+<span class="doccomment">///     .content(&quot;Pinkie...&quot;)?</span>
 <span class="doccomment">///     .wait()</span>
 <span class="doccomment">///     .exec()</span>
 <span class="doccomment">///     .await?</span>
@@ -105,11 +121,19 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">request</span>(<span class="bool-val">false</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">http</span>;
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_into_request</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
             <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
         }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">ExecuteWebhookAndWait</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">request</span>(<span class="bool-val">true</span>)
     }
 }
 </code></pre></div>

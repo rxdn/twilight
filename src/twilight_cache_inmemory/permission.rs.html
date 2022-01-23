@@ -805,8 +805,6 @@
 <span id="799">799</span>
 <span id="800">800</span>
 <span id="801">801</span>
-<span id="802">802</span>
-<span id="803">803</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Calculate the permissions for members in on a guild- or channel-level with</span>
 <span class="doccomment">//! information from the cache.</span>
 <span class="doccomment">//!</span>
@@ -840,7 +838,10 @@
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::{<span class="ident">permission_overwrite::PermissionOverwrite</span>, <span class="ident">GuildChannel</span>},
     <span class="ident">guild::Permissions</span>,
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 <span class="kw">use</span> <span class="ident">twilight_util::permission_calculator::PermissionCalculator</span>;
 
@@ -914,7 +915,7 @@
     <span class="doccomment">/// Guild channel is not present in the cache.</span>
     <span class="ident">ChannelUnavailable</span> {
         <span class="doccomment">/// ID of the channel.</span>
-        <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// The user&#39;s member information is not available in the guild.</span>
     <span class="doccomment">///</span>
@@ -922,9 +923,9 @@
     <span class="doccomment">/// because the member entity has not yet been received by the cache.</span>
     <span class="ident">MemberUnavailable</span> {
         <span class="doccomment">/// ID of the guild.</span>
-        <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// ID of the user.</span>
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// One of the user&#39;s roles is not available in the guild.</span>
     <span class="doccomment">///</span>
@@ -934,7 +935,7 @@
     <span class="doccomment">/// [`RoleCreate`]: twilight_model::gateway::payload::incoming::RoleCreate</span>
     <span class="ident">RoleUnavailable</span> {
         <span class="doccomment">/// ID of the role that the user has but details about is missing.</span>
-        <span class="ident">role_id</span>: <span class="ident">RoleId</span>,
+        <span class="ident">role_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>,
     },
 }
 
@@ -1007,9 +1008,9 @@
     <span class="doccomment">/// because the member entity has not yet been received by the cache.</span>
     <span class="ident">MemberUnavailable</span> {
         <span class="doccomment">/// ID of the guild.</span>
-        <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// ID of the user.</span>
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// One of the user&#39;s roles is not available in the guild.</span>
     <span class="doccomment">///</span>
@@ -1019,7 +1020,7 @@
     <span class="doccomment">/// [`RoleCreate`]: twilight_model::gateway::payload::incoming::RoleCreate</span>
     <span class="ident">RoleUnavailable</span> {
         <span class="doccomment">/// ID of the role that the user has but details about is missing.</span>
-        <span class="ident">role_id</span>: <span class="ident">RoleId</span>,
+        <span class="ident">role_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>,
     },
 }
 
@@ -1029,18 +1030,18 @@
     <span class="doccomment">/// Member is not in the cache.</span>
     <span class="ident">MemberMissing</span> {
         <span class="doccomment">/// ID of the guild.</span>
-        <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// ID of the user.</span>
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Role is missing from the cache.</span>
-    <span class="ident">RoleMissing</span> { <span class="ident">role_id</span>: <span class="ident">RoleId</span> },
+    <span class="ident">RoleMissing</span> { <span class="ident">role_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span> },
 }
 
 <span class="doccomment">/// Member&#39;s roles&#39; permissions and the guild&#39;s `@everyone` role&#39;s permissions.</span>
 <span class="kw">struct</span> <span class="ident">MemberRoles</span> {
     <span class="doccomment">/// User&#39;s roles and their permissions.</span>
-    <span class="ident">assigned</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">RoleId</span>, <span class="ident">Permissions</span>)<span class="op">&gt;</span>,
+    <span class="ident">assigned</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>, <span class="ident">Permissions</span>)<span class="op">&gt;</span>,
     <span class="doccomment">/// Permissions of the guild&#39;s `@everyone` role.</span>
     <span class="ident">everyone</span>: <span class="ident">Permissions</span>,
 }
@@ -1080,14 +1081,14 @@
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-    <span class="doccomment">/// use twilight_model::id::{ChannelId, UserId};</span>
+    <span class="doccomment">/// use twilight_model::id::Id;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let cache = InMemoryCache::new();</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // later on...</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let channel_id = ChannelId::new(4).expect(&quot;non zero&quot;);</span>
-    <span class="doccomment">/// let user_id = UserId::new(5).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let channel_id = Id::new(4);</span>
+    <span class="doccomment">/// let user_id = Id::new(5);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let permissions = cache.permissions().in_channel(user_id, channel_id)?;</span>
     <span class="doccomment">/// println!(</span>
@@ -1117,8 +1118,8 @@
     <span class="doccomment">/// [`ResourceType`]: crate::ResourceType</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_channel</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
-        <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Permissions</span>, <span class="ident">ChannelError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">channels_guild</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">channel_id</span>).<span class="ident">ok_or</span>(<span class="ident">ChannelError</span> {
             <span class="ident">kind</span>: <span class="ident">ChannelErrorType::ChannelUnavailable</span> { <span class="ident">channel_id</span> },
@@ -1167,14 +1168,14 @@
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-    <span class="doccomment">/// use twilight_model::id::{GuildId, UserId};</span>
+    <span class="doccomment">/// use twilight_model::id::Id;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let cache = InMemoryCache::new();</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // later on...</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let guild_id = GuildId::new(4).expect(&quot;non zero&quot;);</span>
-    <span class="doccomment">/// let user_id = UserId::new(5).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let guild_id = Id::new(4);</span>
+    <span class="doccomment">/// let user_id = Id::new(5);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let permissions = cache.permissions().root(user_id, guild_id)?;</span>
     <span class="doccomment">/// println!(</span>
@@ -1198,7 +1199,11 @@
     <span class="doccomment">/// [`ResourceType::MEMBER`]: crate::ResourceType::MEMBER</span>
     <span class="doccomment">/// [`ResourceType::ROLE`]: crate::ResourceType::ROLE</span>
     <span class="doccomment">/// [`ResourceType`]: crate::ResourceType</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">user_id</span>: <span class="ident">UserId</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Permissions</span>, <span class="ident">RootError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Permissions</span>, <span class="ident">RootError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_owner</span>(<span class="ident">user_id</span>, <span class="ident">guild_id</span>) {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Permissions::all</span>());
         }
@@ -1216,7 +1221,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns true if the user is or false if the user is definitively not the</span>
     <span class="doccomment">/// owner of the guild or the guild is not in the cache.</span>
-    <span class="kw">fn</span> <span class="ident">is_owner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">user_id</span>: <span class="ident">UserId</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">is_owner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="number">0</span>
             .<span class="ident">guilds</span>
             .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)
@@ -1236,8 +1241,8 @@
     <span class="doccomment">/// the cache.</span>
     <span class="kw">fn</span> <span class="ident">member_roles</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
-        <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MemberRoles</span>, <span class="ident">MemberRolesErrorType</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">member</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">members</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>)) {
             <span class="ident">member</span>
@@ -1258,7 +1263,7 @@
         }
 
         <span class="comment">// Assume that the `@everyone` role is always present, so do this last.</span>
-        <span class="kw">let</span> <span class="ident">everyone_role_id</span> <span class="op">=</span> <span class="ident">RoleId</span>(<span class="ident">guild_id</span>.<span class="number">0</span>);
+        <span class="kw">let</span> <span class="ident">everyone_role_id</span> <span class="op">=</span> <span class="ident">guild_id</span>.<span class="ident">cast</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">everyone_role</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">roles</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">everyone_role_id</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">MemberRoles</span> {
@@ -1274,7 +1279,7 @@
 
     <span class="kw">fn</span> <span class="ident">parent_overwrites</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">channel_id</span>: <span class="kw-2">&amp;</span><span class="ident">ChannelId</span>,
+        <span class="ident">channel_id</span>: <span class="kw-2">&amp;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
         <span class="ident">parent_overwrites</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span>, <span class="ident">ChannelError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">channels_guild</span>.<span class="ident">get</span>(<span class="ident">channel_id</span>).<span class="ident">ok_or</span>(<span class="ident">ChannelError</span> {
@@ -1322,7 +1327,10 @@
             <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">Guild</span>, <span class="ident">MfaLevel</span>, <span class="ident">NSFWLevel</span>,
             <span class="ident">Permissions</span>, <span class="ident">PremiumTier</span>, <span class="ident">Role</span>, <span class="ident">SystemChannelFlags</span>, <span class="ident">VerificationLevel</span>,
         },
-        <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id</span>::{
+            <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+            <span class="ident">Id</span>,
+        },
     };
 
     <span class="macro">assert_fields!</span>(<span class="ident">ChannelErrorType::ChannelUnavailable</span>: <span class="ident">channel_id</span>);
@@ -1337,40 +1345,28 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">RootError</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
     <span class="doccomment">/// Guild ID used in tests.</span>
-    <span class="kw">fn</span> <span class="ident">guild_id</span>() -&gt; <span class="ident">GuildId</span> {
-        <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-    }
+    <span class="kw">const</span> <span class="ident">GUILD_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
 
     <span class="doccomment">/// ID of the `@everyone` role.</span>
-    <span class="kw">fn</span> <span class="ident">everyone_role_id</span>() -&gt; <span class="ident">RoleId</span> {
-        <span class="ident">RoleId</span>(<span class="ident">guild_id</span>().<span class="number">0</span>)
-    }
+    <span class="kw">const</span> <span class="ident">EVERYONE_ROLE_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">GUILD_ID</span>.<span class="ident">cast</span>();
 
     <span class="doccomment">/// User ID used in tests.</span>
-    <span class="kw">fn</span> <span class="ident">user_id</span>() -&gt; <span class="ident">UserId</span> {
-        <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-    }
+    <span class="kw">const</span> <span class="ident">USER_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">2</span>);
 
     <span class="doccomment">/// ID of another role.</span>
-    <span class="kw">fn</span> <span class="ident">other_role_id</span>() -&gt; <span class="ident">RoleId</span> {
-        <span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-    }
+    <span class="kw">const</span> <span class="ident">OTHER_ROLE_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">3</span>);
 
     <span class="doccomment">/// ID of the user that owns the guild with the ID [`GUILD_ID`].</span>
-    <span class="kw">fn</span> <span class="ident">owner_id</span>() -&gt; <span class="ident">UserId</span> {
-        <span class="ident">UserId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-    }
+    <span class="kw">const</span> <span class="ident">OWNER_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">4</span>);
 
     <span class="doccomment">/// ID of the #general channel in the guild.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This has the same ID as the [`GUILD_ID`].</span>
-    <span class="kw">fn</span> <span class="ident">channel_id</span>() -&gt; <span class="ident">ChannelId</span> {
-        <span class="ident">ChannelId</span>(<span class="ident">guild_id</span>().<span class="number">0</span>)
-    }
+    <span class="kw">const</span> <span class="ident">CHANNEL_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">GUILD_ID</span>.<span class="ident">cast</span>();
 
     <span class="kw">fn</span> <span class="ident">base_guild</span>() -&gt; <span class="ident">Guild</span> {
         <span class="ident">Guild</span> {
-            <span class="ident">id</span>: <span class="ident">guild_id</span>(),
+            <span class="ident">id</span>: <span class="ident">GUILD_ID</span>,
             <span class="ident">afk_channel_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">afk_timeout</span>: <span class="number">300</span>,
             <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
@@ -1393,7 +1389,7 @@
             <span class="ident">name</span>: <span class="string">&quot;this is a guild&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">nsfw_level</span>: <span class="ident">NSFWLevel::AgeRestricted</span>,
             <span class="ident">owner</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
-            <span class="ident">owner_id</span>: <span class="ident">owner_id</span>(),
+            <span class="ident">owner_id</span>: <span class="ident">OWNER_ID</span>,
             <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
             <span class="ident">preferred_locale</span>: <span class="string">&quot;en-GB&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">premium_progress_bar_enabled</span>: <span class="bool-val">false</span>,
@@ -1404,7 +1400,7 @@
                 <span class="comment">// Give the `@everyone` role a guild level and channel level</span>
                 <span class="comment">// permission.</span>
                 <span class="ident">role_with_permissions</span>(
-                    <span class="ident">everyone_role_id</span>(),
+                    <span class="ident">EVERYONE_ROLE_ID</span>,
                     <span class="ident">Permissions::CREATE_INVITE</span> <span class="op">|</span> <span class="ident">Permissions::VIEW_AUDIT_LOG</span>,
                 ),
             ]),
@@ -1429,8 +1425,8 @@
 
     <span class="kw">fn</span> <span class="ident">channel</span>() -&gt; <span class="ident">Channel</span> {
         <span class="ident">Channel::Guild</span>(<span class="ident">GuildChannel::Text</span>(<span class="ident">TextChannel</span> {
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>()),
-            <span class="ident">id</span>: <span class="ident">channel_id</span>(),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GUILD_ID</span>),
+            <span class="ident">id</span>: <span class="ident">CHANNEL_ID</span>,
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
             <span class="ident">last_message_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
@@ -1441,12 +1437,12 @@
                 <span class="ident">PermissionOverwrite</span> {
                     <span class="ident">allow</span>: <span class="ident">Permissions::empty</span>(),
                     <span class="ident">deny</span>: <span class="ident">Permissions::CREATE_INVITE</span>,
-                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">everyone_role_id</span>()),
+                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">EVERYONE_ROLE_ID</span>),
                 },
                 <span class="ident">PermissionOverwrite</span> {
                     <span class="ident">allow</span>: <span class="ident">Permissions::EMBED_LINKS</span>,
                     <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">user_id</span>()),
+                    <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">USER_ID</span>),
                 },
             ]),
             <span class="ident">position</span>: <span class="number">0</span>,
@@ -1455,14 +1451,14 @@
         }))
     }
 
-    <span class="kw">fn</span> <span class="ident">role_with_permissions</span>(<span class="ident">id</span>: <span class="ident">RoleId</span>, <span class="ident">permissions</span>: <span class="ident">Permissions</span>) -&gt; <span class="ident">Role</span> {
+    <span class="kw">fn</span> <span class="ident">role_with_permissions</span>(<span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>, <span class="ident">permissions</span>: <span class="ident">Permissions</span>) -&gt; <span class="ident">Role</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">role</span> <span class="op">=</span> <span class="ident">test::role</span>(<span class="ident">id</span>);
         <span class="ident">role</span>.<span class="ident">permissions</span> <span class="op">=</span> <span class="ident">permissions</span>;
 
         <span class="ident">role</span>
     }
 
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">role_create</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">role</span>: <span class="ident">Role</span>) -&gt; <span class="ident">RoleCreate</span> {
+    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">role_create</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">role</span>: <span class="ident">Role</span>) -&gt; <span class="ident">RoleCreate</span> {
         <span class="ident">RoleCreate</span> { <span class="ident">guild_id</span>, <span class="ident">role</span> }
     }
 
@@ -1475,17 +1471,17 @@
         <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">InMemoryCache::new</span>();
         <span class="kw">let</span> <span class="ident">permissions</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">permissions</span>();
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">user_id</span>(), <span class="ident">guild_id</span>()).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
+            <span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">USER_ID</span>, <span class="ident">GUILD_ID</span>).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
             <span class="kw-2">&amp;</span><span class="ident">RootErrorType::MemberUnavailable</span> { <span class="ident">guild_id</span>: <span class="ident">g_id</span>, <span class="ident">user_id</span>: <span class="ident">u_id</span> }
-            <span class="kw">if</span> <span class="ident">g_id</span> <span class="op">==</span> <span class="ident">guild_id</span>() <span class="op">&amp;&amp;</span> <span class="ident">u_id</span> <span class="op">==</span> <span class="ident">user_id</span>()
+            <span class="kw">if</span> <span class="ident">g_id</span> <span class="op">==</span> <span class="ident">GUILD_ID</span> <span class="op">&amp;&amp;</span> <span class="ident">u_id</span> <span class="op">==</span> <span class="ident">USER_ID</span>
         ));
 
-        <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">MemberAdd</span>(<span class="ident">test::member</span>(<span class="ident">user_id</span>(), <span class="ident">guild_id</span>())));
+        <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">MemberAdd</span>(<span class="ident">test::member</span>(<span class="ident">USER_ID</span>, <span class="ident">GUILD_ID</span>)));
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">user_id</span>(), <span class="ident">guild_id</span>()).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
+            <span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">USER_ID</span>, <span class="ident">GUILD_ID</span>).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
             <span class="kw-2">&amp;</span><span class="ident">RootErrorType::RoleUnavailable</span> { <span class="ident">role_id</span> }
-            <span class="kw">if</span> <span class="ident">role_id</span> <span class="op">==</span> <span class="ident">everyone_role_id</span>()
+            <span class="kw">if</span> <span class="ident">role_id</span> <span class="op">==</span> <span class="ident">EVERYONE_ROLE_ID</span>
         ));
     }
 
@@ -1504,24 +1500,24 @@
         <span class="kw">let</span> <span class="ident">permissions</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">permissions</span>();
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">GuildCreate</span>(<span class="ident">base_guild</span>()));
-        <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">MemberAdd</span>(<span class="ident">test::member</span>(<span class="ident">user_id</span>(), <span class="ident">guild_id</span>())));
+        <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">MemberAdd</span>(<span class="ident">test::member</span>(<span class="ident">USER_ID</span>, <span class="ident">GUILD_ID</span>)));
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">MemberUpdate</span> {
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
-            <span class="ident">guild_id</span>: <span class="ident">guild_id</span>(),
+            <span class="ident">guild_id</span>: <span class="ident">GUILD_ID</span>,
             <span class="ident">deaf</span>: <span class="prelude-val">None</span>,
             <span class="ident">joined_at</span>,
             <span class="ident">mute</span>: <span class="prelude-val">None</span>,
             <span class="ident">nick</span>: <span class="prelude-val">None</span>,
             <span class="ident">pending</span>: <span class="bool-val">false</span>,
             <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-            <span class="ident">roles</span>: <span class="ident">Vec::from</span>([<span class="ident">other_role_id</span>()]),
-            <span class="ident">user</span>: <span class="ident">test::user</span>(<span class="ident">user_id</span>()),
+            <span class="ident">roles</span>: <span class="ident">Vec::from</span>([<span class="ident">OTHER_ROLE_ID</span>]),
+            <span class="ident">user</span>: <span class="ident">test::user</span>(<span class="ident">USER_ID</span>),
         });
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">role_create</span>(
-            <span class="ident">guild_id</span>(),
+            <span class="ident">GUILD_ID</span>,
             <span class="ident">role_with_permissions</span>(
-                <span class="ident">other_role_id</span>(),
+                <span class="ident">OTHER_ROLE_ID</span>,
                 <span class="ident">Permissions::SEND_MESSAGES</span> <span class="op">|</span> <span class="ident">Permissions::BAN_MEMBERS</span>,
             ),
         ));
@@ -1531,7 +1527,7 @@
             <span class="op">|</span> <span class="ident">Permissions::VIEW_AUDIT_LOG</span>
             <span class="op">|</span> <span class="ident">Permissions::SEND_MESSAGES</span>;
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">user_id</span>(), <span class="ident">guild_id</span>())<span class="question-mark">?</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">USER_ID</span>, <span class="ident">GUILD_ID</span>)<span class="question-mark">?</span>);
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -1548,41 +1544,41 @@
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">GuildCreate</span>(<span class="ident">base_guild</span>()));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">user_id</span>(), <span class="ident">channel_id</span>()).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
+            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">USER_ID</span>, <span class="ident">CHANNEL_ID</span>).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
             <span class="ident">ChannelErrorType::ChannelUnavailable</span> { <span class="ident">channel_id</span>: <span class="ident">c_id</span> }
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c_id</span> <span class="op">==</span> <span class="ident">channel_id</span>()
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c_id</span> <span class="op">==</span> <span class="ident">CHANNEL_ID</span>
         ));
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">ChannelCreate</span>(<span class="ident">channel</span>()));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">user_id</span>(), <span class="ident">channel_id</span>()).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
+            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">USER_ID</span>, <span class="ident">CHANNEL_ID</span>).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
             <span class="ident">ChannelErrorType::MemberUnavailable</span> { <span class="ident">guild_id</span>: <span class="ident">g_id</span>, <span class="ident">user_id</span>: <span class="ident">u_id</span> }
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">g_id</span> <span class="op">==</span> <span class="ident">guild_id</span>() <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">u_id</span> <span class="op">==</span> <span class="ident">user_id</span>()
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">g_id</span> <span class="op">==</span> <span class="ident">GUILD_ID</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">u_id</span> <span class="op">==</span> <span class="ident">USER_ID</span>
         ));
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">MemberAdd</span>({
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span> <span class="op">=</span> <span class="ident">test::member</span>(<span class="ident">user_id</span>(), <span class="ident">guild_id</span>());
-            <span class="ident">member</span>.<span class="ident">roles</span>.<span class="ident">push</span>(<span class="ident">other_role_id</span>());
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span> <span class="op">=</span> <span class="ident">test::member</span>(<span class="ident">USER_ID</span>, <span class="ident">GUILD_ID</span>);
+            <span class="ident">member</span>.<span class="ident">roles</span>.<span class="ident">push</span>(<span class="ident">OTHER_ROLE_ID</span>);
 
             <span class="ident">member</span>
         }));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">user_id</span>(), <span class="ident">channel_id</span>()).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
+            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">USER_ID</span>, <span class="ident">CHANNEL_ID</span>).<span class="ident">unwrap_err</span>().<span class="ident">kind</span>(),
             <span class="kw-2">&amp;</span><span class="ident">ChannelErrorType::RoleUnavailable</span> { <span class="ident">role_id</span> }
-            <span class="kw">if</span> <span class="ident">role_id</span> <span class="op">==</span> <span class="ident">other_role_id</span>()
+            <span class="kw">if</span> <span class="ident">role_id</span> <span class="op">==</span> <span class="ident">OTHER_ROLE_ID</span>
         ));
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">role_create</span>(
-            <span class="ident">guild_id</span>(),
+            <span class="ident">GUILD_ID</span>,
             <span class="ident">role_with_permissions</span>(
-                <span class="ident">other_role_id</span>(),
+                <span class="ident">OTHER_ROLE_ID</span>,
                 <span class="ident">Permissions::SEND_MESSAGES</span> <span class="op">|</span> <span class="ident">Permissions::BAN_MEMBERS</span>,
             ),
         ));
 
         <span class="macro">assert_eq!</span>(
             <span class="ident">Permissions::EMBED_LINKS</span> <span class="op">|</span> <span class="ident">Permissions::SEND_MESSAGES</span>,
-            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">user_id</span>(), <span class="ident">channel_id</span>())<span class="question-mark">?</span>,
+            <span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">USER_ID</span>, <span class="ident">CHANNEL_ID</span>)<span class="question-mark">?</span>,
         );
 
         <span class="prelude-val">Ok</span>(())
@@ -1602,10 +1598,10 @@
         <span class="kw">let</span> <span class="ident">permissions</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">permissions</span>();
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">GuildCreate</span>(<span class="ident">base_guild</span>()));
 
-        <span class="macro">assert!</span>(<span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">owner_id</span>(), <span class="ident">guild_id</span>())<span class="question-mark">?</span>.<span class="ident">is_all</span>());
+        <span class="macro">assert!</span>(<span class="ident">permissions</span>.<span class="ident">root</span>(<span class="ident">OWNER_ID</span>, <span class="ident">GUILD_ID</span>)<span class="question-mark">?</span>.<span class="ident">is_all</span>());
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">ChannelCreate</span>(<span class="ident">channel</span>()));
-        <span class="macro">assert!</span>(<span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">owner_id</span>(), <span class="ident">channel_id</span>())<span class="question-mark">?</span>.<span class="ident">is_all</span>());
+        <span class="macro">assert!</span>(<span class="ident">permissions</span>.<span class="ident">in_channel</span>(<span class="ident">OWNER_ID</span>, <span class="ident">CHANNEL_ID</span>)<span class="question-mark">?</span>.<span class="ident">is_all</span>());
 
         <span class="prelude-val">Ok</span>(())
     }

@@ -1699,12 +1699,6 @@
 <span id="1693">1693</span>
 <span id="1694">1694</span>
 <span id="1695">1695</span>
-<span id="1696">1696</span>
-<span id="1697">1697</span>
-<span id="1698">1698</span>
-<span id="1699">1699</span>
-<span id="1700">1700</span>
-<span id="1701">1701</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight-standby</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [![codecov badge][]][codecov link] [![discord badge][]][discord link] [![github badge][]][github link] [![license badge][]][license link] ![rust badge]</span>
@@ -1759,13 +1753,13 @@
 <span class="doccomment">//! # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">//! use twilight_model::{</span>
 <span class="doccomment">//!     gateway::payload::incoming::MessageCreate,</span>
-<span class="doccomment">//!     id::{ChannelId, UserId},</span>
+<span class="doccomment">//!     id::Id,</span>
 <span class="doccomment">//! };</span>
 <span class="doccomment">//! use twilight_standby::Standby;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let standby = Standby::new();</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let channel_id = ChannelId::new(123).expect(&quot;non zero&quot;);</span>
+<span class="doccomment">//! let channel_id = Id::new(123);</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let message = standby.wait_for_message(channel_id, |event: &amp;MessageCreate| {</span>
 <span class="doccomment">//!     event.author.id.get() == 456 &amp;&amp; event.content == &quot;test&quot;</span>
@@ -1785,7 +1779,6 @@
 <span class="doccomment">//! use twilight_model::{</span>
 <span class="doccomment">//!     channel::Message,</span>
 <span class="doccomment">//!     gateway::payload::incoming::ReactionAdd,</span>
-<span class="doccomment">//!     id::{ChannelId, UserId},</span>
 <span class="doccomment">//! };</span>
 <span class="doccomment">//! use twilight_standby::Standby;</span>
 <span class="doccomment">//!</span>
@@ -1845,7 +1838,7 @@
 <span class="doccomment">//! [github link]: https://github.com/twilight-rs/twilight</span>
 <span class="doccomment">//! [license badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=for-the-badge&amp;logo=pastebin</span>
 <span class="doccomment">//! [license link]: https://github.com/twilight-rs/twilight/blob/main/LICENSE.md</span>
-<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.53+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
+<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.57+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
 
 <span class="attribute">#![<span class="ident">deny</span>(
     <span class="ident">clippy::all</span>,
@@ -1886,7 +1879,10 @@
         <span class="ident">event::Event</span>,
         <span class="ident">payload::incoming</span>::{<span class="ident">MessageCreate</span>, <span class="ident">ReactionAdd</span>},
     },
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">MessageId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">MessageMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 
 <span class="doccomment">/// Map keyed by an ID - such as a channel ID or message ID - storing a list of</span>
@@ -1943,7 +1939,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Standby</span> {
     <span class="doccomment">/// List of component bystanders where the ID of the message is known</span>
     <span class="doccomment">/// beforehand.</span>
-    <span class="ident">components</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">MessageId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">MessageComponentInteraction</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">components</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">MessageComponentInteraction</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Bystanders for any event that may not be in any particular guild.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The key is generated via [`event_counter`].</span>
@@ -1955,13 +1951,13 @@
     <span class="doccomment">/// [`events`]: Self::events</span>
     <span class="ident">event_counter</span>: <span class="ident">AtomicU64</span>,
     <span class="doccomment">/// List of bystanders where the ID of the guild is known beforehand.</span>
-    <span class="ident">guilds</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">guilds</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// List of message bystanders where the ID of the channel is known</span>
     <span class="doccomment">/// beforehand.</span>
-    <span class="ident">messages</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">ChannelId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">MessageCreate</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">messages</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">MessageCreate</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// List of reaction bystanders where the ID of the message is known</span>
     <span class="doccomment">/// beforehand.</span>
-    <span class="ident">reactions</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">MessageId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">ReactionAdd</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">reactions</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">ReactionAdd</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Standby</span> {
@@ -2047,13 +2043,13 @@
     <span class="doccomment">/// use futures_util::future;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     gateway::event::{EventType, Event},</span>
-    <span class="doccomment">///     id::GuildId,</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let guild_id = GuildId::new(123).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let guild_id = Id::new(123);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let reaction = standby.wait_for(guild_id, |event: &amp;Event| {</span>
     <span class="doccomment">///     event.kind() == EventType::BanAdd</span>
@@ -2071,7 +2067,7 @@
     <span class="doccomment">/// [`wait_for_stream`]: Self::wait_for_stream</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForGuildEventFuture</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2097,13 +2093,13 @@
     <span class="doccomment">/// use futures_util::stream::StreamExt;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     gateway::event::{EventType, Event},</span>
-    <span class="doccomment">///     id::GuildId,</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let guild_id = GuildId::new(123).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let guild_id = Id::new(123);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut stream = standby.wait_for_stream(guild_id, |event: &amp;Event| {</span>
     <span class="doccomment">///     event.kind() == EventType::BanAdd</span>
@@ -2130,7 +2126,7 @@
     <span class="doccomment">/// [`wait_for`]: Self::wait_for</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForGuildEventStream</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2273,14 +2269,14 @@
     <span class="doccomment">/// use futures_util::future;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     gateway::payload::incoming::MessageCreate,</span>
-    <span class="doccomment">///     id::{ChannelId, UserId},</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let author_id = UserId::new(456).expect(&quot;non zero&quot;);</span>
-    <span class="doccomment">/// let channel_id = ChannelId::new(123).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let author_id = Id::new(456);</span>
+    <span class="doccomment">/// let channel_id = Id::new(123);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let message = standby.wait_for_message(channel_id, move |event: &amp;MessageCreate| {</span>
     <span class="doccomment">///     event.author.id == author_id &amp;&amp; event.content == &quot;test&quot;</span>
@@ -2297,7 +2293,7 @@
     <span class="doccomment">/// [`wait_for_message_stream`]: Self::wait_for_message_stream</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_message</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForMessageFuture</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2324,14 +2320,14 @@
     <span class="doccomment">/// use futures_util::stream::StreamExt;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     gateway::payload::incoming::MessageCreate,</span>
-    <span class="doccomment">///     id::{ChannelId, UserId},</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let author_id = UserId::new(456).expect(&quot;non zero&quot;);</span>
-    <span class="doccomment">/// let channel_id = ChannelId::new(123).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let author_id = Id::new(456);</span>
+    <span class="doccomment">/// let channel_id = Id::new(123);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut messages = standby.wait_for_message_stream(channel_id, move |event: &amp;MessageCreate| {</span>
     <span class="doccomment">///     event.author.id == author_id &amp;&amp; event.content == &quot;test&quot;</span>
@@ -2351,7 +2347,7 @@
     <span class="doccomment">/// [`wait_for_message`]: Self::wait_for_message</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_message_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForMessageStream</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2377,14 +2373,14 @@
     <span class="doccomment">/// use futures_util::future;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     gateway::payload::incoming::ReactionAdd,</span>
-    <span class="doccomment">///     id::{MessageId, UserId},</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let message_id = MessageId::new(123).expect(&quot;non zero&quot;);</span>
-    <span class="doccomment">/// let user_id = UserId::new(456).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let message_id = Id::new(123);</span>
+    <span class="doccomment">/// let user_id = Id::new(456);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let reaction = standby.wait_for_reaction(message_id, move |event: &amp;ReactionAdd| {</span>
     <span class="doccomment">///     event.user_id == user_id</span>
@@ -2401,7 +2397,7 @@
     <span class="doccomment">/// [`wait_for_reaction_stream`]: Self::wait_for_reaction_stream</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_reaction</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForReactionFuture</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2428,13 +2424,13 @@
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     channel::ReactionType,</span>
     <span class="doccomment">///     gateway::payload::incoming::ReactionAdd,</span>
-    <span class="doccomment">///     id::{MessageId, UserId},</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let message_id = MessageId::new(123).expect(&quot;non zero&quot;);</span>
+    <span class="doccomment">/// let message_id = Id::new(123);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut reactions = standby.wait_for_reaction_stream(message_id, |event: &amp;ReactionAdd| {</span>
     <span class="doccomment">///     matches!(&amp;event.emoji, ReactionType::Unicode { name } if name == &quot;🤠&quot;)</span>
@@ -2454,7 +2450,7 @@
     <span class="doccomment">/// [`wait_for_reaction`]: Self::wait_for_reaction</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_reaction_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForReactionStream</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2481,14 +2477,15 @@
     <span class="doccomment">/// use futures_util::future;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     application::interaction::message_component::MessageComponentInteraction,</span>
-    <span class="doccomment">///     id::{MessageId, UserId},</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
+    <span class="doccomment">/// let message_id = Id::new(123);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let component = standby.wait_for_component(MessageId::new(123).expect(&quot;non zero&quot;), |event: &amp;MessageComponentInteraction| {</span>
-    <span class="doccomment">///     event.author_id() == Some(UserId::new(456).expect(&quot;non zero&quot;))</span>
+    <span class="doccomment">/// let component = standby.wait_for_component(message_id, |event: &amp;MessageComponentInteraction| {</span>
+    <span class="doccomment">///     event.author_id() == Some(Id::new(456))</span>
     <span class="doccomment">/// }).await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
@@ -2498,7 +2495,7 @@
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageComponentInteraction</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     <span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForComponentFuture</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2525,13 +2522,14 @@
     <span class="doccomment">/// use futures_util::stream::StreamExt;</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     application::interaction::message_component::MessageComponentInteraction,</span>
-    <span class="doccomment">///     id::{MessageId, UserId},</span>
+    <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
+    <span class="doccomment">/// let message_id = Id::new(123);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut components = standby.wait_for_component_stream(MessageId::new(123).expect(&quot;non zero&quot;), |event: &amp;MessageComponentInteraction| {</span>
+    <span class="doccomment">/// let mut components = standby.wait_for_component_stream(message_id, |event: &amp;MessageComponentInteraction| {</span>
     <span class="doccomment">///     event.data.custom_id == &quot;Click&quot;.to_string()</span>
     <span class="doccomment">/// });</span>
     <span class="doccomment">///</span>
@@ -2546,7 +2544,7 @@
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageComponentInteraction</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     <span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">MessageId</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
         <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="ident">WaitForComponentStream</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
@@ -2937,7 +2935,7 @@
             <span class="ident">event</span>::{<span class="ident">Event</span>, <span class="ident">EventType</span>},
             <span class="ident">payload::incoming</span>::{<span class="ident">InteractionCreate</span>, <span class="ident">MessageCreate</span>, <span class="ident">ReactionAdd</span>, <span class="ident">Ready</span>, <span class="ident">RoleDelete</span>},
         },
-        <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">InteractionId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
         <span class="ident">oauth</span>::{<span class="ident">current_application_info::ApplicationFlags</span>, <span class="ident">PartialApplication</span>},
         <span class="ident">user</span>::{<span class="ident">CurrentUser</span>, <span class="ident">User</span>},
     };
@@ -2946,7 +2944,7 @@
 
     <span class="kw">fn</span> <span class="ident">message</span>() -&gt; <span class="ident">Message</span> {
         <span class="ident">Message</span> {
-            <span class="ident">id</span>: <span class="ident">MessageId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
             <span class="ident">activity</span>: <span class="prelude-val">None</span>,
             <span class="ident">application</span>: <span class="prelude-val">None</span>,
             <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
@@ -2959,7 +2957,7 @@
                 <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">None</span>,
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>(),
@@ -2968,13 +2966,13 @@
                 <span class="ident">system</span>: <span class="prelude-val">None</span>,
                 <span class="ident">verified</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">components</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">content</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">edited_timestamp</span>: <span class="prelude-val">None</span>,
             <span class="ident">embeds</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">4</span>)),
             <span class="ident">interaction</span>: <span class="prelude-val">None</span>,
             <span class="ident">kind</span>: <span class="ident">MessageType::Regular</span>,
             <span class="ident">member</span>: <span class="prelude-val">None</span>,
@@ -2996,29 +2994,29 @@
 
     <span class="kw">fn</span> <span class="ident">reaction</span>() -&gt; <span class="ident">Reaction</span> {
         <span class="ident">Reaction</span> {
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">emoji</span>: <span class="ident">ReactionType::Unicode</span> {
                 <span class="ident">name</span>: <span class="string">&quot;🍎&quot;</span>.<span class="ident">to_owned</span>(),
             },
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
             <span class="ident">member</span>: <span class="prelude-val">None</span>,
-            <span class="ident">message_id</span>: <span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">user_id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">message_id</span>: <span class="ident">Id::new</span>(<span class="number">4</span>),
+            <span class="ident">user_id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
         }
     }
 
     <span class="kw">fn</span> <span class="ident">button</span>() -&gt; <span class="ident">MessageComponentInteraction</span> {
         <span class="ident">MessageComponentInteraction</span> {
-            <span class="ident">application_id</span>: <span class="ident">ApplicationId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">application_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">data</span>: <span class="ident">MessageComponentInteractionData</span> {
                 <span class="ident">custom_id</span>: <span class="ident">String::from</span>(<span class="string">&quot;Click&quot;</span>),
                 <span class="ident">component_type</span>: <span class="ident">ComponentType::Button</span>,
                 <span class="ident">values</span>: <span class="macro">vec!</span>[],
             },
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">guild_locale</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">InteractionId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">4</span>),
             <span class="ident">kind</span>: <span class="ident">InteractionType::MessageComponent</span>,
             <span class="ident">locale</span>: <span class="string">&quot;en-GB&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">member</span>: <span class="prelude-val">None</span>,
@@ -3032,7 +3030,7 @@
                 <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">None</span>,
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                 <span class="ident">name</span>: <span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>(),
@@ -3049,7 +3047,7 @@
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_dropped</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
 
         {
             <span class="kw">let</span> <span class="ident">_rx</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="bool-val">false</span>);
@@ -3057,7 +3055,7 @@
 
         <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>,
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
 
         <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">results</span>.<span class="ident">dropped</span>());
@@ -3069,13 +3067,13 @@
     <span class="doccomment">/// not matched by testing the returned matched amount.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_matched</span>() {
-        <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="ident">bool</span> {
+        <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
             <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span> <span class="op">==</span> <span class="ident">guild_id</span>)
         }
 
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">guild_id_one</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
-        <span class="kw">let</span> <span class="ident">guild_id_two</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">guild_id_one</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
+        <span class="kw">let</span> <span class="ident">guild_id_two</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">2</span>);
         <span class="kw">let</span> <span class="ident">_one</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_one</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
             <span class="ident">check</span>(<span class="ident">event</span>, <span class="ident">guild_id_one</span>)
         });
@@ -3087,8 +3085,8 @@
         });
 
         <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
 
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">results</span>.<span class="ident">dropped</span>());
@@ -3101,13 +3099,13 @@
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_sent</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
 
         <span class="kw">let</span> <span class="ident">_rx</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_stream</span>(<span class="ident">guild_id</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="bool-val">true</span>);
 
         <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>,
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
 
         <span class="macro">assert_eq!</span>(<span class="number">0</span>, <span class="ident">results</span>.<span class="ident">dropped</span>());
@@ -3120,19 +3118,19 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
         <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(
-            <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">1</span>),
         );
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
 
         <span class="macro">assert_eq!</span>(
             <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">unwrap</span>(),
             <span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+                <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             })
         );
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">guilds</span>.<span class="ident">is_empty</span>());
@@ -3143,37 +3141,37 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_stream</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_stream</span>(
-            <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">1</span>),
         );
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
         }));
 
         <span class="macro">assert_eq!</span>(
             <span class="ident">stream</span>.<span class="ident">next</span>().<span class="kw">await</span>,
             <span class="prelude-val">Some</span>(<span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+                <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+                <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>)
             }))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">stream</span>.<span class="ident">next</span>().<span class="kw">await</span>,
             <span class="prelude-val">Some</span>(<span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+                <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+                <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>)
             }))
         );
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">standby</span>.<span class="ident">guilds</span>.<span class="ident">is_empty</span>());
         <span class="ident">drop</span>(<span class="ident">stream</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">4</span>),
         }));
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">guilds</span>.<span class="ident">is_empty</span>());
     }
@@ -3184,7 +3182,7 @@
         <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="ident">Ready</span> {
             <span class="ident">application</span>: <span class="ident">PartialApplication</span> {
                 <span class="ident">flags</span>: <span class="ident">ApplicationFlags::empty</span>(),
-                <span class="ident">id</span>: <span class="ident">ApplicationId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             },
             <span class="ident">guilds</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">session_id</span>: <span class="ident">String::new</span>(),
@@ -3196,7 +3194,7 @@
                 <span class="ident">bot</span>: <span class="bool-val">false</span>,
                 <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">None</span>,
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">mfa_enabled</span>: <span class="bool-val">true</span>,
                 <span class="ident">name</span>: <span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">verified</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
@@ -3243,10 +3241,9 @@
         <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>)));
 
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_message</span>(
-            <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="op">|</span><span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span><span class="op">|</span> <span class="ident">message</span>.<span class="ident">author</span>.<span class="ident">id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">2</span>,
-        );
+        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_message</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="op">|</span><span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span><span class="op">|</span> {
+            <span class="ident">message</span>.<span class="ident">author</span>.<span class="ident">id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">2</span>
+        });
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">msg</span><span class="op">|</span> <span class="ident">msg</span>.<span class="ident">id</span>.<span class="ident">get</span>()).<span class="ident">unwrap</span>());
@@ -3258,10 +3255,7 @@
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_message_stream</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>
-            .<span class="ident">wait_for_message_stream</span>(<span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span><span class="op">|</span> {
-                <span class="bool-val">true</span>
-            });
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_message_stream</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span><span class="op">|</span> <span class="bool-val">true</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>()))));
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>()))));
 
@@ -3279,15 +3273,14 @@
         <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>())));
 
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_reaction</span>(
-            <span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="op">|</span><span class="ident">reaction</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span><span class="op">|</span> <span class="ident">reaction</span>.<span class="ident">user_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">3</span>,
-        );
+        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_reaction</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="op">|</span><span class="ident">reaction</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span><span class="op">|</span> {
+            <span class="ident">reaction</span>.<span class="ident">user_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">3</span>
+        });
 
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">Id::new</span>(<span class="number">3</span>),
             <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">reaction</span><span class="op">|</span> <span class="ident">reaction</span>.<span class="ident">user_id</span>).<span class="ident">unwrap</span>()
         );
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">reactions</span>.<span class="ident">is_empty</span>());
@@ -3298,8 +3291,7 @@
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_reaction_stream</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>
-            .<span class="ident">wait_for_reaction_stream</span>(<span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span><span class="op">|</span> <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_reaction_stream</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span><span class="op">|</span> <span class="bool-val">true</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));
 
@@ -3320,17 +3312,15 @@
         )));
 
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_component</span>(
-            <span class="ident">MessageId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="op">|</span><span class="ident">button</span>: <span class="kw-2">&amp;</span><span class="ident">MessageComponentInteraction</span><span class="op">|</span> {
-                <span class="ident">button</span>.<span class="ident">author_id</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
-            },
-        );
+        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>
+            .<span class="ident">wait_for_component</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="op">|</span><span class="ident">button</span>: <span class="kw-2">&amp;</span><span class="ident">MessageComponentInteraction</span><span class="op">|</span> {
+                <span class="ident">button</span>.<span class="ident">author_id</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>))
+            });
 
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
         <span class="macro">assert_eq!</span>(
-            <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">button</span><span class="op">|</span> <span class="ident">button</span>.<span class="ident">author_id</span>()).<span class="ident">unwrap</span>()
         );
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">components</span>.<span class="ident">is_empty</span>());
@@ -3339,10 +3329,8 @@
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_component_stream</span>() {
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_component_stream</span>(
-            <span class="ident">MessageId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">MessageComponentInteraction</span><span class="op">|</span> <span class="bool-val">true</span>,
-        );
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span>
+            <span class="ident">standby</span>.<span class="ident">wait_for_component_stream</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">MessageComponentInteraction</span><span class="op">|</span> <span class="bool-val">true</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::InteractionCreate</span>(<span class="ident">Box::new</span>(<span class="ident">InteractionCreate</span>(
             <span class="ident">Interaction::MessageComponent</span>(<span class="ident">Box::new</span>(<span class="ident">button</span>())),
         ))));
@@ -3393,13 +3381,13 @@
         <span class="comment">// generic event handler gets other guild events</span>
         <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::RoleDelete</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">wait</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event::RoleDelete</span>(<span class="kw">_</span>))));
 
         <span class="comment">// guild event handler gets message creates or reaction events</span>
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
             <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::ReactionAdd</span>
         });
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));

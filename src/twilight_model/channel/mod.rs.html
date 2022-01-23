@@ -1273,21 +1273,6 @@
 <span id="1267">1267</span>
 <span id="1268">1268</span>
 <span id="1269">1269</span>
-<span id="1270">1270</span>
-<span id="1271">1271</span>
-<span id="1272">1272</span>
-<span id="1273">1273</span>
-<span id="1274">1274</span>
-<span id="1275">1275</span>
-<span id="1276">1276</span>
-<span id="1277">1277</span>
-<span id="1278">1278</span>
-<span id="1279">1279</span>
-<span id="1280">1280</span>
-<span id="1281">1281</span>
-<span id="1282">1282</span>
-<span id="1283">1283</span>
-<span id="1284">1284</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">embed</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">message</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">permission_overwrite</span>;
@@ -1331,7 +1316,10 @@
         <span class="ident">AutoArchiveDuration</span>, <span class="ident">NewsThread</span>, <span class="ident">PrivateThread</span>, <span class="ident">PublicThread</span>, <span class="ident">ThreadMember</span>, <span class="ident">ThreadMetadata</span>,
     },
     <span class="ident">datetime::Timestamp</span>,
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">MessageId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">MessageMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
@@ -1368,7 +1356,7 @@
 
 <span class="kw">impl</span> <span class="ident">Channel</span> {
     <span class="doccomment">/// Return the ID of the inner channel.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ChannelId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Group</span>(<span class="ident">group</span>) =&gt; <span class="ident">group</span>.<span class="ident">id</span>,
             <span class="ident"><span class="self">Self</span>::Guild</span>(<span class="ident">guild_channel</span>) =&gt; <span class="ident">guild_channel</span>.<span class="ident">id</span>(),
@@ -1413,7 +1401,7 @@
 
 <span class="kw">impl</span> <span class="ident">GuildChannel</span> {
     <span class="doccomment">/// Return the guild ID of the inner guild channel.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Category</span>(<span class="ident">category</span>) =&gt; <span class="ident">category</span>.<span class="ident">guild_id</span>,
             <span class="ident"><span class="self">Self</span>::NewsThread</span>(<span class="ident">thread</span>) =&gt; <span class="ident">thread</span>.<span class="ident">guild_id</span>,
@@ -1426,7 +1414,7 @@
     }
 
     <span class="doccomment">/// Return the ID of the inner guild channel.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ChannelId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Category</span>(<span class="ident">category</span>) =&gt; <span class="ident">category</span>.<span class="ident">id</span>,
             <span class="ident"><span class="self">Self</span>::NewsThread</span>(<span class="ident">thread</span>) =&gt; <span class="ident">thread</span>.<span class="ident">id</span>,
@@ -1520,15 +1508,15 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">invitable</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_message_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_message_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_pin_timestamp</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ThreadMember</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member_count</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message_count</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nsfw</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">owner_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">owner_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">permission_overwrites</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rate_limit_per_user</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -1980,27 +1968,27 @@
         <span class="ident">channel::permission_overwrite</span>::{<span class="ident">PermissionOverwrite</span>, <span class="ident">PermissionOverwriteType</span>},
         <span class="ident">datetime::Timestamp</span>,
         <span class="ident">guild::Permissions</span>,
-        <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">MessageId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id</span>::{<span class="ident">marker::ChannelMarker</span>, <span class="ident">Id</span>},
     };
 
     <span class="kw">fn</span> <span class="ident">group</span>() -&gt; <span class="ident">Group</span> {
         <span class="ident">Group</span> {
             <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">icon</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">123</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::Group</span>,
             <span class="ident">last_message_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a group&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">owner_id</span>: <span class="ident">UserId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">owner_id</span>: <span class="ident">Id::new</span>(<span class="number">456</span>),
             <span class="ident">recipients</span>: <span class="ident">Vec::new</span>(),
         }
     }
 
     <span class="kw">fn</span> <span class="ident">guild_category</span>() -&gt; <span class="ident">CategoryChannel</span> {
         <span class="ident">CategoryChannel</span> {
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">123</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildCategory</span>,
             <span class="ident">name</span>: <span class="string">&quot;category&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">permission_overwrites</span>: <span class="ident">Vec::new</span>(),
@@ -2010,8 +1998,8 @@
 
     <span class="kw">fn</span> <span class="ident">guild_text</span>() -&gt; <span class="ident">TextChannel</span> {
         <span class="ident">TextChannel</span> {
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">456</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
             <span class="ident">last_message_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
@@ -2028,8 +2016,8 @@
     <span class="kw">fn</span> <span class="ident">guild_voice</span>() -&gt; <span class="ident">VoiceChannel</span> {
         <span class="ident">VoiceChannel</span> {
             <span class="ident">bitrate</span>: <span class="number">1000</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">789</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildVoice</span>,
             <span class="ident">name</span>: <span class="string">&quot;voice&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">permission_overwrites</span>: <span class="ident">Vec::new</span>(),
@@ -2044,8 +2032,8 @@
     <span class="kw">fn</span> <span class="ident">guild_stage</span>() -&gt; <span class="ident">VoiceChannel</span> {
         <span class="ident">VoiceChannel</span> {
             <span class="ident">bitrate</span>: <span class="number">1000</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">789</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildStageVoice</span>,
             <span class="ident">name</span>: <span class="string">&quot;stage&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">permission_overwrites</span>: <span class="ident">Vec::new</span>(),
@@ -2057,9 +2045,9 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">private</span>() -&gt; <span class="ident">PrivateChannel</span> {
+    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">private</span>() -&gt; <span class="ident">PrivateChannel</span> {
         <span class="ident">PrivateChannel</span> {
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">234</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">234</span>),
             <span class="ident">last_message_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
             <span class="ident">kind</span>: <span class="ident">ChannelType::Private</span>,
@@ -2069,30 +2057,24 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_channel_helpers</span>() {
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">Channel::Group</span>(<span class="ident">group</span>()).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-        );
+        <span class="macro">assert_eq!</span>(<span class="ident">Channel::Group</span>(<span class="ident">group</span>()).<span class="ident">id</span>(), <span class="ident">Id::new</span>(<span class="number">123</span>));
         <span class="macro">assert_eq!</span>(
             <span class="ident">Channel::Guild</span>(<span class="ident">GuildChannel::Category</span>(<span class="ident">guild_category</span>())).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+            <span class="ident">Id::new</span>(<span class="number">123</span>)
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">Channel::Guild</span>(<span class="ident">GuildChannel::Text</span>(<span class="ident">guild_text</span>())).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+            <span class="ident">Id::new</span>(<span class="number">456</span>)
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">Channel::Guild</span>(<span class="ident">GuildChannel::Voice</span>(<span class="ident">guild_voice</span>())).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+            <span class="ident">Id::new</span>(<span class="number">789</span>)
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">Channel::Guild</span>(<span class="ident">GuildChannel::Stage</span>(<span class="ident">guild_stage</span>())).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
+            <span class="ident">Id::new</span>(<span class="number">789</span>)
         );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">Channel::Private</span>(<span class="ident">private</span>()).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">234</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-        );
+        <span class="macro">assert_eq!</span>(<span class="ident">Channel::Private</span>(<span class="ident">private</span>()).<span class="ident">id</span>(), <span class="ident">Id::new</span>(<span class="number">234</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -2166,40 +2148,28 @@
     <span class="kw">fn</span> <span class="ident">test_guild_channel_guild_id</span>() {
         <span class="macro">assert_eq!</span>(
             <span class="ident">GuildChannel::Category</span>(<span class="ident">guild_category</span>()).<span class="ident">guild_id</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
+            <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">GuildChannel::Text</span>(<span class="ident">guild_text</span>()).<span class="ident">guild_id</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
+            <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">GuildChannel::Voice</span>(<span class="ident">guild_voice</span>()).<span class="ident">guild_id</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
+            <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>))
         );
         <span class="macro">assert_eq!</span>(
             <span class="ident">GuildChannel::Stage</span>(<span class="ident">guild_stage</span>()).<span class="ident">guild_id</span>(),
-            <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">321</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
+            <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">321</span>))
         );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_guild_channel_id</span>() {
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">GuildChannel::Category</span>(<span class="ident">guild_category</span>()).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">GuildChannel::Text</span>(<span class="ident">guild_text</span>()).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">GuildChannel::Voice</span>(<span class="ident">guild_voice</span>()).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">GuildChannel::Stage</span>(<span class="ident">guild_stage</span>()).<span class="ident">id</span>(),
-            <span class="ident">ChannelId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)
-        );
+        <span class="macro">assert_eq!</span>(<span class="ident">GuildChannel::Category</span>(<span class="ident">guild_category</span>()).<span class="ident">id</span>(), <span class="ident">Id::new</span>(<span class="number">123</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">GuildChannel::Text</span>(<span class="ident">guild_text</span>()).<span class="ident">id</span>(), <span class="ident">Id::new</span>(<span class="number">456</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">GuildChannel::Voice</span>(<span class="ident">guild_voice</span>()).<span class="ident">id</span>(), <span class="ident">Id::new</span>(<span class="number">789</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">GuildChannel::Stage</span>(<span class="ident">guild_stage</span>()).<span class="ident">id</span>(), <span class="ident">Id::new</span>(<span class="number">789</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -2242,10 +2212,10 @@
         });
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::Text</span>(<span class="ident">TextChannel</span> {
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildText</span>,
-            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="string">&quot;hey&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">nsfw</span>: <span class="bool-val">false</span>,
@@ -2262,8 +2232,8 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_guild_category_channel_deserialization</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::Category</span>(<span class="ident">CategoryChannel</span> {
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildCategory</span>,
             <span class="ident">name</span>: <span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">permission_overwrites</span>: <span class="ident">Vec::new</span>(),
@@ -2278,7 +2248,7 @@
                 <span class="string">&quot;guild_id&quot;</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="string">&quot;name&quot;</span>: <span class="string">&quot;foo&quot;</span>,
                 <span class="string">&quot;nsfw&quot;</span>: <span class="bool-val">false</span>,
-                <span class="string">&quot;parent_id&quot;</span>: <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span>,
+                <span class="string">&quot;parent_id&quot;</span>: <span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
                 <span class="string">&quot;permission_overwrites&quot;</span>: <span class="ident">permission_overwrites</span>,
                 <span class="string">&quot;position&quot;</span>: <span class="number">3</span>,
                 <span class="string">&quot;type&quot;</span>: <span class="number">4</span>,
@@ -2290,15 +2260,15 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_guild_news_channel_deserialization</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::Text</span>(<span class="ident">TextChannel</span> {
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildNews</span>,
-            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">4</span>)),
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="string">&quot;news&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">nsfw</span>: <span class="bool-val">true</span>,
             <span class="ident">permission_overwrites</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">5</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             <span class="ident">position</span>: <span class="number">3</span>,
             <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">None</span>,
             <span class="ident">topic</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a news channel&quot;</span>.<span class="ident">to_owned</span>()),
@@ -2326,8 +2296,8 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_guild_store_channel_deserialization</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::Text</span>(<span class="ident">TextChannel</span> {
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildStore</span>,
             <span class="ident">last_message_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
@@ -2364,23 +2334,23 @@
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::NewsThread</span>(<span class="ident">NewsThread</span> {
             <span class="ident">default_auto_archive_duration</span>: <span class="prelude-val">Some</span>(<span class="ident">AutoArchiveDuration::Hour</span>),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">6</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildNewsThread</span>,
-            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageId::new</span>(<span class="number">3</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">ThreadMember</span> {
                 <span class="ident">flags</span>: <span class="number">0_u64</span>,
-                <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">4</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">4</span>)),
                 <span class="ident">join_timestamp</span>: <span class="ident">timestamp</span>,
                 <span class="ident">member</span>: <span class="prelude-val">None</span>,
                 <span class="ident">presence</span>: <span class="prelude-val">None</span>,
-                <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             }),
             <span class="ident">member_count</span>: <span class="number">50_u8</span>,
             <span class="ident">message_count</span>: <span class="number">50_u8</span>,
             <span class="ident">name</span>: <span class="string">&quot;newsthread&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">2</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
+            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000_u64</span>),
             <span class="ident">thread_metadata</span>: <span class="ident">ThreadMetadata</span> {
                 <span class="ident">archived</span>: <span class="bool-val">false</span>,
@@ -2430,23 +2400,23 @@
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::PublicThread</span>(<span class="ident">PublicThread</span> {
             <span class="ident">default_auto_archive_duration</span>: <span class="prelude-val">Some</span>(<span class="ident">AutoArchiveDuration::Hour</span>),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">6</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildPublicThread</span>,
-            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageId::new</span>(<span class="number">3</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">ThreadMember</span> {
                 <span class="ident">flags</span>: <span class="number">0_u64</span>,
-                <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">4</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">4</span>)),
                 <span class="ident">join_timestamp</span>: <span class="ident">timestamp</span>,
                 <span class="ident">member</span>: <span class="prelude-val">None</span>,
                 <span class="ident">presence</span>: <span class="prelude-val">None</span>,
-                <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             }),
             <span class="ident">member_count</span>: <span class="number">50_u8</span>,
             <span class="ident">message_count</span>: <span class="number">50_u8</span>,
             <span class="ident">name</span>: <span class="string">&quot;publicthread&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">2</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
+            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000_u64</span>),
             <span class="ident">thread_metadata</span>: <span class="ident">ThreadMetadata</span> {
                 <span class="ident">archived</span>: <span class="bool-val">false</span>,
@@ -2497,28 +2467,28 @@
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GuildChannel::PrivateThread</span>(<span class="ident">PrivateThread</span> {
             <span class="ident">default_auto_archive_duration</span>: <span class="prelude-val">Some</span>(<span class="ident">AutoArchiveDuration::Hour</span>),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">id</span>: <span class="ident">ChannelId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">6</span>),
             <span class="ident">invitable</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">kind</span>: <span class="ident">ChannelType::GuildPrivateThread</span>,
-            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">MessageId::new</span>(<span class="number">3</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">last_message_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">ThreadMember</span> {
                 <span class="ident">flags</span>: <span class="number">0_u64</span>,
-                <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">4</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">4</span>)),
                 <span class="ident">join_timestamp</span>: <span class="ident">timestamp</span>,
                 <span class="ident">member</span>: <span class="prelude-val">None</span>,
                 <span class="ident">presence</span>: <span class="prelude-val">None</span>,
-                <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             }),
             <span class="ident">member_count</span>: <span class="number">50_u8</span>,
             <span class="ident">message_count</span>: <span class="number">50_u8</span>,
             <span class="ident">name</span>: <span class="string">&quot;privatethread&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ChannelId::new</span>(<span class="number">2</span>)).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
+            <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">permission_overwrites</span>: <span class="ident">Vec::from</span>([<span class="ident">PermissionOverwrite</span> {
                 <span class="ident">allow</span>: <span class="ident">Permissions::empty</span>(),
                 <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
-                <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">UserId::new</span>(<span class="number">5</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             }]),
             <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000_u64</span>),
             <span class="ident">thread_metadata</span>: <span class="ident">ThreadMetadata</span> {

@@ -1020,6 +1020,10 @@
 <span id="1014">1014</span>
 <span id="1015">1015</span>
 <span id="1016">1016</span>
+<span id="1017">1017</span>
+<span id="1018">1018</span>
+<span id="1019">1019</span>
+<span id="1020">1020</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident"><span class="kw">super</span>::OpCode</span>, <span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>, <span class="ident">Event</span>, <span class="ident">EventConversionError</span>,
 };
@@ -1032,7 +1036,7 @@
     <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>,
 };
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert::TryFrom</span>, <span class="ident">str::FromStr</span>};
+<span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
 <span class="doccomment">/// An event from the gateway, which can either be a dispatch event with</span>
 <span class="doccomment">/// stateful updates or a heartbeat, hello, etc. that a shard needs to operate.</span>
@@ -1566,10 +1570,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DispatchEvent</span>, <span class="ident">GatewayEvent</span>, <span class="ident">GatewayEventDeserializer</span>, <span class="ident">OpCode</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">gateway::payload::incoming::RoleDelete</span>,
-        <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">RoleId</span>},
-    };
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">gateway::payload::incoming::RoleDelete</span>, <span class="ident">id::Id</span>, <span class="ident">test::image_hash</span>};
     <span class="kw">use</span> <span class="ident">serde::de::DeserializeSeed</span>;
     <span class="kw">use</span> <span class="ident">serde_json::de::Deserializer</span>;
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
@@ -1594,8 +1595,9 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_deserialize_dispatch_guild_update</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
-  &quot;d&quot;: {
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">format!</span>(
+            <span class="string">r#&quot;{{
+  &quot;d&quot;: {{
     &quot;afk_channel_id&quot;: &quot;1337&quot;,
     &quot;afk_timeout&quot;: 300,
     &quot;application_id&quot;: null,
@@ -1604,7 +1606,7 @@
     &quot;description&quot;: null,
     &quot;discovery_splash&quot;: null,
     &quot;emojis&quot;: [
-      {
+      {{
         &quot;animated&quot;: false,
         &quot;available&quot;: true,
         &quot;id&quot;: &quot;1338&quot;,
@@ -1612,7 +1614,7 @@
         &quot;name&quot;: &quot;goodboi&quot;,
         &quot;require_colons&quot;: true,
         &quot;roles&quot;: []
-      }
+      }}
     ],
     &quot;explicit_content_filter&quot;: 0,
     &quot;features&quot;: [
@@ -1620,7 +1622,7 @@
       &quot;ANIMATED_ICON&quot;
     ],
     &quot;guild_id&quot;: &quot;1339&quot;,
-    &quot;icon&quot;: &quot;foobar&quot;,
+    &quot;icon&quot;: &quot;{icon}&quot;,
     &quot;id&quot;: &quot;13310&quot;,
     &quot;max_members&quot;: 250000,
     &quot;max_presences&quot;: null,
@@ -1634,7 +1636,7 @@
     &quot;premium_tier&quot;: 1,
     &quot;region&quot;: &quot;eu-central&quot;,
     &quot;roles&quot;: [
-      {
+      {{
         &quot;color&quot;: 0,
         &quot;hoist&quot;: false,
         &quot;id&quot;: &quot;13312&quot;,
@@ -1643,24 +1645,27 @@
         &quot;name&quot;: &quot;@everyone&quot;,
         &quot;permissions&quot;: &quot;104193601&quot;,
         &quot;position&quot;: 0
-      }
+      }}
     ],
     &quot;rules_channel_id&quot;: null,
-    &quot;splash&quot;: &quot;barbaz&quot;,
+    &quot;splash&quot;: &quot;{splash}&quot;,
     &quot;system_channel_flags&quot;: 0,
     &quot;system_channel_id&quot;: &quot;13313&quot;,
     &quot;vanity_url_code&quot;: null,
     &quot;verification_level&quot;: 0,
     &quot;widget_channel_id&quot;: null,
     &quot;widget_enabled&quot;: false
-  },
+  }},
   &quot;op&quot;: 0,
   &quot;s&quot;: 42,
   &quot;t&quot;: &quot;GUILD_UPDATE&quot;
-}&quot;#</span>;
+}}&quot;#</span>,
+            <span class="ident">icon</span> <span class="op">=</span> <span class="ident">image_hash::ICON_INPUT</span>,
+            <span class="ident">splash</span> <span class="op">=</span> <span class="ident">image_hash::SPLASH_INPUT</span>,
+        );
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
         <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">42</span>, <span class="kw">_</span>)));
@@ -1668,8 +1673,9 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_deserialize_dispatch_guild_update_2</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
-  &quot;d&quot;: {
+        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">format!</span>(
+            <span class="string">r#&quot;{{
+  &quot;d&quot;: {{
     &quot;afk_channel_id&quot;: null,
     &quot;afk_timeout&quot;: 300,
     &quot;application_id&quot;: null,
@@ -1678,7 +1684,7 @@
     &quot;description&quot;: null,
     &quot;discovery_splash&quot;: null,
     &quot;emojis&quot;: [
-      {
+      {{
         &quot;animated&quot;: false,
         &quot;available&quot;: true,
         &quot;id&quot;: &quot;42&quot;,
@@ -1686,12 +1692,12 @@
         &quot;name&quot;: &quot;emmet&quot;,
         &quot;require_colons&quot;: true,
         &quot;roles&quot;: []
-      }
+      }}
     ],
     &quot;explicit_content_filter&quot;: 2,
     &quot;features&quot;: [],
     &quot;guild_id&quot;: &quot;43&quot;,
-    &quot;icon&quot;: &quot;44&quot;,
+    &quot;icon&quot;: &quot;{icon}&quot;,
     &quot;id&quot;: &quot;45&quot;,
     &quot;max_members&quot;: 250000,
     &quot;max_presences&quot;: null,
@@ -1705,7 +1711,7 @@
     &quot;premium_tier&quot;: 0,
     &quot;region&quot;: &quot;us-central&quot;,
     &quot;roles&quot;: [
-      {
+      {{
         &quot;color&quot;: 0,
         &quot;hoist&quot;: false,
         &quot;id&quot;: &quot;47&quot;,
@@ -1714,7 +1720,7 @@
         &quot;name&quot;: &quot;@everyone&quot;,
         &quot;permissions&quot;: &quot;104324673&quot;,
         &quot;position&quot;: 0
-      }
+      }}
     ],
     &quot;rules_channel_id&quot;: null,
     &quot;splash&quot;: null,
@@ -1724,14 +1730,16 @@
     &quot;verification_level&quot;: 4,
     &quot;widget_channel_id&quot;: null,
     &quot;widget_enabled&quot;: true
-  },
+  }},
   &quot;op&quot;: 0,
   &quot;s&quot;: 1190911,
   &quot;t&quot;: &quot;GUILD_UPDATE&quot;
-}&quot;#</span>;
+}}&quot;#</span>,
+            <span class="ident">icon</span> <span class="op">=</span> <span class="ident">image_hash::ICON_INPUT</span>
+        );
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
         <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">1_190_911</span>, <span class="kw">_</span>)));
@@ -1879,8 +1887,8 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_serialize_dispatch</span>() {
         <span class="kw">let</span> <span class="ident">role_delete</span> <span class="op">=</span> <span class="ident">RoleDelete</span> {
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">role_id</span>: <span class="ident">RoleId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
+            <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         };
         <span class="kw">let</span> <span class="ident">dispatch</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">DispatchEvent::RoleDelete</span>(<span class="ident">role_delete</span>));
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">2_048</span>, <span class="ident">dispatch</span>);
@@ -1907,10 +1915,10 @@
                     <span class="ident">len</span>: <span class="number">2</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;role_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::StructEnd</span>,

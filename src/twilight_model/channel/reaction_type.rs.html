@@ -100,7 +100,7 @@
 <span id="94">94</span>
 <span id="95">95</span>
 <span id="96">96</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::EmojiId</span>;
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">marker::EmojiMarker</span>, <span class="ident">Id</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
@@ -113,7 +113,7 @@
         <span class="comment">// it is a bit misleading as that should only happen when</span>
         <span class="comment">// the reaction is a unicode emoji and then it is caught by</span>
         <span class="comment">// the other variant.</span>
-        <span class="ident">id</span>: <span class="ident">EmojiId</span>,
+        <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span>,
         <span class="comment">// Name is nil if the emoji data is no longer available, for</span>
         <span class="comment">// example if the emoji have been deleted off the guild.</span>
         <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -126,14 +126,14 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ReactionType</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::EmojiId</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_custom</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">ReactionType::Custom</span> {
             <span class="ident">animated</span>: <span class="bool-val">false</span>,
-            <span class="ident">id</span>: <span class="ident">EmojiId::new</span>(<span class="number">1337</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1337</span>),
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>()),
         };
 
@@ -147,7 +147,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;animated&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;EmojiId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1337&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -166,7 +166,7 @@
                     <span class="ident">len</span>: <span class="number">2</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;EmojiId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1337&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Some</span>,

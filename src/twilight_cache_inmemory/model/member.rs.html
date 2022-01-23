@@ -234,12 +234,20 @@
 <span id="228">228</span>
 <span id="229">229</span>
 <span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application::interaction::application_command::InteractionMember</span>,
     <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild</span>::{<span class="ident">Member</span>, <span class="ident">PartialMember</span>},
-    <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">GuildMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
+    <span class="ident">util::image_hash::ImageHash</span>,
 };
 
 <span class="doccomment">/// Represents a cached [`Member`].</span>
@@ -247,23 +255,23 @@
 <span class="doccomment">/// [`Member`]: twilight_model::guild::Member</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CachedMember</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">communication_disabled_until</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">deaf</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">mute</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">pending</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RoleId</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">CachedMember</span> {
     <span class="doccomment">/// Member&#39;s guild avatar.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">avatar</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">avatar</span>.<span class="ident">as_deref</span>()
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">avatar</span>
     }
 
     <span class="doccomment">/// When the user can resume communication in a guild again.</span>
@@ -285,7 +293,7 @@
     }
 
     <span class="doccomment">/// ID of the guild this member is a part of.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">GuildId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">guild_id</span>
     }
 
@@ -316,12 +324,12 @@
     }
 
     <span class="doccomment">/// List of role IDs this member has.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">RoleId</span>] {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>] {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">roles</span>
     }
 
     <span class="doccomment">/// ID of the user relating to the member.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">UserId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">user_id</span>
     }
 }
@@ -369,7 +377,7 @@
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{
         <span class="ident">datetime::Timestamp</span>,
         <span class="ident">guild</span>::{<span class="ident">Member</span>, <span class="ident">PartialMember</span>},
-        <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
         <span class="ident">user::User</span>,
     };
 
@@ -392,7 +400,7 @@
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
             <span class="ident">joined_at</span>,
             <span class="ident">mute</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),
@@ -412,7 +420,7 @@
             <span class="ident">discriminator</span>: <span class="number">1</span>,
             <span class="ident">email</span>: <span class="prelude-val">None</span>,
             <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">locale</span>: <span class="prelude-val">None</span>,
             <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="string">&quot;bar&quot;</span>.<span class="ident">to_owned</span>(),
@@ -431,7 +439,7 @@
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
             <span class="ident">joined_at</span>,
             <span class="ident">mute</span>: <span class="bool-val">true</span>,
             <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;member nick&quot;</span>.<span class="ident">to_owned</span>()),

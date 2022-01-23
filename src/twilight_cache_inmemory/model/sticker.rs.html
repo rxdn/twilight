@@ -195,13 +195,24 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel::message</span>::{
-        <span class="ident">sticker</span>::{<span class="ident">StickerFormatType</span>, <span class="ident">StickerId</span>, <span class="ident">StickerPackId</span>, <span class="ident">StickerType</span>},
+        <span class="ident">sticker</span>::{<span class="ident">StickerFormatType</span>, <span class="ident">StickerType</span>},
         <span class="ident">Sticker</span>,
     },
-    <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">GuildMarker</span>, <span class="ident">StickerMarker</span>, <span class="ident">StickerPackMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 
 <span class="doccomment">/// Representation of a cached [`Sticker`].</span>
@@ -216,21 +227,21 @@
     <span class="doccomment">/// Format type.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">format_type</span>: <span class="ident">StickerFormatType</span>,
     <span class="doccomment">/// ID of the guild that owns the sticker.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Unique ID of the sticker.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">id</span>: <span class="ident">StickerId</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StickerMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Kind of sticker.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">kind</span>: <span class="ident">StickerType</span>,
     <span class="doccomment">/// Name of the sticker.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Unique ID of the pack the sticker is in.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">pack_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StickerPackId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">pack_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StickerPackMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Sticker&#39;s sort order within a pack.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">sort_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     <span class="doccomment">/// CSV list of tags the sticker is assigned to, if any.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tags</span>: <span class="ident">String</span>,
     <span class="doccomment">/// ID of the user that uploaded the sticker.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">user_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">user_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">CachedSticker</span> {
@@ -250,12 +261,12 @@
     }
 
     <span class="doccomment">/// ID of the guild that owns the sticker.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">guild_id</span>
     }
 
     <span class="doccomment">/// Unique ID of the sticker.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">StickerId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StickerMarker</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">id</span>
     }
 
@@ -270,7 +281,7 @@
     }
 
     <span class="doccomment">/// Unique ID of the pack the sticker is in.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">pack_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StickerPackId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">pack_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StickerPackMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">pack_id</span>
     }
 
@@ -285,7 +296,7 @@
     }
 
     <span class="doccomment">/// ID of the user that uploaded the sticker.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">user_id</span>
     }
 }
@@ -313,11 +324,12 @@
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{
         <span class="ident">channel::message</span>::{
-            <span class="ident">sticker</span>::{<span class="ident">StickerFormatType</span>, <span class="ident">StickerId</span>, <span class="ident">StickerPackId</span>, <span class="ident">StickerType</span>},
+            <span class="ident">sticker</span>::{<span class="ident">StickerFormatType</span>, <span class="ident">StickerType</span>},
             <span class="ident">Sticker</span>,
         },
-        <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
         <span class="ident">user</span>::{<span class="ident">PremiumType</span>, <span class="ident">User</span>, <span class="ident">UserFlags</span>},
+        <span class="ident">util</span>::{<span class="ident">image_hash::ImageHashParseError</span>, <span class="ident">ImageHash</span>},
     };
 
     <span class="macro">assert_fields!</span>(
@@ -336,27 +348,29 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">CachedSticker</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_eq_sticker</span>() {
+    <span class="kw">fn</span> <span class="ident">test_eq_sticker</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ImageHashParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">avatar</span> <span class="op">=</span> <span class="ident">ImageHash::parse</span>(<span class="string">b&quot;5bf451026c107906b4dccea015320222&quot;</span>)<span class="question-mark">?</span>;
+
         <span class="kw">let</span> <span class="ident">sticker</span> <span class="op">=</span> <span class="ident">Sticker</span> {
             <span class="ident">available</span>: <span class="bool-val">true</span>,
             <span class="ident">description</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;sticker&quot;</span>.<span class="ident">into</span>()),
             <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">kind</span>: <span class="ident">StickerType::Guild</span>,
             <span class="ident">name</span>: <span class="string">&quot;stick&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">pack_id</span>: <span class="prelude-val">Some</span>(<span class="ident">StickerPackId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">pack_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">sort_value</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>),
             <span class="ident">tags</span>: <span class="string">&quot;foo,bar,baz&quot;</span>.<span class="ident">into</span>(),
             <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">User</span> {
                 <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>.<span class="ident">to_owned</span>()),
+                <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">avatar</span>),
                 <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                 <span class="ident">bot</span>: <span class="bool-val">false</span>,
                 <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;address@example.com&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">UserFlags::PREMIUM_EARLY_SUPPORTER</span> <span class="op">|</span> <span class="ident">UserFlags::VERIFIED_DEVELOPER</span>),
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;en-us&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">mfa_enabled</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -373,17 +387,19 @@
             <span class="ident">available</span>: <span class="bool-val">true</span>,
             <span class="ident">description</span>: <span class="string">&quot;sticker&quot;</span>.<span class="ident">into</span>(),
             <span class="ident">format_type</span>: <span class="ident">StickerFormatType::Png</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="ident">StickerId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">kind</span>: <span class="ident">StickerType::Guild</span>,
             <span class="ident">name</span>: <span class="string">&quot;stick&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">pack_id</span>: <span class="prelude-val">Some</span>(<span class="ident">StickerPackId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">pack_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">3</span>)),
             <span class="ident">sort_value</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>),
             <span class="ident">tags</span>: <span class="string">&quot;foo,bar,baz&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">user_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
         };
 
         <span class="macro">assert_eq!</span>(<span class="ident">cached</span>, <span class="ident">sticker</span>);
+
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>

@@ -152,6 +152,23 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Parse mentions out of strings.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Included is a trait over select IDs that can be mentioned and an iterator</span>
@@ -170,12 +187,15 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! use twilight_mention::ParseMention;</span>
-<span class="doccomment">//! use twilight_model::id::{ChannelId, EmojiId, RoleId};</span>
+<span class="doccomment">//! use twilight_model::id::{</span>
+<span class="doccomment">//!     marker::{ChannelMarker, EmojiMarker, RoleMarker},</span>
+<span class="doccomment">//!     Id,</span>
+<span class="doccomment">//! };</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">//! assert_eq!(EmojiId::new(123).expect(&quot;non zero&quot;), EmojiId::parse(&quot;&lt;:name:123&gt;&quot;)?);</span>
-<span class="doccomment">//! assert_eq!(RoleId::new(456).expect(&quot;non zero&quot;), RoleId::parse(&quot;&lt;@&amp;456&gt;&quot;)?);</span>
-<span class="doccomment">//! assert!(ChannelId::parse(&quot;&lt;#notamention&gt;&quot;).is_err());</span>
+<span class="doccomment">//! assert_eq!(Id::&lt;EmojiMarker&gt;::new(123), Id::parse(&quot;&lt;:name:123&gt;&quot;)?);</span>
+<span class="doccomment">//! assert_eq!(Id::&lt;RoleMarker&gt;::new(456), Id::parse(&quot;&lt;@&amp;456&gt;&quot;)?);</span>
+<span class="doccomment">//! assert!(Id::&lt;ChannelMarker&gt;::parse(&quot;&lt;#notamention&gt;&quot;).is_err());</span>
 <span class="doccomment">//! # Ok(()) }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -183,9 +203,9 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! use twilight_mention::ParseMention;</span>
-<span class="doccomment">//! use twilight_model::id::UserId;</span>
+<span class="doccomment">//! use twilight_model::id::{marker::UserMarker, Id};</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let mut iter = UserId::iter(&quot;these &lt;@123&gt; are &lt;#456&gt; mentions &lt;@789&gt;&quot;);</span>
+<span class="doccomment">//! let mut iter = Id::&lt;UserMarker&gt;::iter(&quot;these &lt;@123&gt; are &lt;#456&gt; mentions &lt;@789&gt;&quot;);</span>
 <span class="doccomment">//! assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 123));</span>
 <span class="doccomment">//! assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 789));</span>
 <span class="doccomment">//! assert!(iter.next().is_none());</span>
@@ -223,7 +243,10 @@
 };
 
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
-<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">ChannelId</span>, <span class="ident">EmojiId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>};
+<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{
+    <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+    <span class="ident">Id</span>,
+};
 
 <span class="doccomment">/// Any type of mention.</span>
 <span class="doccomment">///</span>
@@ -239,12 +262,24 @@
 <span class="doccomment">///     parse::{MentionType, ParseMention},</span>
 <span class="doccomment">///     timestamp::Timestamp,</span>
 <span class="doccomment">/// };</span>
-<span class="doccomment">/// use twilight_model::id::{ChannelId, RoleId, UserId};</span>
+<span class="doccomment">/// use twilight_model::id::{</span>
+<span class="doccomment">///     marker::{ChannelMarker, RoleMarker, UserMarker},</span>
+<span class="doccomment">///     Id,</span>
+<span class="doccomment">/// };</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">/// assert_eq!(MentionType::Channel(ChannelId::new(123).expect(&quot;non zero&quot;)), MentionType::parse(&quot;&lt;#123&gt;&quot;)?);</span>
-<span class="doccomment">/// assert_eq!(MentionType::Role(RoleId::new(123).expect(&quot;non zero&quot;)), MentionType::parse(&quot;&lt;@&amp;123&gt;&quot;)?);</span>
-<span class="doccomment">/// assert_eq!(MentionType::User(UserId::new(123).expect(&quot;non zero&quot;)), MentionType::parse(&quot;&lt;@!123&gt;&quot;)?);</span>
+<span class="doccomment">/// assert_eq!(</span>
+<span class="doccomment">///     MentionType::Channel(Id::&lt;ChannelMarker&gt;::new(123)),</span>
+<span class="doccomment">///     MentionType::parse(&quot;&lt;#123&gt;&quot;)?,</span>
+<span class="doccomment">/// );</span>
+<span class="doccomment">/// assert_eq!(</span>
+<span class="doccomment">///     MentionType::Role(Id::&lt;RoleMarker&gt;::new(123)),</span>
+<span class="doccomment">///     MentionType::parse(&quot;&lt;@&amp;123&gt;&quot;)?,</span>
+<span class="doccomment">/// );</span>
+<span class="doccomment">/// assert_eq!(</span>
+<span class="doccomment">///     MentionType::User(Id::&lt;UserMarker&gt;::new(123)),</span>
+<span class="doccomment">///     MentionType::parse(&quot;&lt;@!123&gt;&quot;)?,</span>
+<span class="doccomment">/// );</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let timestamp = Timestamp::new(123, None);</span>
 <span class="doccomment">/// assert_eq!(MentionType::Timestamp(timestamp), MentionType::parse(&quot;&lt;t:123&gt;&quot;)?);</span>
@@ -257,8 +292,7 @@
 <span class="doccomment">/// use twilight_mention::{</span>
 <span class="doccomment">///     parse::{MentionType, ParseMention},</span>
 <span class="doccomment">///     timestamp::Timestamp,</span>
-<span class="doccomment">///  };</span>
-<span class="doccomment">/// use twilight_model::id::{ChannelId, EmojiId, RoleId, UserId};</span>
+<span class="doccomment">/// };</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let buf = &quot;channel &lt;#12&gt; emoji &lt;:name:34&gt; role &lt;@&amp;56&gt; timestamp &lt;t:1624047978&gt; user &lt;@78&gt;&quot;;</span>
 <span class="doccomment">///</span>
@@ -278,15 +312,15 @@
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">MentionType</span> {
     <span class="doccomment">/// Channel mention.</span>
-    <span class="ident">Channel</span>(<span class="ident">ChannelId</span>),
+    <span class="ident">Channel</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Emoji mention.</span>
-    <span class="ident">Emoji</span>(<span class="ident">EmojiId</span>),
+    <span class="ident">Emoji</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Role mention.</span>
-    <span class="ident">Role</span>(<span class="ident">RoleId</span>),
+    <span class="ident">Role</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Timestamp mention.</span>
     <span class="ident">Timestamp</span>(<span class="ident">Timestamp</span>),
     <span class="doccomment">/// User mention.</span>
-    <span class="ident">User</span>(<span class="ident">UserId</span>),
+    <span class="ident">User</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionType</span> {

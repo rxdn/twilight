@@ -312,8 +312,6 @@
 <span id="306">306</span>
 <span id="307">307</span>
 <span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::voice::VoiceState</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -326,7 +324,8 @@
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">guild::Member</span>,
-        <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
+        <span class="ident">test::image_hash</span>,
         <span class="ident">user::User</span>,
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
@@ -340,20 +339,20 @@
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">VoiceStateUpdate</span>(<span class="ident">VoiceState</span> {
             <span class="ident">channel_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">Member</span> {
                 <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                 <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">joined_at</span>,
                 <span class="ident">mute</span>: <span class="bool-val">false</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">None</span>,
                 <span class="ident">pending</span>: <span class="bool-val">false</span>,
                 <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">RoleId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)],
+                <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">4</span>)],
                 <span class="ident">user</span>: <span class="ident">User</span> {
-                    <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">banner</span>: <span class="prelude-val">None</span>,
@@ -378,7 +377,7 @@
             <span class="ident">session_id</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">suppress</span>: <span class="bool-val">false</span>,
             <span class="ident">token</span>: <span class="prelude-val">None</span>,
-            <span class="ident">user_id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">user_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-val">None</span>,
         });
 
@@ -398,7 +397,7 @@
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;member&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -411,7 +410,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;deaf&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;joined_at&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2021-09-19T17:30:45.000000+00:00&quot;</span>),
@@ -423,7 +422,7 @@
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;roles&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;4&quot;</span>),
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;user&quot;</span>),
@@ -442,7 +441,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;0909&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;foo&quot;</span>),
@@ -463,7 +462,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;suppress&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;user_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;request_to_speak_timestamp&quot;</span>),
                 <span class="ident">Token::None</span>,
@@ -481,25 +480,22 @@
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">VoiceStateUpdate</span>(<span class="ident">VoiceState</span> {
             <span class="ident">channel_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">999_999</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">999_999</span>)),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">Member</span> {
                 <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                 <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">999_999</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">999_999</span>),
                 <span class="ident">joined_at</span>,
                 <span class="ident">mute</span>: <span class="bool-val">false</span>,
                 <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;Twilight&quot;</span>.<span class="ident">to_string</span>()),
                 <span class="ident">pending</span>: <span class="bool-val">false</span>,
                 <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                <span class="ident">roles</span>: <span class="macro">vec!</span>[
-                    <span class="ident">RoleId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                    <span class="ident">RoleId::new</span>(<span class="number">124</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                ],
+                <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">Id::new</span>(<span class="number">124</span>)],
                 <span class="ident">user</span>: <span class="ident">User</span> {
-                    <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1_234_123_123_123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1_234_123_123_123</span>),
                     <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a21312321231236060dfe562c&quot;</span>.<span class="ident">to_string</span>()),
+                    <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                     <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                     <span class="ident">bot</span>: <span class="bool-val">false</span>,
                     <span class="ident">discriminator</span>: <span class="number">4242</span>,
@@ -522,7 +518,7 @@
             <span class="ident">session_id</span>: <span class="string">&quot;asdasdas1da98da2b3ab3a&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">suppress</span>: <span class="bool-val">false</span>,
             <span class="ident">token</span>: <span class="prelude-val">None</span>,
-            <span class="ident">user_id</span>: <span class="ident">UserId::new</span>(<span class="number">123_213</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">user_id</span>: <span class="ident">Id::new</span>(<span class="number">123_213</span>),
             <span class="ident">request_to_speak_timestamp</span>: <span class="prelude-val">Some</span>(<span class="ident">request_to_speak_timestamp</span>),
         });
 
@@ -546,7 +542,7 @@
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;999999&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;member&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -569,9 +565,9 @@
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;roles&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">2</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;123&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;124&quot;</span>),
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;user&quot;</span>),
@@ -583,7 +579,7 @@
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;avatar&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;a21312321231236060dfe562c&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::AVATAR_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;banner&quot;</span>),
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;bot&quot;</span>),
@@ -591,7 +587,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;4242&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1234123123123&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;Twilight Sparkle&quot;</span>),
@@ -612,7 +608,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;suppress&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;user_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;123213&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;request_to_speak_timestamp&quot;</span>),
                 <span class="ident">Token::Some</span>,

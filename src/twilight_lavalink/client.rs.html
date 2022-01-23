@@ -425,6 +425,9 @@
 <span id="419">419</span>
 <span id="420">420</span>
 <span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Client to manage nodes and players.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -441,7 +444,10 @@
 };
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">gateway::event::Event</span>,
-    <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 
 <span class="doccomment">/// An error that can occur while interacting with the client.</span>
@@ -525,9 +531,9 @@
     <span class="ident">players</span>: <span class="ident">PlayerManager</span>,
     <span class="ident">resume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resume</span><span class="op">&gt;</span>,
     <span class="ident">shard_count</span>: <span class="ident">u64</span>,
-    <span class="ident">user_id</span>: <span class="ident">UserId</span>,
-    <span class="ident">server_updates</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">SlimVoiceServerUpdate</span><span class="op">&gt;</span>,
-    <span class="ident">sessions</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">GuildId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
+    <span class="ident">server_updates</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">SlimVoiceServerUpdate</span><span class="op">&gt;</span>,
+    <span class="ident">sessions</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Lavalink</span> {
@@ -542,7 +548,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`add`]: Self::add</span>
     <span class="doccomment">/// [`new_with_resume`]: Self::new_with_resume</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">user_id</span>: <span class="ident">UserId</span>, <span class="ident">shard_count</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">shard_count</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::_new_with_resume</span>(<span class="ident">user_id</span>, <span class="ident">shard_count</span>, <span class="prelude-val">None</span>)
     }
 
@@ -554,14 +560,14 @@
     <span class="doccomment">/// [`Resume`]: crate::node::Resume</span>
     <span class="doccomment">/// [`new`]: Self::new</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_resume</span>(
-        <span class="ident">user_id</span>: <span class="ident">UserId</span>,
+        <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
         <span class="ident">shard_count</span>: <span class="ident">u64</span>,
         <span class="ident">resume</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resume</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::_new_with_resume</span>(<span class="ident">user_id</span>, <span class="ident">shard_count</span>, <span class="ident">resume</span>.<span class="ident">into</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">_new_with_resume</span>(<span class="ident">user_id</span>: <span class="ident">UserId</span>, <span class="ident">shard_count</span>: <span class="ident">u64</span>, <span class="ident">resume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resume</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">_new_with_resume</span>(<span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">shard_count</span>: <span class="ident">u64</span>, <span class="ident">resume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resume</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">nodes</span>: <span class="ident">DashMap::new</span>(),
             <span class="ident">players</span>: <span class="ident">PlayerManager::new</span>(),
@@ -808,7 +814,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`PlayerManager::get`]: crate::player::PlayerManager::get</span>
     <span class="doccomment">/// [`add`]: Self::add</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">player</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Player</span><span class="op">&gt;</span>, <span class="ident">ClientError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">player</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Player</span><span class="op">&gt;</span>, <span class="ident">ClientError</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">player</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">players</span>().<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>) {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">player</span>);
         }

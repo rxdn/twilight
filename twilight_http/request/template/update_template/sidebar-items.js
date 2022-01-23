@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["UpdateTemplateErrorType","Type of [`UpdateTemplateError`] that occurred."]],"struct":[["UpdateTemplate","Update the template’s metadata, by ID and code."],["UpdateTemplateError","Error emitted when the template can not be updated as configured."]]});

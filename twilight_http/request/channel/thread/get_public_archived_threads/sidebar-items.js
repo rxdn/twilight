@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["GetPublicArchivedThreads","Returns archived public threads in the channel."]]});

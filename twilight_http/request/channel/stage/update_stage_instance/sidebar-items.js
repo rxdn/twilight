@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["UpdateStageInstanceErrorType",""]],"struct":[["UpdateStageInstance","Update fields of an existing stage instance."],["UpdateStageInstanceError","The request can not be created as configured."]]});

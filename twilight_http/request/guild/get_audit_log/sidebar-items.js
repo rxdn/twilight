@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["GetAuditLogErrorType","Type of [`GetAuditLogError`] that occurred."]],"struct":[["GetAuditLog","Get the audit log for a guild."],["GetAuditLogError","The error returned when the audit log can not be requested as configured."]]});

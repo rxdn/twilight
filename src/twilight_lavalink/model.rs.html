@@ -1025,6 +1025,13 @@
 <span id="1019">1019</span>
 <span id="1020">1020</span>
 <span id="1021">1021</span>
+<span id="1022">1022</span>
+<span id="1023">1023</span>
+<span id="1024">1024</span>
+<span id="1025">1025</span>
+<span id="1026">1026</span>
+<span id="1027">1027</span>
+<span id="1028">1028</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Models to (de)serialize incoming/outgoing websocket events and HTTP</span>
 <span class="doccomment">//! responses.</span>
 
@@ -1064,7 +1071,10 @@
 
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Opcode</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">twilight_model</span>::{<span class="ident">gateway::payload::incoming::VoiceServerUpdate</span>, <span class="ident">id::GuildId</span>};
+    <span class="kw">use</span> <span class="ident">twilight_model</span>::{
+        <span class="ident">gateway::payload::incoming::VoiceServerUpdate</span>,
+        <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
+    };
 
     <span class="doccomment">/// An outgoing event to send to Lavalink.</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -1143,14 +1153,14 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Destroy</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
     }
 
     <span class="kw">impl</span> <span class="ident">Destroy</span> {
         <span class="doccomment">/// Create a new destroy event.</span>
-        <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::Destroy</span>,
@@ -1158,8 +1168,8 @@
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Destroy</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Destroy</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::Destroy</span>,
@@ -1175,20 +1185,20 @@
         <span class="doccomment">/// The bands to use as part of the equalizer.</span>
         <span class="kw">pub</span> <span class="ident">bands</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
     }
 
     <span class="kw">impl</span> <span class="ident">Equalizer</span> {
         <span class="doccomment">/// Create a new equalizer event.</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">bands</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">bands</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">bands</span>))
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Equalizer</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">bands</span>): (<span class="ident">GuildId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Equalizer</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">bands</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>)) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">bands</span>,
                 <span class="ident">guild_id</span>,
@@ -1227,7 +1237,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pause</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
         <span class="doccomment">/// Whether to pause the player.</span>
@@ -1240,13 +1250,13 @@
         <span class="doccomment">/// Create a new pause event.</span>
         <span class="doccomment">///</span>
         <span class="doccomment">/// Set to `true` to pause the player or `false` to resume it.</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">pause</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">pause</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">pause</span>))
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Pause</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">pause</span>): (<span class="ident">GuildId</span>, <span class="ident">bool</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Pause</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">pause</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">bool</span>)) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::Pause</span>,
@@ -1268,7 +1278,7 @@
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
         <span class="kw">pub</span> <span class="ident">end_time</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Whether or not to replace the currently playing track with this new</span>
         <span class="doccomment">/// track.</span>
         <span class="doccomment">///</span>
@@ -1289,7 +1299,7 @@
     <span class="kw">impl</span> <span class="ident">Play</span> {
         <span class="doccomment">/// Create a new play event.</span>
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-            <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+            <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
             <span class="ident">track</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
             <span class="ident">start_time</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
             <span class="ident">end_time</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1299,31 +1309,31 @@
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Play</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>): (<span class="ident">GuildId</span>, <span class="ident">T</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Play</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>)) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="bool-val">true</span>))
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">S</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Play</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>): (<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">S</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">S</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Play</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">S</span>)) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>, <span class="prelude-val">None</span>, <span class="bool-val">true</span>))
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>)<span class="op">&gt;</span>
-        <span class="kw">for</span> <span class="ident">Play</span>
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Play</span>
     {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>, <span class="ident">end_time</span>): (<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>)) -&gt; <span class="self">Self</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>, <span class="ident">end_time</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>)) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>, <span class="ident">end_time</span>, <span class="bool-val">true</span>))
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>
-        <span class="kw">for</span> <span class="ident">Play</span>
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Play</span>
     {
         <span class="kw">fn</span> <span class="ident">from</span>(
-            (<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>, <span class="ident">end_time</span>, <span class="ident">no_replace</span>): (<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>, <span class="ident">bool</span>),
+            (<span class="ident">guild_id</span>, <span class="ident">track</span>, <span class="ident">start_time</span>, <span class="ident">end_time</span>, <span class="ident">no_replace</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">E</span>, <span class="ident">bool</span>),
         ) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">end_time</span>: <span class="ident">end_time</span>.<span class="ident">into</span>(),
@@ -1342,7 +1352,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Seek</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
         <span class="doccomment">/// The position in milliseconds to seek to.</span>
@@ -1351,13 +1361,13 @@
 
     <span class="kw">impl</span> <span class="ident">Seek</span> {
         <span class="doccomment">/// Create a new seek event.</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">position</span>: <span class="ident">i64</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">position</span>: <span class="ident">i64</span>) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">position</span>))
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">i64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Seek</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">position</span>): (<span class="ident">GuildId</span>, <span class="ident">i64</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">i64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Seek</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">position</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">i64</span>)) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::Seek</span>,
@@ -1374,18 +1384,18 @@
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     }
 
     <span class="kw">impl</span> <span class="ident">Stop</span> {
         <span class="doccomment">/// Create a new stop event.</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">guild_id</span>)
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Stop</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Stop</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::Stop</span>,
@@ -1401,7 +1411,7 @@
         <span class="doccomment">/// The inner event being forwarded to a node.</span>
         <span class="kw">pub</span> <span class="ident">event</span>: <span class="ident">SlimVoiceServerUpdate</span>,
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
         <span class="doccomment">/// The session ID of the voice channel.</span>
@@ -1411,7 +1421,7 @@
     <span class="kw">impl</span> <span class="ident">VoiceUpdate</span> {
         <span class="doccomment">/// Create a new voice update event.</span>
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-            <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+            <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
             <span class="ident">session_id</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
             <span class="ident">event</span>: <span class="ident">SlimVoiceServerUpdate</span>,
         ) -&gt; <span class="self">Self</span> {
@@ -1419,8 +1429,10 @@
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">SlimVoiceServerUpdate</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceUpdate</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">session_id</span>, <span class="ident">event</span>): (<span class="ident">GuildId</span>, <span class="ident">T</span>, <span class="ident">SlimVoiceServerUpdate</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">SlimVoiceServerUpdate</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceUpdate</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>(
+            (<span class="ident">guild_id</span>, <span class="ident">session_id</span>, <span class="ident">event</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">SlimVoiceServerUpdate</span>),
+        ) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">event</span>,
                 <span class="ident">guild_id</span>,
@@ -1438,7 +1450,7 @@
         <span class="doccomment">/// The endpoint of the Discord voice server.</span>
         <span class="kw">pub</span> <span class="ident">endpoint</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The authentication token used by the bot to connect to the Discord</span>
         <span class="doccomment">/// voice server.</span>
         <span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">String</span>,
@@ -1460,7 +1472,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Volume</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
         <span class="doccomment">/// The volume of the player from 0 to 1000. 100 is the default.</span>
@@ -1469,13 +1481,13 @@
 
     <span class="kw">impl</span> <span class="ident">Volume</span> {
         <span class="doccomment">/// Create a new volume event.</span>
-        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">volume</span>: <span class="ident">i64</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">volume</span>: <span class="ident">i64</span>) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">volume</span>))
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">i64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Volume</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">volume</span>): (<span class="ident">GuildId</span>, <span class="ident">i64</span>)) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">i64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Volume</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">volume</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">i64</span>)) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::Volume</span>,
@@ -1490,7 +1502,7 @@
 
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Opcode</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">twilight_model::id::GuildId</span>;
+    <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>};
 
     <span class="doccomment">/// An incoming event from a Lavalink node.</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -1527,7 +1539,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PlayerUpdate</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
         <span class="kw">pub</span> <span class="ident">op</span>: <span class="ident">Opcode</span>,
         <span class="doccomment">/// The new state of the player.</span>
@@ -1539,10 +1551,12 @@
     <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PlayerUpdateState</span> {
-        <span class="doccomment">/// The new position of the player.</span>
-        <span class="kw">pub</span> <span class="ident">position</span>: <span class="ident">i64</span>,
-        <span class="doccomment">/// The new time of the player.</span>
+        <span class="doccomment">/// True when the player is connected to the voice gateway.</span>
+        <span class="kw">pub</span> <span class="ident">connected</span>: <span class="ident">bool</span>,
+        <span class="doccomment">/// Unix timestamp of the player in milliseconds.</span>
         <span class="kw">pub</span> <span class="ident">time</span>: <span class="ident">i64</span>,
+        <span class="doccomment">/// Track position in milliseconds. None if not playing anything.</span>
+        <span class="kw">pub</span> <span class="ident">position</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>,
     }
 
     <span class="doccomment">/// Statistics about a node and its host.</span>
@@ -1630,7 +1644,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TrackEnd</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The type of track event.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
         <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">TrackEventType</span>,
@@ -1650,7 +1664,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TrackStart</span> {
         <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The type of track event.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
         <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">TrackEventType</span>,
@@ -1666,7 +1680,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WebsocketClosed</span> {
         <span class="doccomment">/// Guild ID of the associated player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Type of track event.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
         <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">TrackEventType</span>,
@@ -1709,7 +1723,7 @@
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-    <span class="kw">use</span> <span class="ident">twilight_model::id::GuildId</span>;
+    <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>};
 
     <span class="macro">assert_fields!</span>(<span class="ident">Destroy</span>: <span class="ident">guild_id</span>, <span class="ident">op</span>);
     <span class="macro">assert_impl_all!</span>(
@@ -1717,7 +1731,7 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,
@@ -1739,7 +1753,7 @@
         <span class="ident">Equalizer</span>: <span class="ident">Clone</span>,
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EqualizerBand</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,
@@ -1779,7 +1793,7 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,
@@ -1813,17 +1827,17 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">u64</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">u64</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,
@@ -1835,7 +1849,7 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">i64</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">i64</span>)<span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,
@@ -1906,7 +1920,7 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,
@@ -1958,7 +1972,7 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">GuildId</span>, <span class="ident">String</span>, <span class="ident">SlimVoiceServerUpdate</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">SlimVoiceServerUpdate</span>)<span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,

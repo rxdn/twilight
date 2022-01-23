@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["CreateMessageErrorType","Type of [`CreateMessageError`] that occurred."]],"struct":[["CreateMessage","Send a message to a channel."],["CreateMessageError","The error created when a message can not be created as configured."]]});
+initSidebarItems({"struct":[["CreateMessage","Send a message to a channel."]]});

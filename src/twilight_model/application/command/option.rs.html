@@ -1006,13 +1006,6 @@
 <span id="1000">1000</span>
 <span id="1001">1001</span>
 <span id="1002">1002</span>
-<span id="1003">1003</span>
-<span id="1004">1004</span>
-<span id="1005">1005</span>
-<span id="1006">1006</span>
-<span id="1007">1007</span>
-<span id="1008">1008</span>
-<span id="1009">1009</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel::ChannelType</span>, <span class="ident">util::is_false</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
@@ -1635,10 +1628,7 @@
         <span class="ident">CommandOptionChoice</span>, <span class="ident">CommandOptionValue</span>, <span class="ident">Number</span>, <span class="ident">NumberCommandOptionData</span>,
         <span class="ident">OptionsCommandOptionData</span>,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">channel::ChannelType</span>,
-        <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">CommandId</span>, <span class="ident">CommandVersionId</span>, <span class="ident">GuildId</span>},
-    };
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel::ChannelType</span>, <span class="ident">id::Id</span>};
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
@@ -1690,11 +1680,11 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="kw">fn</span> <span class="ident">test_command_option_full</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Command</span> {
-            <span class="ident">application_id</span>: <span class="prelude-val">Some</span>(<span class="ident">ApplicationId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">application_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">100</span>)),
             <span class="ident">default_permission</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">description</span>: <span class="string">&quot;this command is a test&quot;</span>.<span class="ident">into</span>(),
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandId::new</span>(<span class="number">200</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">300</span>)),
+            <span class="ident">id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">200</span>)),
             <span class="ident">kind</span>: <span class="ident">CommandType::ChatInput</span>,
             <span class="ident">name</span>: <span class="string">&quot;test command&quot;</span>.<span class="ident">into</span>(),
             <span class="ident">options</span>: <span class="ident">Vec::from</span>([<span class="ident">CommandOption::SubCommandGroup</span>(<span class="ident">OptionsCommandOptionData</span> {
@@ -1774,7 +1764,7 @@
                     ]),
                 })]),
             })]),
-            <span class="ident">version</span>: <span class="ident">CommandVersionId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">version</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
         };
 
         <span class="ident">serde_test::assert_tokens</span>(
@@ -1786,9 +1776,7 @@
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;application_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;ApplicationId&quot;</span>,
-                },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;100&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;default_permission&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -1797,11 +1785,11 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;this command is a test&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;300&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;CommandId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;200&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="number">1</span>),
@@ -2005,9 +1993,7 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;version&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;CommandVersionId&quot;</span>,
-                },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
             ],

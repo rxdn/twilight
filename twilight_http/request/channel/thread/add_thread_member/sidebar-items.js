@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["AddThreadMember","Add another member to a thread."]]});

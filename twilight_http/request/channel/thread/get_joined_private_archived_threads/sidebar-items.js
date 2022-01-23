@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["GetJoinedPrivateArchivedThreads","Returns archived private threads in the channel that the current user has joined."]]});

@@ -510,17 +510,13 @@
 <span id="504">504</span>
 <span id="505">505</span>
 <span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">gateway::presence</span>::{<span class="ident">Presence</span>, <span class="ident">PresenceListDeserializer</span>},
     <span class="ident">guild::member</span>::{<span class="ident">Member</span>, <span class="ident">MemberListDeserializer</span>},
-    <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
@@ -532,11 +528,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MemberChunk</span> {
     <span class="kw">pub</span> <span class="ident">chunk_count</span>: <span class="ident">u32</span>,
     <span class="kw">pub</span> <span class="ident">chunk_index</span>: <span class="ident">u32</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">members</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Member</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">nonce</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">not_found</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">UserId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">not_found</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">presences</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Presence</span><span class="op">&gt;</span>,
 }
@@ -639,8 +635,7 @@
                     <span class="comment">// Since the guild ID may not be deserialized yet we&#39;ll use</span>
                     <span class="comment">// a temporary placeholder value and update it with the real</span>
                     <span class="comment">// guild ID after all the fields have been deserialized.</span>
-                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span>
-                        <span class="ident">MemberListDeserializer::new</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
+                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">MemberListDeserializer::new</span>(<span class="ident">Id::new</span>(<span class="number">1</span>));
 
                     <span class="ident">members</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>);
                 }
@@ -663,8 +658,7 @@
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;presences&quot;</span>));
                     }
 
-                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span>
-                        <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
+                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">Id::new</span>(<span class="number">1</span>));
 
                     <span class="ident">presences</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>);
                 }
@@ -731,7 +725,8 @@
         <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">gateway::presence</span>::{<span class="ident">ClientStatus</span>, <span class="ident">Presence</span>, <span class="ident">Status</span>, <span class="ident">UserOrId</span>},
         <span class="ident">guild::Member</span>,
-        <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
+        <span class="ident">test::image_hash</span>,
         <span class="ident">user</span>::{<span class="ident">User</span>, <span class="ident">UserFlags</span>},
     };
     <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
@@ -755,7 +750,7 @@
                 <span class="string">&quot;pending&quot;</span>: <span class="bool-val">true</span>,
                 <span class="string">&quot;roles&quot;</span>: [<span class="string">&quot;6&quot;</span>],
                 <span class="string">&quot;user&quot;</span>: {
-                    <span class="string">&quot;avatar&quot;</span>: <span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>,
+                    <span class="string">&quot;avatar&quot;</span>: <span class="ident">image_hash::AVATAR_INPUT</span>,
                     <span class="string">&quot;discriminator&quot;</span>: <span class="string">&quot;0001&quot;</span>,
                     <span class="string">&quot;id&quot;</span>: <span class="string">&quot;5&quot;</span>,
                     <span class="string">&quot;public_flags&quot;</span>: <span class="number">131_072</span>,
@@ -770,7 +765,7 @@
                 <span class="string">&quot;nick&quot;</span>: <span class="string">&quot;chunk&quot;</span>,
                 <span class="string">&quot;roles&quot;</span>: [<span class="string">&quot;6&quot;</span>],
                 <span class="string">&quot;user&quot;</span>: {
-                    <span class="string">&quot;avatar&quot;</span>: <span class="string">&quot;bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb&quot;</span>,
+                    <span class="string">&quot;avatar&quot;</span>: <span class="ident">image_hash::AVATAR_INPUT</span>,
                     <span class="string">&quot;discriminator&quot;</span>: <span class="string">&quot;0001&quot;</span>,
                     <span class="string">&quot;id&quot;</span>: <span class="string">&quot;6&quot;</span>,
                     <span class="string">&quot;username&quot;</span>: <span class="string">&quot;test&quot;</span>,
@@ -784,7 +779,7 @@
                 <span class="string">&quot;nick&quot;</span>: <span class="string">&quot;chunk&quot;</span>,
                 <span class="string">&quot;roles&quot;</span>: [<span class="string">&quot;6&quot;</span>],
                 <span class="string">&quot;user&quot;</span>: {
-                    <span class="string">&quot;avatar&quot;</span>: <span class="string">&quot;cccccccccccccccccccccccccccccccc&quot;</span>,
+                    <span class="string">&quot;avatar&quot;</span>: <span class="ident">image_hash::AVATAR_INPUT</span>,
                     <span class="string">&quot;bot&quot;</span>: <span class="bool-val">true</span>,
                     <span class="string">&quot;discriminator&quot;</span>: <span class="string">&quot;0001&quot;</span>,
                     <span class="string">&quot;id&quot;</span>: <span class="string">&quot;3&quot;</span>,
@@ -802,7 +797,7 @@
                     <span class="string">&quot;7&quot;</span>,
                 ],
                 <span class="string">&quot;user&quot;</span>: {
-                    <span class="string">&quot;avatar&quot;</span>: <span class="string">&quot;dddddddddddddddddddddddddddddddd&quot;</span>,
+                    <span class="string">&quot;avatar&quot;</span>: <span class="ident">image_hash::AVATAR_INPUT</span>,
                     <span class="string">&quot;bot&quot;</span>: <span class="bool-val">true</span>,
                     <span class="string">&quot;discriminator&quot;</span>: <span class="string">&quot;0001&quot;</span>,
                     <span class="string">&quot;id&quot;</span>: <span class="string">&quot;2&quot;</span>,
@@ -845,26 +840,23 @@
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">MemberChunk</span> {
             <span class="ident">chunk_count</span>: <span class="number">1</span>,
             <span class="ident">chunk_index</span>: <span class="number">0</span>,
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">members</span>: <span class="ident">Vec::from</span>([
                 <span class="ident">Member</span> {
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
                     <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">joined_at</span>,
                     <span class="ident">mute</span>: <span class="bool-val">false</span>,
                     <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;chunk&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">pending</span>: <span class="bool-val">false</span>,
                     <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">roles</span>: <span class="macro">vec!</span>[
-                        <span class="ident">RoleId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                        <span class="ident">RoleId::new</span>(<span class="number">7</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                    ],
+                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">6</span>), <span class="ident">Id::new</span>(<span class="number">7</span>)],
                     <span class="ident">user</span>: <span class="ident">User</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                         <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;dddddddddddddddddddddddddddddddd&quot;</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                         <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                         <span class="ident">bot</span>: <span class="bool-val">true</span>,
                         <span class="ident">discriminator</span>: <span class="number">1</span>,
@@ -883,17 +875,17 @@
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
                     <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">joined_at</span>,
                     <span class="ident">mute</span>: <span class="bool-val">false</span>,
                     <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;chunk&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">pending</span>: <span class="bool-val">false</span>,
                     <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">RoleId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)],
+                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">6</span>)],
                     <span class="ident">user</span>: <span class="ident">User</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
                         <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;cccccccccccccccccccccccccccccccc&quot;</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                         <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                         <span class="ident">bot</span>: <span class="bool-val">true</span>,
                         <span class="ident">discriminator</span>: <span class="number">1</span>,
@@ -912,17 +904,17 @@
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
                     <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">joined_at</span>,
                     <span class="ident">mute</span>: <span class="bool-val">false</span>,
                     <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;chunk&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">pending</span>: <span class="bool-val">true</span>,
                     <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">RoleId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)],
+                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">6</span>)],
                     <span class="ident">user</span>: <span class="ident">User</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">5</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">5</span>),
                         <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                         <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                         <span class="ident">bot</span>: <span class="bool-val">false</span>,
                         <span class="ident">discriminator</span>: <span class="number">1</span>,
@@ -941,17 +933,17 @@
                     <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                     <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
                     <span class="ident">deaf</span>: <span class="bool-val">false</span>,
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">joined_at</span>,
                     <span class="ident">mute</span>: <span class="bool-val">false</span>,
                     <span class="ident">nick</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;chunk&quot;</span>.<span class="ident">to_owned</span>()),
                     <span class="ident">pending</span>: <span class="bool-val">false</span>,
                     <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">RoleId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)],
+                    <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">6</span>)],
                     <span class="ident">user</span>: <span class="ident">User</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">6</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">6</span>),
                         <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb&quot;</span>.<span class="ident">to_owned</span>()),
+                        <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                         <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                         <span class="ident">bot</span>: <span class="bool-val">false</span>,
                         <span class="ident">discriminator</span>: <span class="number">1</span>,
@@ -977,11 +969,9 @@
                         <span class="ident">mobile</span>: <span class="prelude-val">None</span>,
                         <span class="ident">web</span>: <span class="prelude-val">Some</span>(<span class="ident">Status::Online</span>),
                     },
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">status</span>: <span class="ident">Status::Online</span>,
-                    <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                    },
+                    <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>) },
                 },
                 <span class="ident">Presence</span> {
                     <span class="ident">activities</span>: <span class="ident">Vec::new</span>(),
@@ -990,11 +980,9 @@
                         <span class="ident">mobile</span>: <span class="prelude-val">None</span>,
                         <span class="ident">web</span>: <span class="prelude-val">Some</span>(<span class="ident">Status::Online</span>),
                     },
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">status</span>: <span class="ident">Status::Online</span>,
-                    <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                    },
+                    <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>) },
                 },
                 <span class="ident">Presence</span> {
                     <span class="ident">activities</span>: <span class="ident">Vec::new</span>(),
@@ -1003,11 +991,9 @@
                         <span class="ident">mobile</span>: <span class="prelude-val">None</span>,
                         <span class="ident">web</span>: <span class="prelude-val">None</span>,
                     },
-                    <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                     <span class="ident">status</span>: <span class="ident">Status::DoNotDisturb</span>,
-                    <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> {
-                        <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">5</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-                    },
+                    <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">5</span>) },
                 },
             ]),
         };

@@ -144,6 +144,13 @@
 <span id="138">138</span>
 <span id="139">139</span>
 <span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight-lavalink</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [![codecov badge][]][codecov link] [![discord badge][]][discord link] [![github badge][]][github link] [![license badge][]][license link] ![rust badge]</span>
@@ -168,14 +175,13 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### TLS</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! `twilight-lavalink` has features to enable [`async-tungstenite`]&#39;s TLS</span>
-<span class="doccomment">//! features. These features are mutually exclusive. `rustls` is enabled by</span>
+<span class="doccomment">//! `twilight-lavalink` has features to enable [`tokio-tungstenite`]&#39;s TLS</span>
+<span class="doccomment">//! features. These features are mutually exclusive. `rustls-native-roots` is enabled by</span>
 <span class="doccomment">//! default.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! #### `native`</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The `native` feature enables [`async-tungstenite`]&#39;s `tokio-native-tls`</span>
-<span class="doccomment">//! feature.</span>
+<span class="doccomment">//! The `native` feature enables [`tokio-tungstenite`]&#39;s `native-tls` feature.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! To enable `native`, do something like this in your `Cargo.toml`:</span>
 <span class="doccomment">//!</span>
@@ -184,12 +190,19 @@
 <span class="doccomment">//! twilight-lavalink = { default-features = false, features = [&quot;native&quot;], version = &quot;0.2&quot; }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! #### `rustls`</span>
+<span class="doccomment">//! #### `rustls-native-roots`</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! The `rustls` feature enables [`async-tungstenite`]&#39;s `tokio-rustls` feature, which</span>
-<span class="doccomment">//! use [`rustls`] as the TLS backend.</span>
+<span class="doccomment">//! The `rustls-native-roots` feature enables [`tokio-tungstenite`]&#39;s `rustls-tls-native-roots` feature,</span>
+<span class="doccomment">//! which uses [`rustls`] as the TLS backend and [`rustls-native-certs`] for root certificates.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This is enabled by default.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #### `rustls-webpki-roots`</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `rustls-webpki-roots` feature enables [`tokio-tungstenite`]&#39;s `rustls-tls-webpki-roots` feature,</span>
+<span class="doccomment">//! which uses [`rustls`] as the TLS backend and [`webpki-roots`] for root certificates.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This should be preferred over `rustls-native-roots` in Docker containers based on `scratch`.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ### Tracing</span>
 <span class="doccomment">//!</span>
@@ -205,7 +218,6 @@
 <span class="doccomment">//! ```rust,no_run</span>
 <span class="doccomment">//! use futures_util::stream::StreamExt;</span>
 <span class="doccomment">//! use std::{</span>
-<span class="doccomment">//!     convert::TryInto,</span>
 <span class="doccomment">//!     env,</span>
 <span class="doccomment">//!     error::Error,</span>
 <span class="doccomment">//!     future::Future,</span>
@@ -245,9 +257,11 @@
 <span class="doccomment">//! `twilight` repository][github examples link].</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [Lavalink]: https://github.com/freyacodes/Lavalink</span>
-<span class="doccomment">//! [`async-tungstenite`]: https://crates.io/crates/async-tungstenite</span>
 <span class="doccomment">//! [`http`]: https://crates.io/crates/http</span>
 <span class="doccomment">//! [`rustls`]: https://crates.io/crates/rustls</span>
+<span class="doccomment">//! [`rustls-native-certs`]: https://crates.io/crates/rustls-native-certs</span>
+<span class="doccomment">//! [`tokio-tungstenite`]: https://crates.io/crates/tokio-tungstenite</span>
+<span class="doccomment">//! [`webpki-roots`]: https://crates.io/crates/webpki-roots</span>
 <span class="doccomment">//! [client]: Lavalink</span>
 <span class="doccomment">//! [codecov badge]: https://img.shields.io/codecov/c/gh/twilight-rs/twilight?logo=codecov&amp;style=for-the-badge&amp;token=E9ERLJL0L2</span>
 <span class="doccomment">//! [codecov link]: https://app.codecov.io/gh/twilight-rs/twilight/</span>
@@ -260,7 +274,7 @@
 <span class="doccomment">//! [license link]: https://github.com/twilight-rs/twilight/blob/main/LICENSE.md</span>
 <span class="doccomment">//! [node]: Node</span>
 <span class="doccomment">//! [process]: Lavalink::process</span>
-<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.53+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
+<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.57+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
 
 <span class="attribute">#![<span class="ident">deny</span>(
     <span class="ident">clippy::all</span>,

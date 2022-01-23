@@ -150,8 +150,6 @@
 <span id="144">144</span>
 <span id="145">145</span>
 <span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">guild::UnavailableGuild</span>, <span class="ident">oauth::PartialApplication</span>, <span class="ident">user::CurrentUser</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -172,7 +170,7 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Ready</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">guild::UnavailableGuild</span>,
-        <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
         <span class="ident">oauth</span>::{<span class="ident">current_application_info::ApplicationFlags</span>, <span class="ident">PartialApplication</span>},
         <span class="ident">user::CurrentUser</span>,
     };
@@ -183,11 +181,11 @@
     <span class="kw">fn</span> <span class="ident">test_ready</span>() {
         <span class="kw">let</span> <span class="ident">guilds</span> <span class="op">=</span> <span class="macro">vec!</span>[
             <span class="ident">UnavailableGuild</span> {
-                <span class="ident">id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
                 <span class="ident">unavailable</span>: <span class="bool-val">true</span>,
             },
             <span class="ident">UnavailableGuild</span> {
-                <span class="ident">id</span>: <span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                 <span class="ident">unavailable</span>: <span class="bool-val">true</span>,
             },
         ];
@@ -195,7 +193,7 @@
         <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="ident">Ready</span> {
             <span class="ident">application</span>: <span class="ident">PartialApplication</span> {
                 <span class="ident">flags</span>: <span class="ident">ApplicationFlags::empty</span>(),
-                <span class="ident">id</span>: <span class="ident">ApplicationId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">100</span>),
             },
             <span class="ident">guilds</span>,
             <span class="ident">session_id</span>: <span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>(),
@@ -208,7 +206,7 @@
                 <span class="ident">discriminator</span>: <span class="number">1212</span>,
                 <span class="ident">email</span>: <span class="prelude-val">None</span>,
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                 <span class="ident">mfa_enabled</span>: <span class="bool-val">false</span>,
                 <span class="ident">name</span>: <span class="string">&quot;bar&quot;</span>.<span class="ident">to_owned</span>(),
@@ -234,9 +232,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;flags&quot;</span>),
                 <span class="ident">Token::U64</span>(<span class="number">0</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;ApplicationId&quot;</span>,
-                },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;100&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guilds&quot;</span>),
@@ -246,7 +242,7 @@
                     <span class="ident">len</span>: <span class="number">2</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;unavailable&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
@@ -256,7 +252,7 @@
                     <span class="ident">len</span>: <span class="number">2</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;unavailable&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
@@ -286,7 +282,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1212&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;3&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;mfa_enabled&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),

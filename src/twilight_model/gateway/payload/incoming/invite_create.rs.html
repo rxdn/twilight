@@ -213,13 +213,18 @@
 <span id="207">207</span>
 <span id="208">208</span>
 <span id="209">209</span>
+<span id="210">210</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Gateway event payload when an invite is created.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">datetime::Timestamp</span>,
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
     <span class="ident">invite::TargetType</span>,
     <span class="ident">user</span>::{<span class="self">self</span>, <span class="ident">DiscriminatorDisplay</span>, <span class="ident">User</span>},
+    <span class="ident">util::image_hash::ImageHash</span>,
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -229,13 +234,13 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InviteCreate</span> {
     <span class="doccomment">/// ID of the channel invited users will first see.</span>
-    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Unique code.</span>
     <span class="kw">pub</span> <span class="ident">code</span>: <span class="ident">String</span>,
     <span class="doccomment">/// When the invite was created.</span>
     <span class="kw">pub</span> <span class="ident">created_at</span>: <span class="ident">Timestamp</span>,
     <span class="doccomment">/// ID of the guild being invited to.</span>
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Information about the user who created the invite.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">inviter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>,
@@ -267,7 +272,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PartialUser</span> {
     <span class="doccomment">/// Hash of the user&#39;s avatar.</span>
-    <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Discriminator used to differentiate people with the same [`username`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`username`]: Self::username</span>
@@ -280,7 +285,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;user::discriminator&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">discriminator</span>: <span class="ident">u16</span>,
     <span class="doccomment">/// ID of the user.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">UserId</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Username of the user.</span>
     <span class="kw">pub</span> <span class="ident">username</span>: <span class="ident">String</span>,
 }
@@ -297,10 +302,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">InviteCreate</span>, <span class="ident">PartialUser</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">datetime::Timestamp</span>,
-        <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">UserId</span>},
-    };
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">datetime::Timestamp</span>, <span class="ident">id::Id</span>, <span class="ident">test::image_hash</span>};
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
@@ -348,10 +350,10 @@
         <span class="kw">let</span> <span class="ident">created_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_secs</span>(<span class="number">1_609_459_200</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">InviteCreate</span> {
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">code</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">7</span>),
             <span class="ident">created_at</span>,
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">inviter</span>: <span class="prelude-val">None</span>,
             <span class="ident">max_age</span>: <span class="number">3600</span>,
             <span class="ident">max_uses</span>: <span class="number">5</span>,
@@ -369,14 +371,14 @@
                     <span class="ident">len</span>: <span class="number">8</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;channel_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;ChannelId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;code&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;aaaaaaa&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;created_at&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2021-01-01T00:00:00.000000+00:00&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;max_age&quot;</span>),
                 <span class="ident">Token::U64</span>(<span class="number">3600</span>),
@@ -394,9 +396,9 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_partial_user</span>() {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">PartialUser</span> {
-            <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">32</span>)),
+            <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
             <span class="ident">discriminator</span>: <span class="number">123</span>,
-            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">username</span>: <span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>(),
         };
 
@@ -409,11 +411,11 @@
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;avatar&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::AVATAR_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;0123&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;twilight&quot;</span>),

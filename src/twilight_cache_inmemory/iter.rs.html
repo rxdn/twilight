@@ -362,6 +362,19 @@
 <span id="356">356</span>
 <span id="357">357</span>
 <span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Iterators over the various resources stored in the cache.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The entry point to the module is [`InMemoryCacheIter`]. It exposes methods</span>
@@ -386,9 +399,15 @@
 };
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::VecDeque</span>, <span class="ident">hash::Hash</span>, <span class="ident">ops::Deref</span>};
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">channel</span>::{<span class="ident">message::sticker::StickerId</span>, <span class="ident">Group</span>, <span class="ident">GuildChannel</span>, <span class="ident">PrivateChannel</span>, <span class="ident">StageInstance</span>},
+    <span class="ident">channel</span>::{<span class="ident">Group</span>, <span class="ident">GuildChannel</span>, <span class="ident">PrivateChannel</span>, <span class="ident">StageInstance</span>},
     <span class="ident">guild</span>::{<span class="ident">GuildIntegration</span>, <span class="ident">Role</span>},
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">EmojiId</span>, <span class="ident">GuildId</span>, <span class="ident">IntegrationId</span>, <span class="ident">MessageId</span>, <span class="ident">RoleId</span>, <span class="ident">StageId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{
+            <span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">IntegrationMarker</span>, <span class="ident">MessageMarker</span>, <span class="ident">RoleMarker</span>,
+            <span class="ident">StageMarker</span>, <span class="ident">StickerMarker</span>, <span class="ident">UserMarker</span>,
+        },
+        <span class="ident">Id</span>,
+    },
     <span class="ident">user::User</span>,
     <span class="ident">voice::VoiceState</span>,
 };
@@ -468,12 +487,12 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```no_run</span>
 <span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-<span class="doccomment">/// use twilight_model::id::GuildId;</span>
+<span class="doccomment">/// use twilight_model::id::Id;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let cache = InMemoryCache::new();</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// // later in the application...</span>
-<span class="doccomment">/// let guild_id = GuildId::new(1).expect(&quot;non zero id&quot;);</span>
+<span class="doccomment">/// let guild_id = Id::new(1);</span>
 <span class="doccomment">/// let maybe_guild_members = cache.guild_members(guild_id);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// if let Some(guild_members) = maybe_guild_members {</span>
@@ -503,17 +522,17 @@
     }
 
     <span class="doccomment">/// Create an iterator over the emojis in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">EmojiId</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">CachedEmoji</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">CachedEmoji</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">emojis</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the groups in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">groups</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ChannelId</span>, <span class="ident">Group</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">groups</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">Group</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">groups</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the guilds in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guilds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">GuildId</span>, <span class="ident">CachedGuild</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guilds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">CachedGuild</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">guilds</span>.<span class="ident">iter</span>())
     }
 
@@ -521,59 +540,64 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This does *not* iterate over the channels in a particular guild but</span>
     <span class="doccomment">/// rather iterates over all [`GuildChannel`]s in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">GuildChannel</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_channels</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+    ) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">GuildChannel</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">channels_guild</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the integrations in the cache.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">integrations</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">GuildId</span>, <span class="ident">IntegrationId</span>), <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">GuildIntegration</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">IntegrationMarker</span><span class="op">&gt;</span>), <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">GuildIntegration</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">integrations</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the members across all guilds in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">members</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">GuildId</span>, <span class="ident">UserId</span>), <span class="ident">CachedMember</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">members</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>), <span class="ident">CachedMember</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">members</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the messages in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">messages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">MessageId</span>, <span class="ident">CachedMessage</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">messages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">CachedMessage</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">messages</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the presences in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presences</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">GuildId</span>, <span class="ident">UserId</span>), <span class="ident">CachedPresence</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presences</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>), <span class="ident">CachedPresence</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">presences</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the private channels in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">private_channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ChannelId</span>, <span class="ident">PrivateChannel</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">private_channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">PrivateChannel</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">channels_private</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the roles in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">RoleId</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">Role</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">Role</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">roles</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the stage instances in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stage_instances</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">StageId</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">StageInstance</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stage_instances</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+    ) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StageMarker</span><span class="op">&gt;</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">StageInstance</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">stage_instances</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the stickers in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stickers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">StickerId</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">CachedSticker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stickers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">StickerMarker</span><span class="op">&gt;</span>, <span class="ident">GuildResource</span><span class="op">&lt;</span><span class="ident">CachedSticker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">stickers</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the users in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">users</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">UserId</span>, <span class="ident">User</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">users</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">users</span>.<span class="ident">iter</span>())
     }
 
     <span class="doccomment">/// Create an iterator over the voice states in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">voice_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">GuildId</span>, <span class="ident">UserId</span>), <span class="ident">VoiceState</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">voice_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>), <span class="ident">VoiceState</span><span class="op">&gt;</span> {
         <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">voice_states</span>.<span class="ident">iter</span>())
     }
 }
@@ -632,7 +656,7 @@
 <span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
 <span class="doccomment">/// use twilight_model::id::{ChannelId, MessageId};</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let channel_id = ChannelId::new(1).expect(&quot;non zero id&quot;);</span>
+<span class="doccomment">/// let channel_id = ChannelId::new(1);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let cache = InMemoryCache::new();</span>
 <span class="doccomment">/// let message_ids = cache.channel_messages(channel_id)?;</span>
@@ -650,11 +674,13 @@
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">index</span>: <span class="ident">usize</span>,
-    <span class="ident">message_ids</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ChannelId</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">message_ids</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">message_ids</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">ChannelId</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">MessageId</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">message_ids</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">index</span>: <span class="number">0</span>,
             <span class="ident">message_ids</span>,
@@ -663,7 +689,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">MessageId</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>;
 
     <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message_id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">message_ids</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">index</span>) {
@@ -689,22 +715,22 @@
     <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">fmt::Debug</span>};
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-        <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id</span>::{<span class="ident">marker::UserMarker</span>, <span class="ident">Id</span>},
         <span class="ident">user::User</span>,
     };
 
     <span class="macro">assert_impl_all!</span>(<span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">InMemoryCacheIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">IterReference</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">UserId</span>, <span class="ident">User</span><span class="op">&gt;</span>: <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">UserId</span>, <span class="ident">User</span><span class="op">&gt;</span>: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">IterReference</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span>: <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span>: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
         <span class="kw">let</span> <span class="ident">users</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[
-            (<span class="ident">UserId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>)),
-            (<span class="ident">UserId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>)),
-            (<span class="ident">UserId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">None</span>),
+            (<span class="ident">Id::new</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>)),
+            (<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>)),
+            (<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="prelude-val">None</span>),
         ];
         <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">InMemoryCache::new</span>();
 

@@ -864,7 +864,7 @@
         <span class="ident">NumberCommandOptionData</span>, <span class="ident">OptionsCommandOptionData</span>,
     },
     <span class="ident">channel::ChannelType</span>,
-    <span class="ident">id</span>::{<span class="ident">CommandVersionId</span>, <span class="ident">GuildId</span>},
+    <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
 };
 
 <span class="doccomment">/// Builder to create a [`Command`].</span>
@@ -876,7 +876,7 @@
 <span class="kw">impl</span> <span class="ident">CommandBuilder</span> {
     <span class="doccomment">/// Create a new default [`Command`] builder.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;builders have no effect if unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">description</span>: <span class="ident">String</span>, <span class="ident">kind</span>: <span class="ident">CommandType</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">description</span>: <span class="ident">String</span>, <span class="ident">kind</span>: <span class="ident">CommandType</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">Command</span> {
             <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">default_permission</span>: <span class="prelude-val">None</span>,
@@ -886,7 +886,7 @@
             <span class="ident">kind</span>,
             <span class="ident">name</span>,
             <span class="ident">options</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">version</span>: <span class="ident">CommandVersionId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">version</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
         })
     }
 
@@ -900,7 +900,7 @@
     <span class="doccomment">/// Set the guild ID of the command.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>);
 
         <span class="self">self</span>
@@ -1648,7 +1648,7 @@
                     ]),
                 }),
             ]),
-            <span class="ident">version</span>: <span class="ident">CommandVersionId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">version</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
         };
 
         <span class="macro">assert_eq!</span>(<span class="ident">command</span>, <span class="ident">command_manual</span>);

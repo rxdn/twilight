@@ -237,24 +237,6 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ParseMention</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">iter::Iterator</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">str::CharIndices</span>};
 
@@ -274,10 +256,10 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use twilight_mention::ParseMention;</span>
-<span class="doccomment">/// use twilight_model::id::UserId;</span>
+<span class="doccomment">/// use twilight_model::id::{marker::UserMarker, Id};</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let buf = &quot;&lt;@123&gt; some &lt;@456&gt; users &lt;@789&gt;!&quot;;</span>
-<span class="doccomment">/// let mut iter = UserId::iter(buf);</span>
+<span class="doccomment">/// let mut iter = Id::&lt;UserMarker&gt;::iter(buf);</span>
 <span class="doccomment">/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 123));</span>
 <span class="doccomment">/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 456));</span>
 <span class="doccomment">/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 789));</span>
@@ -364,38 +346,38 @@
     };
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_impl_all</span>, <span class="ident">assert_obj_safe</span>};
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-    <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">ChannelId</span>, <span class="ident">EmojiId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>};
+    <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    };
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">ChannelId</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">EmojiId</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">MentionType</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">RoleId</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">UserId</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_obj_safe!</span>(
-        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">ChannelId</span><span class="op">&gt;</span>,
-        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">EmojiId</span><span class="op">&gt;</span>,
+        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">MentionType</span><span class="op">&gt;</span>,
-        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">RoleId</span><span class="op">&gt;</span>,
-        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">UserId</span><span class="op">&gt;</span>,
+        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">MentionIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     );
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_channel_id</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">ChannelId::iter</span>(<span class="string">&quot;&lt;#123&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">ChannelId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="string">&quot;&lt;#123&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_multiple_ids</span>() {
         <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="string">&quot;one &lt;@123&gt;two&lt;#456&gt;&lt;@789&gt; ----&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">UserId::iter</span>(<span class="ident">buf</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">UserId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="ident">buf</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="kw">let</span> (<span class="ident">mention</span>, <span class="ident">start</span>, <span class="ident">end</span>) <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">UserId::new</span>(<span class="number">789</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">mention</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">789</span>), <span class="ident">mention</span>);
         <span class="macro">assert_eq!</span>(<span class="number">19</span>, <span class="ident">start</span>);
         <span class="macro">assert_eq!</span>(<span class="number">24</span>, <span class="ident">end</span>);
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
@@ -403,45 +385,27 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_emoji_ids</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">EmojiId::iter</span>(<span class="string">&quot;some &lt;:name:123&gt; emojis &lt;:emoji:456&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">EmojiId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">EmojiId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="string">&quot;some &lt;:name:123&gt; emojis &lt;:emoji:456&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_mention_type</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">MentionType::iter</span>(<span class="string">&quot;&lt;#12&gt;&lt;:name:34&gt;&lt;@&amp;56&gt;&lt;@!78&gt;&lt;@90&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::Channel</span>(<span class="ident">ChannelId::new</span>(<span class="number">12</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::Emoji</span>(<span class="ident">EmojiId::new</span>(<span class="number">34</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::Role</span>(<span class="ident">RoleId::new</span>(<span class="number">56</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::User</span>(<span class="ident">UserId::new</span>(<span class="number">78</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::User</span>(<span class="ident">UserId::new</span>(<span class="number">90</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
+        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Channel</span>(<span class="ident">Id::new</span>(<span class="number">12</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Emoji</span>(<span class="ident">Id::new</span>(<span class="number">34</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Role</span>(<span class="ident">Id::new</span>(<span class="number">56</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::User</span>(<span class="ident">Id::new</span>(<span class="number">78</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::User</span>(<span class="ident">Id::new</span>(<span class="number">90</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_mention_type_with_timestamp</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">MentionType::iter</span>(<span class="string">&quot;&lt;#12&gt; &lt;t:34&gt; &lt;t:56:d&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::Channel</span>(<span class="ident">ChannelId::new</span>(<span class="number">12</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
+        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Channel</span>(<span class="ident">Id::new</span>(<span class="number">12</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(
             <span class="ident">MentionType::Timestamp</span>(<span class="ident">Timestamp::new</span>(<span class="number">34</span>, <span class="prelude-val">None</span>)),
             <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
@@ -455,9 +419,9 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_role_ids</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">RoleId::iter</span>(<span class="string">&quot;some &lt;@&amp;123&gt; roles &lt;@&amp;456&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">RoleId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">RoleId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="string">&quot;some &lt;@&amp;123&gt; roles &lt;@&amp;456&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
 
@@ -474,16 +438,16 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_user_ids</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">UserId::iter</span>(<span class="string">&quot;some &lt;@123&gt;users&lt;@456&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">UserId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">UserId::new</span>(<span class="number">456</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="string">&quot;some &lt;@123&gt;users&lt;@456&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_no_id</span>() {
         <span class="kw">let</span> <span class="ident">mention</span> <span class="op">=</span> <span class="string">&quot;this is not &lt;# actually a mention&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">ChannelId::iter</span>(<span class="ident">mention</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="ident">mention</span>);
 
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
@@ -491,7 +455,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_ignores_other_types</span>() {
         <span class="kw">let</span> <span class="ident">mention</span> <span class="op">=</span> <span class="string">&quot;&lt;#123&gt; &lt;:name:456&gt; &lt;@&amp;789&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">UserId::iter</span>(<span class="ident">mention</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="ident">mention</span>);
 
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
     }
@@ -499,7 +463,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_iter_as_str</span>() {
         <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="string">&quot;a buf&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">RoleId::iter</span>(<span class="ident">buf</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="ident">::iter</span>(<span class="ident">buf</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">buf</span>, <span class="ident">iter</span>.<span class="ident">as_str</span>());
         <span class="comment">// Advancing still returns the complete buffer.</span>
         <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());

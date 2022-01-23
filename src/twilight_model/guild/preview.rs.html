@@ -115,7 +115,17 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">channel::message::Sticker</span>, <span class="ident">guild::Emoji</span>, <span class="ident">id::GuildId</span>};
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">channel::message::Sticker</span>,
+    <span class="ident">guild::Emoji</span>,
+    <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
+    <span class="ident">util::image_hash::ImageHash</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -123,21 +133,21 @@
     <span class="kw">pub</span> <span class="ident">approximate_member_count</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">approximate_presence_count</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">discovery_splash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">discovery_splash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">emojis</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Emoji</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">features</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">GuildId</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span> <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">splash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">splash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Guild&#39;s custom stickers.</span>
     <span class="kw">pub</span> <span class="ident">stickers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Sticker</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Emoji</span>, <span class="ident">GuildId</span>, <span class="ident">GuildPreview</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::EmojiId</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Emoji</span>, <span class="ident">GuildPreview</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">id::Id</span>, <span class="ident">test::image_hash</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -146,11 +156,11 @@
             <span class="ident">approximate_member_count</span>: <span class="number">1_000</span>,
             <span class="ident">approximate_presence_count</span>: <span class="number">500</span>,
             <span class="ident">description</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;guild description&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">discovery_splash</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;discovery splash hash&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">discovery_splash</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::SPLASH</span>),
             <span class="ident">emojis</span>: <span class="macro">vec!</span>[<span class="ident">Emoji</span> {
                 <span class="ident">animated</span>: <span class="bool-val">false</span>,
                 <span class="ident">available</span>: <span class="bool-val">true</span>,
-                <span class="ident">id</span>: <span class="ident">EmojiId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
                 <span class="ident">managed</span>: <span class="bool-val">false</span>,
                 <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">require_colons</span>: <span class="bool-val">true</span>,
@@ -158,10 +168,10 @@
                 <span class="ident">user</span>: <span class="prelude-val">None</span>,
             }],
             <span class="ident">features</span>: <span class="macro">vec!</span>[<span class="string">&quot;a feature&quot;</span>.<span class="ident">to_owned</span>()],
-            <span class="ident">id</span>: <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">name</span>: <span class="string">&quot;guild name&quot;</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">icon</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;icon hash&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">splash</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;splash hash&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">icon</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::ICON</span>),
+            <span class="ident">splash</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::SPLASH</span>),
             <span class="ident">stickers</span>: <span class="ident">Vec::new</span>(),
         };
 
@@ -181,7 +191,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild description&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discovery_splash&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;discovery splash hash&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::SPLASH_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;emojis&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
                 <span class="ident">Token::Struct</span> {
@@ -193,7 +203,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;available&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;EmojiId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;managed&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),
@@ -208,16 +218,16 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;a feature&quot;</span>),
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild name&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;icon&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;icon hash&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::ICON_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;splash&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;splash hash&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::SPLASH_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;stickers&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">0</span>) },
                 <span class="ident">Token::SeqEnd</span>,

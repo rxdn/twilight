@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ExecuteWebhookErrorType","Type of [`ExecuteWebhookError`] that occurred."]],"struct":[["ExecuteWebhook","Execute a webhook, sending a message to its channel."],["ExecuteWebhookError","A webhook could not be executed."]]});
+initSidebarItems({"struct":[["ExecuteWebhook","Execute a webhook, sending a message to its channel."]]});

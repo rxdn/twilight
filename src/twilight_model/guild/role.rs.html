@@ -219,8 +219,17 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RoleTags</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">guild::Permissions</span>, <span class="ident">id::RoleId</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">guild::Permissions</span>,
+    <span class="ident">id</span>::{<span class="ident">marker::RoleMarker</span>, <span class="ident">Id</span>},
+    <span class="ident">util::image_hash::ImageHash</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::cmp</span>::{<span class="ident">Ord</span>, <span class="ident">Ordering</span>, <span class="ident">PartialOrd</span>};
 
@@ -237,8 +246,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Discord Docs/Image Formatting]: https://discord.com/developers/docs/reference#image-formatting</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">RoleId</span>,
+    <span class="kw">pub</span> <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">managed</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">mentionable</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
@@ -272,10 +281,10 @@
     <span class="doccomment">/// Compare the position of two roles:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use twilight_model::{guild::{Permissions, Role}, id::RoleId};</span>
+    <span class="doccomment">/// # use twilight_model::{guild::{Permissions, Role}, id::Id};</span>
     <span class="doccomment">/// # use std::cmp::Ordering;</span>
     <span class="doccomment">/// let role_a = Role {</span>
-    <span class="doccomment">///     id: RoleId::new(123).expect(&quot;non zero&quot;),</span>
+    <span class="doccomment">///     id: Id::new(123),</span>
     <span class="doccomment">///     position: 12,</span>
     <span class="doccomment">///#    color: 0,</span>
     <span class="doccomment">///#    hoist: true,</span>
@@ -289,7 +298,7 @@
     <span class="doccomment">///     // ...</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// let role_b = Role {</span>
-    <span class="doccomment">///     id: RoleId::new(456).expect(&quot;non zero&quot;),</span>
+    <span class="doccomment">///     id: Id::new(456),</span>
     <span class="doccomment">///     position: 13,</span>
     <span class="doccomment">///#    color: 0,</span>
     <span class="doccomment">///#    hoist: true,</span>
@@ -311,10 +320,10 @@
     <span class="doccomment">/// Compare the position of two roles with the same position:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use twilight_model::{guild::{Permissions, Role}, id::RoleId};</span>
+    <span class="doccomment">/// # use twilight_model::{guild::{Permissions, Role}, id::Id};</span>
     <span class="doccomment">/// # use std::cmp::Ordering;</span>
     <span class="doccomment">/// let role_a = Role {</span>
-    <span class="doccomment">///     id: RoleId::new(123).expect(&quot;non zero&quot;),</span>
+    <span class="doccomment">///     id: Id::new(123),</span>
     <span class="doccomment">///     position: 12,</span>
     <span class="doccomment">///#    color: 0,</span>
     <span class="doccomment">///#    hoist: true,</span>
@@ -327,7 +336,7 @@
     <span class="doccomment">///#    unicode_emoji: None,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// let role_b = Role {</span>
-    <span class="doccomment">///     id: RoleId::new(456).expect(&quot;non zero&quot;),</span>
+    <span class="doccomment">///     id: Id::new(456),</span>
     <span class="doccomment">///     position: 12,</span>
     <span class="doccomment">///#    color: 0,</span>
     <span class="doccomment">///#    hoist: true,</span>
@@ -347,7 +356,7 @@
     <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">Ordering</span> {
         <span class="self">self</span>.<span class="ident">position</span>
             .<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">position</span>)
-            .<span class="ident">then</span>(<span class="self">self</span>.<span class="ident">id</span>.<span class="number">0</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">id</span>.<span class="number">0</span>))
+            .<span class="ident">then</span>(<span class="self">self</span>.<span class="ident">id</span>.<span class="ident">get</span>().<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">id</span>.<span class="ident">get</span>()))
     }
 }
 
@@ -359,7 +368,8 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Permissions</span>, <span class="ident">Role</span>, <span class="ident">RoleId</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Permissions</span>, <span class="ident">Role</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
@@ -395,7 +405,7 @@
             <span class="ident">color</span>: <span class="number">0</span>,
             <span class="ident">hoist</span>: <span class="bool-val">true</span>,
             <span class="ident">icon</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">RoleId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">123</span>),
             <span class="ident">managed</span>: <span class="bool-val">false</span>,
             <span class="ident">mentionable</span>: <span class="bool-val">true</span>,
             <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
@@ -417,7 +427,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;hoist&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">true</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;RoleId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;123&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;managed&quot;</span>),
                 <span class="ident">Token::Bool</span>(<span class="bool-val">false</span>),

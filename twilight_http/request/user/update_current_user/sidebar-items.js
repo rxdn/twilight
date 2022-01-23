@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["UpdateCurrentUserErrorType","Type of [`UpdateCurrentUserError`] that occurred."]],"struct":[["UpdateCurrentUser","Update the current user."],["UpdateCurrentUserError","The error created when the user can not be updated as configured."]]});

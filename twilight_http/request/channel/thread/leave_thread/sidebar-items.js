@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["LeaveThread","Remove the current user from a thread."]]});

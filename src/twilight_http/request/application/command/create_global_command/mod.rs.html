@@ -92,6 +92,16 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">chat_input</span>;
 <span class="kw">mod</span> <span class="ident">message</span>;
 <span class="kw">mod</span> <span class="ident">user</span>;
@@ -101,61 +111,53 @@
     <span class="ident">user::CreateGlobalUserCommand</span>,
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span></span>::{<span class="ident">InteractionError</span>, <span class="ident">InteractionErrorType</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">request::validate_inner</span>, <span class="ident">Client</span>};
-<span class="kw">use</span> <span class="ident">twilight_model::id::ApplicationId</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Client</span>;
+<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::ApplicationMarker</span>, <span class="ident">Id</span>};
+<span class="kw">use</span> <span class="ident">twilight_validate::command::CommandValidationError</span>;
 
 <span class="doccomment">/// Create a new global command.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The name must be between 1 and 32 characters in length. Creating a command</span>
-<span class="doccomment">/// with the same name as an already-existing global command will overwrite the</span>
-<span class="doccomment">/// old command. See [the discord docs] for more information.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#create-global-application-command</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;the command must have a type&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreateGlobalCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
+    <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-    <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CreateGlobalCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-        <span class="ident">application_id</span>: <span class="ident">ApplicationId</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">InteractionError</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">validate_inner::command_name</span>(<span class="ident">name</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InteractionError</span> {
-                <span class="ident">kind</span>: <span class="ident">InteractionErrorType::CommandNameValidationFailed</span>,
-            });
-        }
-
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
             <span class="ident">application_id</span>,
             <span class="ident">http</span>,
-            <span class="ident">name</span>,
-        })
+        }
     }
 
     <span class="doccomment">/// Create a new chat input global command.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// The description must be between 1 and 100 characters in length. Creating</span>
-    <span class="doccomment">/// a command with the same name as an already-existing global command will</span>
-    <span class="doccomment">/// overwrite the old command. See [the discord docs] for more information.</span>
+    <span class="doccomment">/// The command name must only contain alphanumeric characters and lowercase</span>
+    <span class="doccomment">/// variants must be used where possible. Special characters `-` and `_` are</span>
+    <span class="doccomment">/// allowed. The description must be between 1 and 100 characters in length.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Creating a command with the same name as an already-existing global</span>
+    <span class="doccomment">/// command will overwrite the old command. See [the discord docs] for more</span>
+    <span class="doccomment">/// information.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an [`InteractionErrorType::CommandDescriptionValidationFailed`]</span>
-    <span class="doccomment">/// error type if the command description is not between 1 and</span>
-    <span class="doccomment">/// 100 characters.</span>
+    <span class="doccomment">/// Returns an error of type [`NameLengthInvalid`] or [`NameCharacterInvalid`]</span>
+    <span class="doccomment">/// if the command name is invalid.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`DescriptionInvalid`] if the</span>
+    <span class="doccomment">/// command description is not between 1 and 100 characters.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`NameLengthInvalid`]: twilight_validate::command::CommandValidationErrorType::NameLengthInvalid</span>
+    <span class="doccomment">/// [`NameCharacterInvalid`]: twilight_validate::command::CommandValidationErrorType::NameCharacterInvalid</span>
+    <span class="doccomment">/// [`DescriptionInvalid`]: twilight_validate::command::CommandValidationErrorType::DescriptionInvalid</span>
     <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#create-global-application-command</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chat_input</span>(
         <span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CreateGlobalChatInputCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">InteractionError</span><span class="op">&gt;</span> {
-        <span class="ident">CreateGlobalChatInputCommand::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="self">self</span>.<span class="ident">name</span>, <span class="ident">description</span>)
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CreateGlobalChatInputCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">CreateGlobalChatInputCommand::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">name</span>, <span class="ident">description</span>)
     }
 
     <span class="doccomment">/// Create a new message global command.</span>
@@ -164,9 +166,18 @@
     <span class="doccomment">/// command will overwrite the old command. See [the discord docs] for more</span>
     <span class="doccomment">/// information.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameLengthInvalid`] if the command name is</span>
+    <span class="doccomment">/// not between 1 and 32 characters.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`NameLengthInvalid`]: twilight_validate::command::CommandValidationErrorType::NameLengthInvalid</span>
     <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#create-global-application-command</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">message</span>(<span class="self">self</span>) -&gt; <span class="ident">CreateGlobalMessageCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">CreateGlobalMessageCommand::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="self">self</span>.<span class="ident">name</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">message</span>(
+        <span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CreateGlobalMessageCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">CreateGlobalMessageCommand::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">name</span>)
     }
 
     <span class="doccomment">/// Create a new user global command.</span>
@@ -175,9 +186,18 @@
     <span class="doccomment">/// command will overwrite the old command. See [the discord docs] for more</span>
     <span class="doccomment">/// information.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameLengthInvalid`] if the command name is</span>
+    <span class="doccomment">/// not between 1 and 32 characters.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`NameLengthInvalid`]: twilight_validate::command::CommandValidationErrorType::NameLengthInvalid</span>
     <span class="doccomment">/// [the discord docs]: https://discord.com/developers/docs/interactions/application-commands#create-global-application-command</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">user</span>(<span class="self">self</span>) -&gt; <span class="ident">CreateGlobalUserCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">CreateGlobalUserCommand::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="self">self</span>.<span class="ident">name</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user</span>(
+        <span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CreateGlobalUserCommand</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">CreateGlobalUserCommand::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">name</span>)
     }
 }
 </code></pre></div>

@@ -647,7 +647,10 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel::Message</span>,
     <span class="ident">guild::PartialMember</span>,
-    <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">GuildId</span>, <span class="ident">InteractionId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>},
+        <span class="ident">Id</span>,
+    },
     <span class="ident">user::User</span>,
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{
@@ -678,7 +681,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Interaction</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Ping</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
             <span class="ident"><span class="self">Self</span>::ApplicationCommand</span>(<span class="ident">inner</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ApplicationCommandAutocomplete</span>(<span class="ident">inner</span>) =&gt; {
@@ -689,7 +692,7 @@
     }
 
     <span class="doccomment">/// Return the ID of the inner interaction.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InteractionId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Ping</span>(<span class="ident">ping</span>) =&gt; <span class="ident">ping</span>.<span class="ident">id</span>,
             <span class="ident"><span class="self">Self</span>::ApplicationCommand</span>(<span class="ident">command</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ApplicationCommandAutocomplete</span>(<span class="ident">command</span>) =&gt; {
@@ -734,12 +737,12 @@
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">application_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ApplicationId</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ChannelId</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">application_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_locale</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">InteractionId</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PartialMember</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -988,7 +991,8 @@
         },
         <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">guild</span>::{<span class="ident">PartialMember</span>, <span class="ident">Permissions</span>},
-        <span class="ident">id</span>::{<span class="ident">ApplicationId</span>, <span class="ident">ChannelId</span>, <span class="ident">CommandId</span>, <span class="ident">GuildId</span>, <span class="ident">InteractionId</span>, <span class="ident">UserId</span>},
+        <span class="ident">id::Id</span>,
+        <span class="ident">test::image_hash</span>,
         <span class="ident">user::User</span>,
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
@@ -1000,20 +1004,20 @@
         <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Interaction::ApplicationCommand</span>(<span class="ident">Box::new</span>(<span class="ident">ApplicationCommand</span> {
-            <span class="ident">application_id</span>: <span class="ident">ApplicationId::new</span>(<span class="number">100</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            <span class="ident">channel_id</span>: <span class="ident">ChannelId::new</span>(<span class="number">200</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">application_id</span>: <span class="ident">Id::new</span>(<span class="number">100</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">200</span>),
             <span class="ident">data</span>: <span class="ident">CommandData</span> {
-                <span class="ident">id</span>: <span class="ident">CommandId::new</span>(<span class="number">300</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">300</span>),
                 <span class="ident">name</span>: <span class="string">&quot;command name&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">options</span>: <span class="ident">Vec::from</span>([<span class="ident">CommandDataOption</span> {
                     <span class="ident">focused</span>: <span class="bool-val">false</span>,
                     <span class="ident">name</span>: <span class="string">&quot;member&quot;</span>.<span class="ident">into</span>(),
-                    <span class="ident">value</span>: <span class="ident">CommandOptionValue::User</span>(<span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+                    <span class="ident">value</span>: <span class="ident">CommandOptionValue::User</span>(<span class="ident">Id::new</span>(<span class="number">600</span>)),
                 }]),
                 <span class="ident">resolved</span>: <span class="prelude-val">Some</span>(<span class="ident">CommandInteractionDataResolved</span> {
                     <span class="ident">channels</span>: <span class="ident">HashMap::new</span>(),
                     <span class="ident">members</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                        <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">Id::new</span>(<span class="number">600</span>),
                         <span class="ident">InteractionMember</span> {
                             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                             <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
@@ -1029,16 +1033,16 @@
                     <span class="ident">messages</span>: <span class="ident">HashMap::new</span>(),
                     <span class="ident">roles</span>: <span class="ident">HashMap::new</span>(),
                     <span class="ident">users</span>: <span class="ident">IntoIterator::into_iter</span>([(
-                        <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                        <span class="ident">Id::new</span>(<span class="number">600</span>),
                         <span class="ident">User</span> {
                             <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                            <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;avatar string&quot;</span>.<span class="ident">into</span>()),
+                            <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                             <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                             <span class="ident">bot</span>: <span class="bool-val">false</span>,
                             <span class="ident">discriminator</span>: <span class="number">1111</span>,
                             <span class="ident">email</span>: <span class="prelude-val">None</span>,
                             <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                            <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">600</span>),
                             <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                             <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                             <span class="ident">name</span>: <span class="string">&quot;username&quot;</span>.<span class="ident">into</span>(),
@@ -1051,9 +1055,9 @@
                     .<span class="ident">collect</span>(),
                 }),
             },
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">GuildId::new</span>(<span class="number">400</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)),
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">400</span>)),
             <span class="ident">guild_locale</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;de&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">id</span>: <span class="ident">InteractionId::new</span>(<span class="number">500</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">500</span>),
             <span class="ident">kind</span>: <span class="ident">InteractionType::ApplicationCommand</span>,
             <span class="ident">locale</span>: <span class="string">&quot;en-GB&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
@@ -1068,13 +1072,13 @@
                 <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
                 <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">User</span> {
                     <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;avatar string&quot;</span>.<span class="ident">into</span>()),
+                    <span class="ident">avatar</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::AVATAR</span>),
                     <span class="ident">banner</span>: <span class="prelude-val">None</span>,
                     <span class="ident">bot</span>: <span class="bool-val">false</span>,
                     <span class="ident">discriminator</span>: <span class="number">1111</span>,
                     <span class="ident">email</span>: <span class="prelude-val">None</span>,
                     <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">600</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+                    <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">600</span>),
                     <span class="ident">locale</span>: <span class="prelude-val">None</span>,
                     <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
                     <span class="ident">name</span>: <span class="string">&quot;username&quot;</span>.<span class="ident">into</span>(),
@@ -1096,12 +1100,10 @@
                     <span class="ident">len</span>: <span class="number">10</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;application_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;ApplicationId&quot;</span>,
-                },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;100&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;channel_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;ChannelId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;200&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;data&quot;</span>),
                 <span class="ident">Token::Struct</span> {
@@ -1109,7 +1111,7 @@
                     <span class="ident">len</span>: <span class="number">4</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;CommandId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;300&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;command name&quot;</span>),
@@ -1124,7 +1126,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="ident">CommandOptionType::User</span> <span class="kw">as</span> <span class="ident">u8</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;value&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;600&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::SeqEnd</span>,
@@ -1136,7 +1138,7 @@
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;members&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;600&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;InteractionMember&quot;</span>,
@@ -1160,7 +1162,7 @@
                 <span class="ident">Token::MapEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;users&quot;</span>),
                 <span class="ident">Token::Map</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;600&quot;</span>),
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;User&quot;</span>,
@@ -1170,7 +1172,7 @@
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;avatar&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;avatar string&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::AVATAR_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;banner&quot;</span>),
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;bot&quot;</span>),
@@ -1178,7 +1180,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1111&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;600&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
@@ -1188,15 +1190,13 @@
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;400&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_locale&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::String</span>(<span class="string">&quot;de&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;InteractionId&quot;</span>,
-                },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;500&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
                 <span class="ident">Token::U8</span>(<span class="number">2</span>),
@@ -1235,7 +1235,7 @@
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;avatar&quot;</span>),
                 <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;avatar string&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="ident">image_hash::AVATAR_INPUT</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;banner&quot;</span>),
                 <span class="ident">Token::None</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;bot&quot;</span>),
@@ -1243,7 +1243,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;discriminator&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1111&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;UserId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;600&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;username&quot;</span>),

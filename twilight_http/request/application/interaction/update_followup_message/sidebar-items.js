@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["UpdateFollowupMessageErrorType","Type of [`UpdateFollowupMessageError`] that occurred."]],"struct":[["UpdateFollowupMessage","Update a followup message."],["UpdateFollowupMessageError","A followup message can not be updated as configured."]]});

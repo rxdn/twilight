@@ -84,12 +84,18 @@
 <span id="78">78</span>
 <span id="79">79</span>
 <span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::UpdateChannelPermissionConfigured</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::client::Client</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel::permission_overwrite::PermissionOverwriteType</span>,
     <span class="ident">guild::Permissions</span>,
-    <span class="ident">id</span>::{<span class="ident">ChannelId</span>, <span class="ident">RoleId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
 };
 
 <span class="doccomment">/// Update the permissions for a role or a user in a channel.</span>
@@ -101,16 +107,16 @@
 <span class="doccomment">/// ```no_run</span>
 <span class="doccomment">/// use twilight_http::Client;</span>
 <span class="doccomment">/// use twilight_model::guild::Permissions;</span>
-<span class="doccomment">/// use twilight_model::id::{ChannelId, RoleId};</span>
+<span class="doccomment">/// use twilight_model::id::Id;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # #[tokio::main]</span>
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let channel_id = ChannelId::new(123).expect(&quot;non zero&quot;);</span>
+<span class="doccomment">/// let channel_id = Id::new(123);</span>
 <span class="doccomment">/// let allow = Permissions::VIEW_CHANNEL;</span>
 <span class="doccomment">/// let deny = Permissions::SEND_MESSAGES;</span>
-<span class="doccomment">/// let role_id = RoleId::new(432).expect(&quot;non zero&quot;);</span>
+<span class="doccomment">/// let role_id = Id::new(432);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// client.update_channel_permission(channel_id, allow, deny)</span>
 <span class="doccomment">///     .role(role_id)</span>
@@ -121,7 +127,7 @@
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UpdateChannelPermission</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">allow</span>: <span class="ident">Permissions</span>,
-    <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+    <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     <span class="ident">deny</span>: <span class="ident">Permissions</span>,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
 }
@@ -129,7 +135,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">UpdateChannelPermission</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-        <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
         <span class="ident">allow</span>: <span class="ident">Permissions</span>,
         <span class="ident">deny</span>: <span class="ident">Permissions</span>,
     ) -&gt; <span class="self">Self</span> {
@@ -142,12 +148,12 @@
     }
 
     <span class="doccomment">/// Specify this override to be for a member.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">member</span>(<span class="self">self</span>, <span class="ident">user_id</span>: <span class="ident">UserId</span>) -&gt; <span class="ident">UpdateChannelPermissionConfigured</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">member</span>(<span class="self">self</span>, <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">UpdateChannelPermissionConfigured</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">configure</span>(<span class="ident">PermissionOverwriteType::Member</span>(<span class="ident">user_id</span>))
     }
 
     <span class="doccomment">/// Specify this override to be for a role.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">role</span>(<span class="self">self</span>, <span class="ident">role_id</span>: <span class="ident">RoleId</span>) -&gt; <span class="ident">UpdateChannelPermissionConfigured</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">role</span>(<span class="self">self</span>, <span class="ident">role_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">UpdateChannelPermissionConfigured</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">configure</span>(<span class="ident">PermissionOverwriteType::Role</span>(<span class="ident">role_id</span>))
     }
 

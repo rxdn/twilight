@@ -146,36 +146,12 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">get_reactions</span>;
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">delete_reaction</span>;
+</pre><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">delete_reaction</span>;
 
 <span class="kw">mod</span> <span class="ident">create_reaction</span>;
 <span class="kw">mod</span> <span class="ident">delete_all_reaction</span>;
 <span class="kw">mod</span> <span class="ident">delete_all_reactions</span>;
+<span class="kw">mod</span> <span class="ident">get_reactions</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
     <span class="ident">create_reaction::CreateReaction</span>, <span class="ident">delete_all_reaction::DeleteAllReaction</span>,
@@ -184,7 +160,7 @@
 };
 <span class="kw">use</span> <span class="ident">percent_encoding</span>::{<span class="ident">utf8_percent_encode</span>, <span class="ident">NON_ALPHANUMERIC</span>};
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
-<span class="kw">use</span> <span class="ident">twilight_model::id::EmojiId</span>;
+<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::EmojiMarker</span>, <span class="ident">Id</span>};
 
 <span class="doccomment">/// Handle a reaction of either a custom or unicode emoji.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
@@ -192,7 +168,7 @@
     <span class="doccomment">/// Reaction of a custom emoji.</span>
     <span class="ident">Custom</span> {
         <span class="doccomment">/// ID of the custom emoji.</span>
-        <span class="ident">id</span>: <span class="ident">EmojiId</span>,
+        <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Name of the custom emoji.</span>
         <span class="doccomment">///</span>
         <span class="doccomment">/// This is not strictly required, but may be helpful for Discord to</span>
@@ -206,35 +182,6 @@
     },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">RequestReactionType</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create a display formatter for a reaction type resulting in a format</span>
-    <span class="doccomment">/// acceptable for use in URLs.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Format the transgender flag for use in a URL:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use twilight_http::request::channel::reaction::RequestReactionType;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let reaction = RequestReactionType::Unicode {</span>
-    <span class="doccomment">///     name: &quot;🏳️‍⚧️&quot;,</span>
-    <span class="doccomment">/// };</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // Retrieve the display formatter.</span>
-    <span class="doccomment">/// let display = reaction.display();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // And now format it into a percent-encoded string and then check it.</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     &quot;%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%E2%9A%A7%EF%B8%8F&quot;,</span>
-    <span class="doccomment">///     display.to_string(),</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">display</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="ident">RequestReactionTypeDisplay</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">RequestReactionTypeDisplay</span>(<span class="self">self</span>)
-    }
-}
-
 <span class="doccomment">/// Format a [`RequestReactionType`] into a format acceptable for use in URLs.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
@@ -243,25 +190,33 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use twilight_http::request::channel::reaction::RequestReactionType;</span>
-<span class="doccomment">/// use twilight_model::id::EmojiId;</span>
+<span class="doccomment">/// use twilight_model::id::Id;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let reaction = RequestReactionType::Custom {</span>
-<span class="doccomment">///     id: EmojiId::new(123).expect(&quot;non zero&quot;),</span>
+<span class="doccomment">///     id: Id::new(123),</span>
 <span class="doccomment">///     name: Some(&quot;rarity&quot;),</span>
 <span class="doccomment">/// };</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// // Retrieve the display formatter.</span>
-<span class="doccomment">/// let display = reaction.display();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // And now format it into an acceptable string and then check it.</span>
-<span class="doccomment">/// assert_eq!(&quot;rarity:123&quot;, display.to_string());</span>
+<span class="doccomment">/// assert_eq!(&quot;rarity:123&quot;, reaction.to_string());</span>
 <span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RequestReactionTypeDisplay</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">RequestReactionType</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>);
-
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RequestReactionTypeDisplay</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+<span class="doccomment">///</span>
+<span class="doccomment">/// Format the transgeneder flag for use in a URL:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use twilight_http::request::channel::reaction::RequestReactionType;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let reaction = RequestReactionType::Unicode {</span>
+<span class="doccomment">///     name: &quot;🏳️‍⚧️&quot;,</span>
+<span class="doccomment">/// };</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(</span>
+<span class="doccomment">///     &quot;%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%E2%9A%A7%EF%B8%8F&quot;,</span>
+<span class="doccomment">///     reaction.to_string(),</span>
+<span class="doccomment">/// );</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RequestReactionType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">RequestReactionType::Custom</span> { <span class="ident">id</span>, <span class="ident">name</span> } =&gt; {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>) <span class="op">=</span> <span class="ident">name</span> {
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
@@ -286,37 +241,36 @@
     <span class="comment">// only be enabled on a module level.</span>
     <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::non_ascii_literal</span>)]</span>
 
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">RequestReactionType</span>, <span class="ident">RequestReactionTypeDisplay</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RequestReactionType</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std</span>::{
         <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>},
         <span class="ident">hash::Hash</span>,
     };
-    <span class="kw">use</span> <span class="ident">twilight_model::id::EmojiId</span>;
+    <span class="kw">use</span> <span class="ident">twilight_model::id::Id</span>;
 
     <span class="macro">assert_fields!</span>(<span class="ident">RequestReactionType::Custom</span>: <span class="ident">id</span>, <span class="ident">name</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">RequestReactionType::Unicode</span>: <span class="ident">name</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">RequestReactionTypeDisplay</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">RequestReactionType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">RequestReactionType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_display_custom_with_name</span>() {
         <span class="kw">let</span> <span class="ident">reaction</span> <span class="op">=</span> <span class="ident">RequestReactionType::Custom</span> {
-            <span class="ident">id</span>: <span class="ident">EmojiId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">123</span>),
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>),
         };
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;foo:123&quot;</span>, <span class="ident">reaction</span>.<span class="ident">display</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;foo:123&quot;</span>, <span class="ident">reaction</span>.<span class="ident">to_string</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_display_custom_without_name</span>() {
         <span class="kw">let</span> <span class="ident">reaction</span> <span class="op">=</span> <span class="ident">RequestReactionType::Custom</span> {
-            <span class="ident">id</span>: <span class="ident">EmojiId::new</span>(<span class="number">123</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">123</span>),
             <span class="ident">name</span>: <span class="prelude-val">None</span>,
         };
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;e:123&quot;</span>, <span class="ident">reaction</span>.<span class="ident">display</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;e:123&quot;</span>, <span class="ident">reaction</span>.<span class="ident">to_string</span>());
     }
 
     <span class="doccomment">/// Test that unicode reactions format with percent encoding.</span>
@@ -330,7 +284,7 @@
 
         <span class="macro">assert_eq!</span>(
             <span class="string">&quot;%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88&quot;</span>,
-            <span class="ident">reaction</span>.<span class="ident">display</span>().<span class="ident">to_string</span>()
+            <span class="ident">reaction</span>.<span class="ident">to_string</span>()
         );
     }
 }

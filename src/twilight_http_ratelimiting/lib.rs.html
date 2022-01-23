@@ -187,12 +187,6 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight-http-ratelimiting</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Ratelimiting functionality for HTTP requests.</span>
@@ -301,15 +295,9 @@
     <span class="doccomment">/// the bucket has already refreshed.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">time_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">started_at</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">started_at</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
-        <span class="kw">let</span> <span class="ident">reset_at</span> <span class="op">=</span> <span class="ident">started_at</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">reset_after</span>;
+        <span class="kw">let</span> <span class="ident">reset_at</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">started_at</span><span class="question-mark">?</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">reset_after</span>;
 
-        <span class="kw">if</span> <span class="ident">now</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">reset_at</span> {
-            <span class="kw">return</span> <span class="prelude-val">None</span>;
-        }
-
-        <span class="prelude-val">Some</span>(<span class="ident">reset_at</span>.<span class="ident">duration_since</span>(<span class="ident">now</span>))
+        <span class="ident">reset_at</span>.<span class="ident">checked_duration_since</span>(<span class="ident">Instant::now</span>())
     }
 }
 

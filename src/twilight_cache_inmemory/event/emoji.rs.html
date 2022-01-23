@@ -216,21 +216,20 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">config::ResourceType</span>, <span class="ident">model::CachedEmoji</span>, <span class="ident">GuildResource</span>, <span class="ident">InMemoryCache</span>, <span class="ident">UpdateCache</span>};
 <span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">gateway::payload::incoming::GuildEmojisUpdate</span>,
     <span class="ident">guild::Emoji</span>,
-    <span class="ident">id</span>::{<span class="ident">EmojiId</span>, <span class="ident">GuildId</span>},
+    <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
 };
 
 <span class="kw">impl</span> <span class="ident">InMemoryCache</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">cache_emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">emojis</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Emoji</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">cache_emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">emojis</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Emoji</span><span class="op">&gt;</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">guild_emojis</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">guild_emojis</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>) {
-            <span class="kw">let</span> <span class="ident">incoming</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">emojis</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">id</span>).<span class="ident">collect</span>();
+            <span class="kw">let</span> <span class="ident">incoming</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">emojis</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">id</span>).<span class="ident">collect</span>();
 
-            <span class="kw">let</span> <span class="ident">removal_filter</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EmojiId</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">guild_emojis</span>
+            <span class="kw">let</span> <span class="ident">removal_filter</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">guild_emojis</span>
                 .<span class="ident">iter</span>()
                 .<span class="ident">copied</span>()
                 .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="op">!</span><span class="ident">incoming</span>.<span class="ident">contains</span>(<span class="ident">e</span>))
@@ -250,7 +249,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">cache_emoji</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>, <span class="ident">emoji</span>: <span class="ident">Emoji</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">cache_emoji</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">emoji</span>: <span class="ident">Emoji</span>) {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">emojis</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">emoji</span>.<span class="ident">id</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">cached_emoji</span>) <span class="kw">if</span> <span class="ident">cached_emoji</span>.<span class="ident">value</span> <span class="op">==</span> <span class="ident">emoji</span> =&gt; <span class="kw">return</span>,
             <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">None</span> =&gt; {}
@@ -302,17 +301,20 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::test</span>;
-    <span class="kw">use</span> <span class="ident">twilight_model</span>::{<span class="ident">id::UserId</span>, <span class="ident">user::User</span>};
+    <span class="kw">use</span> <span class="ident">twilight_model</span>::{
+        <span class="ident">id</span>::{<span class="ident">marker::EmojiMarker</span>, <span class="ident">Id</span>},
+        <span class="ident">user::User</span>,
+    };
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_cache_emoji</span>() {
         <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">InMemoryCache::new</span>();
 
         <span class="comment">// The user to do some of the inserts</span>
-        <span class="kw">fn</span> <span class="ident">user_mod</span>(<span class="ident">id</span>: <span class="ident">EmojiId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">user_mod</span>(<span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">EmojiMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span> {
             <span class="kw">if</span> <span class="ident">id</span>.<span class="ident">get</span>() <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">0</span> {
                 <span class="comment">// Only use user for half</span>
-                <span class="prelude-val">Some</span>(<span class="ident">test::user</span>(<span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>)))
+                <span class="prelude-val">Some</span>(<span class="ident">test::user</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)))
             } <span class="kw">else</span> {
                 <span class="prelude-val">None</span>
             }
@@ -320,9 +322,7 @@
 
         <span class="comment">// Single inserts</span>
         {
-            <span class="kw">let</span> <span class="ident">guild_1_emoji_ids</span> <span class="op">=</span> (<span class="number">1</span>..<span class="op">=</span><span class="number">10</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">EmojiId::new</span>(<span class="ident">n</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+            <span class="kw">let</span> <span class="ident">guild_1_emoji_ids</span> <span class="op">=</span> (<span class="number">1</span>..<span class="op">=</span><span class="number">10</span>).<span class="ident">map</span>(<span class="ident">Id::new</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
             <span class="kw">let</span> <span class="ident">guild_1_emoji</span> <span class="op">=</span> <span class="ident">guild_1_emoji_ids</span>
                 .<span class="ident">iter</span>()
                 .<span class="ident">copied</span>()
@@ -330,7 +330,7 @@
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
             <span class="kw">for</span> <span class="ident">emoji</span> <span class="kw">in</span> <span class="ident">guild_1_emoji</span> {
-                <span class="ident">cache</span>.<span class="ident">cache_emoji</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">emoji</span>);
+                <span class="ident">cache</span>.<span class="ident">cache_emoji</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="ident">emoji</span>);
             }
 
             <span class="kw">for</span> <span class="ident">id</span> <span class="kw">in</span> <span class="ident">guild_1_emoji_ids</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>() {
@@ -340,7 +340,7 @@
 
             <span class="comment">// Ensure the emoji has been added to the per-guild lookup map to prevent</span>
             <span class="comment">// issues like #551 from returning</span>
-            <span class="kw">let</span> <span class="ident">guild_emojis</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">guild_emojis</span>(<span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
+            <span class="kw">let</span> <span class="ident">guild_emojis</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">guild_emojis</span>(<span class="ident">Id::new</span>(<span class="number">1</span>));
             <span class="macro">assert!</span>(<span class="ident">guild_emojis</span>.<span class="ident">is_some</span>());
             <span class="kw">let</span> <span class="ident">guild_emojis</span> <span class="op">=</span> <span class="ident">guild_emojis</span>.<span class="ident">unwrap</span>();
 
@@ -350,22 +350,20 @@
 
         <span class="comment">// Bulk inserts</span>
         {
-            <span class="kw">let</span> <span class="ident">guild_2_emoji_ids</span> <span class="op">=</span> (<span class="number">11</span>..<span class="op">=</span><span class="number">20</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="ident">EmojiId::new</span>(<span class="ident">n</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>))
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+            <span class="kw">let</span> <span class="ident">guild_2_emoji_ids</span> <span class="op">=</span> (<span class="number">11</span>..<span class="op">=</span><span class="number">20</span>).<span class="ident">map</span>(<span class="ident">Id::new</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
             <span class="kw">let</span> <span class="ident">guild_2_emojis</span> <span class="op">=</span> <span class="ident">guild_2_emoji_ids</span>
                 .<span class="ident">iter</span>()
                 .<span class="ident">copied</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">test::emoji</span>(<span class="ident">id</span>, <span class="ident">user_mod</span>(<span class="ident">id</span>)))
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-            <span class="ident">cache</span>.<span class="ident">cache_emojis</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="ident">guild_2_emojis</span>);
+            <span class="ident">cache</span>.<span class="ident">cache_emojis</span>(<span class="ident">Id::new</span>(<span class="number">2</span>), <span class="ident">guild_2_emojis</span>);
 
             <span class="kw">for</span> <span class="ident">id</span> <span class="kw">in</span> <span class="ident">guild_2_emoji_ids</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>() {
                 <span class="kw">let</span> <span class="ident">global_emoji</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">emoji</span>(<span class="ident">id</span>);
                 <span class="macro">assert!</span>(<span class="ident">global_emoji</span>.<span class="ident">is_some</span>());
             }
 
-            <span class="kw">let</span> <span class="ident">guild_emojis</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">guild_emojis</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
+            <span class="kw">let</span> <span class="ident">guild_emojis</span> <span class="op">=</span> <span class="ident">cache</span>.<span class="ident">guild_emojis</span>(<span class="ident">Id::new</span>(<span class="number">2</span>));
 
             <span class="macro">assert!</span>(<span class="ident">guild_emojis</span>.<span class="ident">is_some</span>());
             <span class="kw">let</span> <span class="ident">guild_emojis</span> <span class="op">=</span> <span class="ident">guild_emojis</span>.<span class="ident">unwrap</span>();
@@ -378,11 +376,11 @@
     <span class="kw">fn</span> <span class="ident">test_emoji_removal</span>() {
         <span class="kw">let</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">InMemoryCache::new</span>();
 
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">GuildId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>);
+        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">emote</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">EmojiId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">None</span>);
-        <span class="kw">let</span> <span class="ident">emote_2</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">EmojiId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">None</span>);
-        <span class="kw">let</span> <span class="ident">emote_3</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">EmojiId::new</span>(<span class="number">3</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">None</span>);
+        <span class="kw">let</span> <span class="ident">emote</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="prelude-val">None</span>);
+        <span class="kw">let</span> <span class="ident">emote_2</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">Id::new</span>(<span class="number">2</span>), <span class="prelude-val">None</span>);
+        <span class="kw">let</span> <span class="ident">emote_3</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="prelude-val">None</span>);
 
         <span class="ident">cache</span>.<span class="ident">cache_emoji</span>(<span class="ident">guild_id</span>, <span class="ident">emote</span>.<span class="ident">clone</span>());
         <span class="ident">cache</span>.<span class="ident">cache_emoji</span>(<span class="ident">guild_id</span>, <span class="ident">emote_2</span>.<span class="ident">clone</span>());
@@ -409,7 +407,7 @@
         <span class="macro">assert!</span>(<span class="ident">cache</span>.<span class="ident">emoji</span>(<span class="ident">emote</span>.<span class="ident">id</span>).<span class="ident">is_some</span>());
         <span class="macro">assert!</span>(<span class="ident">cache</span>.<span class="ident">emoji</span>(<span class="ident">emote_2</span>.<span class="ident">id</span>).<span class="ident">is_none</span>());
 
-        <span class="kw">let</span> <span class="ident">emote_4</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">EmojiId::new</span>(<span class="number">4</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>), <span class="prelude-val">None</span>);
+        <span class="kw">let</span> <span class="ident">emote_4</span> <span class="op">=</span> <span class="ident">test::emoji</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="prelude-val">None</span>);
 
         <span class="ident">cache</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">GuildEmojisUpdate</span> {
             <span class="ident">emojis</span>: <span class="macro">vec!</span>[<span class="ident">emote_4</span>.<span class="ident">clone</span>()],

@@ -164,7 +164,13 @@
 <span id="158">158</span>
 <span id="159">159</span>
 <span id="160">160</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">ChannelId</span>, <span class="ident">GuildId</span>};
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">twilight_model::id</span>::{
+    <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>},
+    <span class="ident">Id</span>,
+};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::InMemoryCache</span>;
 
@@ -194,7 +200,7 @@
     <span class="doccomment">/// Returns `None` if the channel hasn&#39;t yet been cached or there are no</span>
     <span class="doccomment">/// messages in the channel. However, the provided number may still be 0</span>
     <span class="doccomment">/// if some number is returned.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_messages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_messages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">channel_messages</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">channel_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">channel</span>.<span class="ident">len</span>())
@@ -205,7 +211,7 @@
     <span class="doccomment">/// Returns `None` if the channel hasn&#39;t yet been cached or there are no</span>
     <span class="doccomment">/// voice states in the channel. However, the provided number may still be 0</span>
     <span class="doccomment">/// if some number is returned.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_voice_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">channel_id</span>: <span class="ident">ChannelId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel_voice_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">voice_state_channels</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">channel_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">channel</span>.<span class="ident">len</span>())
@@ -229,7 +235,7 @@
     <span class="doccomment">/// Number of channels in a given guild in the cache.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the guild hasn&#39;t yet been cached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">guild</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_channels</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">guild</span>.<span class="ident">len</span>())
@@ -238,7 +244,7 @@
     <span class="doccomment">/// Number of emojis in a given guild in the cache.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the guild hasn&#39;t yet been cached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">guild</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_emojis</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">guild</span>.<span class="ident">len</span>())
@@ -247,7 +253,7 @@
     <span class="doccomment">/// Number of members in a given guild in the cache.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the guild hasn&#39;t yet been cached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_members</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_members</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">guild</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_members</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">guild</span>.<span class="ident">len</span>())
@@ -256,7 +262,7 @@
     <span class="doccomment">/// Number of presences in a given guild in the cache.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the guild hasn&#39;t yet been cached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_presences</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_presences</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">guild</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_presences</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">guild</span>.<span class="ident">len</span>())
@@ -265,7 +271,7 @@
     <span class="doccomment">/// Number of roles in a given guild in the cache.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the guild hasn&#39;t yet been cached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">guild</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">guild_roles</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">guild</span>.<span class="ident">len</span>())
@@ -274,7 +280,7 @@
     <span class="doccomment">/// Number of voice states in a given guild in the cache.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` if the guild hasn&#39;t yet been cached.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_voice_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guild_voice_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">guild</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">voice_state_guilds</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(<span class="ident">guild</span>.<span class="ident">len</span>())

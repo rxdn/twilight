@@ -330,7 +330,6 @@
 <span id="324">324</span>
 <span id="325">325</span>
 <span id="326">326</span>
-<span id="327">327</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">activity_button</span>;
 
 <span class="kw">mod</span> <span class="ident">activity</span>;
@@ -354,7 +353,10 @@
 };
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>},
+    <span class="ident">id</span>::{
+        <span class="ident">marker</span>::{<span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
+        <span class="ident">Id</span>,
+    },
     <span class="ident">user::User</span>,
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{
@@ -370,7 +372,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">client_status</span>: <span class="ident">ClientStatus</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">GuildId</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">Status</span>,
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="ident">UserOrId</span>,
 }
@@ -379,12 +381,12 @@
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UserOrId</span> {
     <span class="ident">User</span>(<span class="ident">User</span>),
-    <span class="ident">UserId</span> { <span class="ident">id</span>: <span class="ident">UserId</span> },
+    <span class="ident">UserId</span> { <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> },
 }
 
 <span class="kw">impl</span> <span class="ident">UserOrId</span> {
     <span class="doccomment">/// ID of the inner object.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">UserId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">UserOrId::User</span>(<span class="ident">u</span>) =&gt; <span class="ident">u</span>.<span class="ident">id</span>,
             <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span> } =&gt; <span class="kw-2">*</span><span class="ident">id</span>,
@@ -397,7 +399,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">client_status</span>: <span class="ident">ClientStatus</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">Status</span>,
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="ident">UserOrId</span>,
@@ -405,7 +407,7 @@
 
 <span class="kw">impl</span> <span class="ident">PresenceIntermediary</span> {
     <span class="doccomment">/// Inject guild ID into presence if not already present.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_presence</span>(<span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="ident">Presence</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_presence</span>(<span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">Presence</span> {
         <span class="ident">Presence</span> {
             <span class="ident">activities</span>: <span class="self">self</span>.<span class="ident">activities</span>,
             <span class="ident">client_status</span>: <span class="self">self</span>.<span class="ident">client_status</span>,
@@ -416,7 +418,7 @@
     }
 }
 
-<span class="kw">struct</span> <span class="ident">PresenceVisitor</span>(<span class="ident">GuildId</span>);
+<span class="kw">struct</span> <span class="ident">PresenceVisitor</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PresenceVisitor</span> {
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Presence</span>;
@@ -440,12 +442,12 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceDeserializer</span>(<span class="ident">GuildId</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceDeserializer</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">PresenceDeserializer</span> {
     <span class="doccomment">/// Create a new deserializer for a presence when you know the guild ID but</span>
     <span class="doccomment">/// the payload probably doesn&#39;t contain it.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">guild_id</span>)
     }
 }
@@ -459,17 +461,17 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceListDeserializer</span>(<span class="ident">GuildId</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceListDeserializer</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">PresenceListDeserializer</span> {
     <span class="doccomment">/// Create a new deserializer for a map of presences when you know the</span>
     <span class="doccomment">/// Guild ID but the payload probably doesn&#39;t contain it.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">GuildId</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">guild_id</span>)
     }
 }
 
-<span class="kw">struct</span> <span class="ident">PresenceListDeserializerVisitor</span>(<span class="ident">GuildId</span>);
+<span class="kw">struct</span> <span class="ident">PresenceListDeserializerVisitor</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PresenceListDeserializerVisitor</span> {
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Presence</span><span class="op">&gt;</span>;
@@ -503,7 +505,7 @@
         <span class="ident">Activity</span>, <span class="ident">ActivityEmoji</span>, <span class="ident">ActivityType</span>, <span class="ident">ClientStatus</span>, <span class="ident">Presence</span>, <span class="ident">PresenceListDeserializer</span>,
         <span class="ident">Status</span>, <span class="ident">UserOrId</span>,
     };
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id</span>::{<span class="ident">GuildId</span>, <span class="ident">UserId</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">serde::de::DeserializeSeed</span>;
     <span class="kw">use</span> <span class="ident">serde_json::Deserializer</span>;
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
@@ -540,11 +542,9 @@
                 <span class="ident">mobile</span>: <span class="prelude-val">None</span>,
                 <span class="ident">web</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">status</span>: <span class="ident">Status::Online</span>,
-            <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> {
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            },
+            <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>) },
         };
 
         <span class="ident">serde_test::assert_de_tokens</span>(
@@ -563,7 +563,7 @@
                 <span class="ident">Token::Str</span>(<span class="string">&quot;1&quot;</span>),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;guild_id&quot;</span>),
-                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;GuildId&quot;</span> },
+                <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;2&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;status&quot;</span>),
                 <span class="ident">Token::Enum</span> { <span class="ident">name</span>: <span class="string">&quot;Status&quot;</span> },
@@ -644,15 +644,13 @@
                 <span class="ident">mobile</span>: <span class="prelude-val">None</span>,
                 <span class="ident">web</span>: <span class="prelude-val">None</span>,
             },
-            <span class="ident">guild_id</span>: <span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
+            <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">status</span>: <span class="ident">Status::Online</span>,
-            <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> {
-                <span class="ident">id</span>: <span class="ident">UserId::new</span>(<span class="number">1</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>),
-            },
+            <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>) },
         }]);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">GuildId::new</span>(<span class="number">2</span>).<span class="ident">expect</span>(<span class="string">&quot;non zero&quot;</span>));
+        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">Id::new</span>(<span class="number">2</span>));
         <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq!</span>(<span class="ident">actual</span>, <span class="ident">expected</span>);

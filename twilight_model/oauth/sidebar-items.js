@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["current_application_info",""],["id","IDs for OAuth teams."],["team",""]],"struct":[["PartialApplication",""]]});
+initSidebarItems({"mod":[["current_application_info",""],["team",""]],"struct":[["PartialApplication",""]]});
