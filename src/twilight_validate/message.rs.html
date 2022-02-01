@@ -259,13 +259,26 @@
 <span id="254">254</span>
 <span id="255">255</span>
 <span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Constants, error types, and functions for validating [`Message`] fields.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`Message`]: twilight_model::channel::Message</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">component</span>::{<span class="ident">ComponentValidationErrorType</span>, <span class="ident">COMPONENT_COUNT</span>},
-    <span class="ident">embed::EmbedValidationErrorType</span>,
+    <span class="ident">embed</span>::{<span class="ident">chars</span> <span class="kw">as</span> <span class="ident">embed_chars</span>, <span class="ident">EmbedValidationErrorType</span>, <span class="ident">EMBED_TOTAL_LENGTH</span>},
 };
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">error::Error</span>,
@@ -464,7 +477,20 @@
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
         })
     } <span class="kw">else</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">embed</span>) <span class="kw">in</span> <span class="ident">embeds</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="ident">chars</span> <span class="op">+</span><span class="op">=</span> <span class="ident">embed_chars</span>(<span class="ident">embed</span>);
+
+            <span class="kw">if</span> <span class="ident">chars</span> <span class="op">&gt;</span> <span class="ident">EMBED_TOTAL_LENGTH</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">MessageValidationError</span> {
+                    <span class="ident">kind</span>: <span class="ident">MessageValidationErrorType::EmbedInvalid</span> {
+                        <span class="ident">idx</span>,
+                        <span class="ident">kind</span>: <span class="ident">EmbedValidationErrorType::EmbedTooLarge</span> { <span class="ident">chars</span> },
+                    },
+                    <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                });
+            }
+
             <span class="ident"><span class="kw">crate</span>::embed::embed</span>(<span class="ident">embed</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
                 <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">source</span>.<span class="ident">into_parts</span>();
 
@@ -516,5 +542,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_validate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a00e130da 2022-01-29)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_validate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (498eeb72f 2022-01-31)" ></div>
 </body></html>
