@@ -18,8 +18,19 @@
 <span id="13">13</span>
 <span id="14">14</span>
 <span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">application::interaction::InteractionType</span>,
+    <span class="ident">guild::PartialMember</span>,
     <span class="ident">id</span>::{<span class="ident">marker::InteractionMarker</span>, <span class="ident">Id</span>},
     <span class="ident">user::User</span>,
 };
@@ -27,10 +38,19 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MessageInteraction</span> {
+    <span class="doccomment">/// ID of the interaction.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Type of the interaction.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">InteractionType</span>,
+    <span class="doccomment">/// If in a guild, the member who invoked the interaction.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PartialMember</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Name of the [`Command`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`Command`]: crate::application::command::Command</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// User who invoked the interaction.</span>
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="ident">User</span>,
 }
 </code></pre></div>
