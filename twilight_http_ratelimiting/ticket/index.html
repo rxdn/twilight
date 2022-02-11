@@ -7,33 +7,33 @@
     <h1 class="fqn"><span class="in-band">Module <a href="../index.html">twilight_http_ratelimiting</a>::<wbr><a class="mod" href="#">ticket</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/twilight_http_ratelimiting/ticket.rs.html#1-175">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Flow for managing ratelimit tickets.</p>
 <p>Tickets are the <a href="../trait.Ratelimiter.html"><code>Ratelimiter</code></a>’s method of managing approval for a consumer
 to be able to send a request.</p>
-<h2 id="ratelimit-consumer" class="section-header"><a href="#ratelimit-consumer">Ratelimit Consumer</a></h2><h3 id="1-requesting-a-ticket" class="section-header"><a href="#1-requesting-a-ticket">1. Requesting a ticket</a></h3>
+<h2 id="ratelimit-consumer"><a href="#ratelimit-consumer">Ratelimit Consumer</a></h2><h3 id="1-requesting-a-ticket"><a href="#1-requesting-a-ticket">1. Requesting a ticket</a></h3>
 <p>Consumers of a ratelimiter will call <a href="../trait.Ratelimiter.html#tymethod.ticket"><code>Ratelimiter::ticket</code></a>.</p>
-<h3 id="2-waiting-for-approval" class="section-header"><a href="#2-waiting-for-approval">2. Waiting for approval</a></h3>
+<h3 id="2-waiting-for-approval"><a href="#2-waiting-for-approval">2. Waiting for approval</a></h3>
 <p>In return consumers will receive a <a href="struct.TicketReceiver.html" title="TicketReceiver"><code>TicketReceiver</code></a>. This must be polled
 in order to know when the ratelimiter has approved a ticket.</p>
-<h3 id="3-receiving-approval" class="section-header"><a href="#3-receiving-approval">3. Receiving approval</a></h3>
+<h3 id="3-receiving-approval"><a href="#3-receiving-approval">3. Receiving approval</a></h3>
 <p>When a ticket is approved and the future resolves, a <a href="struct.TicketSender.html" title="TicketSender"><code>TicketSender</code></a> is
 provided. This must be used to provide the ratelimiter with the response’s
 ratelimit headers.</p>
-<h3 id="4-performing-the-request" class="section-header"><a href="#4-performing-the-request">4. Performing the request</a></h3>
+<h3 id="4-performing-the-request"><a href="#4-performing-the-request">4. Performing the request</a></h3>
 <p>Consumers may now execute the HTTP request associated with the ticket. Once
 a response (or lack of one) is received, the headers <a href="../headers/index.html">must be parsed</a> and
 sent to the ratelimiter via <a href="struct.TicketSender.html#method.headers" title="TicketSender::headers"><code>TicketSender::headers</code></a>. This completes the
 cycle.</p>
-<h2 id="ratelimiter" class="section-header"><a href="#ratelimiter">Ratelimiter</a></h2><h3 id="1-initializing-a-tickets-channels" class="section-header"><a href="#1-initializing-a-tickets-channels">1. Initializing a ticket’s channels</a></h3>
+<h2 id="ratelimiter"><a href="#ratelimiter">Ratelimiter</a></h2><h3 id="1-initializing-a-tickets-channels"><a href="#1-initializing-a-tickets-channels">1. Initializing a ticket’s channels</a></h3>
 <p>Ratelimiters will accept a request for a ticket when <a href="../trait.Ratelimiter.html#tymethod.ticket"><code>Ratelimiter::ticket</code></a>
 is called. You must call <a href="fn.channel.html" title="channel"><code>channel</code></a> to create a channel between the
 ratelimiter and the consumer.</p>
-<h3 id="2-keeping-the-consumer-waiting" class="section-header"><a href="#2-keeping-the-consumer-waiting">2. Keeping the consumer waiting</a></h3>
+<h3 id="2-keeping-the-consumer-waiting"><a href="#2-keeping-the-consumer-waiting">2. Keeping the consumer waiting</a></h3>
 <p><a href="fn.channel.html" title="channel"><code>channel</code></a> will return two halves: <a href="struct.TicketNotifier.html" title="TicketNotifier"><code>TicketNotifier</code></a> and
 <a href="struct.TicketReceiver.html" title="TicketReceiver"><code>TicketReceiver</code></a>. Ratelimiters must keep the notifier and give the user
 the receiver in return.</p>
-<h3 id="3-notifying-the-consumer-of-ticket-approval" class="section-header"><a href="#3-notifying-the-consumer-of-ticket-approval">3. Notifying the consumer of ticket approval</a></h3>
+<h3 id="3-notifying-the-consumer-of-ticket-approval"><a href="#3-notifying-the-consumer-of-ticket-approval">3. Notifying the consumer of ticket approval</a></h3>
 <p>When any ratelimits have passed and a user is free to perform their request,
 call <a href="struct.TicketNotifier.html#method.available" title="TicketNotifier::available"><code>TicketNotifier::available</code></a>. If the user hasn’t canceled their
 request for a ticket, you will receive a <a href="struct.TicketHeaders.html" title="TicketHeaders"><code>TicketHeaders</code></a>.</p>
-<h3 id="4-receiving-the-responses-headers" class="section-header"><a href="#4-receiving-the-responses-headers">4. Receiving the response’s headers</a></h3>
+<h3 id="4-receiving-the-responses-headers"><a href="#4-receiving-the-responses-headers">4. Receiving the response’s headers</a></h3>
 <p>The consumer will perform their HTTP request and parse the response’s
 headers. Once the headers (or lack of headers) are available the user will
 send them along the channel. Poll the provided <a href="struct.TicketHeaders.html" title="TicketHeaders"><code>TicketHeaders</code></a> for those
@@ -46,5 +46,5 @@ they may now send a request.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.TicketSender.html" title="twilight_http_ratelimiting::ticket::TicketSender struct">TicketSender</a></div><div class="item-right docblock-short"><p>Channel sender to send response ratelimit information to the ratelimiter.</p>
 </div></div></div><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="fn" href="fn.channel.html" title="twilight_http_ratelimiting::ticket::channel fn">channel</a></div><div class="item-right docblock-short"><p>Produce a new channel consisting of a sender and receiver.</p>
-</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e7aca8959 2022-02-09)" ></div>
+</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e646f3d2a 2022-02-10)" ></div>
 </body></html>
