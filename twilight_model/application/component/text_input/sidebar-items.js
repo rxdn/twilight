@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["TextInputStyle","Style of an [`TextInput`]."]],"struct":[["TextInput","Modal component to prompt users for a text input."]]});
