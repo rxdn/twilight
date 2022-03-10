@@ -181,35 +181,7 @@
 <span id="176">176</span>
 <span id="177">177</span>
 <span id="178">178</span>
-<span id="179">179</span>
-<span id="180">180</span>
-<span id="181">181</span>
-<span id="182">182</span>
-<span id="183">183</span>
-<span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Client</span>;
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">client::connector</span>, <span class="ident">Client</span>};
 <span class="kw">use</span> <span class="ident">hyper::header::HeaderMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">sync</span>::{<span class="ident">atomic::AtomicBool</span>, <span class="ident">Arc</span>},
@@ -239,37 +211,9 @@
 
     <span class="doccomment">/// Build the [`Client`].</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="ident">Client</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;trust-dns&quot;</span>))]</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">http_connector</span> <span class="op">=</span> <span class="ident">hyper::client::HttpConnector::new</span>();
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;trust-dns&quot;</span>)]</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">http_connector</span> <span class="op">=</span> <span class="ident">hyper_trust_dns::new_trust_dns_http_connector</span>();
+        <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">connector::create</span>();
 
-        <span class="ident">http_connector</span>.<span class="ident">enforce_http</span>(<span class="bool-val">false</span>);
-
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>)]</span>
-        <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
-            .<span class="ident">with_native_roots</span>()
-            .<span class="ident">https_or_http</span>()
-            .<span class="ident">enable_http1</span>()
-            .<span class="ident">enable_http2</span>()
-            .<span class="ident">wrap_connector</span>(<span class="ident">http_connector</span>);
-
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>)))]</span>
-        <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
-            .<span class="ident">with_webpki_roots</span>()
-            .<span class="ident">https_or_http</span>()
-            .<span class="ident">enable_http1</span>()
-            .<span class="ident">enable_http2</span>()
-            .<span class="ident">wrap_connector</span>(<span class="ident">http_connector</span>);
-
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-            <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;hyper-tls&quot;</span>,
-            <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>),
-            <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>)
-        ))]</span>
-        <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_tls::HttpsConnector::new_with_connector</span>(<span class="ident">http_connector</span>);
-
-        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="ident">hyper::client::Builder::default</span>().<span class="ident">build</span>(<span class="ident">connector</span>);
+        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="ident">hyper::Client::builder</span>().<span class="ident">build</span>(<span class="ident">connector</span>);
 
         <span class="kw">let</span> <span class="ident">token_invalidated</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">remember_invalid_token</span> {
             <span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>)))
