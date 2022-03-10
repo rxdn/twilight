@@ -1113,6 +1113,8 @@
 <span id="1108">1108</span>
 <span id="1109">1109</span>
 <span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="kw">super</span>::{
         <span class="ident">config::Config</span>,
@@ -1942,7 +1944,9 @@
             }
             <span class="comment">// Discord doesn&#39;t appear to send Text messages, so we can ignore</span>
             <span class="comment">// these.</span>
-            <span class="ident">Message::Ping</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Message::Pong</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
+            <span class="comment">// Message::Frame is send-only and therefore falls into the same group,</span>
+            <span class="comment">// see https://docs.rs/tungstenite/latest/tungstenite/enum.Message.html#variant.Frame</span>
+            <span class="ident">Message::Ping</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Message::Pong</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Message::Frame</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
         }
     }
 
