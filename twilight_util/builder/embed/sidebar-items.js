@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["image_source","Sources to image URLs and attachments."]],"struct":[["EmbedAuthorBuilder","Create an embed author with a builder."],["EmbedBuilder","Create an [`Embed`] with a builder."],["EmbedFieldBuilder","Create an embed field with a builder."],["EmbedFooterBuilder","Create an embed footer with a builder."]]});
