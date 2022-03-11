@@ -868,6 +868,30 @@
 <span id="863">863</span>
 <span id="864">864</span>
 <span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Create a [`Command`] with a builder.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
@@ -906,6 +930,9 @@
     <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
 };
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;validate&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">twilight_validate::command</span>::{<span class="ident">command</span> <span class="kw">as</span> <span class="ident">validate_command</span>, <span class="ident">CommandValidationError</span>};
+
 <span class="doccomment">/// Builder to create a [`Command`].</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -934,6 +961,19 @@
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;must be built into a command&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="ident">Command</span> {
         <span class="self">self</span>.<span class="number">0</span>
+    }
+
+    <span class="doccomment">/// Ensure the command is valid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Refer to the errors section of [`twilight_validate::command::command`]</span>
+    <span class="doccomment">/// for possible errors.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;validate&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_command</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Set the guild ID of the command.</span>
@@ -1731,6 +1771,14 @@
         };
 
         <span class="macro">assert_eq!</span>(<span class="ident">command</span>, <span class="ident">command_manual</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;validate&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_validate</span>() {
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">CommandBuilder::new</span>(<span class="string">&quot;&quot;</span>.<span class="ident">into</span>(), <span class="string">&quot;&quot;</span>.<span class="ident">into</span>(), <span class="ident">CommandType::ChatInput</span>).<span class="ident">validate</span>();
+
+        <span class="macro">assert!</span>(<span class="ident">result</span>.<span class="ident">is_err</span>());
     }
 }
 </code></pre></div>
