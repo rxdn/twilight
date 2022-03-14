@@ -232,6 +232,12 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">datetime::Timestamp</span>,
@@ -328,12 +334,18 @@
         <span class="self">self</span>.<span class="ident">user_id</span>
     }
 
+    <span class="doccomment">/// Construct a cached voice state from its [`twilight_model`] form.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_voice_state</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_model</span>(
         <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
         <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="ident">voice_state</span>: <span class="ident">VoiceState</span>,
     ) -&gt; <span class="self">Self</span> {
+        <span class="comment">// Reasons for dropping fields:</span>
+        <span class="comment">//</span>
+        <span class="comment">// - `channel_id`: provided as a function parameter</span>
+        <span class="comment">// - `guild_id`: provided as a function parameter</span>
+        <span class="comment">// - `member`: we have the user&#39;s ID from the `user_id` field</span>
         <span class="kw">let</span> <span class="ident">VoiceState</span> {
             <span class="ident">channel_id</span>: <span class="kw">_</span>,
             <span class="ident">deaf</span>,
@@ -433,7 +445,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_eq</span>() {
         <span class="kw">let</span> <span class="ident">voice_state</span> <span class="op">=</span> <span class="ident">test::voice_state</span>(<span class="ident">GUILD_ID</span>, <span class="prelude-val">Some</span>(<span class="ident">CHANNEL_ID</span>), <span class="ident">USER_ID</span>);
-        <span class="kw">let</span> <span class="ident">cached</span> <span class="op">=</span> <span class="ident">CachedVoiceState::from_voice_state</span>(<span class="ident">CHANNEL_ID</span>, <span class="ident">GUILD_ID</span>, <span class="ident">voice_state</span>.<span class="ident">clone</span>());
+        <span class="kw">let</span> <span class="ident">cached</span> <span class="op">=</span> <span class="ident">CachedVoiceState::from_model</span>(<span class="ident">CHANNEL_ID</span>, <span class="ident">GUILD_ID</span>, <span class="ident">voice_state</span>.<span class="ident">clone</span>());
 
         <span class="macro">assert_eq!</span>(<span class="ident">cached</span>, <span class="ident">voice_state</span>);
     }
@@ -441,7 +453,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_getters</span>() {
         <span class="kw">let</span> <span class="ident">voice_state</span> <span class="op">=</span> <span class="ident">test::voice_state</span>(<span class="ident">GUILD_ID</span>, <span class="prelude-val">Some</span>(<span class="ident">CHANNEL_ID</span>), <span class="ident">USER_ID</span>);
-        <span class="kw">let</span> <span class="ident">cached</span> <span class="op">=</span> <span class="ident">CachedVoiceState::from_voice_state</span>(<span class="ident">CHANNEL_ID</span>, <span class="ident">GUILD_ID</span>, <span class="ident">voice_state</span>.<span class="ident">clone</span>());
+        <span class="kw">let</span> <span class="ident">cached</span> <span class="op">=</span> <span class="ident">CachedVoiceState::from_model</span>(<span class="ident">CHANNEL_ID</span>, <span class="ident">GUILD_ID</span>, <span class="ident">voice_state</span>.<span class="ident">clone</span>());
 
         <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">cached</span>.<span class="ident">channel_id</span>()), <span class="ident">voice_state</span>.<span class="ident">channel_id</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">cached</span>.<span class="ident">deaf</span>(), <span class="ident">voice_state</span>.<span class="ident">deaf</span>);
@@ -462,5 +474,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (335ffbfa5 2022-03-11)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (f103b2969 2022-03-12)" ></div>
 </body></html>

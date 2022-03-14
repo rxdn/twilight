@@ -273,6 +273,69 @@
 <span id="268">268</span>
 <span id="269">269</span>
 <span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::slice::Iter</span>;
 
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
@@ -309,6 +372,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">large</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">max_members</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">max_presences</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">max_video_channel_users</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">member_count</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">mfa_level</span>: <span class="ident">MfaLevel</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">name</span>: <span class="ident">String</span>,
@@ -421,6 +485,11 @@
     <span class="doccomment">/// Maximum presences.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">max_presences</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">max_presences</span>
+    }
+
+    <span class="doccomment">/// Maximum number of users in a video channel.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">max_video_channel_users</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">max_video_channel_users</span>
     }
 
     <span class="doccomment">/// Total number of members in the guild.</span>
@@ -543,6 +612,63 @@
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="ident">AsRef::as_ref</span>)
     }
 }
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CachedGuild</span>, <span class="ident">Features</span>};
+    <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
+    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
+    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+
+    <span class="macro">assert_fields!</span>(
+        <span class="ident">CachedGuild</span>: <span class="ident">afk_channel_id</span>,
+        <span class="ident">afk_timeout</span>,
+        <span class="ident">application_id</span>,
+        <span class="ident">banner</span>,
+        <span class="ident">default_message_notifications</span>,
+        <span class="ident">description</span>,
+        <span class="ident">discovery_splash</span>,
+        <span class="ident">explicit_content_filter</span>,
+        <span class="ident">features</span>,
+        <span class="ident">icon</span>,
+        <span class="ident">id</span>,
+        <span class="ident">joined_at</span>,
+        <span class="ident">large</span>,
+        <span class="ident">max_members</span>,
+        <span class="ident">max_presences</span>,
+        <span class="ident">max_video_channel_users</span>,
+        <span class="ident">member_count</span>,
+        <span class="ident">mfa_level</span>,
+        <span class="ident">name</span>,
+        <span class="ident">nsfw_level</span>,
+        <span class="ident">owner_id</span>,
+        <span class="ident">owner</span>,
+        <span class="ident">permissions</span>,
+        <span class="ident">preferred_locale</span>,
+        <span class="ident">premium_progress_bar_enabled</span>,
+        <span class="ident">premium_subscription_count</span>,
+        <span class="ident">premium_tier</span>,
+        <span class="ident">rules_channel_id</span>,
+        <span class="ident">splash</span>,
+        <span class="ident">system_channel_id</span>,
+        <span class="ident">system_channel_flags</span>,
+        <span class="ident">unavailable</span>,
+        <span class="ident">vanity_url_code</span>,
+        <span class="ident">verification_level</span>,
+        <span class="ident">widget_channel_id</span>,
+        <span class="ident">widget_enabled</span>
+    );
+    <span class="macro">assert_impl_all!</span>(
+        <span class="ident">CachedGuild</span>: <span class="ident">Clone</span>,
+        <span class="ident">Debug</span>,
+        <span class="ident">Eq</span>,
+        <span class="ident">PartialEq</span>,
+        <span class="ident">Send</span>,
+        <span class="ident">Serialize</span>,
+        <span class="ident">Sync</span>,
+    );
+    <span class="macro">assert_impl_all!</span>(<span class="ident">Features</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+}
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (335ffbfa5 2022-03-11)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (f103b2969 2022-03-12)" ></div>
 </body></html>

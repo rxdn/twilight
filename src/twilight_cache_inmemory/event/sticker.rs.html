@@ -157,19 +157,6 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
-<span id="155">155</span>
-<span id="156">156</span>
-<span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">config::ResourceType</span>, <span class="ident">model::CachedSticker</span>, <span class="ident">GuildResource</span>, <span class="ident">InMemoryCache</span>, <span class="ident">UpdateCache</span>,
 };
@@ -216,25 +203,12 @@
             <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">None</span> =&gt; {}
         }
 
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">sticker</span>.<span class="ident">user</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">user</span><span class="op">|</span> <span class="ident">user</span>.<span class="ident">id</span>);
-
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>) <span class="op">=</span> <span class="ident">sticker</span>.<span class="ident">user</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>) <span class="op">=</span> <span class="ident">sticker</span>.<span class="ident">user</span>.<span class="ident">clone</span>() {
             <span class="self">self</span>.<span class="ident">cache_user</span>(<span class="ident">Cow::Owned</span>(<span class="ident">user</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>));
         }
 
-        <span class="kw">let</span> <span class="ident">cached</span> <span class="op">=</span> <span class="ident">CachedSticker</span> {
-            <span class="ident">available</span>: <span class="ident">sticker</span>.<span class="ident">available</span>,
-            <span class="ident">description</span>: <span class="ident">sticker</span>.<span class="ident">description</span>.<span class="ident">unwrap_or_default</span>(),
-            <span class="ident">format_type</span>: <span class="ident">sticker</span>.<span class="ident">format_type</span>,
-            <span class="ident">guild_id</span>: <span class="ident">sticker</span>.<span class="ident">guild_id</span>,
-            <span class="ident">id</span>: <span class="ident">sticker</span>.<span class="ident">id</span>,
-            <span class="ident">kind</span>: <span class="ident">sticker</span>.<span class="ident">kind</span>,
-            <span class="ident">name</span>: <span class="ident">sticker</span>.<span class="ident">name</span>,
-            <span class="ident">pack_id</span>: <span class="ident">sticker</span>.<span class="ident">pack_id</span>,
-            <span class="ident">sort_value</span>: <span class="ident">sticker</span>.<span class="ident">sort_value</span>,
-            <span class="ident">tags</span>: <span class="ident">sticker</span>.<span class="ident">tags</span>,
-            <span class="ident">user_id</span>,
-        };
+        <span class="kw">let</span> <span class="ident">sticker_id</span> <span class="op">=</span> <span class="ident">sticker</span>.<span class="ident">id</span>;
+        <span class="kw">let</span> <span class="ident">cached</span> <span class="op">=</span> <span class="ident">CachedSticker::from_model</span>(<span class="ident">sticker</span>);
 
         <span class="self">self</span>.<span class="ident">stickers</span>.<span class="ident">insert</span>(
             <span class="ident">cached</span>.<span class="ident">id</span>,
@@ -247,7 +221,7 @@
         <span class="self">self</span>.<span class="ident">guild_stickers</span>
             .<span class="ident">entry</span>(<span class="ident">guild_id</span>)
             .<span class="ident">or_default</span>()
-            .<span class="ident">insert</span>(<span class="ident">sticker</span>.<span class="ident">id</span>);
+            .<span class="ident">insert</span>(<span class="ident">sticker_id</span>);
     }
 }
 
@@ -338,5 +312,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (335ffbfa5 2022-03-11)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (f103b2969 2022-03-12)" ></div>
 </body></html>
