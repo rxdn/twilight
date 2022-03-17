@@ -642,6 +642,19 @@
 <span id="637">637</span>
 <span id="638">638</span>
 <span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">embed</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">message</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">permission_overwrite</span>;
@@ -765,6 +778,9 @@
     <span class="doccomment">/// Name of the channel.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Whether a thread was newly created.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">newly_created</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Whether the channel has been configured to be NSFW.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">nsfw</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
@@ -867,6 +883,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">message_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;hey&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">None</span>,
             <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             <span class="ident">owner_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
@@ -901,6 +918,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">message_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;foo&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">None</span>,
             <span class="ident">nsfw</span>: <span class="prelude-val">None</span>,
             <span class="ident">owner_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
@@ -947,6 +965,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">message_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;news&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">None</span>,
             <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">owner_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
@@ -997,6 +1016,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">message_count</span>: <span class="prelude-val">None</span>,
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;store&quot;</span>.<span class="ident">to_owned</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">None</span>,
             <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
             <span class="ident">owner_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
@@ -1055,6 +1075,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">Some</span>(<span class="number">50_u8</span>),
             <span class="ident">message_count</span>: <span class="prelude-val">Some</span>(<span class="number">50_u8</span>),
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;newsthread&quot;</span>.<span class="ident">into</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">nsfw</span>: <span class="prelude-val">None</span>,
             <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
@@ -1093,6 +1114,7 @@
                 <span class="string">&quot;member_count&quot;</span>: <span class="number">50</span>,
                 <span class="string">&quot;message_count&quot;</span>: <span class="number">50</span>,
                 <span class="string">&quot;name&quot;</span>: <span class="string">&quot;newsthread&quot;</span>,
+                <span class="string">&quot;newly_created&quot;</span>: <span class="bool-val">true</span>,
                 <span class="string">&quot;owner_id&quot;</span>: <span class="string">&quot;5&quot;</span>,
                 <span class="string">&quot;parent_id&quot;</span>: <span class="string">&quot;2&quot;</span>,
                 <span class="string">&quot;rate_limit_per_user&quot;</span>: <span class="number">1000</span>,
@@ -1134,6 +1156,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">Some</span>(<span class="number">50_u8</span>),
             <span class="ident">message_count</span>: <span class="prelude-val">Some</span>(<span class="number">50_u8</span>),
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;publicthread&quot;</span>.<span class="ident">into</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">nsfw</span>: <span class="prelude-val">None</span>,
             <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
@@ -1172,6 +1195,7 @@
                 <span class="string">&quot;member_count&quot;</span>: <span class="number">50</span>,
                 <span class="string">&quot;message_count&quot;</span>: <span class="number">50</span>,
                 <span class="string">&quot;name&quot;</span>: <span class="string">&quot;publicthread&quot;</span>,
+                <span class="string">&quot;newly_created&quot;</span>: <span class="bool-val">true</span>,
                 <span class="string">&quot;owner_id&quot;</span>: <span class="string">&quot;5&quot;</span>,
                 <span class="string">&quot;parent_id&quot;</span>: <span class="string">&quot;2&quot;</span>,
                 <span class="string">&quot;rate_limit_per_user&quot;</span>: <span class="number">1000</span>,
@@ -1214,6 +1238,7 @@
             <span class="ident">member_count</span>: <span class="prelude-val">Some</span>(<span class="number">50_u8</span>),
             <span class="ident">message_count</span>: <span class="prelude-val">Some</span>(<span class="number">50_u8</span>),
             <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;privatethread&quot;</span>.<span class="ident">into</span>()),
+            <span class="ident">newly_created</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
             <span class="ident">nsfw</span>: <span class="prelude-val">None</span>,
             <span class="ident">owner_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">5</span>)),
             <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
@@ -1258,6 +1283,7 @@
                 <span class="string">&quot;member_count&quot;</span>: <span class="number">50</span>,
                 <span class="string">&quot;message_count&quot;</span>: <span class="number">50</span>,
                 <span class="string">&quot;name&quot;</span>: <span class="string">&quot;privatethread&quot;</span>,
+                <span class="string">&quot;newly_created&quot;</span>: <span class="bool-val">true</span>,
                 <span class="string">&quot;owner_id&quot;</span>: <span class="string">&quot;5&quot;</span>,
                 <span class="string">&quot;parent_id&quot;</span>: <span class="string">&quot;2&quot;</span>,
                 <span class="string">&quot;rate_limit_per_user&quot;</span>: <span class="number">1000</span>,
