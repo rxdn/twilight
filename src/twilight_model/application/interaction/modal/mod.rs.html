@@ -178,6 +178,24 @@
 <span id="173">173</span>
 <span id="174">174</span>
 <span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">data</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::data</span>::{
@@ -186,6 +204,7 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">application::interaction::InteractionType</span>,
+    <span class="ident">channel::Message</span>,
     <span class="ident">guild::PartialMember</span>,
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>, <span class="ident">UserMarker</span>},
@@ -209,16 +228,30 @@
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">ModalInteractionData</span>,
     <span class="doccomment">/// ID of the guild the interaction was triggered from.</span>
     <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Guild&#39;s preferred locale.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Present when the command is used in a guild.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Defaults to `en-US`.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">guild_locale</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the interaction.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Type of the interaction.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">InteractionType</span>,
+    <span class="doccomment">/// Selected language of the user who triggered the interaction.</span>
+    <span class="kw">pub</span> <span class="ident">locale</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Member that triggered the interaction.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Present when the command is used in a guild.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PartialMember</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Message object, if the modal comes from a message component interaction.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is currently *not* validated by the Discord API and may be spoofed</span>
+    <span class="doccomment">/// by malicious users.</span>
+    <span class="kw">pub</span> <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Token of the interaction.</span>
     <span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">String</span>,
     <span class="doccomment">/// User that triggered the interaction.</span>
@@ -323,8 +356,10 @@
                 }]),
             },
             <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>)),
+            <span class="ident">guild_locale</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;de&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">id</span>: <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>),
             <span class="ident">kind</span>: <span class="ident">InteractionType::ModalSubmit</span>,
+            <span class="ident">locale</span>: <span class="string">&quot;en-GB&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
                 <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
                 <span class="ident">deaf</span>: <span class="bool-val">false</span>,
@@ -337,6 +372,7 @@
                 <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">USER_ID</span>)),
                 <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
             }),
+            <span class="ident">message</span>: <span class="prelude-val">None</span>,
             <span class="ident">token</span>: <span class="string">&quot;TOKEN&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">user</span>: <span class="prelude-val">None</span>,
         };
@@ -354,5 +390,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (1bfe40d11 2022-03-18)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (8d60bf427 2022-03-19)" ></div>
 </body></html>
