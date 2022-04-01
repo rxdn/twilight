@@ -1304,6 +1304,70 @@
 <span id="1299">1299</span>
 <span id="1300">1300</span>
 <span id="1301">1301</span>
+<span id="1302">1302</span>
+<span id="1303">1303</span>
+<span id="1304">1304</span>
+<span id="1305">1305</span>
+<span id="1306">1306</span>
+<span id="1307">1307</span>
+<span id="1308">1308</span>
+<span id="1309">1309</span>
+<span id="1310">1310</span>
+<span id="1311">1311</span>
+<span id="1312">1312</span>
+<span id="1313">1313</span>
+<span id="1314">1314</span>
+<span id="1315">1315</span>
+<span id="1316">1316</span>
+<span id="1317">1317</span>
+<span id="1318">1318</span>
+<span id="1319">1319</span>
+<span id="1320">1320</span>
+<span id="1321">1321</span>
+<span id="1322">1322</span>
+<span id="1323">1323</span>
+<span id="1324">1324</span>
+<span id="1325">1325</span>
+<span id="1326">1326</span>
+<span id="1327">1327</span>
+<span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+<span id="1340">1340</span>
+<span id="1341">1341</span>
+<span id="1342">1342</span>
+<span id="1343">1343</span>
+<span id="1344">1344</span>
+<span id="1345">1345</span>
+<span id="1346">1346</span>
+<span id="1347">1347</span>
+<span id="1348">1348</span>
+<span id="1349">1349</span>
+<span id="1350">1350</span>
+<span id="1351">1351</span>
+<span id="1352">1352</span>
+<span id="1353">1353</span>
+<span id="1354">1354</span>
+<span id="1355">1355</span>
+<span id="1356">1356</span>
+<span id="1357">1357</span>
+<span id="1358">1358</span>
+<span id="1359">1359</span>
+<span id="1360">1360</span>
+<span id="1361">1361</span>
+<span id="1362">1362</span>
+<span id="1363">1363</span>
+<span id="1364">1364</span>
+<span id="1365">1365</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Constants, error types, and functions for validating [`Component`]s.</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -1432,6 +1496,22 @@
 <span class="doccomment">/// [`SelectMenu::placeholder`]: twilight_model::application::component::select_menu::SelectMenu::placeholder</span>
 <span class="doccomment">/// [1]: https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-menu-structure</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SELECT_PLACEHOLDER_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">150</span>;
+
+<span class="doccomment">/// Maximum length of [`TextInput::label`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is based on [Discord Docs/Text Inputs].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`TextInput::label`]: twilight_model::application::component::text_input::TextInput::label</span>
+<span class="doccomment">/// [Discord Docs/Text Inputs]: https://discord.com/developers/docs/interactions/message-components#text-inputs</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TEXT_INPUT_LABEL_MAX</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">45</span>;
+
+<span class="doccomment">/// Minimum length of [`TextInput::label`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is based on [Discord Docs/Text Inputs].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`TextInput::label`]: twilight_model::application::component::text_input::TextInput::label</span>
+<span class="doccomment">/// [Discord Docs/Text Inputs]: https://discord.com/developers/docs/interactions/message-components#text-inputs</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TEXT_INPUT_LABEL_MIN</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>;
 
 <span class="doccomment">/// Maximum length of [`TextInput::value`].</span>
 <span class="doccomment">///</span>
@@ -1603,6 +1683,15 @@
 
                 <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">SELECT_OPTION_COUNT</span>, <span class="ident">f</span>)
             }
+            <span class="ident">ComponentValidationErrorType::TextInputLabelLength</span> { <span class="ident">len</span>: <span class="ident">count</span> } =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a text input label length is &quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Display::fmt</span>(<span class="ident">count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;, but it must be at least &quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">TEXT_INPUT_LABEL_MIN</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; and at most &quot;</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">TEXT_INPUT_LABEL_MAX</span>, <span class="ident">f</span>)
+            }
             <span class="ident">ComponentValidationErrorType::TextInputMaxLength</span> { <span class="ident">len</span>: <span class="ident">count</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a text input max length is &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
@@ -1730,6 +1819,13 @@
     <span class="ident">SelectPlaceholderLength</span> {
         <span class="doccomment">/// Number of codepoints that were provided.</span>
         <span class="ident">chars</span>: <span class="ident">usize</span>,
+    },
+    <span class="doccomment">/// [`TextInput::label`] is invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`TextInput::label`]: twilight_model::application::component::text_input::TextInput::label</span>
+    <span class="ident">TextInputLabelLength</span> {
+        <span class="doccomment">/// Provided length.</span>
+        <span class="ident">len</span>: <span class="ident">usize</span>,
     },
     <span class="doccomment">/// [`TextInput::max_length`] is invalid.</span>
     <span class="doccomment">///</span>
@@ -1987,7 +2083,7 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_input</span>(<span class="ident">text_input</span>: <span class="kw-2">&amp;</span><span class="ident">TextInput</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ComponentValidationError</span><span class="op">&gt;</span> {
     <span class="ident"><span class="self">self</span>::component_custom_id</span>(<span class="kw-2">&amp;</span><span class="ident">text_input</span>.<span class="ident">custom_id</span>)<span class="question-mark">?</span>;
 
-    <span class="ident"><span class="self">self</span>::component_label</span>(<span class="kw-2">&amp;</span><span class="ident">text_input</span>.<span class="ident">label</span>)<span class="question-mark">?</span>;
+    <span class="ident"><span class="self">self</span>::component_text_input_label</span>(<span class="kw-2">&amp;</span><span class="ident">text_input</span>.<span class="ident">label</span>)<span class="question-mark">?</span>;
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">max_length</span>) <span class="op">=</span> <span class="ident">text_input</span>.<span class="ident">max_length</span> {
         <span class="ident"><span class="self">self</span>::component_text_input_max</span>(<span class="ident">max_length</span>)<span class="question-mark">?</span>;
@@ -2235,6 +2331,29 @@
     }
 
     <span class="prelude-val">Ok</span>(())
+}
+
+<span class="doccomment">/// Ensure a [`TextInput::label`]&#39;s length is correct.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The length must be at most [`TEXT_INPUT_LABEL_MAX`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Errors</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returns an error of type [`TextInputLabelLength`] if the provided</span>
+<span class="doccomment">/// label is too long.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`TextInput::label`]: twilight_model::application::component::text_input::TextInput::label</span>
+<span class="doccomment">/// [`TextInputLabelLength`]: ComponentValidationErrorType::TextInputLabelLength</span>
+<span class="kw">fn</span> <span class="ident">component_text_input_label</span>(<span class="ident">label</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ComponentValidationError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">label</span>.<span class="ident">as_ref</span>().<span class="ident">len</span>();
+
+    <span class="kw">if</span> (<span class="ident">TEXT_INPUT_LABEL_MIN</span>..<span class="op">=</span><span class="ident">TEXT_INPUT_LABEL_MAX</span>).<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">len</span>) {
+        <span class="prelude-val">Ok</span>(())
+    } <span class="kw">else</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">ComponentValidationError</span> {
+            <span class="ident">kind</span>: <span class="ident">ComponentValidationErrorType::TextInputLabelLength</span> { <span class="ident">len</span> },
+        })
+    }
 }
 
 <span class="doccomment">/// Ensure a [`TextInput::max_length`]&#39;s value is correct.</span>
@@ -2570,6 +2689,15 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_component_text_input_label</span>() {
+        <span class="macro">assert!</span>(<span class="ident">component_text_input_label</span>(<span class="string">&quot;a&quot;</span>).<span class="ident">is_ok</span>());
+        <span class="macro">assert!</span>(<span class="ident">component_text_input_label</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">45</span>)).<span class="ident">is_ok</span>());
+
+        <span class="macro">assert!</span>(<span class="ident">component_text_input_label</span>(<span class="string">&quot;&quot;</span>).<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">component_text_input_label</span>(<span class="string">&quot;a&quot;</span>.<span class="ident">repeat</span>(<span class="number">46</span>)).<span class="ident">is_err</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_component_text_input_max</span>() {
         <span class="macro">assert!</span>(<span class="ident">component_text_input_max</span>(<span class="number">1</span>).<span class="ident">is_ok</span>());
         <span class="macro">assert!</span>(<span class="ident">component_text_input_max</span>(<span class="number">4000</span>).<span class="ident">is_ok</span>());
@@ -2606,5 +2734,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_validate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (ee915c34e 2022-03-28)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_validate" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (0677edc86 2022-03-31)" ></div>
 </body></html>
