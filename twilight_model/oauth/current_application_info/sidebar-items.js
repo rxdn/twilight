@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ApplicationFlags",""],["CurrentApplicationInfo",""]]});
+initSidebarItems({"type":[["ApplicationFlags",""],["CurrentApplicationInfo",""]]});

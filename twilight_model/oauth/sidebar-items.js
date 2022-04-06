@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["current_application_info",""],["team",""]],"struct":[["PartialApplication",""]]});
+initSidebarItems({"mod":[["current_application_info",""],["team",""]],"struct":[["Application",""],["ApplicationFlags",""],["PartialApplication",""]]});
