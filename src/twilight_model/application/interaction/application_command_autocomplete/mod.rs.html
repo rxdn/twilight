@@ -211,6 +211,90 @@
 <span id="206">206</span>
 <span id="207">207</span>
 <span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">data</span>;
 <span class="kw">mod</span> <span class="ident">option</span>;
 
@@ -225,7 +309,7 @@
     <span class="ident">application::interaction::InteractionType</span>,
     <span class="ident">guild::PartialMember</span>,
     <span class="ident">id</span>::{
-        <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>},
+        <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
     },
     <span class="ident">user::User</span>,
@@ -241,11 +325,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ApplicationCommandAutocomplete</span> {
     <span class="doccomment">/// ID of the associated application.</span>
     <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The channel the interaction was triggered from.</span>
+    <span class="doccomment">/// ID of the channel the interaction was invoked in.</span>
     <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Data from the invoked command.</span>
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">ApplicationCommandAutocompleteData</span>,
-    <span class="doccomment">/// ID of the guild the interaction was triggered from.</span>
+    <span class="doccomment">/// ID of the guild the interaction was invoked in.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Guild&#39;s preferred locale.</span>
@@ -260,27 +344,54 @@
     <span class="doccomment">/// Kind of the interaction.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">InteractionType</span>,
-    <span class="doccomment">/// Selected language of the user who triggered the interaction.</span>
+    <span class="doccomment">/// Selected language of the user who invoked the interaction.</span>
     <span class="kw">pub</span> <span class="ident">locale</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// Member that triggered the interaction.</span>
+    <span class="doccomment">/// Member that invoked the interaction.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Present when the command is used in a guild.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PartialMember</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Token of the interaction.</span>
     <span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// User that triggered the interaction.</span>
+    <span class="doccomment">/// User that invoked the interaction.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Present when the command is used in a direct message.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>,
 }
 
+<span class="kw">impl</span> <span class="ident">ApplicationCommandAutocomplete</span> {
+    <span class="doccomment">/// ID of the user that invoked the interaction.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This will first check for the [`member`]&#39;s</span>
+    <span class="doccomment">/// [`user`][`PartialMember::user`]&#39;s ID and, if not present, then check the</span>
+    <span class="doccomment">/// [`user`]&#39;s ID.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`member`]: Self::member</span>
+    <span class="doccomment">/// [`user`]: Self::user</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">author_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident"><span class="kw">super</span>::author_id</span>(<span class="self">self</span>.<span class="ident">user</span>.<span class="ident">as_ref</span>(), <span class="self">self</span>.<span class="ident">member</span>.<span class="ident">as_ref</span>())
+    }
+
+    <span class="doccomment">/// Whether the interaction was invoked in a DM.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_dm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">user</span>.<span class="ident">is_some</span>()
+    }
+
+    <span class="doccomment">/// Whether the interaction was invoked in a guild.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_guild</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">member</span>.<span class="ident">is_some</span>()
+    }
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">application</span>::{<span class="ident">command::CommandType</span>, <span class="ident">interaction::Interaction</span>},
+        <span class="ident">application</span>::{
+            <span class="ident">command::CommandType</span>,
+            <span class="ident">interaction</span>::{<span class="ident">tests::user</span>, <span class="ident">Interaction</span>},
+        },
         <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
@@ -418,7 +529,64 @@
 
         <span class="prelude-val">Ok</span>(())
     }
+
+    <span class="kw">const</span> <span class="ident">USER_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">7</span>);
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_author_id</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-02-02T02:02:02.020000+00:00&quot;</span>)<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">in_guild</span> <span class="op">=</span> <span class="ident">ApplicationCommandAutocomplete</span> {
+            <span class="ident">application_id</span>: <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>),
+            <span class="ident">channel_id</span>: <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>),
+            <span class="ident">data</span>: <span class="ident">ApplicationCommandAutocompleteData</span> {
+                <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
+                <span class="ident">name</span>: <span class="string">&quot;search&quot;</span>.<span class="ident">to_owned</span>(),
+                <span class="ident">kind</span>: <span class="ident">CommandType::ChatInput</span>,
+                <span class="ident">options</span>: <span class="ident">Vec::from</span>([<span class="ident">ApplicationCommandAutocompleteDataOption</span> {
+                    <span class="ident">focused</span>: <span class="bool-val">true</span>,
+                    <span class="ident">kind</span>: <span class="ident">ApplicationCommandAutocompleteDataOptionType::Integer</span>,
+                    <span class="ident">name</span>: <span class="string">&quot;issue&quot;</span>.<span class="ident">to_owned</span>(),
+                    <span class="ident">options</span>: <span class="ident">Vec::new</span>(),
+                    <span class="ident">value</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;1234&quot;</span>.<span class="ident">to_owned</span>()),
+                }]),
+                <span class="ident">resolved</span>: <span class="prelude-val">None</span>,
+            },
+            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>)),
+            <span class="ident">guild_locale</span>: <span class="prelude-val">None</span>,
+            <span class="ident">id</span>: <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>),
+            <span class="ident">kind</span>: <span class="ident">InteractionType::ApplicationCommandAutocomplete</span>,
+            <span class="ident">locale</span>: <span class="string">&quot;en-US&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
+                <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
+                <span class="ident">deaf</span>: <span class="bool-val">false</span>,
+                <span class="ident">joined_at</span>,
+                <span class="ident">mute</span>: <span class="bool-val">false</span>,
+                <span class="ident">nick</span>: <span class="prelude-val">None</span>,
+                <span class="ident">permissions</span>: <span class="prelude-val">None</span>,
+                <span class="ident">premium_since</span>: <span class="prelude-val">None</span>,
+                <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
+                <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">USER_ID</span>)),
+                <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
+            }),
+            <span class="ident">token</span>: <span class="string">&quot;TOKEN&quot;</span>.<span class="ident">to_owned</span>(),
+            <span class="ident">user</span>: <span class="prelude-val">None</span>,
+        };
+
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">USER_ID</span>), <span class="ident">in_guild</span>.<span class="ident">author_id</span>());
+        <span class="macro">assert!</span>(<span class="ident">in_guild</span>.<span class="ident">is_guild</span>());
+
+        <span class="kw">let</span> <span class="ident">in_dm</span> <span class="op">=</span> <span class="ident">ApplicationCommandAutocomplete</span> {
+            <span class="ident">member</span>: <span class="prelude-val">None</span>,
+            <span class="ident">user</span>: <span class="prelude-val">Some</span>(<span class="ident">user</span>(<span class="ident">USER_ID</span>)),
+            ..<span class="ident">in_guild</span>
+        };
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">USER_ID</span>), <span class="ident">in_dm</span>.<span class="ident">author_id</span>());
+        <span class="macro">assert!</span>(<span class="ident">in_dm</span>.<span class="ident">is_dm</span>());
+
+        <span class="prelude-val">Ok</span>(())
+    }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (306ba8357 2022-04-05)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (90ca44752 2022-04-11)" ></div>
 </body></html>

@@ -192,10 +192,6 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">data</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::data</span>::{
@@ -222,11 +218,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ModalSubmitInteraction</span> {
     <span class="doccomment">/// ID of the associated application.</span>
     <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// ID of the channel the interaction was triggered from.</span>
+    <span class="doccomment">/// ID of the channel the interaction was invoked in.</span>
     <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Data from the submitted modal.</span>
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">ModalInteractionData</span>,
-    <span class="doccomment">/// ID of the guild the interaction was triggered from.</span>
+    <span class="doccomment">/// ID of the guild the interaction was invoked in.</span>
     <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Guild&#39;s preferred locale.</span>
     <span class="doccomment">///</span>
@@ -240,9 +236,9 @@
     <span class="doccomment">/// Type of the interaction.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">InteractionType</span>,
-    <span class="doccomment">/// Selected language of the user who triggered the interaction.</span>
+    <span class="doccomment">/// Selected language of the user who invoked the interaction.</span>
     <span class="kw">pub</span> <span class="ident">locale</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// Member that triggered the interaction.</span>
+    <span class="doccomment">/// Member that invoked the interaction.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Present when the command is used in a guild.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -254,7 +250,7 @@
     <span class="kw">pub</span> <span class="ident">message</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Token of the interaction.</span>
     <span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// User that triggered the interaction.</span>
+    <span class="doccomment">/// User that invoked the interaction.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Present when the command is used in a direct message.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -262,7 +258,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ModalSubmitInteraction</span> {
-    <span class="doccomment">/// ID of the user that submitted the modal.</span>
+    <span class="doccomment">/// ID of the user that invoked the interaction.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will first check for the [`member`]&#39;s</span>
     <span class="doccomment">/// [`user`][`PartialMember::user`]&#39;s ID and, if not present, then check the</span>
@@ -271,27 +267,41 @@
     <span class="doccomment">/// [`member`]: Self::member</span>
     <span class="doccomment">/// [`user`]: Self::user</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">author_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">member</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">member</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">member</span>.<span class="ident">user</span> {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>.<span class="ident">id</span>);
-            }
-        }
+        <span class="ident"><span class="kw">super</span>::author_id</span>(<span class="self">self</span>.<span class="ident">user</span>.<span class="ident">as_ref</span>(), <span class="self">self</span>.<span class="ident">member</span>.<span class="ident">as_ref</span>())
+    }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">user</span> {
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">user</span>.<span class="ident">id</span>);
-        }
+    <span class="doccomment">/// Whether the interaction was invoked in a DM.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_dm</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">user</span>.<span class="ident">is_some</span>()
+    }
 
-        <span class="prelude-val">None</span>
+    <span class="doccomment">/// Whether the interaction was invoked in a guild.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_guild</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">member</span>.<span class="ident">is_some</span>()
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">application::component::ComponentType</span>,
-        <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
+    <span class="kw">use</span> <span class="kw">super</span>::{
+        <span class="ident">ModalInteractionData</span>, <span class="ident">ModalInteractionDataActionRow</span>, <span class="ident">ModalInteractionDataComponent</span>,
+        <span class="ident">ModalSubmitInteraction</span>,
     };
+    <span class="kw">use</span> <span class="kw">crate</span>::{
+        <span class="ident">application</span>::{
+            <span class="ident">component::ComponentType</span>,
+            <span class="ident">interaction</span>::{<span class="ident">tests::user</span>, <span class="ident">InteractionType</span>},
+        },
+        <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
+        <span class="ident">guild::PartialMember</span>,
+        <span class="ident">id</span>::{
+            <span class="ident">marker</span>::{
+                <span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>, <span class="ident">UserMarker</span>,
+            },
+            <span class="ident">Id</span>,
+        },
+    };
+    <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">str::FromStr</span>};
 
@@ -317,26 +327,6 @@
     );
 
     <span class="kw">const</span> <span class="ident">USER_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">7</span>);
-
-    <span class="kw">fn</span> <span class="ident">user</span>(<span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">User</span> {
-        <span class="ident">User</span> {
-            <span class="ident">accent_color</span>: <span class="prelude-val">None</span>,
-            <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
-            <span class="ident">banner</span>: <span class="prelude-val">None</span>,
-            <span class="ident">bot</span>: <span class="bool-val">false</span>,
-            <span class="ident">discriminator</span>: <span class="number">4444</span>,
-            <span class="ident">email</span>: <span class="prelude-val">None</span>,
-            <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>,
-            <span class="ident">locale</span>: <span class="prelude-val">None</span>,
-            <span class="ident">mfa_enabled</span>: <span class="prelude-val">None</span>,
-            <span class="ident">name</span>: <span class="string">&quot;twilight&quot;</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">premium_type</span>: <span class="prelude-val">None</span>,
-            <span class="ident">public_flags</span>: <span class="prelude-val">None</span>,
-            <span class="ident">system</span>: <span class="prelude-val">None</span>,
-            <span class="ident">verified</span>: <span class="prelude-val">None</span>,
-        }
-    }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_author_id</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
@@ -378,6 +368,7 @@
         };
 
         <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">USER_ID</span>), <span class="ident">in_guild</span>.<span class="ident">author_id</span>());
+        <span class="macro">assert!</span>(<span class="ident">in_guild</span>.<span class="ident">is_guild</span>());
 
         <span class="kw">let</span> <span class="ident">in_dm</span> <span class="op">=</span> <span class="ident">ModalSubmitInteraction</span> {
             <span class="ident">member</span>: <span class="prelude-val">None</span>,
@@ -385,10 +376,11 @@
             ..<span class="ident">in_guild</span>
         };
         <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">USER_ID</span>), <span class="ident">in_dm</span>.<span class="ident">author_id</span>());
+        <span class="macro">assert!</span>(<span class="ident">in_dm</span>.<span class="ident">is_dm</span>());
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (306ba8357 2022-04-05)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (90ca44752 2022-04-11)" ></div>
 </body></html>
