@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["config","Configuration for a `Parser`."]],"struct":[["Arguments","An iterator over command arguments."],["Command","Indicator that a command was used."],["Parser","A struct to parse prefixes, commands, and arguments out of messages."]]});

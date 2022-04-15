@@ -1,7 +1,6 @@
 var N = null;var sourcesIndex = {};
 sourcesIndex["twilight"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["twilight_cache_inmemory"] = {"name":"","dirs":[{"name":"event","files":["channel.rs","emoji.rs","guild.rs","integration.rs","interaction.rs","member.rs","message.rs","mod.rs","presence.rs","reaction.rs","role.rs","stage_instance.rs","sticker.rs","thread.rs","voice_state.rs"]},{"name":"model","files":["emoji.rs","guild.rs","member.rs","message.rs","mod.rs","presence.rs","sticker.rs","voice_state.rs"]}],"files":["builder.rs","config.rs","iter.rs","lib.rs","permission.rs","stats.rs"]};
-sourcesIndex["twilight_command_parser"] = {"name":"","files":["arguments.rs","casing.rs","config.rs","lib.rs","parser.rs"]};
 sourcesIndex["twilight_embed_builder"] = {"name":"","files":["author.rs","builder.rs","field.rs","footer.rs","image_source.rs","lib.rs"]};
 sourcesIndex["twilight_gateway"] = {"name":"","dirs":[{"name":"cluster","files":["builder.rs","config.rs","event.rs","impl.rs","mod.rs","scheme.rs"]},{"name":"shard","dirs":[{"name":"processor","dirs":[{"name":"compression","files":["inflater.rs","mod.rs"]}],"files":["heartbeat.rs","impl.rs","mod.rs","session.rs","socket_forwarder.rs"]}],"files":["builder.rs","command.rs","config.rs","emitter.rs","event.rs","impl.rs","json.rs","mod.rs","raw_message.rs","stage.rs","tls.rs"]}],"files":["event.rs","lib.rs"]};
 sourcesIndex["twilight_gateway_queue"] = {"name":"","files":["day_limiter.rs","large_bot_queue.rs","lib.rs"]};
