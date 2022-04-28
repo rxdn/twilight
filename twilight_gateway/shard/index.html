@@ -4,7 +4,7 @@
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
         </a><h2 class="location"><a href="#">Module shard</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li></ul></div></section><div id="sidebar-vars" data-name="shard" data-ty="mod" data-relpath="./"></div><script defer src="./sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_gateway/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
-    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">twilight_gateway</a>::<wbr><a class="mod" href="#">shard</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/twilight_gateway/shard/mod.rs.html#1-53">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Types for working with and running connections to the gateway.</p>
+    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">twilight_gateway</a>::<wbr><a class="mod" href="#">shard</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/twilight_gateway/shard/mod.rs.html#1-86">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Types for working with and running connections to the gateway.</p>
 <p>At the heart of the <code>shard</code> module is the <a href="struct.Shard.html" title="Shard"><code>Shard</code></a> itself: it’s the
 interface used to start a shard, send messages to the gateway, and receive
 <a href="../../twilight_model/gateway/event/enum.Event.html"><code>Event</code></a>s from it, such as <a href="../../twilight_model/gateway/event/enum.Event.html#variant.MessageCreate">new messages</a> or <a href="../../twilight_model/gateway/event/enum.Event.html#variant.ChannelDelete">channel deletions</a>.</p>
@@ -14,6 +14,32 @@ obtain through it. This is information such as the latency or the current
 <a href="stage/enum.Stage.html#variant.Resuming"><code>Resuming</code></a> the connection.</p>
 <p>Shards are configurable through the <a href="struct.ShardBuilder.html" title="ShardBuilder"><code>ShardBuilder</code></a>, which provides a clean
 interface for correctly configuring a shard.</p>
+<h2 id="member-chunking"><a href="#member-chunking">Member Chunking</a></h2>
+<p>Requesting chunks of a guild’s members may be done via <a href="struct.Shard.html#method.command" title="Shard::command"><code>Shard::command</code></a>
+and <a href="../../twilight_model/gateway/payload/outgoing/request_guild_members/struct.RequestGuildMembers.html"><code>RequestGuildMembers</code></a>. For example, requesting chunks of members whose
+names start with “tw”:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">std::env</span>;
+<span class="kw">use</span> <span class="ident">twilight_gateway</span>::{<span class="ident">shard::Shard</span>, <span class="ident">Intents</span>};
+<span class="kw">use</span> <span class="ident">twilight_model</span>::{
+    <span class="ident">gateway::payload::outgoing::RequestGuildMembers</span>,
+    <span class="ident">id::Id</span>,
+};
+
+<span class="kw">let</span> <span class="ident">intents</span> <span class="op">=</span> <span class="ident">Intents::GUILD_MEMBERS</span>;
+<span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let</span> (<span class="ident">shard</span>, <span class="ident">_events</span>) <span class="op">=</span> <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>);
+<span class="ident">shard</span>.<span class="ident">start</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+<span class="comment">// Query members whose names start with &quot;tw&quot; and limit the results to</span>
+<span class="comment">// 10 members.</span>
+<span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span>
+    <span class="ident">RequestGuildMembers::builder</span>(<span class="ident">Id::new</span>(<span class="number">1</span>))
+        .<span class="ident">query</span>(<span class="string">&quot;tw&quot;</span>, <span class="prelude-val">Some</span>(<span class="number">10</span>));
+
+<span class="comment">// Send the request over the shard.</span>
+<span class="ident">shard</span>.<span class="ident">command</span>(<span class="kw-2">&amp;</span><span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div>
 </div></details><h2 id="reexports" class="small-section-header"><a href="#reexports">Re-exports</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left import-item"><code>pub use self::stage::<a class="enum" href="stage/enum.Stage.html" title="enum twilight_gateway::shard::stage::Stage">Stage</a>;</code></div><div class="item-right docblock-short"></div></div></div><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="raw_message/index.html" title="twilight_gateway::shard::raw_message mod">raw_message</a></div><div class="item-right docblock-short"><p>Send raw websocket messages over the websocket.</p>
@@ -42,5 +68,5 @@ and connection stage.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ShardStartErrorType.html" title="twilight_gateway::shard::ShardStartErrorType enum">ShardStartErrorType</a></div><div class="item-right docblock-short"><p>Type of <a href="struct.ShardStartError.html" title="ShardStartError"><code>ShardStartError</code></a> that occurred.</p>
 </div></div></div><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Command.html" title="twilight_gateway::shard::Command trait">Command</a></div><div class="item-right docblock-short"><p>Trait marker to denote what can be provided to <a href="struct.Shard.html#method.command"><code>Shard::command</code></a>.</p>
-</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (082e4ca49 2022-04-26)" ></div>
+</div></div></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (69a5d2481 2022-04-27)" ></div>
 </body></html>

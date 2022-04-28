@@ -829,6 +829,14 @@
 <span id="824">824</span>
 <span id="825">825</span>
 <span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">builder::ShardBuilder</span>,
     <span class="ident">command::Command</span>,
@@ -1426,32 +1434,38 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Request members whose names start with &quot;tw&quot; in a guild:</span>
+    <span class="doccomment">/// Updating the shard&#39;s presence after identifying can be done by sending</span>
+    <span class="doccomment">/// an [`UpdatePresence`] command. For example, updating the active presence</span>
+    <span class="doccomment">/// with the custom status &quot;running on twilight&quot;:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use std::env;</span>
     <span class="doccomment">/// use twilight_gateway::{shard::Shard, Intents};</span>
-    <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     gateway::payload::outgoing::RequestGuildMembers,</span>
-    <span class="doccomment">///     id::Id,</span>
+    <span class="doccomment">/// use twilight_model::gateway::{</span>
+    <span class="doccomment">///     payload::outgoing::UpdatePresence,</span>
+    <span class="doccomment">///     presence::{Activity, ActivityType, MinimalActivity, Status},</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let intents = Intents::GUILD_VOICE_STATES;</span>
+    <span class="doccomment">/// let intents = Intents::GUILDS;</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let (shard, _events) = Shard::new(token, intents);</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// // Query members whose names start with &quot;tw&quot; and limit the results to</span>
-    <span class="doccomment">/// // 10 members.</span>
-    <span class="doccomment">/// let request =</span>
-    <span class="doccomment">///     RequestGuildMembers::builder(Id::new(1))</span>
-    <span class="doccomment">///         .query(&quot;tw&quot;, Some(10));</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // Send the request over the shard.</span>
-    <span class="doccomment">/// shard.command(&amp;request).await?;</span>
+    <span class="doccomment">/// let minimal_activity = MinimalActivity {</span>
+    <span class="doccomment">///     kind: ActivityType::Custom,</span>
+    <span class="doccomment">///     name: &quot;running on twilight&quot;.to_owned(),</span>
+    <span class="doccomment">///     url: None,</span>
+    <span class="doccomment">/// };</span>
+    <span class="doccomment">/// let command = UpdatePresence::new(</span>
+    <span class="doccomment">///     Vec::from([Activity::from(minimal_activity)]),</span>
+    <span class="doccomment">///     false,</span>
+    <span class="doccomment">///     Some(1),</span>
+    <span class="doccomment">///     Status::Online,</span>
+    <span class="doccomment">/// )?;</span>
+    <span class="doccomment">/// shard.command(&amp;command).await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -1466,6 +1480,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns a [`CommandErrorType::SessionInactive`] error type if the shard</span>
     <span class="doccomment">/// has not been started.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`UpdatePresence`]: twilight_model::gateway::payload::outgoing::UpdatePresence</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">command</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Command</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">CommandError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="ident">json::to_vec</span>(<span class="ident">value</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">CommandError</span> {
             <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
@@ -1656,5 +1672,5 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">Shard</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (082e4ca49 2022-04-26)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (69a5d2481 2022-04-27)" ></div>
 </body></html>
