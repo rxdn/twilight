@@ -1113,6 +1113,50 @@
 <span id="1108">1108</span>
 <span id="1109">1109</span>
 <span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
+<span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains all other input validation functions.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! These functions are generally not related to a specific Discord model.</span>
@@ -1150,6 +1194,9 @@
 
 <span class="doccomment">/// Minimum amount of audit log entries to list.</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">GET_GUILD_AUDIT_LOG_LIMIT_MIN</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">1</span>;
+
+<span class="doccomment">/// Maximum amount of guild bans to list.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">GET_GUILD_BANS_LIMIT_MAX</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">1000</span>;
 
 <span class="doccomment">/// Maximum amount of guild members to list.</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">GET_GUILD_MEMBERS_LIMIT_MAX</span>: <span class="ident">u16</span> <span class="op">=</span> <span class="number">1000</span>;
@@ -1309,6 +1356,13 @@
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; and at most &quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">GET_GUILD_MEMBERS_LIMIT_MAX</span>, <span class="ident">f</span>)
+            }
+            <span class="ident">ValidationErrorType::GetGuildBans</span> { <span class="ident">limit</span> } =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided get guild bans limit is &quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Display::fmt</span>(<span class="ident">limit</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;, but it must be at most &quot;</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">GET_GUILD_BANS_LIMIT_MAX</span>, <span class="ident">f</span>)
             }
             <span class="ident">ValidationErrorType::GetGuildMembers</span> { <span class="ident">limit</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided get guild members limit is &quot;</span>)<span class="question-mark">?</span>;
@@ -1475,6 +1529,11 @@
     },
     <span class="doccomment">/// Provided get guild audit log limit was invalid.</span>
     <span class="ident">GetGuildAuditLog</span> {
+        <span class="doccomment">/// Invalid limit.</span>
+        <span class="ident">limit</span>: <span class="ident">u16</span>,
+    },
+    <span class="doccomment">/// Provided get guild bans limit was invalid.</span>
+    <span class="ident">GetGuildBans</span> {
         <span class="doccomment">/// Invalid limit.</span>
         <span class="ident">limit</span>: <span class="ident">u16</span>,
     },
@@ -1689,6 +1748,27 @@
     } <span class="kw">else</span> {
         <span class="prelude-val">Err</span>(<span class="ident">ValidationError</span> {
             <span class="ident">kind</span>: <span class="ident">ValidationErrorType::GetGuildAuditLog</span> { <span class="ident">limit</span> },
+        })
+    }
+}
+
+<span class="doccomment">/// Ensure that the limit for the Get Guild Bans endpoint is correct.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The limit must be at most [`GET_GUILD_BANS_LIMIT_MAX`]. This is based on</span>
+<span class="doccomment">/// [this documentation entry].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Errors</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Returns an error of type [`GetGuildBans`] if the limit is invalid.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`GetGuildBans`]: ValidationErrorType::GetGuildBans</span>
+<span class="doccomment">/// [this documentation entry]: https://discord.com/developers/docs/resources/guild#get-guild-bans</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">get_guild_bans_limit</span>(<span class="ident">limit</span>: <span class="ident">u16</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ValidationError</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">limit</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">GET_GUILD_BANS_LIMIT_MAX</span> {
+        <span class="prelude-val">Ok</span>(())
+    } <span class="kw">else</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">ValidationError</span> {
+            <span class="ident">kind</span>: <span class="ident">ValidationErrorType::GetGuildBans</span> { <span class="ident">limit</span> },
         })
     }
 }
@@ -2094,6 +2174,14 @@
 
         <span class="macro">assert!</span>(<span class="ident">get_guild_audit_log_limit</span>(<span class="number">0</span>).<span class="ident">is_err</span>());
         <span class="macro">assert!</span>(<span class="ident">get_guild_audit_log_limit</span>(<span class="number">101</span>).<span class="ident">is_err</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_get_guild_bans_limit</span>() {
+        <span class="macro">assert!</span>(<span class="ident">get_guild_bans_limit</span>(<span class="number">0</span>).<span class="ident">is_ok</span>());
+        <span class="macro">assert!</span>(<span class="ident">get_guild_bans_limit</span>(<span class="number">1000</span>).<span class="ident">is_ok</span>());
+
+        <span class="macro">assert!</span>(<span class="ident">get_guild_bans_limit</span>(<span class="number">1001</span>).<span class="ident">is_err</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
