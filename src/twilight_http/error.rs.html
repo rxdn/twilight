@@ -199,12 +199,12 @@
             }
             <span class="ident">ErrorType::RequestError</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Parsing or sending the response failed&quot;</span>),
             <span class="ident">ErrorType::RequestTimedOut</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;request timed out&quot;</span>),
-            <span class="ident">ErrorType::Response</span> { <span class="ident">error</span>, <span class="ident">status</span>, .. } =&gt; {
+            <span class="ident">ErrorType::Response</span> { <span class="ident">body</span>, <span class="ident">status</span>, .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Response error: status code &quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">Display::fmt</span>(<span class="ident">status</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;, error: &quot;</span>)<span class="question-mark">?</span>;
 
-                <span class="ident">Display::fmt</span>(<span class="ident">error</span>, <span class="ident">f</span>)
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">String::from_utf8_lossy</span>(<span class="ident">body</span>))
             }
             <span class="ident">ErrorType::ServiceUnavailable</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;api may be temporarily unavailable (received a 503)&quot;</span>)
