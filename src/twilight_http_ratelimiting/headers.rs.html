@@ -792,6 +792,19 @@
 <span id="787">787</span>
 <span id="788">788</span>
 <span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Parse typed headers from a response.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Parsing response headers is necessary for the [`Ratelimiter`] to properly</span>
@@ -989,6 +1002,8 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HeaderType</span> {
+    <span class="doccomment">/// Type of header value is a bool.</span>
+    <span class="ident">Bool</span>,
     <span class="doccomment">/// Type of header value is a float.</span>
     <span class="ident">Float</span>,
     <span class="doccomment">/// Type of header value is an integer.</span>
@@ -1001,6 +1016,7 @@
     <span class="doccomment">/// Name of the type of header.</span>
     <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
         <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident"><span class="self">Self</span>::Bool</span> =&gt; <span class="string">&quot;bool&quot;</span>,
             <span class="ident"><span class="self">Self</span>::Float</span> =&gt; <span class="string">&quot;float&quot;</span>,
             <span class="ident"><span class="self">Self</span>::Integer</span> =&gt; <span class="string">&quot;integer&quot;</span>,
             <span class="ident"><span class="self">Self</span>::String</span> =&gt; <span class="string">&quot;string&quot;</span>,
@@ -1267,7 +1283,7 @@
                     <span class="ident">bucket</span>.<span class="ident">replace</span>(<span class="ident">header_str</span>(<span class="ident">HeaderName::Bucket</span>, <span class="ident">value</span>)<span class="question-mark">?</span>);
                 }
                 <span class="ident">HeaderName::GLOBAL</span> =&gt; {
-                    <span class="ident">global</span> <span class="op">=</span> <span class="ident">header_bool</span>(<span class="ident">value</span>);
+                    <span class="ident">global</span> <span class="op">=</span> <span class="ident">header_bool</span>(<span class="ident">HeaderName::Global</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
                 }
                 <span class="ident">HeaderName::LIMIT</span> =&gt; {
                     <span class="ident">limit</span>.<span class="ident">replace</span>(<span class="ident">header_int</span>(<span class="ident">HeaderName::Limit</span>, <span class="ident">value</span>)<span class="question-mark">?</span>);
@@ -1338,14 +1354,24 @@
 }
 
 <span class="doccomment">/// Parse a value as a boolean.</span>
-<span class="kw">fn</span> <span class="ident">header_bool</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">bool</span> {
-    <span class="ident">value</span> <span class="op">==</span> <span class="string">b&quot;true&quot;</span>
+<span class="kw">fn</span> <span class="ident">header_bool</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError</span> {
+        <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::Parsing</span> {
+            <span class="ident">kind</span>: <span class="ident">HeaderType::Bool</span>,
+            <span class="ident">name</span>,
+            <span class="ident">value</span>: <span class="ident">text</span>.<span class="ident">to_owned</span>(),
+        },
+        <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+    })<span class="question-mark">?</span>;
+
+    <span class="prelude-val">Ok</span>(<span class="ident">end</span>)
 }
 
 <span class="doccomment">/// Parse a value expected to be a float.</span>
 <span class="kw">fn</span> <span class="ident">header_float</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">str::from_utf8</span>(<span class="ident">value</span>)
-        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError::not_utf8</span>(<span class="ident">name</span>, <span class="ident">value</span>.<span class="ident">to_owned</span>(), <span class="ident">source</span>))<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError</span> {
         <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::Parsing</span> {
@@ -1361,8 +1387,7 @@
 
 <span class="doccomment">/// Parse a value expected to be an integer.</span>
 <span class="kw">fn</span> <span class="ident">header_int</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">str::from_utf8</span>(<span class="ident">value</span>)
-        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError::not_utf8</span>(<span class="ident">name</span>, <span class="ident">value</span>.<span class="ident">to_owned</span>(), <span class="ident">source</span>))<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
     <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError</span> {
         <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::Parsing</span> {
@@ -1576,11 +1601,12 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_type</span>() {
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;bool&quot;</span>, <span class="ident">HeaderType::Bool</span>.<span class="ident">name</span>());
         <span class="macro">assert_eq!</span>(<span class="string">&quot;float&quot;</span>, <span class="ident">HeaderType::Float</span>.<span class="ident">name</span>());
         <span class="macro">assert_eq!</span>(<span class="string">&quot;integer&quot;</span>, <span class="ident">HeaderType::Integer</span>.<span class="ident">name</span>());
         <span class="macro">assert_eq!</span>(<span class="string">&quot;string&quot;</span>, <span class="ident">HeaderType::String</span>.<span class="ident">name</span>());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (ecd44958e 2022-05-10)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (6dd68402c 2022-05-11)" ></div>
 </body></html>

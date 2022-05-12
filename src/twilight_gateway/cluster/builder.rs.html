@@ -309,15 +309,29 @@
 <span id="304">304</span>
 <span id="305">305</span>
 <span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">config::Config</span> <span class="kw">as</span> <span class="ident">ClusterConfig</span>,
     <span class="ident">event::Events</span>,
     <span class="ident">r#impl</span>::{<span class="ident">Cluster</span>, <span class="ident">ClusterStartError</span>},
     <span class="ident">scheme::ShardScheme</span>,
-    <span class="ident">ClusterStartErrorType</span>,
 };
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">shard</span>::{<span class="ident">tls::TlsContainer</span>, <span class="ident">LargeThresholdError</span>, <span class="ident">ResumeSession</span>, <span class="ident">ShardBuilder</span>},
+    <span class="ident">shard</span>::{<span class="ident">LargeThresholdError</span>, <span class="ident">ResumeSession</span>, <span class="ident">ShardBuilder</span>},
     <span class="ident">EventTypeFlags</span>,
 };
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">sync::Arc</span>};
@@ -327,6 +341,13 @@
     <span class="ident">payload::outgoing</span>::{<span class="ident">identify::IdentifyProperties</span>, <span class="ident">update_presence::UpdatePresencePayload</span>},
     <span class="ident">Intents</span>,
 };
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
+    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
+    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
+    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+))]</span>
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::shard::tls::TlsContainer</span>;
 
 <span class="doccomment">/// Builder to configure and construct a [`Cluster`].</span>
 <span class="doccomment">///</span>
@@ -376,12 +397,21 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`ClusterStartErrorType::RetrievingGatewayInfo`]: super::ClusterStartErrorType::RetrievingGatewayInfo</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Cluster</span>, <span class="ident">Events</span>), <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">tls</span> <span class="op">=</span> <span class="ident">TlsContainer::new</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ClusterStartError</span> {
-            <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType::Tls</span>,
-            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)),
-        })<span class="question-mark">?</span>;
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
+            <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
+            <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
+            <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+        ))]</span>
+        {
+            <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ClusterStartErrorType</span>;
 
-        (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">tls</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tls</span>);
+            <span class="kw">let</span> <span class="ident">tls</span> <span class="op">=</span> <span class="ident">TlsContainer::new</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ClusterStartError</span> {
+                <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType::Tls</span>,
+                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)),
+            })<span class="question-mark">?</span>;
+
+            (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">tls</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tls</span>);
+        }
 
         <span class="kw">if</span> (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">gateway_url</span>.<span class="ident">is_none</span>() {
             <span class="kw">let</span> <span class="ident">maybe_response</span> <span class="op">=</span> (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">http_client</span>.<span class="ident">gateway</span>().<span class="ident">authed</span>().<span class="ident">exec</span>().<span class="kw">await</span>;
@@ -616,5 +646,5 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">ClusterBuilder</span>: <span class="ident">Debug</span>, <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">Intents</span>)<span class="op">&gt;</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (ecd44958e 2022-05-10)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (6dd68402c 2022-05-11)" ></div>
 </body></html>
