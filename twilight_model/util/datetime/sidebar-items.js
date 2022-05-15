@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["TimestampParseErrorType","Type of [`TimestampParseError`] that occurred."]],"struct":[["Timestamp","Representation of a Unix timestamp."],["TimestampIso8601Display","Display implementation to format a [`Timestamp`] in an ISO 8601 format."],["TimestampParseError","Reason that an ISO 8601 format couldn’t be parsed."]]});

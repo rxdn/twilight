@@ -814,29 +814,6 @@
 <span id="809">809</span>
 <span id="810">810</span>
 <span id="811">811</span>
-<span id="812">812</span>
-<span id="813">813</span>
-<span id="814">814</span>
-<span id="815">815</span>
-<span id="816">816</span>
-<span id="817">817</span>
-<span id="818">818</span>
-<span id="819">819</span>
-<span id="820">820</span>
-<span id="821">821</span>
-<span id="822">822</span>
-<span id="823">823</span>
-<span id="824">824</span>
-<span id="825">825</span>
-<span id="826">826</span>
-<span id="827">827</span>
-<span id="828">828</span>
-<span id="829">829</span>
-<span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">builder::ShardBuilder</span>,
     <span class="ident">command::Command</span>,
@@ -1028,8 +1005,8 @@
 <span class="doccomment">/// Starting a shard and connecting to the gateway failed.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShardStartError</span> {
-    <span class="ident">kind</span>: <span class="ident">ShardStartErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">kind</span>: <span class="ident">ShardStartErrorType</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ShardStartError</span> {
@@ -1214,7 +1191,8 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// let (shard, mut events) = Shard::builder(token, Intents::GUILD_MESSAGES)</span>
 <span class="doccomment">///     .event_types(event_types)</span>
-<span class="doccomment">///     .build();</span>
+<span class="doccomment">///     .build()</span>
+<span class="doccomment">///     .await?;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// // Start the shard.</span>
 <span class="doccomment">/// shard.start().await?;</span>
@@ -1265,7 +1243,7 @@
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let intents = Intents::GUILD_MESSAGES | Intents::GUILD_MESSAGE_TYPING;</span>
-    <span class="doccomment">/// let (shard, _) = Shard::new(token, intents);</span>
+    <span class="doccomment">/// let (shard, _) = Shard::new(token, intents).await?;</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// tokio_time::sleep(Duration::from_secs(1)).await;</span>
@@ -1275,9 +1253,14 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns a [`ShardStartErrorType::RetrievingGatewayUrl`] error type if</span>
+    <span class="doccomment">/// the gateway URL couldn&#39;t be retrieved from the HTTP API.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// [`start`]: Self::start</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; (<span class="self">Self</span>, <span class="ident">Events</span>) {
-        <span class="ident"><span class="self">Self</span>::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="ident">build</span>()
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Events</span>), <span class="ident">ShardStartError</span><span class="op">&gt;</span> {
+        <span class="ident"><span class="self">Self</span>::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="ident">build</span>().<span class="kw">await</span>
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_with_config</span>(<span class="ident">config</span>: <span class="ident">Config</span>) -&gt; (<span class="self">Self</span>, <span class="ident">Events</span>) {
@@ -1326,36 +1309,9 @@
     <span class="doccomment">/// Returns a [`ShardStartErrorType::ParsingGatewayUrl`] error type if the</span>
     <span class="doccomment">/// gateway URL couldn&#39;t be parsed.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`ShardStartErrorType::RetrievingGatewayUrl`] error type if</span>
-    <span class="doccomment">/// the gateway URL couldn&#39;t be retrieved from the HTTP API.</span>
-    <span class="doccomment">///</span>
     <span class="doccomment">/// [`shutdown_resumable`]: Self::shutdown_resumable</span>
     <span class="doccomment">/// [`shutdown`]: Self::shutdown</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ShardStartError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">u</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">gateway_url</span>.<span class="ident">clone</span>() {
-            <span class="ident">u</span>.<span class="ident">into_string</span>()
-        } <span class="kw">else</span> {
-            <span class="comment">// By making an authenticated gateway information retrieval request</span>
-            <span class="comment">// we&#39;re also validating the configured token.</span>
-            <span class="self">self</span>.<span class="ident">config</span>
-                .<span class="ident">http_client</span>()
-                .<span class="ident">gateway</span>()
-                .<span class="ident">authed</span>()
-                .<span class="ident">exec</span>()
-                .<span class="kw">await</span>
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">ShardStartError</span> {
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-                    <span class="ident">kind</span>: <span class="ident">ShardStartErrorType::RetrievingGatewayUrl</span>,
-                })<span class="question-mark">?</span>
-                .<span class="ident">model</span>()
-                .<span class="kw">await</span>
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">ShardStartError</span> {
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-                    <span class="ident">kind</span>: <span class="ident">ShardStartErrorType::RetrievingGatewayUrl</span>,
-                })<span class="question-mark">?</span>
-                .<span class="ident">url</span>
-        };
-
         <span class="kw">let</span> <span class="ident">emitter</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">emitter</span>
             .<span class="ident">lock</span>()
@@ -1367,29 +1323,27 @@
             })<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">config</span>);
-        <span class="kw">let</span> (<span class="ident">processor</span>, <span class="ident">wrx</span>) <span class="op">=</span>
-            <span class="ident">ShardProcessor::new</span>(<span class="ident">config</span>, <span class="ident">url</span>, <span class="ident">emitter</span>)
-                .<span class="kw">await</span>
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
-                    <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">source</span>.<span class="ident">into_parts</span>();
+        <span class="kw">let</span> (<span class="ident">processor</span>, <span class="ident">wrx</span>) <span class="op">=</span> <span class="ident">ShardProcessor::new</span>(<span class="ident">config</span>, <span class="ident">emitter</span>)
+            .<span class="kw">await</span>
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
+                <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">source</span>) <span class="op">=</span> <span class="ident">source</span>.<span class="ident">into_parts</span>();
 
-                    <span class="kw">let</span> <span class="ident">new_kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">kind</span> {
-                        <span class="ident">ConnectingErrorType::Establishing</span> =&gt; <span class="ident">ShardStartErrorType::Establishing</span>,
-                        <span class="ident">ConnectingErrorType::ParsingUrl</span> { <span class="ident">url</span> } =&gt; {
-                            <span class="ident">ShardStartErrorType::ParsingGatewayUrl</span> { <span class="ident">url</span> }
-                        }
-                    };
-
-                    <span class="ident">ShardStartError</span> {
-                        <span class="ident">source</span>,
-                        <span class="ident">kind</span>: <span class="ident">new_kind</span>,
+                <span class="kw">let</span> <span class="ident">new_kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">kind</span> {
+                    <span class="ident">ConnectingErrorType::Establishing</span> =&gt; <span class="ident">ShardStartErrorType::Establishing</span>,
+                    <span class="ident">ConnectingErrorType::ParsingUrl</span> { <span class="ident">url</span> } =&gt; {
+                        <span class="ident">ShardStartErrorType::ParsingGatewayUrl</span> { <span class="ident">url</span> }
                     }
-                })<span class="question-mark">?</span>;
+                };
+
+                <span class="ident">ShardStartError</span> {
+                    <span class="ident">source</span>,
+                    <span class="ident">kind</span>: <span class="ident">new_kind</span>,
+                }
+            })<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">tokio::spawn</span>(<span class="kw">async</span> {
             <span class="ident">processor</span>.<span class="ident">run</span>().<span class="kw">await</span>;
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;shard processor future ended&quot;</span>);
         });
 
@@ -1451,7 +1405,7 @@
     <span class="doccomment">/// let intents = Intents::GUILDS;</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let (shard, _events) = Shard::new(token, intents);</span>
+    <span class="doccomment">/// let (shard, _events) = Shard::new(token, intents).await?;</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let minimal_activity = MinimalActivity {</span>
@@ -1505,7 +1459,7 @@
     <span class="doccomment">/// use twilight_gateway::{shard::{raw_message::Message, Shard}, Intents};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS);</span>
+    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS).await?;</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// shard.send(Message::Ping(Vec::new())).await?;</span>
@@ -1526,7 +1480,7 @@
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS);</span>
+    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS).await?;</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let close = CloseFrame::from((1000, &quot;&quot;));</span>

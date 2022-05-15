@@ -324,20 +324,58 @@
 <span id="319">319</span>
 <span id="320">320</span>
 <span id="321">321</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">config::Config</span> <span class="kw">as</span> <span class="ident">ClusterConfig</span>,
-    <span class="ident">event::Events</span>,
-    <span class="ident">r#impl</span>::{<span class="ident">Cluster</span>, <span class="ident">ClusterStartError</span>},
-    <span class="ident">scheme::ShardScheme</span>,
-};
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Cluster</span>, <span class="ident">ClusterStartError</span>, <span class="ident">ClusterStartErrorType</span>, <span class="ident">Config</span>, <span class="ident">Events</span>, <span class="ident">ShardScheme</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">shard</span>::{<span class="ident">LargeThresholdError</span>, <span class="ident">ResumeSession</span>, <span class="ident">ShardBuilder</span>},
+    <span class="ident">shard</span>::{<span class="ident">ResumeSession</span>, <span class="ident">ShardBuilder</span>},
     <span class="ident">EventTypeFlags</span>,
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">sync::Arc</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">collections::HashMap</span>,
+    <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
+    <span class="ident">sync::Arc</span>,
+};
 <span class="kw">use</span> <span class="ident">twilight_gateway_queue</span>::{<span class="ident">LocalQueue</span>, <span class="ident">Queue</span>};
 <span class="kw">use</span> <span class="ident">twilight_http::Client</span>;
 <span class="kw">use</span> <span class="ident">twilight_model::gateway</span>::{
+    <span class="ident">connection_info::BotConnectionInfo</span>,
     <span class="ident">payload::outgoing</span>::{<span class="ident">identify::IdentifyProperties</span>, <span class="ident">update_presence::UpdatePresencePayload</span>},
     <span class="ident">Intents</span>,
 };
@@ -364,28 +402,33 @@
 <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let cluster = Cluster::builder(token, Intents::GUILD_MESSAGES)</span>
-<span class="doccomment">///     .large_threshold(100)?</span>
+<span class="doccomment">///     .large_threshold(100)</span>
 <span class="doccomment">///     .build()</span>
 <span class="doccomment">///     .await?;</span>
 <span class="doccomment">/// # Ok(()) }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`large_threshold`]: Self::large_threshold</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClusterBuilder</span>(<span class="ident">ClusterConfig</span>, <span class="ident">ShardBuilder</span>);
+<span class="comment">// Remember to sync this with the custom Debug implementation.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClusterBuilder</span> {
+    <span class="ident">queue</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Queue</span><span class="op">&gt;</span>,
+    <span class="ident">resume_sessions</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">ResumeSession</span><span class="op">&gt;</span>,
+    <span class="ident">shard</span>: <span class="ident">ShardBuilder</span>,
+    <span class="ident">shard_presence</span>:
+        <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="ident">u64</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UpdatePresencePayload</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">shard_scheme</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ShardScheme</span><span class="op">&gt;</span>,
+}
 
 <span class="kw">impl</span> <span class="ident">ClusterBuilder</span> {
     <span class="doccomment">/// Create a new builder to construct and configure a cluster.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(
-            <span class="ident">ClusterConfig</span> {
-                <span class="ident">queue</span>: <span class="ident">Arc::new</span>(<span class="ident">LocalQueue::new</span>()),
-                <span class="ident">resume_sessions</span>: <span class="ident">HashMap::new</span>(),
-                <span class="ident">shard_presence</span>: <span class="prelude-val">None</span>,
-                <span class="ident">shard_scheme</span>: <span class="ident">ShardScheme::Auto</span>,
-            },
-            <span class="ident">ShardBuilder::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>),
-        )
+        <span class="self">Self</span> {
+            <span class="ident">queue</span>: <span class="ident">Arc::new</span>(<span class="ident">LocalQueue::new</span>()),
+            <span class="ident">resume_sessions</span>: <span class="ident">HashMap::new</span>(),
+            <span class="ident">shard</span>: <span class="ident">ShardBuilder::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>),
+            <span class="ident">shard_presence</span>: <span class="prelude-val">None</span>,
+            <span class="ident">shard_scheme</span>: <span class="prelude-val">None</span>,
+        }
     }
 
     <span class="doccomment">/// Consume the builder and create the cluster.</span>
@@ -397,33 +440,65 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`ClusterStartErrorType::RetrievingGatewayInfo`]: super::ClusterStartErrorType::RetrievingGatewayInfo</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Cluster</span>, <span class="ident">Events</span>), <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">gateway_url</span>.<span class="ident">is_none</span>() <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">shard_scheme</span>.<span class="ident">is_none</span>() {
+            <span class="kw">let</span> <span class="ident">gateway</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::retrieve_connect_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">http_client</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">gateway_url</span>.<span class="ident">is_none</span>() {
+                <span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">gateway_url</span>(<span class="ident">gateway</span>.<span class="ident">url</span>);
+            }
+
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">shard_scheme</span>.<span class="ident">is_none</span>() {
+                <span class="self">self</span>.<span class="ident">shard_scheme</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ShardScheme::Range</span> {
+                    <span class="ident">from</span>: <span class="number">0</span>,
+                    <span class="ident">to</span>: <span class="ident">gateway</span>.<span class="ident">shards</span> <span class="op">-</span> <span class="number">1</span>,
+                    <span class="ident">total</span>: <span class="ident">gateway</span>.<span class="ident">shards</span>,
+                });
+            }
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shard_config</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">into_config</span>();
+
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
             <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
             <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
             <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
         ))]</span>
         {
-            <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ClusterStartErrorType</span>;
-
             <span class="kw">let</span> <span class="ident">tls</span> <span class="op">=</span> <span class="ident">TlsContainer::new</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ClusterStartError</span> {
                 <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType::Tls</span>,
                 <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)),
             })<span class="question-mark">?</span>;
 
-            (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">tls</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tls</span>);
+            <span class="ident">shard_config</span>.<span class="ident">tls</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tls</span>);
         }
 
-        <span class="kw">if</span> (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">gateway_url</span>.<span class="ident">is_none</span>() {
-            <span class="kw">let</span> <span class="ident">maybe_response</span> <span class="op">=</span> (<span class="self">self</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">http_client</span>.<span class="ident">gateway</span>().<span class="ident">authed</span>().<span class="ident">exec</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">Config</span> {
+            <span class="ident">queue</span>: <span class="self">self</span>.<span class="ident">queue</span>,
+            <span class="ident">resume_sessions</span>: <span class="self">self</span>.<span class="ident">resume_sessions</span>,
+            <span class="ident">shard_presence</span>: <span class="self">self</span>.<span class="ident">shard_presence</span>,
+            <span class="ident">shard_scheme</span>: <span class="self">self</span>.<span class="ident">shard_scheme</span>.<span class="ident">expect</span>(<span class="string">&quot;always set&quot;</span>),
+        };
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">response</span>) <span class="op">=</span> <span class="ident">maybe_response</span> {
-                <span class="kw">let</span> <span class="ident">gateway_url</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">model</span>().<span class="kw">await</span>.<span class="ident">ok</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">info</span><span class="op">|</span> <span class="ident">info</span>.<span class="ident">url</span>);
+        <span class="ident">Cluster::new_with_config</span>(<span class="ident">config</span>, <span class="ident">shard_config</span>).<span class="kw">await</span>
+    }
 
-                <span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">gateway_url</span>(<span class="ident">gateway_url</span>);
-            }
-        }
-
-        <span class="ident">Cluster::new_with_config</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span> .<span class="number">0</span>).<span class="kw">await</span>
+    <span class="doccomment">/// Retrieves [`BotConnectionInfo`], containing the gateway url and</span>
+    <span class="doccomment">/// recommended shard count.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">retrieve_connect_info</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="ident">Client</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BotConnectionInfo</span>, <span class="ident">ClusterStartError</span><span class="op">&gt;</span> {
+        <span class="ident">http</span>.<span class="ident">gateway</span>()
+            .<span class="ident">authed</span>()
+            .<span class="ident">exec</span>()
+            .<span class="kw">await</span>
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">ClusterStartError</span> {
+                <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType::RetrievingGatewayInfo</span>,
+                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            })<span class="question-mark">?</span>
+            .<span class="ident">model</span>()
+            .<span class="kw">await</span>
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">ClusterStartError</span> {
+                <span class="ident">kind</span>: <span class="ident">ClusterStartErrorType::RetrievingGatewayInfo</span>,
+                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            })
     }
 
     <span class="doccomment">/// Set the event types to process.</span>
@@ -437,15 +512,17 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">event_types</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">event_types</span>: <span class="ident">EventTypeFlags</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">event_types</span>(<span class="ident">event_types</span>);
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">event_types</span>(<span class="ident">event_types</span>);
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the URL that will be used to connect to the gateway.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is to fetch it from the HTTP API.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gateway_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">gateway_url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">gateway_url</span>(<span class="ident">gateway_url</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gateway_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">gateway_url</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">gateway_url</span>(<span class="ident">gateway_url</span>);
 
         <span class="self">self</span>
     }
@@ -459,7 +536,7 @@
     <span class="doccomment">/// Defaults to a new, default HTTP client is used.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http_client</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">http_client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">http_client</span>(<span class="ident">http_client</span>);
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">http_client</span>(<span class="ident">http_client</span>);
 
         <span class="self">self</span>
     }
@@ -480,13 +557,7 @@
     <span class="doccomment">/// use twilight_model::gateway::payload::outgoing::identify::IdentifyProperties;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-    <span class="doccomment">/// let properties = IdentifyProperties::new(</span>
-    <span class="doccomment">///     &quot;twilight.rs&quot;,</span>
-    <span class="doccomment">///     &quot;twilight.rs&quot;,</span>
-    <span class="doccomment">///     OS,</span>
-    <span class="doccomment">///     &quot;&quot;,</span>
-    <span class="doccomment">///     &quot;&quot;,</span>
-    <span class="doccomment">/// );</span>
+    <span class="doccomment">/// let properties = IdentifyProperties::new(&quot;twilight.rs&quot;, &quot;twilight.rs&quot;, OS);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let builder = Cluster::builder(token, Intents::empty())</span>
     <span class="doccomment">///     .identify_properties(properties);</span>
@@ -495,7 +566,7 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identify_properties</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">identify_properties</span>: <span class="ident">IdentifyProperties</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">identify_properties</span>(<span class="ident">identify_properties</span>);
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">identify_properties</span>(<span class="ident">identify_properties</span>);
 
         <span class="self">self</span>
     }
@@ -505,20 +576,14 @@
     <span class="doccomment">/// Refer to the shard&#39;s [`ShardBuilder::large_threshold`] for more</span>
     <span class="doccomment">/// information.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`LargeThresholdErrorType::TooFew`] error type if the provided</span>
-    <span class="doccomment">/// value is below 50.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`LargeThresholdErrorType::TooMany`] error type if the</span>
-    <span class="doccomment">/// provided value is above 250.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`LargeThresholdErrorType::TooFew`]: crate::shard::LargeThresholdErrorType::TooFew</span>
-    <span class="doccomment">/// [`LargeThresholdErrorType::TooMany`]: crate::shard::LargeThresholdErrorType::TooMany</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">large_threshold</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">LargeThresholdError</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">large_threshold</span>(<span class="ident">large_threshold</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Panics if the provided value is below 50 or above 250.</span>
+    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">large_threshold</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">large_threshold</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">large_threshold</span>(<span class="ident">large_threshold</span>);
 
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the presence to use when identifying with the gateway.</span>
@@ -526,7 +591,7 @@
     <span class="doccomment">/// Refer to the shard&#39;s [`ShardBuilder::presence`] for more information.</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presence</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">presence</span>: <span class="ident">UpdatePresencePayload</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">presence</span>(<span class="ident">presence</span>);
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">presence</span>(<span class="ident">presence</span>);
 
         <span class="self">self</span>
     }
@@ -540,7 +605,7 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ratelimit_payloads</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ratelimit_payloads</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">ratelimit_payloads</span>(<span class="ident">ratelimit_payloads</span>);
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">ratelimit_payloads</span>(<span class="ident">ratelimit_payloads</span>);
 
         <span class="self">self</span>
     }
@@ -557,20 +622,19 @@
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">u64</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">UpdatePresencePayload</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shard_presence</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">shard_presence</span>));
+        <span class="self">self</span>.<span class="ident">shard_presence</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">shard_presence</span>));
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the scheme to use for shard managing.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// For example, [`ShardScheme::Auto`] means that the cluster will</span>
-    <span class="doccomment">/// automatically manage all of the shards that Discord recommends you use.</span>
     <span class="doccomment">/// [`ShardScheme::Range`] means that it will manage a range of shards, but</span>
     <span class="doccomment">/// not necessarily all of the shards that your bot uses.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// The default value is [`ShardScheme::Auto`]. For most setups this is an</span>
-    <span class="doccomment">/// acceptable default.</span>
+    <span class="doccomment">/// The cluster will automatically manage all of the shards that Discord</span>
+    <span class="doccomment">/// recommends you use by default. For most setups this is an acceptable</span>
+    <span class="doccomment">/// default.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -593,7 +657,7 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shard_scheme</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">scheme</span>: <span class="ident">ShardScheme</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shard_scheme</span> <span class="op">=</span> <span class="ident">scheme</span>;
+        <span class="self">self</span>.<span class="ident">shard_scheme</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">scheme</span>);
 
         <span class="self">self</span>
     }
@@ -608,8 +672,8 @@
     <span class="doccomment">/// [`queue`]: crate::queue</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">queue</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Queue</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">queue</span> <span class="op">=</span> <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">queue</span>);
-        <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">queue</span>(<span class="ident">queue</span>);
+        <span class="self">self</span>.<span class="ident">queue</span> <span class="op">=</span> <span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">queue</span>);
+        <span class="self">self</span>.<span class="ident">shard</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">shard</span>.<span class="ident">queue</span>(<span class="ident">queue</span>);
 
         <span class="self">self</span>
     }
@@ -625,8 +689,20 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">resume_sessions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">resume_sessions</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">ResumeSession</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">resume_sessions</span> <span class="op">=</span> <span class="ident">resume_sessions</span>;
+        <span class="self">self</span>.<span class="ident">resume_sessions</span> <span class="op">=</span> <span class="ident">resume_sessions</span>;
         <span class="self">self</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">ClusterBuilder</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;ClusterBuilder&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;queue&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">queue</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;resume_sessions&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">resume_sessions</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;shard&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">shard</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;shard_presence&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;&lt;Fn&gt;&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;shard_scheme&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">shard_scheme</span>)
+            .<span class="ident">finish</span>()
     }
 }
 

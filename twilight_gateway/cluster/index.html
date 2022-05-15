@@ -34,20 +34,20 @@ disconnected, and when new message commands come in:</p>
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_event</span>(<span class="ident">cluster</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Cluster</span><span class="op">&gt;</span>, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">event</span>: <span class="ident">Event</span>) {
     <span class="kw">match</span> <span class="ident">event</span> {
         <span class="ident">Event::ShardConnected</span> { .. } =&gt; {
-            <span class="macro">println!</span>(<span class="string">&quot;Shard {} is now connected&quot;</span>, <span class="ident">shard_id</span>);
+            <span class="macro">println!</span>(<span class="string">&quot;Shard {shard_id} is now connected&quot;</span>);
         },
         <span class="ident">Event::ShardDisconnected</span> { .. } =&gt; {
-            <span class="macro">println!</span>(<span class="string">&quot;Shard {} is now disconnected&quot;</span>, <span class="ident">shard_id</span>);
+            <span class="macro">println!</span>(<span class="string">&quot;Shard {shard_id} is now disconnected&quot;</span>);
         },
         <span class="ident">Event::MessageCreate</span>(<span class="ident">msg</span>) <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">content</span> <span class="op">==</span> <span class="string">&quot;!latency&quot;</span> =&gt; {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">shard</span>) <span class="op">=</span> <span class="ident">cluster</span>.<span class="ident">shard</span>(<span class="ident">shard_id</span>) {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">info</span>) <span class="op">=</span> <span class="ident">shard</span>.<span class="ident">info</span>() {
-                    <span class="macro">println!</span>(<span class="string">&quot;Shard {}&#39;s latency is {:?}&quot;</span>, <span class="ident">shard_id</span>, <span class="ident">info</span>.<span class="ident">latency</span>());
+                    <span class="macro">println!</span>(<span class="string">&quot;Shard {shard_id}&#39;s latency is {:?}&quot;</span>, <span class="ident">info</span>.<span class="ident">latency</span>());
                 }
             }
         },
         <span class="ident">Event::MessageCreate</span>(<span class="ident">msg</span>) <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">content</span> <span class="op">==</span> <span class="string">&quot;!shutdown&quot;</span> =&gt; {
-            <span class="macro">println!</span>(<span class="string">&quot;Got a shutdown request from shard {}&quot;</span>, <span class="ident">shard_id</span>);
+            <span class="macro">println!</span>(<span class="string">&quot;Got a shutdown request from shard {shard_id}&quot;</span>);
 
             <span class="ident">cluster</span>.<span class="ident">down</span>();
         },

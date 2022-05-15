@@ -187,17 +187,6 @@
 <span id="182">182</span>
 <span id="183">183</span>
 <span id="184">184</span>
-<span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight-gateway-queue</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Ratelimiting functionality for queueing new gateway sessions.</span>
@@ -239,14 +228,6 @@
 <span class="doccomment">//! The `twilight-http` feature brings in support for [`LargeBotQueue`].</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This is enabled by default.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Tracing</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The `tracing` feature enables logging via the [`tracing`] crate.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This is enabled by default.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [`tracing`]: https://crates.io/crates/tracing</span>
 <span class="doccomment">//! [Sharding for Very Large Bots]: https://discord.com/developers/docs/topics/gateway#sharding-for-very-large-bots</span>
 
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_auto_cfg</span>))]</span>
@@ -339,9 +320,8 @@
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">waiter</span>(<span class="kw-2">mut</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>) {
     <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">_source</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-            <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">_source</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
+            <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {source:?}&quot;</span>);
         }
         <span class="ident">sleep</span>(<span class="ident">DUR</span>).<span class="kw">await</span>;
     }
@@ -351,18 +331,16 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">_id</span>, <span class="ident">_total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">_source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">tx</span>) {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-                <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {:?}&quot;</span>, <span class="ident">_source</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">tx</span>) {
+                <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {source:?}&quot;</span>);
                 <span class="kw">return</span>;
             }
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-            <span class="macro">tracing::info!</span>(<span class="string">&quot;shard {}/{} waiting for allowance&quot;</span>, <span class="ident">_id</span>, <span class="ident">_total</span>);
+            <span class="macro">tracing::info!</span>(<span class="string">&quot;shard {id}/{total} waiting for allowance&quot;</span>);
 
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="kw">await</span>;
         })

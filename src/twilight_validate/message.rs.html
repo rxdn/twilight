@@ -329,6 +329,28 @@
 <span id="324">324</span>
 <span id="325">325</span>
 <span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Constants, error types, and functions for validating [`Message`] fields.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`Message`]: twilight_model::channel::Message</span>
@@ -336,6 +358,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">component</span>::{<span class="ident">ComponentValidationErrorType</span>, <span class="ident">COMPONENT_COUNT</span>},
     <span class="ident">embed</span>::{<span class="ident">chars</span> <span class="kw">as</span> <span class="ident">embed_chars</span>, <span class="ident">EmbedValidationErrorType</span>, <span class="ident">EMBED_TOTAL_LENGTH</span>},
+    <span class="ident">request::ValidationError</span>,
 };
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">error::Error</span>,
@@ -397,6 +420,18 @@
     ) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
+
+    <span class="doccomment">/// Create a [`MessageValidationError`] from a [`ValidationError`].</span>
+    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_validation_error</span>(
+        <span class="ident">kind</span>: <span class="ident">MessageValidationErrorType</span>,
+        <span class="ident">source</span>: <span class="ident">ValidationError</span>,
+    ) -&gt; <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">kind</span>,
+            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        }
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MessageValidationError</span> {
@@ -434,6 +469,13 @@
             }
             <span class="ident">MessageValidationErrorType::TooManyEmbeds</span> { .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;message has too many embeds&quot;</span>)
+            }
+            <span class="ident">MessageValidationErrorType::WebhookUsername</span> { .. } =&gt; {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">source</span>() {
+                    <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>, <span class="ident">f</span>)
+                } <span class="kw">else</span> {
+                    <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;webhook username is invalid&quot;</span>)
+                }
             }
         }
     }
@@ -479,6 +521,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// A followup message can have up to 10 embeds.</span>
     <span class="ident">TooManyEmbeds</span>,
+    <span class="doccomment">/// Provided webhook username was invalid.</span>
+    <span class="ident">WebhookUsername</span>,
 }
 
 <span class="doccomment">/// Ensure an attachment&#39;s filename is correct.</span>

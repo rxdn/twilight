@@ -444,6 +444,38 @@
 <span id="439">439</span>
 <span id="440">440</span>
 <span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::wildcard_imports</span>)]</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">gateway</span>;
@@ -481,6 +513,8 @@
     <span class="ident">ChannelPinsUpdate</span>(<span class="ident">ChannelPinsUpdate</span>),
     <span class="doccomment">/// A channel was updated.</span>
     <span class="ident">ChannelUpdate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ChannelUpdate</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A command&#39;s permissions were updated.</span>
+    <span class="ident">CommandPermissionsUpdate</span>(<span class="ident">CommandPermissionsUpdate</span>),
     <span class="doccomment">/// A heartbeat was sent to or received from the gateway.</span>
     <span class="ident">GatewayHeartbeat</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// A heartbeat acknowledgement was received from the gateway.</span>
@@ -493,7 +527,7 @@
     <span class="ident">GatewayInvalidateSession</span>(<span class="ident">bool</span>),
     <span class="doccomment">/// The gateway is indicating to perform a reconnect.</span>
     <span class="ident">GatewayReconnect</span>,
-    <span class="doccomment">/// Undocumented event, should be ignored</span>
+    <span class="doccomment">/// Undocumented event, should be ignored.</span>
     <span class="ident">GiftCodeUpdate</span>,
     <span class="doccomment">/// A guild was created.</span>
     <span class="ident">GuildCreate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">GuildCreate</span><span class="op">&gt;</span>),
@@ -503,6 +537,16 @@
     <span class="ident">GuildEmojisUpdate</span>(<span class="ident">GuildEmojisUpdate</span>),
     <span class="doccomment">/// A guild&#39;s integrations were updated.</span>
     <span class="ident">GuildIntegrationsUpdate</span>(<span class="ident">GuildIntegrationsUpdate</span>),
+    <span class="doccomment">/// A guild scheduled event was created.</span>
+    <span class="ident">GuildScheduledEventCreate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">GuildScheduledEventCreate</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A guild scheduled event was deleted.</span>
+    <span class="ident">GuildScheduledEventDelete</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">GuildScheduledEventDelete</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A guild scheduled event was updated.</span>
+    <span class="ident">GuildScheduledEventUpdate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">GuildScheduledEventUpdate</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A user was added to a guild scheduled event.</span>
+    <span class="ident">GuildScheduledEventUserAdd</span>(<span class="ident">GuildScheduledEventUserAdd</span>),
+    <span class="doccomment">/// A user was removed from a guild scheduled event.</span>
+    <span class="ident">GuildScheduledEventUserRemove</span>(<span class="ident">GuildScheduledEventUserRemove</span>),
     <span class="doccomment">/// A guild&#39;s stickers were updated.</span>
     <span class="ident">GuildStickersUpdate</span>(<span class="ident">GuildStickersUpdate</span>),
     <span class="doccomment">/// A guild was updated.</span>
@@ -619,6 +663,7 @@
             <span class="ident"><span class="self">Self</span>::ChannelDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelDelete</span>,
             <span class="ident"><span class="self">Self</span>::ChannelPinsUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelPinsUpdate</span>,
             <span class="ident"><span class="self">Self</span>::ChannelUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelUpdate</span>,
+            <span class="ident"><span class="self">Self</span>::CommandPermissionsUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::CommandPermissionsUpdate</span>,
             <span class="ident"><span class="self">Self</span>::GatewayHeartbeat</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GatewayHeartbeat</span>,
             <span class="ident"><span class="self">Self</span>::GatewayHeartbeatAck</span> =&gt; <span class="ident">EventType::GatewayHeartbeatAck</span>,
             <span class="ident"><span class="self">Self</span>::GatewayHello</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GatewayHello</span>,
@@ -629,6 +674,11 @@
             <span class="ident"><span class="self">Self</span>::GuildDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildDelete</span>,
             <span class="ident"><span class="self">Self</span>::GuildEmojisUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildEmojisUpdate</span>,
             <span class="ident"><span class="self">Self</span>::GuildIntegrationsUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildIntegrationsUpdate</span>,
+            <span class="ident"><span class="self">Self</span>::GuildScheduledEventCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventCreate</span>,
+            <span class="ident"><span class="self">Self</span>::GuildScheduledEventDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventDelete</span>,
+            <span class="ident"><span class="self">Self</span>::GuildScheduledEventUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventUpdate</span>,
+            <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserAdd</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventUserAdd</span>,
+            <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserRemove</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventUserRemove</span>,
             <span class="ident"><span class="self">Self</span>::GuildStickersUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildStickersUpdate</span>,
             <span class="ident"><span class="self">Self</span>::GuildUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildUpdate</span>,
             <span class="ident"><span class="self">Self</span>::IntegrationCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::IntegrationCreate</span>,
@@ -691,11 +741,19 @@
             <span class="ident">DispatchEvent::ChannelDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelDelete</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::ChannelPinsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelPinsUpdate</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::ChannelUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::CommandPermissionsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::CommandPermissionsUpdate</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::GiftCodeUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GiftCodeUpdate</span>,
             <span class="ident">DispatchEvent::GuildCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildCreate</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::GuildDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildDelete</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::GuildEmojisUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildEmojisUpdate</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::GuildIntegrationsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildIntegrationsUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::GuildScheduledEventCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventCreate</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::GuildScheduledEventDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventDelete</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::GuildScheduledEventUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventUpdate</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::GuildScheduledEventUserAdd</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserAdd</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::GuildScheduledEventUserRemove</span>(<span class="ident">v</span>) =&gt; {
+                <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserRemove</span>(<span class="ident">v</span>)
+            }
             <span class="ident">DispatchEvent::IntegrationCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::IntegrationCreate</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::IntegrationDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::IntegrationDelete</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::IntegrationUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::IntegrationUpdate</span>(<span class="ident">v</span>),
@@ -823,7 +881,7 @@
     <span class="comment">// requires a variable to be used in a function, so this is a false</span>
     <span class="comment">// positive.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-    <span class="kw">const</span> <span class="ident">EVENT_THRESHOLD</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">192</span>;
+    <span class="kw">const</span> <span class="ident">EVENT_THRESHOLD</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">184</span>;
 
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="ident">EVENT_THRESHOLD</span>);
 
@@ -831,6 +889,9 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelDelete</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildScheduledEventCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildScheduledEventDelete</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildScheduledEventUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">IntegrationCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">IntegrationUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
@@ -853,12 +914,15 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">BanAdd</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">BanRemove</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelPinsUpdate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">CommandPermissionsUpdate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Connected</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Connecting</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Disconnected</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildDelete</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildEmojisUpdate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildIntegrationsUpdate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildScheduledEventUserAdd</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildScheduledEventUserRemove</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Identifying</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">IntegrationDelete</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">InteractionCreate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);

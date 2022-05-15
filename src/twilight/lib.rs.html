@@ -245,10 +245,6 @@
 <span id="240">240</span>
 <span id="241">241</span>
 <span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [![codecov badge][]][codecov link] [![discord badge][]][discord link] [![github badge][]][github link] [![license badge][]][license link] ![rust badge]</span>
@@ -267,7 +263,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Installation</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Twilight supports a MSRV of Rust 1.57+.</span>
+<span class="doccomment">//! Twilight supports a MSRV of Rust 1.60+.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! We recommend that most users start out with these crates:</span>
 <span class="doccomment">//!</span>
@@ -378,7 +374,7 @@
 <span class="doccomment">//! use std::{env, error::Error, sync::Arc};</span>
 <span class="doccomment">//! use futures::stream::StreamExt;</span>
 <span class="doccomment">//! use twilight_cache_inmemory::{InMemoryCache, ResourceType};</span>
-<span class="doccomment">//! use twilight_gateway::{cluster::{Cluster, ShardScheme}, Event};</span>
+<span class="doccomment">//! use twilight_gateway::{Cluster, Event};</span>
 <span class="doccomment">//! use twilight_http::Client as HttpClient;</span>
 <span class="doccomment">//! use twilight_model::gateway::Intents;</span>
 <span class="doccomment">//!</span>
@@ -386,15 +382,11 @@
 <span class="doccomment">//! async fn main() -&gt; Result&lt;(), Box&lt;dyn Error + Send + Sync&gt;&gt; {</span>
 <span class="doccomment">//!     let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!     // This is the default scheme. It will automatically create as many</span>
-<span class="doccomment">//!     // shards as is suggested by Discord.</span>
-<span class="doccomment">//!     let scheme = ShardScheme::Auto;</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//!     // Use intents to only receive guild message events.</span>
-<span class="doccomment">//!     let (cluster, mut events) = Cluster::builder(token.to_owned(), Intents::GUILD_MESSAGES)</span>
-<span class="doccomment">//!         .shard_scheme(scheme)</span>
-<span class="doccomment">//!         .build()</span>
-<span class="doccomment">//!         .await?;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // A cluster is a manager for multiple shards that by default</span>
+<span class="doccomment">//!     // creates as many shards as Discord recommends.</span>
+<span class="doccomment">//!     let (cluster, mut events) = Cluster::new(token.to_owned(), Intents::GUILD_MESSAGES).await?;</span>
 <span class="doccomment">//!     let cluster = Arc::new(cluster);</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!     // Start up the cluster.</span>
@@ -438,7 +430,7 @@
 <span class="doccomment">//!                 .await?;</span>
 <span class="doccomment">//!         }</span>
 <span class="doccomment">//!         Event::ShardConnected(_) =&gt; {</span>
-<span class="doccomment">//!             println!(&quot;Connected on shard {}&quot;, shard_id);</span>
+<span class="doccomment">//!             println!(&quot;Connected on shard {shard_id}&quot;);</span>
 <span class="doccomment">//!         }</span>
 <span class="doccomment">//!         // Other events here...</span>
 <span class="doccomment">//!         _ =&gt; {}</span>
@@ -481,7 +473,7 @@
 <span class="doccomment">//! [license badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=for-the-badge&amp;logo=pastebin</span>
 <span class="doccomment">//! [license link]: https://github.com/twilight-rs/twilight/blob/main/LICENSE.md</span>
 <span class="doccomment">//! [logo]: https://raw.githubusercontent.com/twilight-rs/twilight/main/logo.png</span>
-<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.57+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
+<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.60+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
 <span class="doccomment">//! [`log`]: https://crates.io/crates/log</span>
 <span class="doccomment">//! [`tracing-log`]: https://github.com/tokio-rs/tracing/tree/master/tracing-log</span>
 <span class="doccomment">//! [`tracing`]: https://crates.io/crates/tracing</span>

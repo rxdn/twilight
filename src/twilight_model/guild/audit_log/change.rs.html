@@ -956,13 +956,24 @@
 <span id="951">951</span>
 <span id="952">952</span>
 <span id="953">953</span>
+<span id="954">954</span>
+<span id="955">955</span>
+<span id="956">956</span>
+<span id="957">957</span>
+<span id="958">958</span>
+<span id="959">959</span>
+<span id="960">960</span>
+<span id="961">961</span>
+<span id="962">962</span>
+<span id="963">963</span>
+<span id="964">964</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::change_key::AuditLogChangeKey</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">application::command::permissions::GuildCommandPermissions</span>,
     <span class="ident">channel</span>::{
         <span class="ident">message::sticker::StickerFormatType</span>, <span class="ident">permission_overwrite::PermissionOverwrite</span>,
         <span class="ident">stage_instance::PrivacyLevel</span>, <span class="ident">thread::AutoArchiveDuration</span>,
     },
-    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild</span>::{
         <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">MfaLevel</span>, <span class="ident">NSFWLevel</span>, <span class="ident">Permissions</span>,
         <span class="ident">VerificationLevel</span>,
@@ -973,7 +984,7 @@
         },
         <span class="ident">Id</span>,
     },
-    <span class="ident">util::ImageHash</span>,
+    <span class="ident">util</span>::{<span class="ident">ImageHash</span>, <span class="ident">Timestamp</span>},
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -1075,19 +1086,19 @@
     <span class="ident">AvatarHash</span> {
         <span class="doccomment">/// New hash of an avatar.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Old hash of an avatar.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Hash of a guild banner.</span>
     <span class="ident">BannerHash</span> {
         <span class="doccomment">/// New hash of a guild&#39;s banner.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Old hash of a guild&#39;s banner.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Bitrate of an audio channel.</span>
     <span class="ident">Bitrate</span> {
@@ -1124,6 +1135,15 @@
         <span class="doccomment">/// Old role color.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
         <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    },
+    <span class="doccomment">/// Permissions for a command were updated</span>
+    <span class="ident">CommandId</span> {
+        <span class="doccomment">/// New command permissions.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildCommandPermissions</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// Old command permissions.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildCommandPermissions</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Member timeout state changed.</span>
     <span class="ident">CommunicationDisabledUntil</span> {
@@ -1183,10 +1203,10 @@
     <span class="ident">DiscoverySplashHash</span> {
         <span class="doccomment">/// New discovery splash hash.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Old discovery splash hash.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Whether emoticons are enabled.</span>
     <span class="ident">EnableEmoticons</span> {
@@ -1264,10 +1284,10 @@
     <span class="ident">IconHash</span> {
         <span class="doccomment">/// New hash of a guild&#39;s icon.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
         <span class="doccomment">/// Old hash of a guild&#39;s icon.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// ID of an entity.</span>
     <span class="ident">Id</span> {
@@ -1524,10 +1544,10 @@
     <span class="ident">SplashHash</span> {
         <span class="doccomment">/// Old hash of a guild&#39;s splash.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
         <span class="doccomment">/// New hash of a guild&#39;s splash.</span>
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Status of guild scheduled event was changed.</span>
     <span class="ident">Status</span> {
@@ -1692,6 +1712,7 @@
             <span class="ident"><span class="self">Self</span>::ChannelId</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::ChannelId</span>,
             <span class="ident"><span class="self">Self</span>::Code</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Code</span>,
             <span class="ident"><span class="self">Self</span>::Color</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::Color</span>,
+            <span class="ident"><span class="self">Self</span>::CommandId</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::CommandId</span>,
             <span class="ident"><span class="self">Self</span>::CommunicationDisabledUntil</span> { .. } =&gt; {
                 <span class="ident">AuditLogChangeKey::CommunicationDisabledUntil</span>
             }
@@ -1781,6 +1802,7 @@
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::ChannelId</span>: <span class="ident">new</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Code</span>: <span class="ident">new</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Color</span>: <span class="ident">new</span>, <span class="ident">old</span>);
+    <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::CommandId</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::CommunicationDisabledUntil</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::Deaf</span>: <span class="ident">new</span>, <span class="ident">old</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">AuditLogChange::DefaultMessageNotifications</span>: <span class="ident">new</span>, <span class="ident">old</span>);

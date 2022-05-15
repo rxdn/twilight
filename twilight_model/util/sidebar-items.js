@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["image_hash","Efficient parsing and storage of Discord image hashes."]]});
+initSidebarItems({"mod":[["datetime","Utilities for parsing and formatting ISO 8601 timestamps."],["image_hash","Efficient parsing and storage of Discord image hashes."]]});

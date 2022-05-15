@@ -332,19 +332,6 @@
 <span id="327">327</span>
 <span id="328">328</span>
 <span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
 </pre><pre class="rust"><code><span class="doccomment">//! [`Bucket`] management used by the [`super::InMemoryRatelimiter`] internally.</span>
 <span class="doccomment">//! Each bucket has an associated [`BucketQueue`] to queue an API request, which is</span>
 <span class="doccomment">//! consumed by the [`BucketQueueTask`] that manages the ratelimit for the bucket</span>
@@ -563,7 +550,6 @@
     <span class="doccomment">/// Process incoming ratelimit requests to this bucket and update the state</span>
     <span class="doccomment">/// based on received [`RatelimitHeaders`].</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="self">self</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::debug_span!</span>(<span class="string">&quot;background queue task&quot;</span>, <span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>);
 
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">queue_tx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>().<span class="kw">await</span> {
@@ -577,27 +563,22 @@
                 <span class="kw">continue</span>;
             };
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-            <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;starting to wait for response headers&quot;</span>,);
+            <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;starting to wait for response headers&quot;</span>);
 
             <span class="kw">match</span> <span class="ident">timeout</span>(<span class="ident"><span class="self">Self</span>::WAIT</span>, <span class="ident">ticket_headers</span>).<span class="kw">await</span> {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">headers</span>))) =&gt; <span class="self">self</span>.<span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="ident">headers</span>).<span class="kw">await</span>,
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)) =&gt; {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;request aborted&quot;</span>);
                 }
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="kw">_</span>)) =&gt; {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;ticket channel closed&quot;</span>);
                 }
                 <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;receiver timed out&quot;</span>);
                 }
             }
         }
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;bucket appears finished, removing&quot;</span>);
 
         <span class="self">self</span>.<span class="ident">buckets</span>
@@ -621,14 +602,12 @@
             }
         };
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;updating bucket&quot;</span>);
         <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">update</span>(<span class="ident">ratelimits</span>);
     }
 
     <span class="doccomment">/// Lock the global ratelimit for a specified duration.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">lock_global</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">wait</span>: <span class="ident">Duration</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;request got global ratelimited&quot;</span>);
         <span class="self">self</span>.<span class="ident">global</span>.<span class="ident">lock</span>();
         <span class="kw">let</span> <span class="ident">lock</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">global</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
@@ -640,7 +619,6 @@
 
     <span class="doccomment">/// Get the next [`TicketNotifier`] in the queue.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TicketNotifier</span><span class="op">&gt;</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;starting to get next in queue&quot;</span>);
 
         <span class="self">self</span>.<span class="ident">wait_if_needed</span>().<span class="kw">await</span>;
@@ -650,7 +628,6 @@
 
     <span class="doccomment">/// Wait for this bucket to refresh if it isn&#39;t ready yet.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">wait_if_needed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::debug_span!</span>(<span class="string">&quot;waiting for bucket to refresh&quot;</span>, <span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>);
 
         <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> {
@@ -658,7 +635,6 @@
                 <span class="kw">return</span>;
             }
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;0 tickets remaining, may have to wait&quot;</span>);
 
             <span class="kw">match</span> <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">time_remaining</span>() {
@@ -672,7 +648,6 @@
             }
         };
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(
             <span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>,
             <span class="ident">milliseconds</span><span class="op">=</span><span class="op">%</span><span class="ident">wait</span>.<span class="ident">as_millis</span>(),
@@ -681,7 +656,6 @@
 
         <span class="ident">sleep</span>(<span class="ident">wait</span>).<span class="kw">await</span>;
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="ident">span</span>, <span class="string">&quot;done waiting for ratelimit to pass&quot;</span>);
 
         <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">try_reset</span>();

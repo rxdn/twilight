@@ -1064,6 +1064,12 @@
 <span id="1059">1059</span>
 <span id="1060">1060</span>
 <span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
 </pre><pre class="rust"><code><span class="doccomment">//! # twilight-cache-inmemory</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [![codecov badge][]][codecov link] [![discord badge][]][discord link] [![github badge][]][github link] [![license badge][]][license link] ![rust badge]</span>
@@ -1106,7 +1112,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
 <span class="doccomment">//! let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-<span class="doccomment">//! let (shard, mut events) = Shard::new(token, Intents::GUILD_MESSAGES);</span>
+<span class="doccomment">//! let (shard, mut events) = Shard::new(token, Intents::GUILD_MESSAGES).await?;</span>
 <span class="doccomment">//! shard.start().await?;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! // Create a cache, caching up to 10 messages per channel:</span>
@@ -1134,7 +1140,7 @@
 <span class="doccomment">//! [github link]: https://github.com/twilight-rs/twilight</span>
 <span class="doccomment">//! [license badge]: https://img.shields.io/badge/license-ISC-blue.svg?style=for-the-badge&amp;logo=pastebin</span>
 <span class="doccomment">//! [license link]: https://github.com/twilight-rs/twilight/blob/main/LICENSE.md</span>
-<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.57+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
+<span class="doccomment">//! [rust badge]: https://img.shields.io/badge/rust-1.60+-93450a.svg?style=for-the-badge&amp;logo=rust</span>
 
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_auto_cfg</span>))]</span>
 <span class="attribute">#![<span class="ident">deny</span>(
@@ -1450,7 +1456,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// // later on...</span>
     <span class="doccomment">/// let guilds = cache.stats().guilds();</span>
-    <span class="doccomment">/// println!(&quot;guild count: {}&quot;, guilds);</span>
+    <span class="doccomment">/// println!(&quot;guild count: {guilds}&quot;);</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">stats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">InMemoryCacheStats</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">InMemoryCacheStats::new</span>(<span class="self">self</span>)
@@ -1484,7 +1490,7 @@
     <span class="doccomment">/// let user_id = Id::new(5);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let permissions = cache.permissions().in_channel(user_id, channel_id)?;</span>
-    <span class="doccomment">/// println!(&quot;member has these permissions: {:?}&quot;, permissions);</span>
+    <span class="doccomment">/// println!(&quot;member has these permissions: {permissions:?}&quot;);</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;permission-calculator&quot;</span>)]</span>
@@ -1972,6 +1978,7 @@
             <span class="ident">ChannelDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>.<span class="ident">deref</span>()),
             <span class="ident">ChannelPinsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>),
             <span class="ident">ChannelUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>.<span class="ident">deref</span>()),
+            <span class="ident">CommandPermissionsUpdate</span>(<span class="kw">_</span>) =&gt; {}
             <span class="ident">GatewayHeartbeat</span>(<span class="kw">_</span>) =&gt; {}
             <span class="ident">GatewayHeartbeatAck</span> =&gt; {}
             <span class="ident">GatewayHello</span>(<span class="kw">_</span>) =&gt; {}
@@ -1983,6 +1990,11 @@
             <span class="ident">GuildEmojisUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>),
             <span class="ident">GuildStickersUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>),
             <span class="ident">GuildIntegrationsUpdate</span>(<span class="kw">_</span>) =&gt; {}
+            <span class="ident">GuildScheduledEventCreate</span>(<span class="kw">_</span>) =&gt; {}
+            <span class="ident">GuildScheduledEventDelete</span>(<span class="kw">_</span>) =&gt; {}
+            <span class="ident">GuildScheduledEventUpdate</span>(<span class="kw">_</span>) =&gt; {}
+            <span class="ident">GuildScheduledEventUserAdd</span>(<span class="kw">_</span>) =&gt; {}
+            <span class="ident">GuildScheduledEventUserRemove</span>(<span class="kw">_</span>) =&gt; {}
             <span class="ident">GuildUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>.<span class="ident">deref</span>()),
             <span class="ident">IntegrationCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>.<span class="ident">deref</span>()),
             <span class="ident">IntegrationDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident">c</span>.<span class="ident">update</span>(<span class="ident">v</span>.<span class="ident">deref</span>()),
@@ -2039,10 +2051,10 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">test</span>, <span class="ident">InMemoryCache</span>};
     <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-        <span class="ident">datetime::Timestamp</span>,
         <span class="ident">gateway::payload::incoming::RoleDelete</span>,
         <span class="ident">guild</span>::{<span class="ident">Member</span>, <span class="ident">Permissions</span>, <span class="ident">Role</span>},
         <span class="ident">id::Id</span>,
+        <span class="ident">util::Timestamp</span>,
     };
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

@@ -998,31 +998,6 @@
 <span id="993">993</span>
 <span id="994">994</span>
 <span id="995">995</span>
-<span id="996">996</span>
-<span id="997">997</span>
-<span id="998">998</span>
-<span id="999">999</span>
-<span id="1000">1000</span>
-<span id="1001">1001</span>
-<span id="1002">1002</span>
-<span id="1003">1003</span>
-<span id="1004">1004</span>
-<span id="1005">1005</span>
-<span id="1006">1006</span>
-<span id="1007">1007</span>
-<span id="1008">1008</span>
-<span id="1009">1009</span>
-<span id="1010">1010</span>
-<span id="1011">1011</span>
-<span id="1012">1012</span>
-<span id="1013">1013</span>
-<span id="1014">1014</span>
-<span id="1015">1015</span>
-<span id="1016">1016</span>
-<span id="1017">1017</span>
-<span id="1018">1018</span>
-<span id="1019">1019</span>
-<span id="1020">1020</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident"><span class="kw">super</span>::OpCode</span>, <span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>, <span class="ident">Event</span>, <span class="ident">EventConversionError</span>,
 };
@@ -1298,14 +1273,12 @@
     }
 
     <span class="kw">fn</span> <span class="ident">ignore_all</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">map</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">V::Error</span><span class="op">&gt;</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::trace!</span>(<span class="string">&quot;ignoring all other fields&quot;</span>);
 
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_key</span>::<span class="op">&lt;</span><span class="ident">Field</span><span class="op">&gt;</span>() {
             <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         }
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::trace!</span>(<span class="string">&quot;ignored all other fields&quot;</span>);
 
         <span class="prelude-val">Ok</span>(())
@@ -1334,17 +1307,13 @@
             <span class="string">&quot;RECONNECT&quot;</span>,
         ];
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing gateway event&quot;</span>);
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::trace!</span>(<span class="ident">event_type</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="number">2</span>, <span class="ident">op</span><span class="op">=</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">seq</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="number">1</span>);
 
         <span class="kw">let</span> <span class="ident">op_deser</span>: <span class="ident">U8Deserializer</span><span class="op">&lt;</span><span class="ident">V::Error</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">into_deserializer</span>();
 
         <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">OpCode::deserialize</span>(<span class="ident">op_deser</span>).<span class="ident">ok</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::trace!</span>(<span class="ident">op</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>, <span class="string">&quot;unknown opcode&quot;</span>);
             <span class="kw">let</span> <span class="ident">unexpected</span> <span class="op">=</span> <span class="ident">Unexpected::Unsigned</span>(<span class="ident">u64::from</span>(<span class="self">self</span>.<span class="number">0</span>));
 
@@ -1357,36 +1326,25 @@
                     .<span class="number">2</span>
                     .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::custom</span>(<span class="string">&quot;event type not provided beforehand&quot;</span>))<span class="question-mark">?</span>;
 
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway dispatch&quot;</span>);
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
                 <span class="kw">loop</span> {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="kw">let</span> <span class="ident">span_child</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
                     <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
-                            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                             <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
                             <span class="ident">key</span>
                         }
                         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                             <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
-                            <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {:?}&quot;</span>, <span class="ident">why</span>);
-
-                            <span class="kw">continue</span>;
-                        }
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>))]</span>
-                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                            <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                            <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {why:?}&quot;</span>);
 
                             <span class="kw">continue</span>;
                         }
@@ -1405,7 +1363,6 @@
                         <span class="ident">Field::Op</span> <span class="op">|</span> <span class="ident">Field::S</span> <span class="op">|</span> <span class="ident">Field::T</span> =&gt; {
                             <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
-                            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                             <span class="macro">tracing::trace!</span>(<span class="ident">key</span><span class="op">=</span><span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;ignoring key&quot;</span>);
                         }
                     }
@@ -1419,10 +1376,8 @@
                 <span class="ident">GatewayEvent::Dispatch</span>(<span class="ident">s</span>, <span class="ident">Box::new</span>(<span class="ident">d</span>))
             }
             <span class="ident">OpCode::Heartbeat</span> =&gt; {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway heartbeat&quot;</span>);
                 <span class="kw">let</span> <span class="ident">seq</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::field</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">seq</span> <span class="op">=</span> <span class="op">%</span><span class="ident">seq</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
@@ -1430,7 +1385,6 @@
                 <span class="ident">GatewayEvent::Heartbeat</span>(<span class="ident">seq</span>)
             }
             <span class="ident">OpCode::HeartbeatAck</span> =&gt; {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway heartbeat ack&quot;</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
@@ -1438,10 +1392,8 @@
                 <span class="ident">GatewayEvent::HeartbeatAck</span>
             }
             <span class="ident">OpCode::Hello</span> =&gt; {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway hello&quot;</span>);
                 <span class="kw">let</span> <span class="ident">hello</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::field</span>::<span class="op">&lt;</span><span class="ident">Hello</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">hello</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">hello</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
@@ -1449,10 +1401,8 @@
                 <span class="ident">GatewayEvent::Hello</span>(<span class="ident">hello</span>.<span class="ident">heartbeat_interval</span>)
             }
             <span class="ident">OpCode::InvalidSession</span> =&gt; {
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing invalid session&quot;</span>);
                 <span class="kw">let</span> <span class="ident">invalidate</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::field</span>::<span class="op">&lt;</span><span class="ident">bool</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="macro">tracing::trace!</span>(<span class="ident">invalidate</span> <span class="op">=</span> <span class="op">%</span><span class="ident">invalidate</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;

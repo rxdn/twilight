@@ -511,28 +511,13 @@
 <span id="506">506</span>
 <span id="507">507</span>
 <span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">guild::member</span>::{<span class="ident">Member</span>, <span class="ident">OptionalMemberDeserializer</span>},
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
     },
+    <span class="ident">util::Timestamp</span>,
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{
     <span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>, <span class="ident">MapAccess</span>, <span class="ident">Visitor</span>},
@@ -616,38 +601,25 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request_to_speak_timestamp</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing voice state&quot;</span>);
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
 
         <span class="kw">loop</span> {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="kw">let</span> <span class="ident">span_child</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
             <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
                     <span class="ident">key</span>
                 }
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                 <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                     <span class="comment">// Encountered when we run into an unknown key.</span>
                     <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
-                    <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {:?}&quot;</span>, <span class="ident">why</span>);
-
-                    <span class="kw">continue</span>;
-                }
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>))]</span>
-                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="comment">// Encountered when we run into an unknown key.</span>
-                    <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                    <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {why:?}&quot;</span>);
 
                     <span class="kw">continue</span>;
                 }
@@ -768,7 +740,6 @@
 
         <span class="kw">let</span> <span class="ident">self_stream</span> <span class="op">=</span> <span class="ident">self_stream</span>.<span class="ident">unwrap_or_default</span>();
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::trace!</span>(
             <span class="op">%</span><span class="ident">deaf</span>,
             <span class="op">%</span><span class="ident">mute</span>,
@@ -782,7 +753,6 @@
         );
 
         <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">guild_id</span>), <span class="prelude-val">Some</span>(<span class="ident">member</span>)) <span class="op">=</span> (<span class="ident">guild_id</span>, <span class="ident">member</span>.<span class="ident">as_mut</span>()) {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
             <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="question-mark">?</span><span class="ident">member</span>, <span class="string">&quot;setting member guild id&quot;</span>);
 
             <span class="ident">member</span>.<span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">guild_id</span>;
@@ -833,9 +803,9 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Member</span>, <span class="ident">VoiceState</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
         <span class="ident">id::Id</span>,
         <span class="ident">user::User</span>,
+        <span class="ident">util::datetime</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampParseError</span>},
     };
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;

@@ -100,14 +100,6 @@
 <span id="95">95</span>
 <span id="96">96</span>
 <span id="97">97</span>
-<span id="98">98</span>
-<span id="99">99</span>
-<span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span>::ShardStream</span>;
 <span class="kw">use</span> <span class="ident">futures_util</span>::{
     <span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">Either</span>},
@@ -148,7 +140,6 @@
     }
 
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;starting driving loop&quot;</span>);
 
         <span class="kw">loop</span> {
@@ -161,17 +152,14 @@
                 <span class="comment">// `rx` future finished first.</span>
                 <span class="prelude-val">Ok</span>(<span class="ident">Either::Left</span>((<span class="ident">maybe_msg</span>, <span class="kw">_</span>))) =&gt; {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="ident">maybe_msg</span> {
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-                        <span class="macro">tracing::trace!</span>(<span class="string">&quot;sending message: {}&quot;</span>, <span class="ident">msg</span>);
+                        <span class="macro">tracing::trace!</span>(<span class="string">&quot;sending message: {msg}&quot;</span>);
 
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">_source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stream</span>.<span class="ident">send</span>(<span class="ident">msg</span>).<span class="kw">await</span> {
-                            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-                            <span class="macro">tracing::warn!</span>(<span class="string">&quot;sending failed: {}&quot;</span>, <span class="ident">_source</span>);
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">stream</span>.<span class="ident">send</span>(<span class="ident">msg</span>).<span class="kw">await</span> {
+                            <span class="macro">tracing::warn!</span>(<span class="string">&quot;sending failed: {source}&quot;</span>);
 
                             <span class="kw">break</span>;
                         }
                     } <span class="kw">else</span> {
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::debug!</span>(<span class="string">&quot;rx stream ended, closing socket&quot;</span>);
 
                         <span class="kw">let</span> <span class="ident">_res</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">stream</span>.<span class="ident">close</span>(<span class="prelude-val">None</span>).<span class="kw">await</span>;
@@ -186,14 +174,12 @@
                             <span class="kw">break</span>;
                         }
                     }
-                    <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">_source</span>)) =&gt; {
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
-                        <span class="macro">tracing::warn!</span>(<span class="string">&quot;socket errored: {}&quot;</span>, <span class="ident">_source</span>);
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">source</span>)) =&gt; {
+                        <span class="macro">tracing::warn!</span>(<span class="string">&quot;socket errored: {source}&quot;</span>);
 
                         <span class="kw">break</span>;
                     }
                     <span class="prelude-val">None</span> =&gt; {
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                         <span class="macro">tracing::debug!</span>(<span class="string">&quot;socket ended&quot;</span>);
 
                         <span class="kw">break</span>;
@@ -201,7 +187,6 @@
                 },
                 <span class="comment">// Timeout future finished first.</span>
                 <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
                     <span class="macro">tracing::warn!</span>(<span class="string">&quot;socket timed out&quot;</span>);
 
                     <span class="kw">break</span>;
@@ -209,7 +194,6 @@
             }
         }
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>)]</span>
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;Leaving loop&quot;</span>);
     }
 }

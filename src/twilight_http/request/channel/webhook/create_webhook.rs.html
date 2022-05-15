@@ -118,6 +118,11 @@
 <span id="113">113</span>
 <span id="114">114</span>
 <span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span>,
@@ -130,12 +135,15 @@
     <span class="ident">channel::Webhook</span>,
     <span class="ident">id</span>::{<span class="ident">marker::ChannelMarker</span>, <span class="ident">Id</span>},
 };
-<span class="kw">use</span> <span class="ident">twilight_validate::request</span>::{<span class="ident">audit_reason</span> <span class="kw">as</span> <span class="ident">validate_audit_reason</span>, <span class="ident">ValidationError</span>};
+<span class="kw">use</span> <span class="ident">twilight_validate::request</span>::{
+    <span class="ident">audit_reason</span> <span class="kw">as</span> <span class="ident">validate_audit_reason</span>, <span class="ident">webhook_username</span> <span class="kw">as</span> <span class="ident">validate_webhook_username</span>,
+    <span class="ident">ValidationError</span>,
+};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">CreateWebhookFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
+    <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
 }
 
@@ -153,7 +161,7 @@
 <span class="doccomment">/// let channel_id = Id::new(123);</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let webhook = client</span>
-<span class="doccomment">///     .create_webhook(channel_id, &quot;Twily Bot&quot;)</span>
+<span class="doccomment">///     .create_webhook(channel_id, &quot;Twily Bot&quot;)?</span>
 <span class="doccomment">///     .exec()</span>
 <span class="doccomment">///     .await?;</span>
 <span class="doccomment">/// # Ok(()) }</span>
@@ -167,17 +175,19 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CreateWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
         <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_webhook_username</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">channel_id</span>,
             <span class="ident">fields</span>: <span class="ident">CreateWebhookFields</span> { <span class="ident">avatar</span>: <span class="prelude-val">None</span>, <span class="ident">name</span> },
             <span class="ident">http</span>,
             <span class="ident">reason</span>: <span class="prelude-val">None</span>,
-        }
+        })
     }
 
     <span class="doccomment">/// Set the avatar of the webhook.</span>
@@ -187,7 +197,7 @@
     <span class="doccomment">/// and `{data}` is the base64-encoded image. See [Discord Docs/Image Data].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Discord Docs/Image Data]: https://discord.com/developers/docs/reference#image-data</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">avatar</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">avatar</span>);
 
         <span class="self">self</span>

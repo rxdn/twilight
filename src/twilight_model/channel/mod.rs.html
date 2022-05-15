@@ -605,56 +605,6 @@
 <span id="600">600</span>
 <span id="601">601</span>
 <span id="602">602</span>
-<span id="603">603</span>
-<span id="604">604</span>
-<span id="605">605</span>
-<span id="606">606</span>
-<span id="607">607</span>
-<span id="608">608</span>
-<span id="609">609</span>
-<span id="610">610</span>
-<span id="611">611</span>
-<span id="612">612</span>
-<span id="613">613</span>
-<span id="614">614</span>
-<span id="615">615</span>
-<span id="616">616</span>
-<span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
-<span id="620">620</span>
-<span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
-<span id="624">624</span>
-<span id="625">625</span>
-<span id="626">626</span>
-<span id="627">627</span>
-<span id="628">628</span>
-<span id="629">629</span>
-<span id="630">630</span>
-<span id="631">631</span>
-<span id="632">632</span>
-<span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
-<span id="637">637</span>
-<span id="638">638</span>
-<span id="639">639</span>
-<span id="640">640</span>
-<span id="641">641</span>
-<span id="642">642</span>
-<span id="643">643</span>
-<span id="644">644</span>
-<span id="645">645</span>
-<span id="646">646</span>
-<span id="647">647</span>
-<span id="648">648</span>
-<span id="649">649</span>
-<span id="650">650</span>
-<span id="651">651</span>
-<span id="652">652</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">embed</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">message</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">permission_overwrite</span>;
@@ -686,13 +636,12 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel::thread</span>::{<span class="ident">AutoArchiveDuration</span>, <span class="ident">ThreadMember</span>, <span class="ident">ThreadMetadata</span>},
-    <span class="ident">datetime::Timestamp</span>,
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">MessageMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
     },
     <span class="ident">user::User</span>,
-    <span class="ident">util::ImageHash</span>,
+    <span class="ident">util</span>::{<span class="ident">ImageHash</span>, <span class="ident">Timestamp</span>},
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
@@ -832,9 +781,9 @@
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">AutoArchiveDuration</span>, <span class="ident">Channel</span>, <span class="ident">ChannelType</span>, <span class="ident">ThreadMember</span>, <span class="ident">ThreadMetadata</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">channel::permission_overwrite</span>::{<span class="ident">PermissionOverwrite</span>, <span class="ident">PermissionOverwriteType</span>},
-        <span class="ident">datetime::Timestamp</span>,
         <span class="ident">guild::Permissions</span>,
         <span class="ident">id::Id</span>,
+        <span class="ident">util::Timestamp</span>,
     };
 
     <span class="comment">// The deserializer for GuildChannel should skip over fields names that</span>
@@ -994,55 +943,6 @@
                 <span class="string">&quot;position&quot;</span>: <span class="number">3</span>,
                 <span class="string">&quot;topic&quot;</span>: <span class="string">&quot;a news channel&quot;</span>,
                 <span class="string">&quot;type&quot;</span>: <span class="ident">ChannelType::GuildNews</span>,
-            }))
-            .<span class="ident">unwrap</span>()
-        );
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_guild_store_channel_deserialization</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Channel</span> {
-            <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">bitrate</span>: <span class="prelude-val">None</span>,
-            <span class="ident">default_auto_archive_duration</span>: <span class="prelude-val">None</span>,
-            <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
-            <span class="ident">icon</span>: <span class="prelude-val">None</span>,
-            <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
-            <span class="ident">invitable</span>: <span class="prelude-val">None</span>,
-            <span class="ident">kind</span>: <span class="ident">ChannelType::GuildStore</span>,
-            <span class="ident">last_message_id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">last_pin_timestamp</span>: <span class="prelude-val">None</span>,
-            <span class="ident">member</span>: <span class="prelude-val">None</span>,
-            <span class="ident">member_count</span>: <span class="prelude-val">None</span>,
-            <span class="ident">message_count</span>: <span class="prelude-val">None</span>,
-            <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;store&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">newly_created</span>: <span class="prelude-val">None</span>,
-            <span class="ident">nsfw</span>: <span class="prelude-val">Some</span>(<span class="bool-val">false</span>),
-            <span class="ident">owner_id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">parent_id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">permission_overwrites</span>: <span class="prelude-val">Some</span>(<span class="ident">Vec::new</span>()),
-            <span class="ident">position</span>: <span class="prelude-val">Some</span>(<span class="number">2</span>),
-            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">None</span>,
-            <span class="ident">recipients</span>: <span class="prelude-val">None</span>,
-            <span class="ident">rtc_region</span>: <span class="prelude-val">None</span>,
-            <span class="ident">thread_metadata</span>: <span class="prelude-val">None</span>,
-            <span class="ident">topic</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;a store channel&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">user_limit</span>: <span class="prelude-val">None</span>,
-            <span class="ident">video_quality_mode</span>: <span class="prelude-val">None</span>,
-        };
-        <span class="kw">let</span> <span class="ident">permission_overwrites</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">value</span>,
-            <span class="ident">serde_json::from_value</span>(<span class="macro">serde_json::json!</span>({
-                <span class="string">&quot;id&quot;</span>: <span class="string">&quot;1&quot;</span>,
-                <span class="string">&quot;guild_id&quot;</span>: <span class="string">&quot;2&quot;</span>,
-                <span class="string">&quot;name&quot;</span>: <span class="string">&quot;store&quot;</span>,
-                <span class="string">&quot;nsfw&quot;</span>: <span class="bool-val">false</span>,
-                <span class="string">&quot;permission_overwrites&quot;</span>: <span class="ident">permission_overwrites</span>,
-                <span class="string">&quot;position&quot;</span>: <span class="number">2</span>,
-                <span class="string">&quot;topic&quot;</span>: <span class="string">&quot;a store channel&quot;</span>,
-                <span class="string">&quot;type&quot;</span>: <span class="ident">ChannelType::GuildStore</span>,
             }))
             .<span class="ident">unwrap</span>()
         );

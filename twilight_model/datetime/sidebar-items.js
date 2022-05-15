@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["error","Error detail implementation for `Timestamp` parsing."]],"struct":[["Timestamp","Representation of a Unix timestamp."],["TimestampIso8601Display","Display implementation to format a [`Timestamp`] in an ISO 8601 format."]]});
