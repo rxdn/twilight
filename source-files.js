@@ -1,4 +1,4 @@
-var N = null;var sourcesIndex = {};
+var sourcesIndex = {};
 sourcesIndex["twilight"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["twilight_cache_inmemory"] = {"name":"","dirs":[{"name":"event","files":["channel.rs","emoji.rs","guild.rs","integration.rs","interaction.rs","member.rs","message.rs","mod.rs","presence.rs","reaction.rs","role.rs","stage_instance.rs","sticker.rs","thread.rs","voice_state.rs"]},{"name":"model","files":["emoji.rs","guild.rs","member.rs","message.rs","mod.rs","presence.rs","sticker.rs","voice_state.rs"]}],"files":["builder.rs","config.rs","iter.rs","lib.rs","permission.rs","stats.rs"]};
 sourcesIndex["twilight_embed_builder"] = {"name":"","files":["author.rs","builder.rs","field.rs","footer.rs","image_source.rs","lib.rs"]};
