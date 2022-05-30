@@ -162,10 +162,6 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
-<span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">application</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">attachment</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">channel</span>;
@@ -205,16 +201,16 @@
 <span class="doccomment">/// Name of the audit log reason header.</span>
 <span class="kw">const</span> <span class="ident">REASON_HEADER_NAME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-audit-log-reason&quot;</span>;
 
-<span class="doccomment">/// Field that either serializes to null or a value.</span>
+<span class="doccomment">/// Type that either serializes to null or a value.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is particularly useful when combined with an `Option` by allowing three</span>
-<span class="doccomment">/// states via `Option&lt;NullableField&lt;T&gt;&gt;`: undefined, null, and T.</span>
+<span class="doccomment">/// states via `Option&lt;Nullable&lt;T&gt;&gt;`: undefined, null, and T.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// When the request field is `None` a field can skip serialization, while if a</span>
-<span class="doccomment">/// `NullableField` is provided with `None` within it then it will serialize as</span>
+<span class="doccomment">/// When the request value is `None` it can skip serialization, while if</span>
+<span class="doccomment">/// `Nullable` is provided with `None` within it then it will serialize as</span>
 <span class="doccomment">/// null. This mechanism is primarily used in patch requests.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
-<span class="kw">struct</span> <span class="ident">NullableField</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
+<span class="kw">struct</span> <span class="ident">Nullable</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 
 <span class="kw">fn</span> <span class="ident">audit_header</span>(<span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">HeaderName</span>, <span class="ident">HeaderValue</span>)<span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">header_name</span> <span class="op">=</span> <span class="ident">HeaderName::from_static</span>(<span class="ident">REASON_HEADER_NAME</span>);
@@ -257,7 +253,7 @@
 <span class="doccomment">/// Part of a backported fix for #1744. Remove after 0.11.x.</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::ref_option_ref</span>)]</span>
 <span class="kw">fn</span> <span class="ident">serialize_optional_nullable_image</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(
-    <span class="ident">maybe_data</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NullableField</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">maybe_data</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Nullable</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">serializer</span>: <span class="ident">S</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">maybe_data</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">field</span><span class="op">|</span> <span class="ident">field</span>.<span class="number">0</span>) {
@@ -272,7 +268,7 @@
     <span class="kw">use</span> <span class="ident">serde_json::Serializer</span>;
     <span class="kw">use</span> <span class="ident">std::io::Cursor</span>;
 
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request::NullableField</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request::Nullable</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_serialize_image</span>() {
@@ -310,8 +306,7 @@
     <span class="kw">fn</span> <span class="ident">test_serialize_optional_nullable_image_some_null</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="ident">Vec::new</span>());
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serializer</span> <span class="op">=</span> <span class="ident">Serializer::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>);
-        <span class="ident"><span class="kw">super</span>::serialize_optional_nullable_image</span>(<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">NullableField</span>(<span class="prelude-val">None</span>)), <span class="kw-2">&amp;mut</span> <span class="ident">serializer</span>)
-            .<span class="ident">unwrap</span>();
+        <span class="ident"><span class="kw">super</span>::serialize_optional_nullable_image</span>(<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">Nullable</span>(<span class="prelude-val">None</span>)), <span class="kw-2">&amp;mut</span> <span class="ident">serializer</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="string">b&quot;null&quot;</span>, <span class="ident">buf</span>.<span class="ident">into_inner</span>().<span class="ident">as_slice</span>());
     }
 
@@ -319,11 +314,8 @@
     <span class="kw">fn</span> <span class="ident">test_serialize_optional_nullable_image_some_value</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Cursor::new</span>(<span class="ident">Vec::new</span>());
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serializer</span> <span class="op">=</span> <span class="ident">Serializer::new</span>(<span class="kw-2">&amp;mut</span> <span class="ident">buf</span>);
-        <span class="ident"><span class="kw">super</span>::serialize_optional_nullable_image</span>(
-            <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">NullableField</span>(<span class="prelude-val">Some</span>(<span class="string">b&quot;test&quot;</span>))),
-            <span class="kw-2">&amp;mut</span> <span class="ident">serializer</span>,
-        )
-        .<span class="ident">unwrap</span>();
+        <span class="ident"><span class="kw">super</span>::serialize_optional_nullable_image</span>(<span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">Nullable</span>(<span class="prelude-val">Some</span>(<span class="string">b&quot;test&quot;</span>))), <span class="kw-2">&amp;mut</span> <span class="ident">serializer</span>)
+            .<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="string">br#&quot;&quot;test&quot;&quot;#</span>, <span class="ident">buf</span>.<span class="ident">into_inner</span>().<span class="ident">as_slice</span>());
     }
 }
