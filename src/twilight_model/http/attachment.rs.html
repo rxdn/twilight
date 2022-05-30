@@ -37,23 +37,117 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Models used when sending attachments to Discord.</span>
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="doccomment">/// Attachment for when creating and updating messages.</span>
+<span class="doccomment">/// Attachments used in messages.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Create an attachment of a short JSON blob describing a cat with a</span>
+<span class="doccomment">/// description for screen readers:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// use twilight_model::http::attachment::Attachment;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let filename = &quot;twilight_sparkle.json&quot;.to_owned();</span>
+<span class="doccomment">/// let file_content = br#&quot;{</span>
+<span class="doccomment">///     &quot;best_friend&quot;: &quot;Spike&quot;,</span>
+<span class="doccomment">///     &quot;cutie_mark&quot;: &quot;sparkles&quot;,</span>
+<span class="doccomment">///     &quot;name&quot;: &quot;Twilight Sparkle&quot;</span>
+<span class="doccomment">/// }&quot;#.to_vec();</span>
+<span class="doccomment">/// let id = 1;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut attachment = Attachment::from_bytes(filename, file_content, id);</span>
+<span class="doccomment">/// attachment.description(&quot;Raw data about Twilight Sparkle&quot;.to_owned());</span>
+<span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Attachment</span> {
+    <span class="doccomment">/// Description of the attachment, useful for screen readers and users</span>
+    <span class="doccomment">/// requiring alt text.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Content of the file.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip</span>)]</span>
     <span class="kw">pub</span> <span class="ident">file</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Name of the file.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Examples may be &quot;twilight_sparkle.png&quot;, &quot;cat.jpg&quot;, or &quot;logs.txt&quot;.</span>
     <span class="kw">pub</span> <span class="ident">filename</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Unique ID of the attachment in the message.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// While attachment IDs can be the same as attachments in other messages,</span>
+    <span class="doccomment">/// they must be unique within the same message. Attachment IDs don&#39;t need</span>
+    <span class="doccomment">/// to be in any particular format; for example, IDs of 0, 100, the current</span>
+    <span class="doccomment">/// timestamp, and so on are all valid.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Attachment</span> {
-    <span class="doccomment">/// Create a attachment from a filename and bytes.</span>
+    <span class="doccomment">/// Create an attachment from a filename and bytes.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Create an attachment with a grocery list named &quot;grocerylist.txt&quot;:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use twilight_model::http::attachment::Attachment;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let filename = &quot;grocerylist.txt&quot;.to_owned();</span>
+    <span class="doccomment">/// let file_content = b&quot;Apples\nGrapes\nLemonade&quot;.to_vec();</span>
+    <span class="doccomment">/// let id = 1;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let attachment = Attachment::from_bytes(filename, file_content, id);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">from_bytes</span>(<span class="ident">filename</span>: <span class="ident">String</span>, <span class="ident">file</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">id</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">description</span>: <span class="prelude-val">None</span>,
@@ -63,8 +157,10 @@
         }
     }
 
-    <span class="doccomment">/// Set the description of a attachment, this is used for alt-text</span>
-    <span class="doccomment">/// on Discords end.</span>
+    <span class="doccomment">/// Set the description of the attachment.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Attachment descriptions are useful for those requiring screen readers</span>
+    <span class="doccomment">/// and are displayed as alt text.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="ident">String</span>) {
         <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">description</span>);
     }

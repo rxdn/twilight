@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Attachment","Attachment for when creating and updating messages."]]});
+initSidebarItems({"struct":[["Attachment","Attachments used in messages."]]});
