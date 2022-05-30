@@ -2511,46 +2511,6 @@
 <span id="2504">2504</span>
 <span id="2505">2505</span>
 <span id="2506">2506</span>
-<span id="2507">2507</span>
-<span id="2508">2508</span>
-<span id="2509">2509</span>
-<span id="2510">2510</span>
-<span id="2511">2511</span>
-<span id="2512">2512</span>
-<span id="2513">2513</span>
-<span id="2514">2514</span>
-<span id="2515">2515</span>
-<span id="2516">2516</span>
-<span id="2517">2517</span>
-<span id="2518">2518</span>
-<span id="2519">2519</span>
-<span id="2520">2520</span>
-<span id="2521">2521</span>
-<span id="2522">2522</span>
-<span id="2523">2523</span>
-<span id="2524">2524</span>
-<span id="2525">2525</span>
-<span id="2526">2526</span>
-<span id="2527">2527</span>
-<span id="2528">2528</span>
-<span id="2529">2529</span>
-<span id="2530">2530</span>
-<span id="2531">2531</span>
-<span id="2532">2532</span>
-<span id="2533">2533</span>
-<span id="2534">2534</span>
-<span id="2535">2535</span>
-<span id="2536">2536</span>
-<span id="2537">2537</span>
-<span id="2538">2538</span>
-<span id="2539">2539</span>
-<span id="2540">2540</span>
-<span id="2541">2541</span>
-<span id="2542">2542</span>
-<span id="2543">2543</span>
-<span id="2544">2544</span>
-<span id="2545">2545</span>
-<span id="2546">2546</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">connector</span>;
 <span class="kw">mod</span> <span class="ident">interaction</span>;
@@ -2660,6 +2620,14 @@
 <span class="kw">use</span> <span class="ident">twilight_validate</span>::{
     <span class="ident">channel::ChannelValidationError</span>, <span class="ident">request::ValidationError</span>, <span class="ident">sticker::StickerValidationError</span>,
 };
+
+<span class="kw">const</span> <span class="ident">TWILIGHT_USER_AGENT</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="macro">concat!</span>(
+    <span class="string">&quot;DiscordBot (&quot;</span>,
+    <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_HOMEPAGE&quot;</span>),
+    <span class="string">&quot;, &quot;</span>,
+    <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),
+    <span class="string">&quot;) Twilight-rs&quot;</span>,
+);
 
 <span class="doccomment">/// Twilight&#39;s http client.</span>
 <span class="doccomment">///</span>
@@ -4939,7 +4907,6 @@
         }
     }
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="kw">fn</span> <span class="ident">try_request</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="ident">Request</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token_invalidated</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">token_invalidated</span>.<span class="ident">as_ref</span>() {
             <span class="kw">if</span> <span class="ident">token_invalidated</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>) {
@@ -4964,14 +4931,13 @@
         <span class="kw">let</span> <span class="ident">host</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">proxy</span>.<span class="ident">as_deref</span>().<span class="ident">unwrap_or</span>(<span class="string">&quot;discord.com&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{protocol}://{host}/api/v{API_VERSION}/{path}&quot;</span>);
-        <span class="macro">tracing::debug!</span>(<span class="string">&quot;URL: {url:?}&quot;</span>);
+        <span class="macro">tracing::debug!</span>(<span class="question-mark">?</span><span class="ident">url</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">hyper::Request::builder</span>().<span class="ident">method</span>(<span class="ident">method</span>.<span class="ident">to_http</span>()).<span class="ident">uri</span>(<span class="kw-2">&amp;</span><span class="ident">url</span>);
 
         <span class="kw">if</span> <span class="ident">use_authorization_token</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span> {
                 <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">HeaderValue::from_str</span>(<span class="ident">token</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> {
-                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::borrow_interior_mutable_const</span>)]</span>
                     <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">AUTHORIZATION</span>.<span class="ident">to_string</span>();
 
                     <span class="ident">Error</span> {
@@ -4986,25 +4952,17 @@
             }
         }
 
-        <span class="kw">let</span> <span class="ident">user_agent</span> <span class="op">=</span> <span class="ident">HeaderValue::from_static</span>(<span class="macro">concat!</span>(
-            <span class="string">&quot;DiscordBot (&quot;</span>,
-            <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_HOMEPAGE&quot;</span>),
-            <span class="string">&quot;, &quot;</span>,
-            <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),
-            <span class="string">&quot;) Twilight-rs&quot;</span>,
-        ));
-
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">headers</span>) <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">headers_mut</span>() {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">form</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">form</span> {
+                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_LENGTH</span>, <span class="ident">HeaderValue::from</span>(<span class="ident">form</span>.<span class="ident">len</span>()));
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">content_type</span>) <span class="op">=</span> <span class="ident">HeaderValue::try_from</span>(<span class="ident">form</span>.<span class="ident">content_type</span>()) {
                     <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_TYPE</span>, <span class="ident">content_type</span>);
                 }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bytes</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">body</span> {
-                <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">len</span>();
-                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_LENGTH</span>, <span class="ident">HeaderValue::from</span>(<span class="ident">len</span>));
-
-                <span class="kw">let</span> <span class="ident">content_type</span> <span class="op">=</span> <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;application/json&quot;</span>);
-                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_TYPE</span>, <span class="ident">content_type</span>);
+                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_LENGTH</span>, <span class="ident">HeaderValue::from</span>(<span class="ident">bytes</span>.<span class="ident">len</span>()));
+                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_TYPE</span>, <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;application/json&quot;</span>));
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">method</span>, <span class="ident">Method::Put</span> <span class="op">|</span> <span class="ident">Method::Post</span> <span class="op">|</span> <span class="ident">Method::Patch</span>) {
+                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_LENGTH</span>, <span class="ident">HeaderValue::from</span>(<span class="number">0</span>));
             }
 
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;decompression&quot;</span>)]</span>
@@ -5013,7 +4971,7 @@
                 <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;br&quot;</span>),
             );
 
-            <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">user_agent</span>);
+            <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">USER_AGENT</span>, <span class="ident">HeaderValue::from_static</span>(<span class="ident">TWILIGHT_USER_AGENT</span>));
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req_headers</span>) <span class="op">=</span> <span class="ident">req_headers</span> {
                 <span class="kw">for</span> (<span class="ident">maybe_name</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">req_headers</span> {
@@ -5025,76 +4983,38 @@
 
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">default_headers</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">default_headers</span> {
                 <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">default_headers</span> {
-                    <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">name</span>, <span class="ident">HeaderValue::from</span>(<span class="ident">value</span>));
+                    <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">name</span>, <span class="ident">value</span>.<span class="ident">clone</span>());
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">form</span>) <span class="op">=</span> <span class="ident">form</span> {
-            <span class="kw">let</span> <span class="ident">form_bytes</span> <span class="op">=</span> <span class="ident">form</span>.<span class="ident">build</span>();
-
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">headers</span>) <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">headers_mut</span>() {
-                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_LENGTH</span>, <span class="ident">HeaderValue::from</span>(<span class="ident">form_bytes</span>.<span class="ident">len</span>()));
-            };
-
-            <span class="ident">builder</span>
-                .<span class="ident">body</span>(<span class="ident">Body::from</span>(<span class="ident">form_bytes</span>))
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::BuildingRequest</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-                })<span class="question-mark">?</span>
+        <span class="kw">let</span> <span class="ident">try_req</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">form</span>) <span class="op">=</span> <span class="ident">form</span> {
+            <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">Body::from</span>(<span class="ident">form</span>.<span class="ident">build</span>()))
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">bytes</span>) <span class="op">=</span> <span class="ident">body</span> {
-            <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">Body::from</span>(<span class="ident">bytes</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span> {
-                <span class="ident">kind</span>: <span class="ident">ErrorType::BuildingRequest</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-            })<span class="question-mark">?</span>
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">method</span> <span class="op">==</span> <span class="ident">Method::Put</span> <span class="op">|</span><span class="op">|</span> <span class="ident">method</span> <span class="op">==</span> <span class="ident">Method::Post</span> <span class="op">|</span><span class="op">|</span> <span class="ident">method</span> <span class="op">==</span> <span class="ident">Method::Patch</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">headers</span>) <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">headers_mut</span>() {
-                <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="ident">CONTENT_LENGTH</span>, <span class="ident">HeaderValue::from</span>(<span class="number">0</span>));
-            }
-
-            <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">Body::empty</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span> {
-                <span class="ident">kind</span>: <span class="ident">ErrorType::BuildingRequest</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-            })<span class="question-mark">?</span>
+            <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">Body::from</span>(<span class="ident">bytes</span>))
         } <span class="kw">else</span> {
-            <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">Body::empty</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span> {
-                <span class="ident">kind</span>: <span class="ident">ErrorType::BuildingRequest</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-            })<span class="question-mark">?</span>
+            <span class="ident">builder</span>.<span class="ident">body</span>(<span class="ident">Body::empty</span>())
         };
 
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">req</span>);
+        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">try_req</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">Error</span> {
+            <span class="ident">kind</span>: <span class="ident">ErrorType::BuildingRequest</span>,
+            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        })<span class="question-mark">?</span>);
 
         <span class="comment">// For requests that don&#39;t use an authorization token we don&#39;t need to</span>
         <span class="comment">// remember whether the token is invalid. This may be for requests such</span>
         <span class="comment">// as webhooks and interactions.</span>
-        <span class="kw">let</span> <span class="ident">invalid_token</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">use_authorization_token</span> {
-            <span class="self">self</span>.<span class="ident">token_invalidated</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="ident">Arc::clone</span>)
-        } <span class="kw">else</span> {
-            <span class="prelude-val">None</span>
-        };
+        <span class="kw">let</span> <span class="ident">invalid_token</span> <span class="op">=</span> <span class="ident">use_authorization_token</span>
+            .<span class="ident">then</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">token_invalidated</span>.<span class="ident">clone</span>())
+            .<span class="ident">flatten</span>();
 
-        <span class="comment">// Clippy suggests bad code; an `Option::map_or_else` won&#39;t work here</span>
-        <span class="comment">// due to move semantics in both cases.</span>
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::option_if_let_else</span>)]</span>
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ratelimiter</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">ratelimiter</span>.<span class="ident">as_ref</span>() {
+        <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ratelimiter</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ratelimiter</span> {
             <span class="kw">let</span> <span class="ident">tx_future</span> <span class="op">=</span> <span class="ident">ratelimiter</span>.<span class="ident">wait_for_ticket</span>(<span class="ident">ratelimit_path</span>);
 
-            <span class="prelude-val">Ok</span>(<span class="ident">ResponseFuture::ratelimit</span>(
-                <span class="prelude-val">None</span>,
-                <span class="ident">invalid_token</span>,
-                <span class="ident">tx_future</span>,
-                <span class="self">self</span>.<span class="ident">timeout</span>,
-                <span class="ident">inner</span>,
-            ))
+            <span class="ident">ResponseFuture::ratelimit</span>(<span class="ident">invalid_token</span>, <span class="ident">inner</span>, <span class="self">self</span>.<span class="ident">timeout</span>, <span class="ident">tx_future</span>)
         } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">ResponseFuture::new</span>(
-                <span class="ident">invalid_token</span>,
-                <span class="ident">time::timeout</span>(<span class="self">self</span>.<span class="ident">timeout</span>, <span class="ident">inner</span>),
-                <span class="prelude-val">None</span>,
-            ))
-        }
+            <span class="ident">ResponseFuture::new</span>(<span class="ident">Box::pin</span>(<span class="ident">time::timeout</span>(<span class="self">self</span>.<span class="ident">timeout</span>, <span class="ident">inner</span>)), <span class="ident">invalid_token</span>)
+        })
     }
 }
 </code></pre></div>
