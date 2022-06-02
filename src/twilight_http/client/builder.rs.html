@@ -177,12 +177,6 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">client::connector</span>, <span class="ident">Client</span>};
 <span class="kw">use</span> <span class="ident">hyper::header::HeaderMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -194,6 +188,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="doccomment">/// A builder for [`Client`].</span>
+<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClientBuilder</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">default_allowed_mentions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AllowedMentions</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">proxy</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -238,7 +233,6 @@
 
     <span class="doccomment">/// Set the default allowed mentions setting to use on all messages sent through the HTTP</span>
     <span class="doccomment">/// client.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_allowed_mentions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">allowed_mentions</span>: <span class="ident">AllowedMentions</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">default_allowed_mentions</span>.<span class="ident">replace</span>(<span class="ident">allowed_mentions</span>);
 
@@ -265,7 +259,6 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [twilight&#39;s HTTP proxy server]: https://github.com/twilight-rs/http-proxy</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">proxy</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">proxy_url</span>: <span class="ident">String</span>, <span class="ident">use_http</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">proxy</span>.<span class="ident">replace</span>(<span class="ident">proxy_url</span>.<span class="ident">into_boxed_str</span>());
         <span class="self">self</span>.<span class="ident">use_http</span> <span class="op">=</span> <span class="ident">use_http</span>;
@@ -281,7 +274,6 @@
     <span class="doccomment">/// If this method is not called at all then a default [`InMemoryRatelimiter`] will be</span>
     <span class="doccomment">/// created by [`ClientBuilder::build`].</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ratelimiter</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ratelimiter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Ratelimiter</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">ratelimiter</span> <span class="op">=</span> <span class="ident">ratelimiter</span>;
 
@@ -291,7 +283,6 @@
     <span class="doccomment">/// Set the timeout for HTTP requests.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The default is 10 seconds.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">duration</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="ident">duration</span>;
 
@@ -299,7 +290,6 @@
     }
 
     <span class="doccomment">/// Set a group headers which are sent in every request.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_headers</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">headers</span>: <span class="ident">HeaderMap</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">default_headers</span>.<span class="ident">replace</span>(<span class="ident">headers</span>);
 
@@ -313,7 +303,6 @@
     <span class="doccomment">/// will not process future requests.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to true.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">remember_invalid_token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">remember</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">remember_invalid_token</span> <span class="op">=</span> <span class="ident">remember</span>;
 
@@ -321,7 +310,6 @@
     }
 
     <span class="doccomment">/// Set the token to use for HTTP requests.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">token</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">is_bot</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bot &quot;</span>);
         <span class="kw">let</span> <span class="ident">is_bearer</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bearer &quot;</span>);
