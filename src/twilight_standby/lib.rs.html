@@ -1535,10 +1535,19 @@
 <span id="1528">1528</span>
 <span id="1529">1529</span>
 <span id="1530">1530</span>
+<span id="1531">1531</span>
+<span id="1532">1532</span>
+<span id="1533">1533</span>
+<span id="1534">1534</span>
+<span id="1535">1535</span>
+<span id="1536">1536</span>
+<span id="1537">1537</span>
+<span id="1538">1538</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">deny</span>(
     <span class="ident">clippy::all</span>,
     <span class="ident">clippy::missing_const_for_fn</span>,
     <span class="ident">clippy::missing_docs_in_private_items</span>,
+    <span class="ident">clippy::pedantic</span>,
     <span class="ident">future_incompatible</span>,
     <span class="ident">missing_docs</span>,
     <span class="ident">nonstandard_style</span>,
@@ -1546,6 +1555,12 @@
     <span class="ident">rustdoc::broken_intra_doc_links</span>,
     <span class="ident">unsafe_code</span>,
     <span class="ident">unused</span>
+)]</span>
+<span class="attribute">#![<span class="ident">allow</span>(
+    <span class="ident">clippy::module_name_repetitions</span>,
+    <span class="ident">clippy::must_use_candidate</span>,
+    <span class="ident">clippy::unnecessary_wraps</span>,
+    <span class="ident">clippy::used_underscore_binding</span>
 )]</span>
 <span class="attribute">#![<span class="ident">doc</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
 
@@ -2200,7 +2215,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Wait for multiple button components on message 123 with a custom_id of &quot;Click&quot;:</span>
+    <span class="doccomment">/// Wait for multiple button components on message 123 with a `custom_id` of</span>
+    <span class="doccomment">/// &quot;Click&quot;:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
@@ -2880,7 +2896,7 @@
 
         <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
         <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">Event::Ready</span>(<span class="ident">ready</span>) =&gt; <span class="ident">ready</span>.<span class="ident">shard</span>.<span class="ident">map</span>(<span class="op">|</span>[<span class="ident">id</span>, <span class="kw">_</span>]<span class="op">|</span> <span class="ident">id</span> <span class="op">==</span> <span class="number">5</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>),
+            <span class="ident">Event::Ready</span>(<span class="ident">ready</span>) =&gt; <span class="ident">ready</span>.<span class="ident">shard</span>.<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span>[<span class="ident">id</span>, <span class="kw">_</span>]<span class="op">|</span> <span class="ident">id</span> <span class="op">==</span> <span class="number">5</span>),
             <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
         });
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">standby</span>.<span class="ident">events</span>.<span class="ident">is_empty</span>());
