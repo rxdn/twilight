@@ -345,6 +345,7 @@
 <span id="338">338</span>
 <span id="339">339</span>
 <span id="340">340</span>
+<span id="341">341</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application::interaction::application_command::InteractionMember</span>,
@@ -479,7 +480,8 @@
     }
 
     <span class="comment">// clippy: the member field&#39;s destructor needs to drop</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
+    <span class="comment">// clippy: the contents of `fields` is consumed</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>, <span class="ident">clippy::needless_pass_by_value</span>)]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_interaction_member</span>(
         <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
@@ -542,7 +544,7 @@
             <span class="ident">pending</span>: <span class="bool-val">false</span>,
             <span class="ident">premium_since</span>,
             <span class="ident">roles</span>,
-            <span class="ident">user_id</span>: <span class="ident">user</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">user</span><span class="op">|</span> <span class="ident">user</span>.<span class="ident">id</span>).<span class="ident">unwrap_or</span>(<span class="ident">user_id</span>),
+            <span class="ident">user_id</span>: <span class="ident">user</span>.<span class="ident">map_or</span>(<span class="ident">user_id</span>, <span class="op">|</span><span class="ident">user</span><span class="op">|</span> <span class="ident">user</span>.<span class="ident">id</span>),
         }
     }
 }
