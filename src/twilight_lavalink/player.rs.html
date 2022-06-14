@@ -231,7 +231,6 @@
 <span id="224">224</span>
 <span id="225">225</span>
 <span id="226">226</span>
-<span id="227">227</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Players containing information about active playing state within guilds and</span>
 <span class="doccomment">//! allowing you to send events to connected nodes.</span>
 <span class="doccomment">//!</span>
@@ -244,7 +243,7 @@
 <span class="doccomment">//! [read the position]: Player::position</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">model</span>::<span class="kw-2">*</span>,
+    <span class="ident">model</span>::{<span class="ident">Destroy</span>, <span class="ident">OutgoingEvent</span>},
     <span class="ident">node</span>::{<span class="ident">Node</span>, <span class="ident">NodeSenderError</span>},
 };
 <span class="kw">use</span> <span class="ident">dashmap::DashMap</span>;
@@ -382,7 +381,8 @@
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">event</span> {
             <span class="ident">OutgoingEvent::Pause</span>(<span class="ident">event</span>) =&gt; <span class="self">self</span>.<span class="ident">paused</span>.<span class="ident">store</span>(<span class="ident">event</span>.<span class="ident">pause</span>, <span class="ident">Ordering::Release</span>),
             <span class="ident">OutgoingEvent::Volume</span>(<span class="ident">event</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">volume</span>.<span class="ident">store</span>(<span class="ident">event</span>.<span class="ident">volume</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">Ordering::Release</span>)
+                <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>, <span class="ident">clippy::cast_sign_loss</span>)]</span>
+                <span class="self">self</span>.<span class="ident">volume</span>.<span class="ident">store</span>(<span class="ident">event</span>.<span class="ident">volume</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="ident">Ordering::Release</span>);
             }
             <span class="kw">_</span> =&gt; {}
         }
@@ -408,10 +408,8 @@
 
     <span class="doccomment">/// Sets the channel ID the player is currently connected to.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_channel_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">channel_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="self">self</span>.<span class="ident">channel_id</span>.<span class="ident">store</span>(
-            <span class="ident">channel_id</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">id</span>.<span class="ident">get</span>()).<span class="ident">unwrap_or</span>(<span class="number">0_u64</span>),
-            <span class="ident">Ordering::Release</span>,
-        );
+        <span class="self">self</span>.<span class="ident">channel_id</span>
+            .<span class="ident">store</span>(<span class="ident">channel_id</span>.<span class="ident">map_or</span>(<span class="number">0_u64</span>, <span class="ident">Id::get</span>), <span class="ident">Ordering::Release</span>);
     }
 
     <span class="doccomment">/// Return the player&#39;s guild ID.</span>
@@ -431,7 +429,7 @@
 
     <span class="doccomment">/// Set the player&#39;s position.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">position</span>: <span class="ident">i64</span>) {
-        <span class="self">self</span>.<span class="ident">position</span>.<span class="ident">store</span>(<span class="ident">position</span>, <span class="ident">Ordering::Release</span>)
+        <span class="self">self</span>.<span class="ident">position</span>.<span class="ident">store</span>(<span class="ident">position</span>, <span class="ident">Ordering::Release</span>);
     }
 
     <span class="doccomment">/// Return the player&#39;s time.</span>
@@ -441,7 +439,7 @@
 
     <span class="doccomment">/// Set the player&#39;s time.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">time</span>: <span class="ident">i64</span>) {
-        <span class="self">self</span>.<span class="ident">time</span>.<span class="ident">store</span>(<span class="ident">time</span>, <span class="ident">Ordering::Release</span>)
+        <span class="self">self</span>.<span class="ident">time</span>.<span class="ident">store</span>(<span class="ident">time</span>, <span class="ident">Ordering::Release</span>);
     }
 
     <span class="doccomment">/// Return the player&#39;s volume.</span>
