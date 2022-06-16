@@ -199,6 +199,14 @@
 <span id="192">192</span>
 <span id="193">193</span>
 <span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::channel::ConversionError</span>;
 <span class="kw">use</span> <span class="ident">serde_repr</span>::{<span class="ident">Deserialize_repr</span>, <span class="ident">Serialize_repr</span>};
 
@@ -230,6 +238,8 @@
     <span class="ident">ThreadStarterMessage</span> <span class="op">=</span> <span class="number">21</span>,
     <span class="ident">GuildInviteReminder</span> <span class="op">=</span> <span class="number">22</span>,
     <span class="ident">ContextMenuCommand</span> <span class="op">=</span> <span class="number">23</span>,
+    <span class="doccomment">/// Message is an auto-moderation action.</span>
+    <span class="ident">AutoModerationAction</span> <span class="op">=</span> <span class="number">24</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MessageType</span> {
@@ -260,6 +270,7 @@
             <span class="number">21</span> =&gt; <span class="ident">MessageType::ThreadStarterMessage</span>,
             <span class="number">22</span> =&gt; <span class="ident">MessageType::GuildInviteReminder</span>,
             <span class="number">23</span> =&gt; <span class="ident">MessageType::ContextMenuCommand</span>,
+            <span class="number">24</span> =&gt; <span class="ident">MessageType::AutoModerationAction</span>,
             <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ConversionError::MessageType</span>(<span class="ident">value</span>)),
         };
 
@@ -303,6 +314,7 @@
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">MessageType::ThreadStarterMessage</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">21</span>)]);
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">MessageType::GuildInviteReminder</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">22</span>)]);
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">MessageType::ContextMenuCommand</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">23</span>)]);
+        <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">MessageType::AutoModerationAction</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">24</span>)]);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -388,11 +400,15 @@
             <span class="ident">MessageType::ContextMenuCommand</span>
         );
         <span class="macro">assert_eq!</span>(
+            <span class="ident">MessageType::try_from</span>(<span class="number">24</span>).<span class="ident">unwrap</span>(),
+            <span class="ident">MessageType::AutoModerationAction</span>
+        );
+        <span class="macro">assert_eq!</span>(
             <span class="ident">MessageType::try_from</span>(<span class="number">250</span>).<span class="ident">unwrap_err</span>(),
             <span class="ident">ConversionError::MessageType</span>(<span class="number">250</span>)
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (ca122c7eb 2022-06-13)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (b31f9cc22 2022-06-15)" ></div>
 </body></html>
