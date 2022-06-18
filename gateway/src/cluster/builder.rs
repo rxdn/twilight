@@ -55,6 +55,7 @@ use crate::shard::tls::TlsContainer;
 // Remember to sync this with the custom Debug implementation.
 #[must_use = "has no effect if not built"]
 pub struct ClusterBuilder {
+    #[cfg(feature = "twilight-http")]
     http: Arc<Client>,
     queue: Arc<dyn Queue>,
     resume_sessions: HashMap<u64, ResumeSession>,
@@ -68,6 +69,7 @@ impl ClusterBuilder {
     /// Create a new builder to construct and configure a cluster.
     pub fn new(token: String, intents: Intents) -> Self {
         Self {
+            #[cfg(feature = "twilight-http")]
             http: Arc::new(Client::new(token.clone())),
             queue: Arc::new(LocalQueue::new()),
             resume_sessions: HashMap::new(),
@@ -341,8 +343,12 @@ impl ClusterBuilder {
 
 impl Debug for ClusterBuilder {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        f.debug_struct("ClusterBuilder")
-            .field("http", &self.http)
+        let mut debug = f.debug_struct("ClusterBuilder");
+        #[cfg(feature = "twilight-http")]
+        {
+            debug.field("http", &self.http);
+        }
+        debug
             .field("queue", &self.queue)
             .field("resume_sessions", &self.resume_sessions)
             .field("shard", &self.shard)
