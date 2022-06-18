@@ -181,10 +181,10 @@ impl ClusterBuilder {
         self
     }
 
-    /// Set the HTTP client for retrieving the recommended shard count, if not
+    /// Set the HTTP client for retrieving the recommended shard count if not
     /// manually specified with [`shard_scheme`].
     ///
-    /// Default is a new, unconfigured HTTP client.
+    /// Defaults to a new, unconfigured HTTP client.
     ///
     /// [`shard_scheme`]: Self::shard_scheme
     #[cfg(feature = "twilight-http")]
@@ -282,7 +282,7 @@ impl ClusterBuilder {
     ///
     /// ***Must*** be set if the `twilight-http` feature is disabled.
     ///
-    /// Default is to fetch the recommended number of shards from the HTTP API.
+    /// Defaults to fetch the recommended number of shards from the HTTP API.
     ///
     /// # Examples
     ///
