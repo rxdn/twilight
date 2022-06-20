@@ -514,7 +514,7 @@
 <span id="507">507</span>
 <span id="508">508</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">guild::member</span>::{<span class="ident">Member</span>, <span class="ident">OptionalMemberDeserializer</span>},
+    <span class="ident">guild::member</span>::{<span class="ident">Member</span>, <span class="ident">MemberIntermediary</span>},
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
@@ -591,7 +591,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">deaf</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MemberIntermediary</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mute</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">self_deaf</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">self_mute</span> <span class="op">=</span> <span class="prelude-val">None</span>;
@@ -654,9 +654,7 @@
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;member&quot;</span>));
                     }
 
-                    <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">OptionalMemberDeserializer::new</span>(<span class="ident">Id::new</span>(<span class="number">1</span>));
-
-                    <span class="ident">member</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
+                    <span class="ident">member</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                 }
                 <span class="ident">Field::Mute</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">mute</span>.<span class="ident">is_some</span>() {
@@ -754,11 +752,13 @@
             <span class="op">%</span><span class="ident">user_id</span>,
         );
 
-        <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">guild_id</span>), <span class="prelude-val">Some</span>(<span class="ident">member</span>)) <span class="op">=</span> (<span class="ident">guild_id</span>, <span class="ident">member</span>.<span class="ident">as_mut</span>()) {
+        <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">guild_id</span>), <span class="prelude-val">Some</span>(<span class="ident">member</span>)) <span class="op">=</span> (<span class="ident">guild_id</span>, <span class="ident">member</span>) {
             <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="question-mark">?</span><span class="ident">member</span>, <span class="string">&quot;setting member guild id&quot;</span>);
 
-            <span class="ident">member</span>.<span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">guild_id</span>;
-        }
+            <span class="prelude-val">Some</span>(<span class="ident">member</span>.<span class="ident">into_member</span>(<span class="ident">guild_id</span>))
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        };
 
         <span class="prelude-val">Ok</span>(<span class="ident">VoiceState</span> {
             <span class="ident">channel_id</span>,
