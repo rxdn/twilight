@@ -739,6 +739,8 @@
 <span id="732">732</span>
 <span id="733">733</span>
 <span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Nodes for communicating with a Lavalink server.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Using nodes, you can send events to a server and receive events.</span>
@@ -782,7 +784,7 @@
     <span class="ident">time</span> <span class="kw">as</span> <span class="ident">tokio_time</span>,
 };
 <span class="kw">use</span> <span class="ident">tokio_tungstenite</span>::{
-    <span class="ident">tungstenite</span>::{<span class="ident">handshake::client::generate_key</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">TungsteniteError</span>, <span class="ident">Message</span>},
+    <span class="ident">tungstenite</span>::{<span class="ident">client::IntoClientRequest</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">TungsteniteError</span>, <span class="ident">Message</span>},
     <span class="ident">MaybeTlsStream</span>, <span class="ident">WebSocketStream</span>,
 };
 <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::UserMarker</span>, <span class="ident">Id</span>};
@@ -1357,20 +1359,22 @@
 }
 
 <span class="kw">fn</span> <span class="ident">connect_request</span>(<span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">NodeConfig</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, <span class="ident">NodeError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">Request::get</span>(<span class="macro">format!</span>(<span class="string">&quot;ws://{}&quot;</span>, <span class="ident">state</span>.<span class="ident">address</span>));
-    <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">header</span>(<span class="string">&quot;Authorization&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">state</span>.<span class="ident">authorization</span>);
-    <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">header</span>(<span class="string">&quot;Num-Shards&quot;</span>, <span class="ident">state</span>.<span class="ident">shard_count</span>);
-    <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">header</span>(<span class="string">&quot;Sec-WebSocket-Key&quot;</span>, <span class="ident">generate_key</span>());
-    <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">header</span>(<span class="string">&quot;User-Id&quot;</span>, <span class="ident">state</span>.<span class="ident">user_id</span>.<span class="ident">get</span>());
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;ws://{}&quot;</span>, <span class="ident">state</span>.<span class="ident">address</span>)
+        .<span class="ident">into_client_request</span>()
+        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">NodeError</span> {
+            <span class="ident">kind</span>: <span class="ident">NodeErrorType::BuildingConnectionRequest</span>,
+            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        })<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">headers_mut</span>();
+    <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;User-Id&quot;</span>, <span class="ident">state</span>.<span class="ident">user_id</span>.<span class="ident">get</span>().<span class="ident">into</span>());
+    <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;Authorization&quot;</span>, <span class="ident">state</span>.<span class="ident">authorization</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>());
+    <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;Num-Shards&quot;</span>, <span class="ident">state</span>.<span class="ident">shard_count</span>.<span class="ident">into</span>());
 
     <span class="kw">if</span> <span class="ident">state</span>.<span class="ident">resume</span>.<span class="ident">is_some</span>() {
-        <span class="ident">builder</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">header</span>(<span class="string">&quot;Resume-Key&quot;</span>, <span class="ident">state</span>.<span class="ident">address</span>.<span class="ident">to_string</span>());
+        <span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;Resume-Key&quot;</span>, <span class="ident">state</span>.<span class="ident">address</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>());
     }
 
-    <span class="ident">builder</span>.<span class="ident">body</span>(()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">NodeError</span> {
-        <span class="ident">kind</span>: <span class="ident">NodeErrorType::BuildingConnectionRequest</span>,
-        <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-    })
+    <span class="prelude-val">Ok</span>(<span class="ident">request</span>)
 }
 
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reconnect</span>(
@@ -1474,5 +1478,5 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">Resume</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_lavalink" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (21e9336fe 2022-06-18)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_lavalink" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (bb8c2f411 2022-06-19)" ></div>
 </body></html>
