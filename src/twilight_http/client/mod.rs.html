@@ -2510,6 +2510,30 @@
 <span id="2504">2504</span>
 <span id="2505">2505</span>
 <span id="2506">2506</span>
+<span id="2507">2507</span>
+<span id="2508">2508</span>
+<span id="2509">2509</span>
+<span id="2510">2510</span>
+<span id="2511">2511</span>
+<span id="2512">2512</span>
+<span id="2513">2513</span>
+<span id="2514">2514</span>
+<span id="2515">2515</span>
+<span id="2516">2516</span>
+<span id="2517">2517</span>
+<span id="2518">2518</span>
+<span id="2519">2519</span>
+<span id="2520">2520</span>
+<span id="2521">2521</span>
+<span id="2522">2522</span>
+<span id="2523">2523</span>
+<span id="2524">2524</span>
+<span id="2525">2525</span>
+<span id="2526">2526</span>
+<span id="2527">2527</span>
+<span id="2528">2528</span>
+<span id="2529">2529</span>
+<span id="2530">2530</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">connector</span>;
 <span class="kw">mod</span> <span class="ident">interaction</span>;
@@ -4191,16 +4215,22 @@
 
     <span class="doccomment">/// Start a thread that is not connected to a message.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Values of [`ThreeDays`] and [`Week`] require the guild to be boosted.</span>
-    <span class="doccomment">/// The guild&#39;s features will indicate if a guild is able to use these</span>
-    <span class="doccomment">/// settings.</span>
+    <span class="doccomment">/// Automatic archive durations are not locked behind the guild&#39;s boost</span>
+    <span class="doccomment">/// level.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// To make a [`GuildPrivateThread`], the guild must also have the</span>
     <span class="doccomment">/// `PRIVATE_THREADS` feature.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameInvalid`] if the channel&#39;s name&#39;s length is</span>
+    <span class="doccomment">/// incorrect.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`TypeInvalid`] if the channel is not a thread.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildPrivateThread`]: twilight_model::channel::ChannelType::GuildPrivateThread</span>
-    <span class="doccomment">/// [`ThreeDays`]: twilight_model::channel::thread::AutoArchiveDuration::ThreeDays</span>
-    <span class="doccomment">/// [`Week`]: twilight_model::channel::thread::AutoArchiveDuration::Week</span>
+    <span class="doccomment">/// [`NameInvalid`]: twilight_validate::channel::ChannelValidationErrorType::NameInvalid</span>
+    <span class="doccomment">/// [`TypeInvalid`]: twilight_validate::channel::ChannelValidationErrorType::TypeInvalid</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_thread</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
@@ -4218,19 +4248,25 @@
     <span class="doccomment">/// When called on a [`GuildNews`] channel, this creates a</span>
     <span class="doccomment">/// [`GuildNewsThread`].</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Values of [`ThreeDays`] and [`Week`] require the guild to be boosted.</span>
-    <span class="doccomment">/// The guild&#39;s features will indicate if a guild is able to use these</span>
-    <span class="doccomment">/// settings.</span>
+    <span class="doccomment">/// Automatic archive durations are not locked behind the guild&#39;s boost</span>
+    <span class="doccomment">/// level.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The thread&#39;s ID will be the same as its parent message. This ensures</span>
     <span class="doccomment">/// only one thread can be created per message.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`GuildNewsThread`]: twilight_model::channel::ChannelType::GuildNewsThread</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameInvalid`] if the channel&#39;s name&#39;s length is</span>
+    <span class="doccomment">/// incorrect.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`TypeInvalid`] if the channel is not a thread.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildNews`]: twilight_model::channel::ChannelType::GuildNews</span>
+    <span class="doccomment">/// [`GuildNewsThread`]: twilight_model::channel::ChannelType::GuildNewsThread</span>
     <span class="doccomment">/// [`GuildPublicThread`]: twilight_model::channel::ChannelType::GuildPublicThread</span>
     <span class="doccomment">/// [`GuildText`]: twilight_model::channel::ChannelType::GuildText</span>
-    <span class="doccomment">/// [`ThreeDays`]: twilight_model::channel::thread::AutoArchiveDuration::ThreeDays</span>
-    <span class="doccomment">/// [`Week`]: twilight_model::channel::thread::AutoArchiveDuration::Week</span>
+    <span class="doccomment">/// [`NameInvalid`]: twilight_validate::channel::ChannelValidationErrorType::NameInvalid</span>
+    <span class="doccomment">/// [`TypeInvalid`]: twilight_validate::channel::ChannelValidationErrorType::TypeInvalid</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_thread_from_message</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
@@ -4818,6 +4854,18 @@
     <span class="doccomment">/// println!(&quot;{sticker:#?}&quot;);</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`DescriptionInvalid`] if the length is invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameInvalid`] if the length is invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`TagsInvalid`] if the length is invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`DescriptionInvalid`]: twilight_validate::sticker::StickerValidationErrorType::DescriptionInvalid</span>
+    <span class="doccomment">/// [`NameInvalid`]: twilight_validate::sticker::StickerValidationErrorType::NameInvalid</span>
+    <span class="doccomment">/// [`TagsInvalid`]: twilight_validate::sticker::StickerValidationErrorType::TagsInvalid</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_guild_sticker</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,

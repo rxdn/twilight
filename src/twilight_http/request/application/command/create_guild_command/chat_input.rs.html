@@ -168,6 +168,24 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::<span class="kw">super</span>::CommandBorrowed</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
@@ -236,6 +254,28 @@
         })
     }
 
+    <span class="doccomment">/// Add a list of command options.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Required command options must be added before optional options.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`OptionsRequiredFirst`] if a required option</span>
+    <span class="doccomment">/// was added after an optional option. The problem option&#39;s index is</span>
+    <span class="doccomment">/// provided.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`OptionsRequiredFirst`]: twilight_validate::command::CommandValidationErrorType::OptionsRequiredFirst</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">command_options</span>(
+        <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">CommandOption</span>],
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
+        <span class="ident">validate_options</span>(<span class="ident">options</span>)<span class="question-mark">?</span>;
+
+        <span class="self">self</span>.<span class="ident">options</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">options</span>);
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
+    }
+
     <span class="doccomment">/// Default permissions required for a member to run the command.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
@@ -248,6 +288,13 @@
     <span class="doccomment">/// Set the localization dictionary for the command description.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`DescriptionInvalid`] if the description is</span>
+    <span class="doccomment">/// invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`DescriptionInvalid`]: twilight_validate::command::CommandValidationErrorType::DescriptionInvalid</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description_localizations</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">localizations</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
@@ -264,6 +311,17 @@
     <span class="doccomment">/// Set the localization dictionary for the command name.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameLengthInvalid`] if the length is invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`NameCharacterInvalid`] if the name contains a</span>
+    <span class="doccomment">/// non-alphanumeric character or an uppercase character for which a</span>
+    <span class="doccomment">/// lowercase variant exists.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`NameLengthInvalid`]: twilight_validate::command::CommandValidationErrorType::NameLengthInvalid</span>
+    <span class="doccomment">/// [`NameCharacterInvalid`]: twilight_validate::command::CommandValidationErrorType::NameCharacterInvalid</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name_localizations</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">localizations</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
@@ -273,28 +331,6 @@
         }
 
         <span class="self">self</span>.<span class="ident">name_localizations</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">localizations</span>);
-
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
-    }
-
-    <span class="doccomment">/// Add a list of command options.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Required command options must be added before optional options.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error of type [`OptionsRequiredFirst`] if a required option</span>
-    <span class="doccomment">/// was added after an optional option. The problem option&#39;s index is</span>
-    <span class="doccomment">/// provided.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`OptionsRequiredFirst`]: twilight_validate::command::CommandValidationErrorType::OptionsRequiredFirst</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">command_options</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">CommandOption</span>],
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">CommandValidationError</span><span class="op">&gt;</span> {
-        <span class="ident">validate_options</span>(<span class="ident">options</span>)<span class="question-mark">?</span>;
-
-        <span class="self">self</span>.<span class="ident">options</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">options</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
