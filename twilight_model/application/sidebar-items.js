@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["command","Used for building commands to send to Discord."],["component","Types for Message [`Component`] support."],["interaction","Used when receiving interactions through gateway or webhooks."]]});
+window.SIDEBAR_ITEMS = {"mod":[["command","Used for building commands to send to Discord."],["component","Types for Message [`Component`] support."],["interaction","Used when receiving interactions through gateway or webhooks."]]};

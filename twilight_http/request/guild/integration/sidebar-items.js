@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["DeleteGuildIntegration","Delete an integration for a guild, by the integration’s id."],["GetGuildIntegrations","Get the guild’s integrations."]]});
+window.SIDEBAR_ITEMS = {"struct":[["DeleteGuildIntegration","Delete an integration for a guild, by the integration’s id."],["GetGuildIntegrations","Get the guild’s integrations."]]};

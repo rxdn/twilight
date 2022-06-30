@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["TeamMembershipState",""]],"struct":[["Team",""],["TeamMember",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["TeamMembershipState",""]],"struct":[["Team",""],["TeamMember",""]]};

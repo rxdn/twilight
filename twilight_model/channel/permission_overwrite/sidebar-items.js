@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["PermissionOverwriteType","Type of a permission overwrite target."]],"struct":[["PermissionOverwrite","Permission overwrite data for a role or member."]]});
+window.SIDEBAR_ITEMS = {"enum":[["PermissionOverwriteType","Type of a permission overwrite target."]],"struct":[["PermissionOverwrite","Permission overwrite data for a role or member."]]};

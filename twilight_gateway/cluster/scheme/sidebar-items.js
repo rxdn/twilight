@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ShardScheme","The method of sharding to use."],["ShardSchemeRangeErrorType","Starting a cluster failed."]],"struct":[["ShardSchemeIter","Iterator of shard IDs based on a shard scheme."],["ShardSchemeRangeError","Starting a cluster failed."]]});
+window.SIDEBAR_ITEMS = {"enum":[["ShardScheme","The method of sharding to use."],["ShardSchemeRangeErrorType","Starting a cluster failed."]],"struct":[["ShardSchemeIter","Iterator of shard IDs based on a shard scheme."],["ShardSchemeRangeError","Starting a cluster failed."]]};

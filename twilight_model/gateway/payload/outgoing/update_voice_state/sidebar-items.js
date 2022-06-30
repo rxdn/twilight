@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["UpdateVoiceState",""],["UpdateVoiceStateInfo",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["UpdateVoiceState",""],["UpdateVoiceStateInfo",""]]};

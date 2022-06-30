@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["command","Create a [`Command`] with a builder."],["embed","Create an [`Embed`] with a builder."]],"struct":[["InteractionResponseDataBuilder","Create an [`InteractionResponseData`] with a builder."]]});
+window.SIDEBAR_ITEMS = {"mod":[["command","Create a [`Command`] with a builder."],["embed","Create an [`Embed`] with a builder."]],"struct":[["InteractionResponseDataBuilder","Create an [`InteractionResponseData`] with a builder."]]};

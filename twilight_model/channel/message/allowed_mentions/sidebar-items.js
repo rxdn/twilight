@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ParseTypes","Parse types."]],"struct":[["AllowedMentions","Allowed mentions structure."],["AllowedMentionsBuilder",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["ParseTypes","Parse types."]],"struct":[["AllowedMentions","Allowed mentions structure."],["AllowedMentionsBuilder",""]]};

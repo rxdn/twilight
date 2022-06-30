@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["incoming","Payloads that are incoming from the Discord Gateway API."],["outgoing","Payloads that are outgoing to the Discord Gateway API."]]});
+window.SIDEBAR_ITEMS = {"mod":[["incoming","Payloads that are incoming from the Discord Gateway API."],["outgoing","Payloads that are outgoing to the Discord Gateway API."]]};

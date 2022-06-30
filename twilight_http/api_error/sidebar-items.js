@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ApiError",""],["MessageApiErrorEmbedField","Field within a [`MessageApiError`] embed list."]],"struct":[["GeneralApiError",""],["MessageApiError","Sending a message failed because the provided fields contained invalid input."],["RatelimitedApiError",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["ApiError",""],["MessageApiErrorEmbedField","Field within a [`MessageApiError`] embed list."]],"struct":[["GeneralApiError",""],["MessageApiError","Sending a message failed because the provided fields contained invalid input."],["RatelimitedApiError",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["ReactionRemoveEmoji",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["ReactionRemoveEmoji",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["UpdateWebhookMessage","Update a message created by a webhook."]]});
+window.SIDEBAR_ITEMS = {"struct":[["UpdateWebhookMessage","Update a message created by a webhook."]]};

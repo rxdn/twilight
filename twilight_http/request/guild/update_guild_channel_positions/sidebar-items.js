@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Position",""],["UpdateGuildChannelPositions","Modify the positions of the channels."]]});
+window.SIDEBAR_ITEMS = {"struct":[["Position",""],["UpdateGuildChannelPositions","Modify the positions of the channels."]]};

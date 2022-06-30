@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["command",""],["interaction",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["command",""],["interaction",""]]};

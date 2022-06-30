@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Embed",""],["EmbedAuthor",""],["EmbedField",""],["EmbedFooter",""],["EmbedImage",""],["EmbedProvider",""],["EmbedThumbnail",""],["EmbedVideo",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["Embed",""],["EmbedAuthor",""],["EmbedField",""],["EmbedFooter",""],["EmbedImage",""],["EmbedProvider",""],["EmbedThumbnail",""],["EmbedVideo",""]]};

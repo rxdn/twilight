@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["PermissionCalculator","Calculate the permissions of a member."]]});
+window.SIDEBAR_ITEMS = {"struct":[["PermissionCalculator","Calculate the permissions of a member."]]};

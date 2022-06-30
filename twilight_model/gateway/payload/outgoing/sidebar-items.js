@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["identify",""],["request_guild_members",""],["resume",""],["update_presence",""],["update_voice_state",""]],"struct":[["Heartbeat",""]]});
+window.SIDEBAR_ITEMS = {"mod":[["identify",""],["request_guild_members",""],["resume",""],["update_presence",""],["update_voice_state",""]],"struct":[["Heartbeat",""]]};

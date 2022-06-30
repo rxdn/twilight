@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["WebhookParseErrorType","Type of [`WebhookParseError`] that occurred."]],"fn":[["parse","Parse the webhook ID and token from a webhook URL, if it exists in the string."]],"struct":[["WebhookParseError","Error when parsing a webhook URL."]]});
+window.SIDEBAR_ITEMS = {"enum":[["WebhookParseErrorType","Type of [`WebhookParseError`] that occurred."]],"fn":[["parse","Parse the webhook ID and token from a webhook URL, if it exists in the string."]],"struct":[["WebhookParseError","Error when parsing a webhook URL."]]};

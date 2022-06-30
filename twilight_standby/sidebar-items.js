@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["future","Futures and streams returned by `Standby`."]],"struct":[["ProcessResults","Number of [`Standby`] calls that were completed."],["Standby","The `Standby` struct, used by the main event loop to process events and by tasks to wait for an event."]]});
+window.SIDEBAR_ITEMS = {"mod":[["future","Futures and streams returned by `Standby`."]],"struct":[["ProcessResults","Number of [`Standby`] calls that were completed."],["Standby","The `Standby` struct, used by the main event loop to process events and by tasks to wait for an event."]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["webhook","Utilities for parsing webhook URLs."]]});
+window.SIDEBAR_ITEMS = {"mod":[["webhook","Utilities for parsing webhook URLs."]]};

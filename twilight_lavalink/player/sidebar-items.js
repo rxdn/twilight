@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Player","A player for a guild connected to a node."],["PlayerManager","Retrieve and create players for guilds."]]});
+window.SIDEBAR_ITEMS = {"struct":[["Player","A player for a guild connected to a node."],["PlayerManager","Retrieve and create players for guilds."]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Template",""],["TemplateGuild",""],["TemplateRole",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["Template",""],["TemplateGuild",""],["TemplateRole",""]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["get_nitro_sticker_packs",""]],"struct":[["GetSticker","Returns a single sticker by its ID."]]});
+window.SIDEBAR_ITEMS = {"mod":[["get_nitro_sticker_packs",""]],"struct":[["GetSticker","Returns a single sticker by its ID."]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["UpdateCurrentUserVoiceState","Update the current user’s voice state."],["UpdateUserVoiceState","Update another user’s voice state."]]});
+window.SIDEBAR_ITEMS = {"struct":[["UpdateCurrentUserVoiceState","Update the current user’s voice state."],["UpdateUserVoiceState","Update another user’s voice state."]]};

@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AttachmentManager",""],["PartialAttachment",""]]});
+window.SIDEBAR_ITEMS = {"struct":[["AttachmentManager",""],["PartialAttachment",""]]};

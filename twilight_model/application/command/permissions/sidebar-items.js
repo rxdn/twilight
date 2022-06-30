@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["CommandPermissionsType",""]],"struct":[["CommandPermissions",""],["GuildCommandPermissions",""]]});
+window.SIDEBAR_ITEMS = {"enum":[["CommandPermissionsType",""]],"struct":[["CommandPermissions",""],["GuildCommandPermissions",""]]};
