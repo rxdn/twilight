@@ -196,6 +196,12 @@
 <span id="190">190</span>
 <span id="191">191</span>
 <span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">data</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::data</span>::{
@@ -205,7 +211,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">application::interaction::InteractionType</span>,
     <span class="ident">channel::Message</span>,
-    <span class="ident">guild::PartialMember</span>,
+    <span class="ident">guild</span>::{<span class="ident">PartialMember</span>, <span class="ident">Permissions</span>},
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
@@ -220,6 +226,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span>(<span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;Interaction&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ModalSubmitInteraction</span> {
+    <span class="doccomment">/// App&#39;s permissions in the channel the interaction was sent from.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// None if the interaction happens in a direct message channel.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">app_permissions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the associated application.</span>
     <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
     <span class="doccomment">/// ID of the channel the interaction was invoked in.</span>
@@ -299,7 +310,7 @@
             <span class="ident">component::ComponentType</span>,
             <span class="ident">interaction</span>::{<span class="ident">tests::user</span>, <span class="ident">InteractionType</span>},
         },
-        <span class="ident">guild::PartialMember</span>,
+        <span class="ident">guild</span>::{<span class="ident">PartialMember</span>, <span class="ident">Permissions</span>},
         <span class="ident">id</span>::{
             <span class="ident">marker</span>::{
                 <span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>, <span class="ident">UserMarker</span>,
@@ -340,6 +351,7 @@
         <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-02-02T02:02:02.020000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">in_guild</span> <span class="op">=</span> <span class="ident">ModalSubmitInteraction</span> {
+            <span class="ident">app_permissions</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::SEND_MESSAGES</span>),
             <span class="ident">application_id</span>: <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>),
             <span class="ident">channel_id</span>: <span class="ident">Id</span>::<span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="number">1</span>),
             <span class="ident">data</span>: <span class="ident">ModalInteractionData</span> {
@@ -389,5 +401,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7425fb293 2022-06-30)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (46b8c23f3 2022-07-01)" ></div>
 </body></html>
