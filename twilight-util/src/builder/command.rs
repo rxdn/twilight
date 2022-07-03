@@ -47,9 +47,8 @@
 
 use twilight_model::{
     application::command::{
-        BaseCommandOptionData, ChannelCommandOptionData, ChoiceCommandOptionData, Command,
-        CommandOption, CommandOptionChoice, CommandOptionValue, CommandType,
-        NumberCommandOptionData, OptionsCommandOptionData,
+        Command, CommandOption, CommandOptionChoice, CommandOptionChoiceData, CommandOptionType,
+        CommandOptionValue, CommandType,
     },
     channel::ChannelType,
     guild::Permissions,
@@ -183,18 +182,27 @@ impl CommandBuilder {
 /// Create an attachment option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct AttachmentBuilder(BaseCommandOptionData);
+pub struct AttachmentBuilder(CommandOption);
 
 impl AttachmentBuilder {
     /// Create a new default [`AttachmentBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(BaseCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Attachment,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -202,7 +210,7 @@ impl AttachmentBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Attachment(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -241,9 +249,9 @@ impl AttachmentBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -258,18 +266,27 @@ impl From<AttachmentBuilder> for CommandOption {
 /// Create a boolean option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct BooleanBuilder(BaseCommandOptionData);
+pub struct BooleanBuilder(CommandOption);
 
 impl BooleanBuilder {
     /// Create a new default [`BooleanBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(BaseCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Boolean,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -277,7 +294,7 @@ impl BooleanBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Boolean(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -316,9 +333,9 @@ impl BooleanBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -333,19 +350,27 @@ impl From<BooleanBuilder> for CommandOption {
 /// Create a channel option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct ChannelBuilder(ChannelCommandOptionData);
+pub struct ChannelBuilder(CommandOption);
 
 impl ChannelBuilder {
     /// Create a new default [`ChannelBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(ChannelCommandOptionData {
-            channel_types: Vec::new(),
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: Some(Vec::new()),
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Channel,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -353,14 +378,14 @@ impl ChannelBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Channel(self.0)
+        self.0
     }
 
     /// Restricts the channel choice to specific types.
     ///
     /// Defaults to all channel types allowed.
     pub fn channel_types(mut self, channel_types: impl IntoIterator<Item = ChannelType>) -> Self {
-        self.0.channel_types = channel_types.into_iter().collect();
+        self.0.channel_types = Some(Vec::from_iter(channel_types));
 
         self
     }
@@ -401,9 +426,9 @@ impl ChannelBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -417,22 +442,27 @@ impl From<ChannelBuilder> for CommandOption {
 /// Create a integer option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct IntegerBuilder(NumberCommandOptionData);
+pub struct IntegerBuilder(CommandOption);
 
 impl IntegerBuilder {
     /// Create a new default [`IntegerBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(NumberCommandOptionData {
-            autocomplete: false,
-            choices: Vec::new(),
+        Self(CommandOption {
+            autocomplete: Some(false),
+            channel_types: None,
+            choices: Some(Vec::new()),
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Integer,
+            max_length: None,
             max_value: None,
+            min_length: None,
             min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -440,31 +470,36 @@ impl IntegerBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Integer(self.0)
+        self.0
     }
 
     /// Set whether this option supports autocomplete.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn autocomplete(mut self, autocomplete: bool) -> Self {
-        self.0.autocomplete = autocomplete;
+        self.0.autocomplete = Some(autocomplete);
 
         self
     }
 
-    /// Set localization for a particular choice, by name.
+    /// Set localization for a particular choice.
     ///
     /// Choices must be set with the [`choices`] method before updating their
     /// localization.
     ///
+    /// # Panics
+    ///
+    /// Panics if choices are not set.
+    ///
     /// [`choices`]: Self::choices
+    #[track_caller]
     pub fn choice_localizations<K: Into<String>, V: Into<String>>(
         mut self,
         choice_name: &str,
         name_localizations: impl IntoIterator<Item = (K, V)>,
     ) -> Self {
-        let choice = self.0.choices.iter_mut().find(
-            |choice| matches!(choice, CommandOptionChoice::Int { name, .. } if name == choice_name),
+        let choice = self.0.choices.as_mut().expect("choices are set").iter_mut().find(
+            |choice| matches!(choice, CommandOptionChoice::Integer(CommandOptionChoiceData{ name, ..})  if name == choice_name),
         );
 
         if let Some(choice) = choice {
@@ -483,14 +518,18 @@ impl IntegerBuilder {
     ///
     /// [`choice_localizations`]: Self::choice_localizations
     pub fn choices<K: Into<String>>(mut self, choices: impl IntoIterator<Item = (K, i64)>) -> Self {
-        self.0.choices = choices
-            .into_iter()
-            .map(|(name, value, ..)| CommandOptionChoice::Int {
-                name: name.into(),
-                name_localizations: None,
-                value,
-            })
-            .collect();
+        self.0.choices = Some(
+            choices
+                .into_iter()
+                .map(|(name, value, ..)| {
+                    CommandOptionChoice::Integer(CommandOptionChoiceData {
+                        name: name.into(),
+                        name_localizations: None,
+                        value,
+                    })
+                })
+                .collect(),
+        );
 
         self
     }
@@ -512,7 +551,7 @@ impl IntegerBuilder {
         self
     }
 
-    /// Set the maximum value permitted.
+    /// Set the maximum allowed value.
     ///
     /// Defaults to no limit.
     pub const fn max_value(mut self, value: i64) -> Self {
@@ -521,7 +560,7 @@ impl IntegerBuilder {
         self
     }
 
-    /// Set the minimum value permitted.
+    /// Set the minimum allowed value.
     ///
     /// Defaults to no limit.
     pub const fn min_value(mut self, value: i64) -> Self {
@@ -549,9 +588,9 @@ impl IntegerBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -566,18 +605,27 @@ impl From<IntegerBuilder> for CommandOption {
 /// Create a mentionable option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct MentionableBuilder(BaseCommandOptionData);
+pub struct MentionableBuilder(CommandOption);
 
 impl MentionableBuilder {
     /// Create a new default [`MentionableBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(BaseCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Mentionable,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -585,7 +633,7 @@ impl MentionableBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Mentionable(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -624,9 +672,9 @@ impl MentionableBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -641,22 +689,27 @@ impl From<MentionableBuilder> for CommandOption {
 /// Create a number option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct NumberBuilder(NumberCommandOptionData);
+pub struct NumberBuilder(CommandOption);
 
 impl NumberBuilder {
     /// Create a new default [`NumberBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(NumberCommandOptionData {
-            autocomplete: false,
-            choices: Vec::new(),
+        Self(CommandOption {
+            autocomplete: Some(false),
+            channel_types: None,
+            choices: Some(Vec::new()),
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Number,
+            max_length: None,
             max_value: None,
+            min_length: None,
             min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -664,14 +717,14 @@ impl NumberBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Number(self.0)
+        self.0
     }
 
     /// Set whether this option supports autocomplete.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn autocomplete(mut self, autocomplete: bool) -> Self {
-        self.0.autocomplete = autocomplete;
+        self.0.autocomplete = Some(autocomplete);
 
         self
     }
@@ -681,14 +734,19 @@ impl NumberBuilder {
     /// Choices must be set with the [`choices`] method before updating their
     /// localization.
     ///
+    /// # Panics
+    ///
+    /// Panics if choices are not set.
+    ///
     /// [`choices`]: Self::choices
+    #[track_caller]
     pub fn choice_localizations<K: Into<String>, V: Into<String>>(
         mut self,
         choice_name: &str,
         name_localizations: impl IntoIterator<Item = (K, V)>,
     ) -> Self {
-        let choice = self.0.choices.iter_mut().find(
-            |choice| matches!(choice, CommandOptionChoice::Number { name, .. } if name == choice_name),
+        let choice = self.0.choices.as_mut().expect("choices are set").iter_mut().find(
+            |choice| matches!(choice, CommandOptionChoice::Number(CommandOptionChoiceData {name, ..}) if name == choice_name),
         );
 
         if let Some(choice) = choice {
@@ -707,14 +765,18 @@ impl NumberBuilder {
     ///
     /// [`choice_localizations`]: Self::choice_localizations
     pub fn choices<K: Into<String>>(mut self, choices: impl IntoIterator<Item = (K, f64)>) -> Self {
-        self.0.choices = choices
-            .into_iter()
-            .map(|(name, value, ..)| CommandOptionChoice::Number {
-                name: name.into(),
-                name_localizations: None,
-                value,
-            })
-            .collect();
+        self.0.choices = Some(
+            choices
+                .into_iter()
+                .map(|(name, value, ..)| {
+                    CommandOptionChoice::Number(CommandOptionChoiceData {
+                        name: name.into(),
+                        name_localizations: None,
+                        value,
+                    })
+                })
+                .collect(),
+        );
 
         self
     }
@@ -736,7 +798,7 @@ impl NumberBuilder {
         self
     }
 
-    /// Set the maximum value permitted.
+    /// Set the maximum allowed value.
     ///
     /// Defaults to no limit.
     pub const fn max_value(mut self, value: f64) -> Self {
@@ -745,7 +807,7 @@ impl NumberBuilder {
         self
     }
 
-    /// Set the minimum value permitted.
+    /// Set the minimum allowed value.
     ///
     /// Defaults to no limit.
     pub const fn min_value(mut self, value: f64) -> Self {
@@ -773,9 +835,9 @@ impl NumberBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -790,18 +852,27 @@ impl From<NumberBuilder> for CommandOption {
 /// Create a role option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct RoleBuilder(BaseCommandOptionData);
+pub struct RoleBuilder(CommandOption);
 
 impl RoleBuilder {
     /// Create a new default [`RoleBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(BaseCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::Role,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -809,7 +880,7 @@ impl RoleBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::Role(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -848,9 +919,9 @@ impl RoleBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -865,22 +936,27 @@ impl From<RoleBuilder> for CommandOption {
 /// Create a string option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct StringBuilder(ChoiceCommandOptionData);
+pub struct StringBuilder(CommandOption);
 
 impl StringBuilder {
     /// Create a new default [`StringBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(ChoiceCommandOptionData {
-            autocomplete: false,
-            choices: Vec::new(),
+        Self(CommandOption {
+            autocomplete: Some(false),
+            channel_types: None,
+            choices: Some(Vec::new()),
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::String,
             max_length: None,
+            max_value: None,
             min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -888,14 +964,14 @@ impl StringBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::String(self.0)
+        self.0
     }
 
     /// Set whether this option supports autocomplete.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn autocomplete(mut self, autocomplete: bool) -> Self {
-        self.0.autocomplete = autocomplete;
+        self.0.autocomplete = Some(autocomplete);
 
         self
     }
@@ -905,14 +981,19 @@ impl StringBuilder {
     /// Choices must be set with the [`choices`] method before updating their
     /// localization.
     ///
+    /// # Panics
+    ///
+    /// Panics if choices are not set.
+    ///
     /// [`choices`]: Self::choices
+    #[track_caller]
     pub fn choice_localizations<K: Into<String>, V: Into<String>>(
         mut self,
         choice_name: &str,
         name_localizations: impl IntoIterator<Item = (K, V)>,
     ) -> Self {
-        let choice = self.0.choices.iter_mut().find(
-            |choice| matches!(choice, CommandOptionChoice::String { name, .. } if name == choice_name),
+        let choice = self.0.choices.as_mut().expect("choices are set").iter_mut().find(
+            |choice| matches!(choice, CommandOptionChoice::String(CommandOptionChoiceData{name, ..}) if name == choice_name),
         );
 
         if let Some(choice) = choice {
@@ -934,14 +1015,18 @@ impl StringBuilder {
         mut self,
         choices: impl IntoIterator<Item = (K, V)>,
     ) -> Self {
-        self.0.choices = choices
-            .into_iter()
-            .map(|(name, value, ..)| CommandOptionChoice::String {
-                name: name.into(),
-                name_localizations: None,
-                value: value.into(),
-            })
-            .collect();
+        self.0.choices = Some(
+            choices
+                .into_iter()
+                .map(|(name, value, ..)| {
+                    CommandOptionChoice::String(CommandOptionChoiceData {
+                        name: name.into(),
+                        name_localizations: None,
+                        value: value.into(),
+                    })
+                })
+                .collect(),
+        );
 
         self
     }
@@ -1000,9 +1085,9 @@ impl StringBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -1017,18 +1102,27 @@ impl From<StringBuilder> for CommandOption {
 /// Create a subcommand option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct SubCommandBuilder(OptionsCommandOptionData);
+pub struct SubCommandBuilder(CommandOption);
 
 impl SubCommandBuilder {
     /// Create a new default [`SubCommandBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(OptionsCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::SubCommand,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            options: Vec::new(),
+            options: Some(Vec::new()),
+            required: None,
         })
     }
 
@@ -1036,7 +1130,7 @@ impl SubCommandBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::SubCommand(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -1081,7 +1175,11 @@ impl SubCommandBuilder {
     }
 
     fn _option(mut self, option: CommandOption) -> Self {
-        self.0.options.push(option);
+        self.0
+            .options
+            .as_mut()
+            .expect("set to Some in `new`")
+            .push(option);
 
         self
     }
@@ -1096,18 +1194,27 @@ impl From<SubCommandBuilder> for CommandOption {
 /// Create a subcommand group option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct SubCommandGroupBuilder(OptionsCommandOptionData);
+pub struct SubCommandGroupBuilder(CommandOption);
 
 impl SubCommandGroupBuilder {
     /// Create a new default [`SubCommandGroupBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(OptionsCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::SubCommandGroup,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            options: Vec::new(),
+            options: Some(Vec::new()),
+            required: None,
         })
     }
 
@@ -1115,7 +1222,7 @@ impl SubCommandGroupBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::SubCommandGroup(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -1156,7 +1263,7 @@ impl SubCommandGroupBuilder {
     ///
     /// Defaults to no subcommands.
     pub fn subcommands(mut self, subcommands: impl IntoIterator<Item = SubCommandBuilder>) -> Self {
-        self.0.options = subcommands.into_iter().map(Into::into).collect();
+        self.0.options = Some(subcommands.into_iter().map(Into::into).collect());
 
         self
     }
@@ -1171,18 +1278,27 @@ impl From<SubCommandGroupBuilder> for CommandOption {
 /// Create a user option with a builder.
 #[derive(Clone, Debug)]
 #[must_use = "should be used in a command builder"]
-pub struct UserBuilder(BaseCommandOptionData);
+pub struct UserBuilder(CommandOption);
 
 impl UserBuilder {
     /// Create a new default [`UserBuilder`].
     #[must_use = "builders have no effect if unused"]
     pub fn new(name: impl Into<String>, description: impl Into<String>) -> Self {
-        Self(BaseCommandOptionData {
+        Self(CommandOption {
+            autocomplete: None,
+            channel_types: None,
+            choices: None,
             description: description.into(),
             description_localizations: None,
+            kind: CommandOptionType::User,
+            max_length: None,
+            max_value: None,
+            min_length: None,
+            min_value: None,
             name: name.into(),
             name_localizations: None,
-            required: false,
+            options: None,
+            required: None,
         })
     }
 
@@ -1190,7 +1306,7 @@ impl UserBuilder {
     #[allow(clippy::missing_const_for_fn)]
     #[must_use = "should be used in a command builder"]
     pub fn build(self) -> CommandOption {
-        CommandOption::User(self.0)
+        self.0
     }
 
     /// Set the localization dictionary for the option description.
@@ -1229,9 +1345,9 @@ impl UserBuilder {
 
     /// Set whether this option is required.
     ///
-    /// Defaults to false.
+    /// Defaults to `false`.
     pub const fn required(mut self, required: bool) -> Self {
-        self.0.required = required;
+        self.0.required = Some(required);
 
         self
     }
@@ -1248,15 +1364,15 @@ fn set_choice_localizations<K: Into<String>, V: Into<String>>(
     localizations: impl IntoIterator<Item = (K, V)>,
 ) {
     let name_localizations = match choice {
-        CommandOptionChoice::String {
+        CommandOptionChoice::String(CommandOptionChoiceData {
             name_localizations, ..
-        }
-        | CommandOptionChoice::Int {
+        })
+        | CommandOptionChoice::Integer(CommandOptionChoiceData {
             name_localizations, ..
-        }
-        | CommandOptionChoice::Number {
+        })
+        | CommandOptionChoice::Number(CommandOptionChoiceData {
             name_localizations, ..
-        } => name_localizations,
+        }) => name_localizations,
     };
 
     *name_localizations = Some(
@@ -1329,11 +1445,7 @@ mod tests {
                                 "channel",
                                 "The channel permissions to edit. If omitted, the guild \
                                  permissions will be edited",
-                            ))
-                            .option(
-                                NumberBuilder::new("position", "The position of the new role")
-                                    .autocomplete(true),
-                            ),
+                            )),
                     ]),
             )
             .build();
@@ -1350,137 +1462,248 @@ mod tests {
             name_localizations: None,
             description_localizations: None,
             options: Vec::from([
-                CommandOption::SubCommandGroup(OptionsCommandOptionData {
-                    description: String::from("Get or edit permissions for a user"),
+                CommandOption {
+                    autocomplete: None,
+                    channel_types: None,
+                    choices: None,
+                    description: "Get or edit permissions for a user".to_owned(),
                     description_localizations: None,
-                    name: String::from("user"),
+                    kind: CommandOptionType::SubCommandGroup,
+                    max_length: None,
+                    max_value: None,
+                    min_length: None,
+                    min_value: None,
+                    name: "user".to_owned(),
                     name_localizations: None,
-                    options: Vec::from([
-                        CommandOption::SubCommand(OptionsCommandOptionData {
-                            description: String::from("Get permissions for a user"),
+                    options: Some(Vec::from([
+                        CommandOption {
+                            autocomplete: None,
+                            channel_types: None,
+                            choices: None,
+                            description: "Get permissions for a user".to_owned(),
                             description_localizations: None,
-                            name: String::from("get"),
+                            kind: CommandOptionType::SubCommand,
+                            max_length: None,
+                            max_value: None,
+                            min_length: None,
+                            min_value: None,
+                            name: "get".to_owned(),
                             name_localizations: None,
-                            options: Vec::from([
-                                CommandOption::User(BaseCommandOptionData {
-                                    description: String::from("The user to get"),
+                            options: Some(Vec::from([
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: None,
+                                    choices: None,
+                                    description: "The user to get".to_owned(),
                                     description_localizations: None,
-                                    name: String::from("user"),
-                                    name_localizations: None,
-                                    required: true,
-                                }),
-                                CommandOption::Channel(ChannelCommandOptionData {
-                                    channel_types: Vec::new(),
-                                    description: String::from(
-                                        "The channel permissions to get. If omitted, the guild \
-                                         permissions will be returned",
-                                    ),
-                                    description_localizations: None,
-                                    name: String::from("channel"),
-                                    name_localizations: None,
-                                    required: false,
-                                }),
-                            ]),
-                        }),
-                        CommandOption::SubCommand(OptionsCommandOptionData {
-                            description: String::from("Edit permissions for a user"),
-                            description_localizations: None,
-                            name: String::from("edit"),
-                            name_localizations: None,
-                            options: Vec::from([
-                                CommandOption::User(BaseCommandOptionData {
-                                    description: String::from("The user to edit"),
-                                    description_localizations: None,
-                                    name: String::from("user"),
-                                    name_localizations: None,
-                                    required: true,
-                                }),
-                                CommandOption::Channel(ChannelCommandOptionData {
-                                    channel_types: Vec::new(),
-                                    description: String::from(
-                                        "The channel permissions to edit. If omitted, the guild \
-                                         permissions will be edited",
-                                    ),
-                                    description_localizations: None,
-                                    name: String::from("channel"),
-                                    name_localizations: None,
-                                    required: false,
-                                }),
-                            ]),
-                        }),
-                    ]),
-                }),
-                CommandOption::SubCommandGroup(OptionsCommandOptionData {
-                    description: String::from("Get or edit permissions for a role"),
-                    description_localizations: None,
-                    name: String::from("role"),
-                    name_localizations: None,
-                    options: Vec::from([
-                        CommandOption::SubCommand(OptionsCommandOptionData {
-                            description: String::from("Get permissions for a role"),
-                            description_localizations: None,
-                            name: String::from("get"),
-                            name_localizations: None,
-                            options: Vec::from([
-                                CommandOption::Role(BaseCommandOptionData {
-                                    description: String::from("The role to get"),
-                                    description_localizations: None,
-                                    name: String::from("role"),
-                                    name_localizations: None,
-                                    required: true,
-                                }),
-                                CommandOption::Channel(ChannelCommandOptionData {
-                                    channel_types: Vec::new(),
-                                    description: String::from(
-                                        "The channel permissions to get. If omitted, the guild \
-                                         permissions will be returned",
-                                    ),
-                                    description_localizations: None,
-                                    name: String::from("channel"),
-                                    name_localizations: None,
-                                    required: false,
-                                }),
-                            ]),
-                        }),
-                        CommandOption::SubCommand(OptionsCommandOptionData {
-                            description: String::from("Edit permissions for a role"),
-                            description_localizations: None,
-                            name: String::from("edit"),
-                            name_localizations: None,
-                            options: Vec::from([
-                                CommandOption::Role(BaseCommandOptionData {
-                                    description: String::from("The role to edit"),
-                                    description_localizations: None,
-                                    name: String::from("role"),
-                                    name_localizations: None,
-                                    required: true,
-                                }),
-                                CommandOption::Channel(ChannelCommandOptionData {
-                                    channel_types: Vec::new(),
-                                    description: String::from(
-                                        "The channel permissions to edit. If omitted, the guild \
-                                         permissions will be edited",
-                                    ),
-                                    description_localizations: None,
-                                    name: String::from("channel"),
-                                    name_localizations: None,
-                                    required: false,
-                                }),
-                                CommandOption::Number(NumberCommandOptionData {
-                                    autocomplete: true,
-                                    choices: Vec::new(),
-                                    description: String::from("The position of the new role"),
-                                    description_localizations: None,
+                                    kind: CommandOptionType::User,
+                                    max_length: None,
                                     max_value: None,
+                                    min_length: None,
                                     min_value: None,
-                                    name: String::from("position"),
+                                    name: "user".to_owned(),
                                     name_localizations: None,
-                                    required: false,
-                                }),
-                            ]),
-                        }),
-                    ]),
-                }),
+                                    options: None,
+                                    required: Some(true),
+                                },
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: Some(Vec::new()),
+                                    choices: None,
+                                    description:
+                                        "The channel permissions to get. If omitted, the guild \
+                                        permissions will be returned"
+                                            .to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::Channel,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "channel".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: None,
+                                },
+                            ])),
+                            required: None,
+                        },
+                        CommandOption {
+                            autocomplete: None,
+                            channel_types: None,
+                            choices: None,
+                            description: "Edit permissions for a user".to_owned(),
+                            description_localizations: None,
+                            kind: CommandOptionType::SubCommand,
+                            max_length: None,
+                            max_value: None,
+                            min_length: None,
+                            min_value: None,
+                            name: "edit".to_owned(),
+                            name_localizations: None,
+                            options: Some(Vec::from([
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: None,
+                                    choices: None,
+                                    description: "The user to edit".to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::User,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "user".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: Some(true),
+                                },
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: Some(Vec::new()),
+                                    choices: None,
+                                    description:
+                                        "The channel permissions to edit. If omitted, the guild \
+                                        permissions will be edited"
+                                            .to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::Channel,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "channel".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: None,
+                                },
+                            ])),
+                            required: None,
+                        },
+                    ])),
+                    required: None,
+                },
+                CommandOption {
+                    autocomplete: None,
+                    channel_types: None,
+                    choices: None,
+                    description: "Get or edit permissions for a role".to_owned(),
+                    description_localizations: None,
+                    kind: CommandOptionType::SubCommandGroup,
+                    max_length: None,
+                    max_value: None,
+                    min_length: None,
+                    min_value: None,
+                    name: "role".to_owned(),
+                    name_localizations: None,
+                    options: Some(Vec::from([
+                        CommandOption {
+                            autocomplete: None,
+                            channel_types: None,
+                            choices: None,
+                            description: "Get permissions for a role".to_owned(),
+                            description_localizations: None,
+                            kind: CommandOptionType::SubCommand,
+                            max_length: None,
+                            max_value: None,
+                            min_length: None,
+                            min_value: None,
+                            name: "get".to_owned(),
+                            name_localizations: None,
+                            options: Some(Vec::from([
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: None,
+                                    choices: None,
+                                    description: "The role to get".to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::Role,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "role".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: Some(true),
+                                },
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: Some(Vec::new()),
+                                    choices: None,
+                                    description:
+                                        "The channel permissions to get. If omitted, the guild \
+                                permissions will be returned"
+                                            .to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::Channel,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "channel".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: None,
+                                },
+                            ])),
+                            required: None,
+                        },
+                        CommandOption {
+                            autocomplete: None,
+                            channel_types: None,
+                            choices: None,
+                            description: "Edit permissions for a role".to_owned(),
+                            description_localizations: None,
+                            kind: CommandOptionType::SubCommand,
+                            max_length: None,
+                            max_value: None,
+                            min_length: None,
+                            min_value: None,
+                            name: "edit".to_owned(),
+                            name_localizations: None,
+                            options: Some(Vec::from([
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: None,
+                                    choices: None,
+                                    description: "The role to edit".to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::Role,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "role".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: Some(true),
+                                },
+                                CommandOption {
+                                    autocomplete: None,
+                                    channel_types: Some(Vec::new()),
+                                    choices: None,
+                                    description:
+                                        "The channel permissions to edit. If omitted, the guild \
+                                permissions will be edited"
+                                            .to_owned(),
+                                    description_localizations: None,
+                                    kind: CommandOptionType::Channel,
+                                    max_length: None,
+                                    max_value: None,
+                                    min_length: None,
+                                    min_value: None,
+                                    name: "channel".to_owned(),
+                                    name_localizations: None,
+                                    options: None,
+                                    required: None,
+                                },
+                            ])),
+                            required: None,
+                        },
+                    ])),
+                    required: None,
+                },
             ]),
             version: Id::new(1),
         };
