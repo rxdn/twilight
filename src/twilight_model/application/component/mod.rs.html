@@ -852,6 +852,18 @@
 <span id="846">846</span>
 <span id="847">847</span>
 <span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Types for Message [`Component`] support.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Message components are a Discord API framework for adding interactive</span>
@@ -894,6 +906,7 @@
     <span class="ident">Button</span>(<span class="ident">Button</span>),
     <span class="ident">SelectMenu</span>(<span class="ident">SelectMenu</span>),
     <span class="ident">TextInput</span>(<span class="ident">TextInput</span>),
+    <span class="ident">Unknown</span>(<span class="ident">u8</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">Component</span> {
@@ -923,6 +936,7 @@
             <span class="ident"><span class="self">Self</span>::Button</span>(<span class="kw">_</span>) =&gt; <span class="ident">ComponentType::Button</span>,
             <span class="ident"><span class="self">Self</span>::SelectMenu</span>(<span class="kw">_</span>) =&gt; <span class="ident">ComponentType::SelectMenu</span>,
             <span class="ident"><span class="self">Self</span>::TextInput</span>(<span class="kw">_</span>) =&gt; <span class="ident">ComponentType::TextInput</span>,
+            <span class="ident">Component::Unknown</span>(<span class="ident">unknown</span>) =&gt; <span class="ident">ComponentType::Unknown</span>(<span class="kw-2">*</span><span class="ident">unknown</span>),
         }
     }
 }
@@ -1275,6 +1289,7 @@
                     <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">unwrap_or_default</span>(),
                 })
             }
+            <span class="ident">ComponentType::Unknown</span>(<span class="ident">unknown</span>) =&gt; <span class="ident"><span class="self">Self</span>::Value::Unknown</span>(<span class="ident">unknown</span>),
         })
     }
 }
@@ -1338,6 +1353,9 @@
                     <span class="op">+</span> <span class="ident">usize::from</span>(<span class="ident">text_input</span>.<span class="ident">required</span>.<span class="ident">is_some</span>())
                     <span class="op">+</span> <span class="ident">usize::from</span>(<span class="ident">text_input</span>.<span class="ident">value</span>.<span class="ident">is_some</span>())
             }
+            <span class="comment">// We are dropping fields here but nothing we can do about that for</span>
+            <span class="comment">// the time being.</span>
+            <span class="ident">Component::Unknown</span>(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
         };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">serializer</span>.<span class="ident">serialize_struct</span>(<span class="string">&quot;Component&quot;</span>, <span class="ident">len</span>)<span class="question-mark">?</span>;
@@ -1426,6 +1444,12 @@
                     <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;value&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">text_input</span>.<span class="ident">value</span>)<span class="question-mark">?</span>;
                 }
             }
+            <span class="comment">// We are not serializing all fields so this will fail to</span>
+            <span class="comment">// deserialize. But it is all that can be done to avoid losing</span>
+            <span class="comment">// incoming messages at this time.</span>
+            <span class="ident">Component::Unknown</span>(<span class="ident">unknown</span>) =&gt; {
+                <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;type&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">ComponentType::Unknown</span>(<span class="kw-2">*</span><span class="ident">unknown</span>))<span class="question-mark">?</span>;
+            }
         }
 
         <span class="ident">state</span>.<span class="ident">end</span>()
@@ -1489,7 +1513,7 @@
                     <span class="ident">len</span>: <span class="number">2</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::ActionRow</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::ActionRow</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;components&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">2</span>) },
                 <span class="ident">Token::Struct</span> {
@@ -1497,7 +1521,7 @@
                     <span class="ident">len</span>: <span class="number">5</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::Button</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::Button</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;custom_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;test custom id&quot;</span>),
@@ -1507,14 +1531,14 @@
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;test label&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;style&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ButtonStyle::Primary</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ButtonStyle::Primary</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::StructEnd</span>,
                 <span class="ident">Token::Struct</span> {
                     <span class="ident">name</span>: <span class="string">&quot;Component&quot;</span>,
                     <span class="ident">len</span>: <span class="number">6</span>,
                 },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::SelectMenu</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::SelectMenu</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;custom_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;test custom id 2&quot;</span>),
@@ -1574,7 +1598,7 @@
                     <span class="ident">len</span>: <span class="number">2</span>,
                 },
                 <span class="ident">Token::String</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::ActionRow</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::ActionRow</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::String</span>(<span class="string">&quot;components&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
                 <span class="ident">Token::Struct</span> {
@@ -1624,7 +1648,7 @@
                     <span class="ident">len</span>: <span class="number">6</span>,
                 },
                 <span class="ident">Token::String</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::Button</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::Button</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::String</span>(<span class="string">&quot;custom_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::String</span>(<span class="string">&quot;test&quot;</span>),
@@ -1641,7 +1665,7 @@
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::String</span>(<span class="string">&quot;Test&quot;</span>),
                 <span class="ident">Token::String</span>(<span class="string">&quot;style&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ButtonStyle::Link</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ButtonStyle::Link</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::String</span>(<span class="string">&quot;url&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::String</span>(<span class="string">&quot;https://twilight.rs&quot;</span>),
@@ -1671,7 +1695,7 @@
                     <span class="ident">len</span>: <span class="number">9</span>,
                 },
                 <span class="ident">Token::String</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::TextInput</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">ComponentType::TextInput</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::String</span>(<span class="string">&quot;custom_id&quot;</span>),
                 <span class="ident">Token::Some</span>,
                 <span class="ident">Token::String</span>(<span class="string">&quot;test&quot;</span>),
@@ -1701,5 +1725,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

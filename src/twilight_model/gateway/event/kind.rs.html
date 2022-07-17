@@ -359,12 +359,45 @@
 <span id="353">353</span>
 <span id="354">354</span>
 <span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// The type of an event.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EventType</span> {
+    <span class="ident">AutoModerationActionExecution</span>,
+    <span class="ident">AutoModerationRuleCreate</span>,
+    <span class="ident">AutoModerationRuleDelete</span>,
+    <span class="ident">AutoModerationRuleUpdate</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_BAN_ADD&quot;</span>)]</span>
     <span class="ident">BanAdd</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_BAN_REMOVE&quot;</span>)]</span>
@@ -400,12 +433,12 @@
     <span class="ident">InviteDelete</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBER_ADD&quot;</span>)]</span>
     <span class="ident">MemberAdd</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>)]</span>
+    <span class="ident">MemberChunk</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBER_REMOVE&quot;</span>)]</span>
     <span class="ident">MemberRemove</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBER_UPDATE&quot;</span>)]</span>
     <span class="ident">MemberUpdate</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>)]</span>
-    <span class="ident">MemberChunk</span>,
     <span class="ident">MessageCreate</span>,
     <span class="ident">MessageDelete</span>,
     <span class="ident">MessageDeleteBulk</span>,
@@ -432,8 +465,8 @@
     <span class="ident">ShardConnecting</span>,
     <span class="ident">ShardDisconnected</span>,
     <span class="ident">ShardIdentifying</span>,
-    <span class="ident">ShardReconnecting</span>,
     <span class="ident">ShardPayload</span>,
+    <span class="ident">ShardReconnecting</span>,
     <span class="ident">ShardResuming</span>,
     <span class="ident">StageInstanceCreate</span>,
     <span class="ident">StageInstanceDelete</span>,
@@ -455,6 +488,10 @@
 <span class="kw">impl</span> <span class="ident">EventType</span> {
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident"><span class="self">Self</span>::AutoModerationActionExecution</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;AUTO_MODERATION_ACTION_EXECUTION&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::AutoModerationRuleCreate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;AUTO_MODERATION_RULE_CREATE&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::AutoModerationRuleDelete</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;AUTO_MODERATION_RULE_DELETE&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::AutoModerationRuleUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;AUTO_MODERATION_RULE_UPDATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::BanAdd</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_BAN_ADD&quot;</span>),
             <span class="ident"><span class="self">Self</span>::BanRemove</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_BAN_REMOVE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ChannelCreate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;CHANNEL_CREATE&quot;</span>),
@@ -481,15 +518,15 @@
             <span class="ident"><span class="self">Self</span>::InviteCreate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;INVITE_CREATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::InviteDelete</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;INVITE_DELETE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MemberAdd</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_MEMBER_ADD&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::MemberChunk</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MemberRemove</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_MEMBER_REMOVE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MemberUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_MEMBER_UPDATE&quot;</span>),
-            <span class="ident"><span class="self">Self</span>::MemberChunk</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MessageCreate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_CREATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MessageDelete</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_DELETE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MessageDeleteBulk</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_DELETE_BULK&quot;</span>),
             <span class="ident"><span class="self">Self</span>::MessageUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_UPDATE&quot;</span>),
-            <span class="ident"><span class="self">Self</span>::PresenceUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;PRESENCE_UPDATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::PresencesReplace</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;PRESENCES_REPLACE&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::PresenceUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;PRESENCE_UPDATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ReactionAdd</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_REACTION_ADD&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ReactionRemove</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_REACTION_REMOVE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ReactionRemoveAll</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;MESSAGE_REACTION_REMOVE_ALL&quot;</span>),
@@ -505,8 +542,8 @@
             <span class="ident"><span class="self">Self</span>::ThreadCreate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_CREATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ThreadDelete</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_DELETE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ThreadListSync</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_LIST_SYNC&quot;</span>),
-            <span class="ident"><span class="self">Self</span>::ThreadMemberUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_MEMBER_UPDATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ThreadMembersUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_MEMBERS_UPDATE&quot;</span>),
+            <span class="ident"><span class="self">Self</span>::ThreadMemberUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_MEMBER_UPDATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::ThreadUpdate</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;THREAD_UPDATE&quot;</span>),
             <span class="ident"><span class="self">Self</span>::TypingStart</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;TYPING_START&quot;</span>),
             <span class="ident"><span class="self">Self</span>::UnavailableGuild</span> =&gt; <span class="prelude-val">Some</span>(<span class="string">&quot;UNAVAILABLE_GUILD&quot;</span>),
@@ -523,8 +560,8 @@
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardConnecting</span>
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardDisconnected</span>
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardIdentifying</span>
-            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardReconnecting</span>
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardPayload</span>
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardReconnecting</span>
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::ShardResuming</span> =&gt; <span class="prelude-val">None</span>,
         }
     }
@@ -535,6 +572,10 @@
 
     <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event_type</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">event_type</span> {
+            <span class="string">&quot;AUTO_MODERATION_ACTION_EXECUTION&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::AutoModerationActionExecution</span>),
+            <span class="string">&quot;AUTO_MODERATION_RULE_CREATE&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::AutoModerationRuleCreate</span>),
+            <span class="string">&quot;AUTO_MODERATION_RULE_DELETE&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::AutoModerationRuleDelete</span>),
+            <span class="string">&quot;AUTO_MODERATION_RULE_UPDATE&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::AutoModerationRuleUpdate</span>),
             <span class="string">&quot;GUILD_BAN_ADD&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::BanAdd</span>),
             <span class="string">&quot;GUILD_BAN_REMOVE&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::BanRemove</span>),
             <span class="string">&quot;CHANNEL_CREATE&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ChannelCreate</span>),
@@ -613,8 +654,25 @@
         );
     }
 
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">variants</span>() {
+        <span class="ident">assert_variant</span>(
+            <span class="ident">EventType::AutoModerationActionExecution</span>,
+            <span class="string">&quot;AUTO_MODERATION_ACTION_EXECUTION&quot;</span>,
+        );
+        <span class="ident">assert_variant</span>(
+            <span class="ident">EventType::AutoModerationRuleCreate</span>,
+            <span class="string">&quot;AUTO_MODERATION_RULE_CREATE&quot;</span>,
+        );
+        <span class="ident">assert_variant</span>(
+            <span class="ident">EventType::AutoModerationRuleDelete</span>,
+            <span class="string">&quot;AUTO_MODERATION_RULE_DELETE&quot;</span>,
+        );
+        <span class="ident">assert_variant</span>(
+            <span class="ident">EventType::AutoModerationRuleUpdate</span>,
+            <span class="string">&quot;AUTO_MODERATION_RULE_UPDATE&quot;</span>,
+        );
         <span class="ident">assert_variant</span>(<span class="ident">EventType::BanAdd</span>, <span class="string">&quot;GUILD_BAN_ADD&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::BanRemove</span>, <span class="string">&quot;GUILD_BAN_REMOVE&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::ChannelCreate</span>, <span class="string">&quot;CHANNEL_CREATE&quot;</span>);
@@ -669,9 +727,9 @@
         <span class="ident">assert_variant</span>(<span class="ident">EventType::InviteCreate</span>, <span class="string">&quot;INVITE_CREATE&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::InviteDelete</span>, <span class="string">&quot;INVITE_DELETE&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::MemberAdd</span>, <span class="string">&quot;GUILD_MEMBER_ADD&quot;</span>);
+        <span class="ident">assert_variant</span>(<span class="ident">EventType::MemberChunk</span>, <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::MemberRemove</span>, <span class="string">&quot;GUILD_MEMBER_REMOVE&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::MemberUpdate</span>, <span class="string">&quot;GUILD_MEMBER_UPDATE&quot;</span>);
-        <span class="ident">assert_variant</span>(<span class="ident">EventType::MemberChunk</span>, <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::MessageCreate</span>, <span class="string">&quot;MESSAGE_CREATE&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::MessageDelete</span>, <span class="string">&quot;MESSAGE_DELETE&quot;</span>);
         <span class="ident">assert_variant</span>(<span class="ident">EventType::MessageDeleteBulk</span>, <span class="string">&quot;MESSAGE_DELETE_BULK&quot;</span>);
@@ -715,5 +773,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

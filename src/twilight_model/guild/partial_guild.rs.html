@@ -224,11 +224,11 @@
 <span id="218">218</span>
 <span id="219">219</span>
 <span id="220">220</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">guild</span>::{
-        <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">Emoji</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">MfaLevel</span>, <span class="ident">NSFWLevel</span>,
-        <span class="ident">Permissions</span>, <span class="ident">PremiumTier</span>, <span class="ident">Role</span>, <span class="ident">SystemChannelFlags</span>, <span class="ident">VerificationLevel</span>,
-    },
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
+    <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">Emoji</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">GuildFeature</span>, <span class="ident">MfaLevel</span>,
+    <span class="ident">NSFWLevel</span>, <span class="ident">Permissions</span>, <span class="ident">PremiumTier</span>, <span class="ident">Role</span>, <span class="ident">SystemChannelFlags</span>, <span class="ident">VerificationLevel</span>,
+};
+<span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
@@ -249,7 +249,7 @@
     <span class="kw">pub</span> <span class="ident">discovery_splash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">emojis</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Emoji</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">explicit_content_filter</span>: <span class="ident">ExplicitContentFilter</span>,
-    <span class="kw">pub</span> <span class="ident">features</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">features</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildFeature</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">icon</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">max_members</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
@@ -286,7 +286,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::test::image_hash</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">guild::GuildFeature</span>, <span class="ident">test::image_hash</span>};
 
     <span class="kw">use</span> <span class="kw">super</span>::{
         <span class="ident">DefaultMessageNotificationLevel</span>, <span class="ident">ExplicitContentFilter</span>, <span class="ident">MfaLevel</span>, <span class="ident">NSFWLevel</span>, <span class="ident">PartialGuild</span>,
@@ -309,7 +309,7 @@
             <span class="ident">discovery_splash</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::SPLASH</span>),
             <span class="ident">emojis</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">explicit_content_filter</span>: <span class="ident">ExplicitContentFilter::MembersWithoutRole</span>,
-            <span class="ident">features</span>: <span class="macro">vec!</span>[<span class="string">&quot;a feature&quot;</span>.<span class="ident">to_owned</span>()],
+            <span class="ident">features</span>: <span class="ident">Vec::from</span>([<span class="ident">GuildFeature::AnimatedBanner</span>]),
             <span class="ident">icon</span>: <span class="prelude-val">Some</span>(<span class="ident">image_hash::ICON</span>),
             <span class="ident">max_members</span>: <span class="prelude-val">Some</span>(<span class="number">25_000</span>),
             <span class="ident">max_presences</span>: <span class="prelude-val">Some</span>(<span class="number">10_000</span>),
@@ -373,7 +373,7 @@
                 <span class="ident">Token::U8</span>(<span class="number">1</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;features&quot;</span>),
                 <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">1</span>) },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;a feature&quot;</span>),
+                <span class="ident">Token::Str</span>(<span class="string">&quot;ANIMATED_BANNER&quot;</span>),
                 <span class="ident">Token::SeqEnd</span>,
                 <span class="ident">Token::Str</span>(<span class="string">&quot;icon&quot;</span>),
                 <span class="ident">Token::Some</span>,
@@ -445,5 +445,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

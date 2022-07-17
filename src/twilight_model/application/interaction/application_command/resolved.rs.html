@@ -515,6 +515,38 @@
 <span id="509">509</span>
 <span id="510">510</span>
 <span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">channel</span>::{<span class="ident">thread::ThreadMetadata</span>, <span class="ident">Attachment</span>, <span class="ident">ChannelType</span>, <span class="ident">Message</span>},
     <span class="ident">guild</span>::{<span class="ident">Permissions</span>, <span class="ident">Role</span>},
@@ -528,42 +560,73 @@
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::collections::hash_map::HashMap</span>;
 
+<span class="doccomment">/// Resolved mentioned resources.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [Discord Docs/Resolved Data Structure].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`ApplicationCommand`]: crate::application::interaction::InteractionType::ApplicationCommand</span>
+<span class="doccomment">/// [Discord Docs/Resolved Data Structure]: https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-resolved-data-structure</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CommandInteractionDataResolved</span> {
+    <span class="doccomment">/// Map of resolved attachments.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">attachments</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AttachmentMarker</span><span class="op">&gt;</span>, <span class="ident">Attachment</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Map of resolved channels.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">channels</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">InteractionChannel</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Map of resolved members.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Resolved members&#39; ID will map to a resolved user as well.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">members</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">InteractionMember</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Map of resolved messages.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">messages</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">Message</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Map of resolved roles.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>, <span class="ident">Role</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Map of resolved users.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;HashMap::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span>,
 }
 
+<span class="doccomment">/// Partial channel resolved from an [`Interaction`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`Interaction`]: crate::application::interaction::Interaction</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InteractionChannel</span> {
+    <span class="doccomment">/// ID of the channel.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Type of the channel.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This can be used to determine what fields *might* be available.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ChannelType</span>,
+    <span class="doccomment">/// Name of the channel.</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// ID of the channel the thread was created in.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">parent_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Computed permissions, including overwrites, for the invoking user in the channel.</span>
     <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="ident">Permissions</span>,
+    <span class="doccomment">/// Metadata about a thread.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">thread_metadata</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ThreadMetadata</span><span class="op">&gt;</span>,
 }
 
+<span class="doccomment">/// Partial member resolved from an [`Interaction`].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`Interaction`]: crate::application::interaction::Interaction</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InteractionMember</span> {
     <span class="doccomment">/// Member&#39;s guild avatar.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// If the member is timed out, when the timeout will expire.</span>
     <span class="kw">pub</span> <span class="ident">communication_disabled_until</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Member guild join date.</span>
     <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
+    <span class="doccomment">/// Member nickname.</span>
     <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Whether the user has yet to pass the guild&#39;s Membership Screening</span>
     <span class="doccomment">/// requirements.</span>
@@ -572,6 +635,7 @@
     <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="ident">Permissions</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Member roles.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
@@ -1027,5 +1091,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

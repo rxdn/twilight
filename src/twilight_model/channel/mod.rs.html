@@ -590,23 +590,6 @@
 <span id="584">584</span>
 <span id="585">585</span>
 <span id="586">586</span>
-<span id="587">587</span>
-<span id="588">588</span>
-<span id="589">589</span>
-<span id="590">590</span>
-<span id="591">591</span>
-<span id="592">592</span>
-<span id="593">593</span>
-<span id="594">594</span>
-<span id="595">595</span>
-<span id="596">596</span>
-<span id="597">597</span>
-<span id="598">598</span>
-<span id="599">599</span>
-<span id="600">600</span>
-<span id="601">601</span>
-<span id="602">602</span>
-<span id="603">603</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">embed</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">message</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">permission_overwrite</span>;
@@ -646,25 +629,6 @@
     <span class="ident">util</span>::{<span class="ident">ImageHash</span>, <span class="ident">Timestamp</span>},
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ConversionError</span> {
-    <span class="ident">MessageType</span>(<span class="ident">u8</span>),
-}
-
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ConversionError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">ConversionError::MessageType</span>(<span class="ident">num</span>) =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Could not convert &quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Display::fmt</span>(<span class="ident">num</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; into a valid MessageType!&quot;</span>)
-            }
-        }
-    }
-}
 
 <span class="doccomment">/// Channel to send messages in, call with other users, organize groups, and</span>
 <span class="doccomment">/// more.</span>
@@ -683,9 +647,9 @@
     <span class="doccomment">/// ID of the application that created the channel.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Bitrate setting of audio channels.</span>
+    <span class="doccomment">/// Bitrate (in bits) setting of audio channels.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">bitrate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">bitrate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Default duration without messages before the channel&#39;s threads</span>
     <span class="doccomment">/// automatically archive.</span>
     <span class="doccomment">///</span>
@@ -751,10 +715,10 @@
     <span class="kw">pub</span> <span class="ident">permission_overwrites</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Sorting position of the channel.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">position</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">position</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Amount of seconds a user has to wait before sending another message.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">rate_limit_per_user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">rate_limit_per_user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Recipients of the channel.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">recipients</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -770,8 +734,10 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">topic</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Number of users that may be in the channel.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Zero refers to no limit.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">user_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">user_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Camera video quality mode of the channel.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`VideoQualityMode::Auto`] for applicable channels.</span>
@@ -984,7 +950,7 @@
             <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">permission_overwrites</span>: <span class="prelude-val">None</span>,
             <span class="ident">position</span>: <span class="prelude-val">None</span>,
-            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000_u64</span>),
+            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000</span>),
             <span class="ident">recipients</span>: <span class="prelude-val">None</span>,
             <span class="ident">rtc_region</span>: <span class="prelude-val">None</span>,
             <span class="ident">thread_metadata</span>: <span class="prelude-val">Some</span>(<span class="ident">ThreadMetadata</span> {
@@ -1065,7 +1031,7 @@
             <span class="ident">parent_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">permission_overwrites</span>: <span class="prelude-val">None</span>,
             <span class="ident">position</span>: <span class="prelude-val">None</span>,
-            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000_u64</span>),
+            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000</span>),
             <span class="ident">recipients</span>: <span class="prelude-val">None</span>,
             <span class="ident">rtc_region</span>: <span class="prelude-val">None</span>,
             <span class="ident">thread_metadata</span>: <span class="prelude-val">Some</span>(<span class="ident">ThreadMetadata</span> {
@@ -1152,7 +1118,7 @@
                 <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>,
             }])),
             <span class="ident">position</span>: <span class="prelude-val">None</span>,
-            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000_u64</span>),
+            <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">Some</span>(<span class="number">1000</span>),
             <span class="ident">recipients</span>: <span class="prelude-val">None</span>,
             <span class="ident">rtc_region</span>: <span class="prelude-val">None</span>,
             <span class="ident">thread_metadata</span>: <span class="prelude-val">Some</span>(<span class="ident">ThreadMetadata</span> {
@@ -1211,5 +1177,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

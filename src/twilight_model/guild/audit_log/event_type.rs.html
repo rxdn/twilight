@@ -279,224 +279,514 @@
 <span id="273">273</span>
 <span id="274">274</span>
 <span id="275">275</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde_repr</span>::{<span class="ident">Deserialize_repr</span>, <span class="ident">Serialize_repr</span>};
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// Action to cause an [`AuditLogEntry`].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`AuditLogEntry`]: super::AuditLogEntry</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize_repr</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize_repr</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;u16&quot;</span>, <span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;u16&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AuditLogEventType</span> {
     <span class="doccomment">/// [Guild] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Guild]: super::super::Guild</span>
-    <span class="ident">GuildUpdate</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">GuildUpdate</span>,
     <span class="doccomment">/// [Channel] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Channel]: crate::channel::Channel</span>
-    <span class="ident">ChannelCreate</span> <span class="op">=</span> <span class="number">10</span>,
+    <span class="ident">ChannelCreate</span>,
     <span class="doccomment">/// [Channel] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Channel]: crate::channel::Channel</span>
-    <span class="ident">ChannelUpdate</span> <span class="op">=</span> <span class="number">11</span>,
+    <span class="ident">ChannelUpdate</span>,
     <span class="doccomment">/// [Channel] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Channel]: crate::channel::Channel</span>
-    <span class="ident">ChannelDelete</span> <span class="op">=</span> <span class="number">12</span>,
+    <span class="ident">ChannelDelete</span>,
     <span class="doccomment">/// [Permission overwrite] for a [channel] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
     <span class="doccomment">/// [Permission overwrite]: crate::channel::permission_overwrite::PermissionOverwrite</span>
-    <span class="ident">ChannelOverwriteCreate</span> <span class="op">=</span> <span class="number">13</span>,
+    <span class="ident">ChannelOverwriteCreate</span>,
     <span class="doccomment">/// [Permission overwrite] for a [channel] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
     <span class="doccomment">/// [Permission overwrite]: crate::channel::permission_overwrite::PermissionOverwrite</span>
-    <span class="ident">ChannelOverwriteUpdate</span> <span class="op">=</span> <span class="number">14</span>,
+    <span class="ident">ChannelOverwriteUpdate</span>,
     <span class="doccomment">/// [Permission overwrite] for a [channel] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
     <span class="doccomment">/// [Permission overwrite]: crate::channel::permission_overwrite::PermissionOverwrite</span>
-    <span class="ident">ChannelOverwriteDelete</span> <span class="op">=</span> <span class="number">15</span>,
+    <span class="ident">ChannelOverwriteDelete</span>,
     <span class="doccomment">/// [Member] was kicked.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
-    <span class="ident">MemberKick</span> <span class="op">=</span> <span class="number">20</span>,
+    <span class="ident">MemberKick</span>,
     <span class="doccomment">/// [Member] prune began.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
-    <span class="ident">MemberPrune</span> <span class="op">=</span> <span class="number">21</span>,
+    <span class="ident">MemberPrune</span>,
     <span class="doccomment">/// [Member] was banned.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
-    <span class="ident">MemberBanAdd</span> <span class="op">=</span> <span class="number">22</span>,
+    <span class="ident">MemberBanAdd</span>,
     <span class="doccomment">/// [Member]&#39;s [ban] was removed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [ban]: super::super::Ban</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
-    <span class="ident">MemberBanRemove</span> <span class="op">=</span> <span class="number">23</span>,
+    <span class="ident">MemberBanRemove</span>,
     <span class="doccomment">/// [Member] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
-    <span class="ident">MemberUpdate</span> <span class="op">=</span> <span class="number">24</span>,
+    <span class="ident">MemberUpdate</span>,
     <span class="doccomment">/// [Member] either had a [role] attached or removed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
     <span class="doccomment">/// [role]: super::super::Role</span>
-    <span class="ident">MemberRoleUpdate</span> <span class="op">=</span> <span class="number">25</span>,
+    <span class="ident">MemberRoleUpdate</span>,
     <span class="doccomment">/// [Member] was moved between voice [channel]s.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">MemberMove</span> <span class="op">=</span> <span class="number">26</span>,
+    <span class="ident">MemberMove</span>,
     <span class="doccomment">/// [Member] was disconnected from a voice [channel].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Member]: super::super::Member</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">MemberDisconnect</span> <span class="op">=</span> <span class="number">27</span>,
+    <span class="ident">MemberDisconnect</span>,
     <span class="doccomment">/// [Bot user] was added to a [guild].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Bot user]: crate::user::User::bot</span>
     <span class="doccomment">/// [guild]: super::super::Guild</span>
-    <span class="ident">BotAdd</span> <span class="op">=</span> <span class="number">28</span>,
+    <span class="ident">BotAdd</span>,
     <span class="doccomment">/// [Role] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Role]: super::super::Role</span>
-    <span class="ident">RoleCreate</span> <span class="op">=</span> <span class="number">30</span>,
+    <span class="ident">RoleCreate</span>,
     <span class="doccomment">/// [Role] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Role]: super::super::Role</span>
-    <span class="ident">RoleUpdate</span> <span class="op">=</span> <span class="number">31</span>,
+    <span class="ident">RoleUpdate</span>,
     <span class="doccomment">/// [Role] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Role]: super::super::Role</span>
-    <span class="ident">RoleDelete</span> <span class="op">=</span> <span class="number">32</span>,
+    <span class="ident">RoleDelete</span>,
     <span class="doccomment">/// [Invite] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Invite]: crate::invite::Invite</span>
-    <span class="ident">InviteCreate</span> <span class="op">=</span> <span class="number">40</span>,
+    <span class="ident">InviteCreate</span>,
     <span class="doccomment">/// [Invite] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Invite]: crate::invite::Invite</span>
-    <span class="ident">InviteUpdate</span> <span class="op">=</span> <span class="number">41</span>,
+    <span class="ident">InviteUpdate</span>,
     <span class="doccomment">/// [Invite] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Invite]: crate::invite::Invite</span>
-    <span class="ident">InviteDelete</span> <span class="op">=</span> <span class="number">42</span>,
+    <span class="ident">InviteDelete</span>,
     <span class="doccomment">/// [Webhook] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Webhook]: crate::channel::webhook::Webhook</span>
-    <span class="ident">WebhookCreate</span> <span class="op">=</span> <span class="number">50</span>,
+    <span class="ident">WebhookCreate</span>,
     <span class="doccomment">/// [Webhook] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Webhook]: crate::channel::webhook::Webhook</span>
-    <span class="ident">WebhookUpdate</span> <span class="op">=</span> <span class="number">51</span>,
+    <span class="ident">WebhookUpdate</span>,
     <span class="doccomment">/// [Webhook] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Webhook]: crate::channel::webhook::Webhook</span>
-    <span class="ident">WebhookDelete</span> <span class="op">=</span> <span class="number">52</span>,
+    <span class="ident">WebhookDelete</span>,
     <span class="doccomment">/// [Emoji] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Emoji]: super::super::Emoji</span>
-    <span class="ident">EmojiCreate</span> <span class="op">=</span> <span class="number">60</span>,
+    <span class="ident">EmojiCreate</span>,
     <span class="doccomment">/// [Emoji] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Emoji]: super::super::Emoji</span>
-    <span class="ident">EmojiUpdate</span> <span class="op">=</span> <span class="number">61</span>,
+    <span class="ident">EmojiUpdate</span>,
     <span class="doccomment">/// [Emoji] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Emoji]: super::super::Emoji</span>
-    <span class="ident">EmojiDelete</span> <span class="op">=</span> <span class="number">62</span>,
+    <span class="ident">EmojiDelete</span>,
     <span class="doccomment">/// [Message] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Message]: crate::channel::message::Message</span>
-    <span class="ident">MessageDelete</span> <span class="op">=</span> <span class="number">72</span>,
+    <span class="ident">MessageDelete</span>,
     <span class="doccomment">/// Multiple [messages] were deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [messages]: crate::channel::message::Message</span>
-    <span class="ident">MessageBulkDelete</span> <span class="op">=</span> <span class="number">73</span>,
+    <span class="ident">MessageBulkDelete</span>,
     <span class="doccomment">/// [Message] was pinned to a [channel].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Message]: crate::channel::message::Message</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">MessagePin</span> <span class="op">=</span> <span class="number">74</span>,
+    <span class="ident">MessagePin</span>,
     <span class="doccomment">/// [Message] was unpinned from a [channel].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Message]: crate::channel::message::Message</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">MessageUnpin</span> <span class="op">=</span> <span class="number">75</span>,
+    <span class="ident">MessageUnpin</span>,
     <span class="doccomment">/// [Integration] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Integration]: super::super::GuildIntegration</span>
-    <span class="ident">IntegrationCreate</span> <span class="op">=</span> <span class="number">80</span>,
+    <span class="ident">IntegrationCreate</span>,
     <span class="doccomment">/// [Integration] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Integration]: super::super::GuildIntegration</span>
-    <span class="ident">IntegrationUpdate</span> <span class="op">=</span> <span class="number">81</span>,
+    <span class="ident">IntegrationUpdate</span>,
     <span class="doccomment">/// [Integration] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Integration]: super::super::GuildIntegration</span>
-    <span class="ident">IntegrationDelete</span> <span class="op">=</span> <span class="number">82</span>,
+    <span class="ident">IntegrationDelete</span>,
     <span class="doccomment">/// [Stage instance] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Stage instance]: crate::channel::stage_instance::StageInstance</span>
-    <span class="ident">StageInstanceCreate</span> <span class="op">=</span> <span class="number">83</span>,
+    <span class="ident">StageInstanceCreate</span>,
     <span class="doccomment">/// [Stage instance] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Stage instance]: crate::channel::stage_instance::StageInstance</span>
-    <span class="ident">StageInstanceUpdate</span> <span class="op">=</span> <span class="number">84</span>,
+    <span class="ident">StageInstanceUpdate</span>,
     <span class="doccomment">/// [Stage instance] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Stage instance]: crate::channel::stage_instance::StageInstance</span>
-    <span class="ident">StageInstanceDelete</span> <span class="op">=</span> <span class="number">85</span>,
+    <span class="ident">StageInstanceDelete</span>,
     <span class="doccomment">/// [Sticker] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Sticker]: crate::channel::message::sticker::Sticker</span>
-    <span class="ident">StickerCreate</span> <span class="op">=</span> <span class="number">90</span>,
+    <span class="ident">StickerCreate</span>,
     <span class="doccomment">/// [Sticker] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Sticker]: crate::channel::message::sticker::Sticker</span>
-    <span class="ident">StickerUpdate</span> <span class="op">=</span> <span class="number">91</span>,
+    <span class="ident">StickerUpdate</span>,
     <span class="doccomment">/// [Sticker] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Sticker]: crate::channel::message::sticker::Sticker</span>
-    <span class="ident">StickerDelete</span> <span class="op">=</span> <span class="number">92</span>,
+    <span class="ident">StickerDelete</span>,
     <span class="doccomment">/// [`GuildScheduledEvent`] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildScheduledEvent`]: crate::scheduled_event::GuildScheduledEvent</span>
-    <span class="ident">GuildScheduledEventCreate</span> <span class="op">=</span> <span class="number">100</span>,
+    <span class="ident">GuildScheduledEventCreate</span>,
     <span class="doccomment">/// [`GuildScheduledEvent`] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildScheduledEvent`]: crate::scheduled_event::GuildScheduledEvent</span>
-    <span class="ident">GuildScheduledEventUpdate</span> <span class="op">=</span> <span class="number">101</span>,
+    <span class="ident">GuildScheduledEventUpdate</span>,
     <span class="doccomment">/// [`GuildScheduledEvent`] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`GuildScheduledEvent`]: crate::scheduled_event::GuildScheduledEvent</span>
-    <span class="ident">GuildScheduledEventDelete</span> <span class="op">=</span> <span class="number">102</span>,
+    <span class="ident">GuildScheduledEventDelete</span>,
     <span class="doccomment">/// Thread [channel] was created.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">ThreadCreate</span> <span class="op">=</span> <span class="number">110</span>,
+    <span class="ident">ThreadCreate</span>,
     <span class="doccomment">/// Thread [channel] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">ThreadUpdate</span> <span class="op">=</span> <span class="number">111</span>,
+    <span class="ident">ThreadUpdate</span>,
     <span class="doccomment">/// Thread [channel] was deleted.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [channel]: crate::channel::Channel</span>
-    <span class="ident">ThreadDelete</span> <span class="op">=</span> <span class="number">112</span>,
+    <span class="ident">ThreadDelete</span>,
     <span class="doccomment">/// A [GuildCommandPermissions] was updated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [GuildCommandPermissions]: crate::application::command::permissions::GuildCommandPermissions</span>
-    <span class="ident">ApplicationCommandPermissionUpdate</span> <span class="op">=</span> <span class="number">121</span>,
+    <span class="ident">ApplicationCommandPermissionUpdate</span>,
+    <span class="doccomment">/// [`AutoModerationRule`] has been created.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule</span>
+    <span class="ident">AutoModerationRuleCreate</span>,
+    <span class="doccomment">/// [`AutoModerationRule`] has been updated.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule</span>
+    <span class="ident">AutoModerationRuleUpdate</span>,
+    <span class="doccomment">/// [`AutoModerationRule`] has been deleted.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule</span>
+    <span class="ident">AutoModerationRuleDelete</span>,
+    <span class="doccomment">/// Message has been blocked by AutoMod according to a rule.</span>
+    <span class="ident">AutoModerationBlockMessage</span>,
+    <span class="doccomment">/// Variant value is unknown to the library.</span>
+    <span class="ident">Unknown</span>(<span class="ident">u16</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AuditLogEventType</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u16</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="number">1</span> =&gt; <span class="ident">AuditLogEventType::GuildUpdate</span>,
+            <span class="number">10</span> =&gt; <span class="ident">AuditLogEventType::ChannelCreate</span>,
+            <span class="number">11</span> =&gt; <span class="ident">AuditLogEventType::ChannelUpdate</span>,
+            <span class="number">12</span> =&gt; <span class="ident">AuditLogEventType::ChannelDelete</span>,
+            <span class="number">13</span> =&gt; <span class="ident">AuditLogEventType::ChannelOverwriteCreate</span>,
+            <span class="number">14</span> =&gt; <span class="ident">AuditLogEventType::ChannelOverwriteUpdate</span>,
+            <span class="number">15</span> =&gt; <span class="ident">AuditLogEventType::ChannelOverwriteDelete</span>,
+            <span class="number">20</span> =&gt; <span class="ident">AuditLogEventType::MemberKick</span>,
+            <span class="number">21</span> =&gt; <span class="ident">AuditLogEventType::MemberPrune</span>,
+            <span class="number">22</span> =&gt; <span class="ident">AuditLogEventType::MemberBanAdd</span>,
+            <span class="number">23</span> =&gt; <span class="ident">AuditLogEventType::MemberBanRemove</span>,
+            <span class="number">24</span> =&gt; <span class="ident">AuditLogEventType::MemberUpdate</span>,
+            <span class="number">25</span> =&gt; <span class="ident">AuditLogEventType::MemberRoleUpdate</span>,
+            <span class="number">26</span> =&gt; <span class="ident">AuditLogEventType::MemberMove</span>,
+            <span class="number">17</span> =&gt; <span class="ident">AuditLogEventType::MemberDisconnect</span>,
+            <span class="number">28</span> =&gt; <span class="ident">AuditLogEventType::BotAdd</span>,
+            <span class="number">30</span> =&gt; <span class="ident">AuditLogEventType::RoleCreate</span>,
+            <span class="number">31</span> =&gt; <span class="ident">AuditLogEventType::RoleUpdate</span>,
+            <span class="number">32</span> =&gt; <span class="ident">AuditLogEventType::RoleDelete</span>,
+            <span class="number">40</span> =&gt; <span class="ident">AuditLogEventType::InviteCreate</span>,
+            <span class="number">41</span> =&gt; <span class="ident">AuditLogEventType::InviteUpdate</span>,
+            <span class="number">42</span> =&gt; <span class="ident">AuditLogEventType::InviteDelete</span>,
+            <span class="number">50</span> =&gt; <span class="ident">AuditLogEventType::WebhookCreate</span>,
+            <span class="number">51</span> =&gt; <span class="ident">AuditLogEventType::WebhookUpdate</span>,
+            <span class="number">52</span> =&gt; <span class="ident">AuditLogEventType::WebhookDelete</span>,
+            <span class="number">60</span> =&gt; <span class="ident">AuditLogEventType::EmojiCreate</span>,
+            <span class="number">61</span> =&gt; <span class="ident">AuditLogEventType::EmojiUpdate</span>,
+            <span class="number">62</span> =&gt; <span class="ident">AuditLogEventType::EmojiDelete</span>,
+            <span class="number">72</span> =&gt; <span class="ident">AuditLogEventType::MessageDelete</span>,
+            <span class="number">73</span> =&gt; <span class="ident">AuditLogEventType::MessageBulkDelete</span>,
+            <span class="number">74</span> =&gt; <span class="ident">AuditLogEventType::MessagePin</span>,
+            <span class="number">75</span> =&gt; <span class="ident">AuditLogEventType::MessageUnpin</span>,
+            <span class="number">80</span> =&gt; <span class="ident">AuditLogEventType::IntegrationCreate</span>,
+            <span class="number">81</span> =&gt; <span class="ident">AuditLogEventType::IntegrationUpdate</span>,
+            <span class="number">82</span> =&gt; <span class="ident">AuditLogEventType::IntegrationDelete</span>,
+            <span class="number">83</span> =&gt; <span class="ident">AuditLogEventType::StageInstanceCreate</span>,
+            <span class="number">84</span> =&gt; <span class="ident">AuditLogEventType::StageInstanceUpdate</span>,
+            <span class="number">85</span> =&gt; <span class="ident">AuditLogEventType::StageInstanceDelete</span>,
+            <span class="number">90</span> =&gt; <span class="ident">AuditLogEventType::StickerCreate</span>,
+            <span class="number">91</span> =&gt; <span class="ident">AuditLogEventType::StickerUpdate</span>,
+            <span class="number">92</span> =&gt; <span class="ident">AuditLogEventType::StickerDelete</span>,
+            <span class="number">100</span> =&gt; <span class="ident">AuditLogEventType::GuildScheduledEventCreate</span>,
+            <span class="number">101</span> =&gt; <span class="ident">AuditLogEventType::GuildScheduledEventUpdate</span>,
+            <span class="number">102</span> =&gt; <span class="ident">AuditLogEventType::GuildScheduledEventDelete</span>,
+            <span class="number">110</span> =&gt; <span class="ident">AuditLogEventType::ThreadCreate</span>,
+            <span class="number">111</span> =&gt; <span class="ident">AuditLogEventType::ThreadUpdate</span>,
+            <span class="number">112</span> =&gt; <span class="ident">AuditLogEventType::ThreadDelete</span>,
+            <span class="number">121</span> =&gt; <span class="ident">AuditLogEventType::ApplicationCommandPermissionUpdate</span>,
+            <span class="number">140</span> =&gt; <span class="ident">AuditLogEventType::AutoModerationRuleCreate</span>,
+            <span class="number">141</span> =&gt; <span class="ident">AuditLogEventType::AutoModerationRuleUpdate</span>,
+            <span class="number">142</span> =&gt; <span class="ident">AuditLogEventType::AutoModerationRuleDelete</span>,
+            <span class="number">143</span> =&gt; <span class="ident">AuditLogEventType::AutoModerationBlockMessage</span>,
+            <span class="ident">unknown</span> =&gt; <span class="ident">AuditLogEventType::Unknown</span>(<span class="ident">unknown</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">AuditLogEventType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u16</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">AuditLogEventType</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="ident">AuditLogEventType::GuildUpdate</span> =&gt; <span class="number">1</span>,
+            <span class="ident">AuditLogEventType::ChannelCreate</span> =&gt; <span class="number">10</span>,
+            <span class="ident">AuditLogEventType::ChannelUpdate</span> =&gt; <span class="number">11</span>,
+            <span class="ident">AuditLogEventType::ChannelDelete</span> =&gt; <span class="number">12</span>,
+            <span class="ident">AuditLogEventType::ChannelOverwriteCreate</span> =&gt; <span class="number">13</span>,
+            <span class="ident">AuditLogEventType::ChannelOverwriteUpdate</span> =&gt; <span class="number">14</span>,
+            <span class="ident">AuditLogEventType::ChannelOverwriteDelete</span> =&gt; <span class="number">15</span>,
+            <span class="ident">AuditLogEventType::MemberKick</span> =&gt; <span class="number">20</span>,
+            <span class="ident">AuditLogEventType::MemberPrune</span> =&gt; <span class="number">21</span>,
+            <span class="ident">AuditLogEventType::MemberBanAdd</span> =&gt; <span class="number">22</span>,
+            <span class="ident">AuditLogEventType::MemberBanRemove</span> =&gt; <span class="number">23</span>,
+            <span class="ident">AuditLogEventType::MemberUpdate</span> =&gt; <span class="number">24</span>,
+            <span class="ident">AuditLogEventType::MemberRoleUpdate</span> =&gt; <span class="number">25</span>,
+            <span class="ident">AuditLogEventType::MemberMove</span> =&gt; <span class="number">26</span>,
+            <span class="ident">AuditLogEventType::MemberDisconnect</span> =&gt; <span class="number">27</span>,
+            <span class="ident">AuditLogEventType::BotAdd</span> =&gt; <span class="number">28</span>,
+            <span class="ident">AuditLogEventType::RoleCreate</span> =&gt; <span class="number">30</span>,
+            <span class="ident">AuditLogEventType::RoleUpdate</span> =&gt; <span class="number">31</span>,
+            <span class="ident">AuditLogEventType::RoleDelete</span> =&gt; <span class="number">32</span>,
+            <span class="ident">AuditLogEventType::InviteCreate</span> =&gt; <span class="number">40</span>,
+            <span class="ident">AuditLogEventType::InviteUpdate</span> =&gt; <span class="number">41</span>,
+            <span class="ident">AuditLogEventType::InviteDelete</span> =&gt; <span class="number">42</span>,
+            <span class="ident">AuditLogEventType::WebhookCreate</span> =&gt; <span class="number">50</span>,
+            <span class="ident">AuditLogEventType::WebhookUpdate</span> =&gt; <span class="number">51</span>,
+            <span class="ident">AuditLogEventType::WebhookDelete</span> =&gt; <span class="number">52</span>,
+            <span class="ident">AuditLogEventType::EmojiCreate</span> =&gt; <span class="number">60</span>,
+            <span class="ident">AuditLogEventType::EmojiUpdate</span> =&gt; <span class="number">61</span>,
+            <span class="ident">AuditLogEventType::EmojiDelete</span> =&gt; <span class="number">62</span>,
+            <span class="ident">AuditLogEventType::MessageDelete</span> =&gt; <span class="number">72</span>,
+            <span class="ident">AuditLogEventType::MessageBulkDelete</span> =&gt; <span class="number">73</span>,
+            <span class="ident">AuditLogEventType::MessagePin</span> =&gt; <span class="number">74</span>,
+            <span class="ident">AuditLogEventType::MessageUnpin</span> =&gt; <span class="number">75</span>,
+            <span class="ident">AuditLogEventType::IntegrationCreate</span> =&gt; <span class="number">80</span>,
+            <span class="ident">AuditLogEventType::IntegrationUpdate</span> =&gt; <span class="number">81</span>,
+            <span class="ident">AuditLogEventType::IntegrationDelete</span> =&gt; <span class="number">82</span>,
+            <span class="ident">AuditLogEventType::StageInstanceCreate</span> =&gt; <span class="number">83</span>,
+            <span class="ident">AuditLogEventType::StageInstanceUpdate</span> =&gt; <span class="number">84</span>,
+            <span class="ident">AuditLogEventType::StageInstanceDelete</span> =&gt; <span class="number">85</span>,
+            <span class="ident">AuditLogEventType::StickerCreate</span> =&gt; <span class="number">90</span>,
+            <span class="ident">AuditLogEventType::StickerUpdate</span> =&gt; <span class="number">91</span>,
+            <span class="ident">AuditLogEventType::StickerDelete</span> =&gt; <span class="number">92</span>,
+            <span class="ident">AuditLogEventType::GuildScheduledEventCreate</span> =&gt; <span class="number">100</span>,
+            <span class="ident">AuditLogEventType::GuildScheduledEventUpdate</span> =&gt; <span class="number">101</span>,
+            <span class="ident">AuditLogEventType::GuildScheduledEventDelete</span> =&gt; <span class="number">102</span>,
+            <span class="ident">AuditLogEventType::ThreadCreate</span> =&gt; <span class="number">110</span>,
+            <span class="ident">AuditLogEventType::ThreadUpdate</span> =&gt; <span class="number">111</span>,
+            <span class="ident">AuditLogEventType::ThreadDelete</span> =&gt; <span class="number">112</span>,
+            <span class="ident">AuditLogEventType::ApplicationCommandPermissionUpdate</span> =&gt; <span class="number">121</span>,
+            <span class="ident">AuditLogEventType::AutoModerationRuleCreate</span> =&gt; <span class="number">140</span>,
+            <span class="ident">AuditLogEventType::AutoModerationRuleUpdate</span> =&gt; <span class="number">141</span>,
+            <span class="ident">AuditLogEventType::AutoModerationRuleDelete</span> =&gt; <span class="number">142</span>,
+            <span class="ident">AuditLogEventType::AutoModerationBlockMessage</span> =&gt; <span class="number">143</span>,
+            <span class="ident">AuditLogEventType::Unknown</span>(<span class="ident">unknown</span>) =&gt; <span class="ident">unknown</span>,
+        }
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::AuditLogEventType</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_impl_all</span>, <span class="ident">const_assert_eq</span>};
+    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>};
 
     <span class="macro">assert_impl_all!</span>(
@@ -511,49 +801,69 @@
         <span class="ident">Serialize</span>,
         <span class="ident">Sync</span>,
     );
-    <span class="macro">const_assert_eq!</span>(<span class="number">1</span>, <span class="ident">AuditLogEventType::GuildUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">10</span>, <span class="ident">AuditLogEventType::ChannelCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">11</span>, <span class="ident">AuditLogEventType::ChannelUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">12</span>, <span class="ident">AuditLogEventType::ChannelDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">13</span>, <span class="ident">AuditLogEventType::ChannelOverwriteCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">14</span>, <span class="ident">AuditLogEventType::ChannelOverwriteUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">15</span>, <span class="ident">AuditLogEventType::ChannelOverwriteDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">20</span>, <span class="ident">AuditLogEventType::MemberKick</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">21</span>, <span class="ident">AuditLogEventType::MemberPrune</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">22</span>, <span class="ident">AuditLogEventType::MemberBanAdd</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">23</span>, <span class="ident">AuditLogEventType::MemberBanRemove</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">24</span>, <span class="ident">AuditLogEventType::MemberUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">25</span>, <span class="ident">AuditLogEventType::MemberRoleUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">26</span>, <span class="ident">AuditLogEventType::MemberMove</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">27</span>, <span class="ident">AuditLogEventType::MemberDisconnect</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">28</span>, <span class="ident">AuditLogEventType::BotAdd</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">30</span>, <span class="ident">AuditLogEventType::RoleCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">31</span>, <span class="ident">AuditLogEventType::RoleUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">32</span>, <span class="ident">AuditLogEventType::RoleDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">40</span>, <span class="ident">AuditLogEventType::InviteCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">41</span>, <span class="ident">AuditLogEventType::InviteUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">42</span>, <span class="ident">AuditLogEventType::InviteDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">50</span>, <span class="ident">AuditLogEventType::WebhookCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">51</span>, <span class="ident">AuditLogEventType::WebhookUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">52</span>, <span class="ident">AuditLogEventType::WebhookDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">60</span>, <span class="ident">AuditLogEventType::EmojiCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">61</span>, <span class="ident">AuditLogEventType::EmojiUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">62</span>, <span class="ident">AuditLogEventType::EmojiDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">72</span>, <span class="ident">AuditLogEventType::MessageDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">73</span>, <span class="ident">AuditLogEventType::MessageBulkDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">74</span>, <span class="ident">AuditLogEventType::MessagePin</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">75</span>, <span class="ident">AuditLogEventType::MessageUnpin</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">80</span>, <span class="ident">AuditLogEventType::IntegrationCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">81</span>, <span class="ident">AuditLogEventType::IntegrationUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">82</span>, <span class="ident">AuditLogEventType::IntegrationDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">83</span>, <span class="ident">AuditLogEventType::StageInstanceCreate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">84</span>, <span class="ident">AuditLogEventType::StageInstanceUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">85</span>, <span class="ident">AuditLogEventType::StageInstanceDelete</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(
-        <span class="number">121</span>,
-        <span class="ident">AuditLogEventType::ApplicationCommandPermissionUpdate</span> <span class="kw">as</span> <span class="ident">u8</span>
-    );
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_values</span>() {
+        <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::GuildUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ChannelCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">11</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ChannelUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">12</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ChannelDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">13</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ChannelOverwriteCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">14</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ChannelOverwriteUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">15</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ChannelOverwriteDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">20</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberKick</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">21</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberPrune</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">22</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberBanAdd</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">23</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberBanRemove</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">24</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">25</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberRoleUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">26</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberMove</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">27</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MemberDisconnect</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">28</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::BotAdd</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">30</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::RoleCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">31</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::RoleUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">32</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::RoleDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">40</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::InviteCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">41</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::InviteUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">42</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::InviteDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">50</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::WebhookCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">51</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::WebhookUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">52</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::WebhookDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">60</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::EmojiCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">61</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::EmojiUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">62</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::EmojiDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">72</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MessageDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">73</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MessageBulkDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">74</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MessagePin</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">75</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::MessageUnpin</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">80</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::IntegrationCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">81</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::IntegrationUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">82</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::IntegrationDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">83</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::StageInstanceCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">84</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::StageInstanceUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">90</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::StickerCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">91</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::StickerUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">92</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::StickerDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">100</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::GuildScheduledEventCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">101</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::GuildScheduledEventUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">102</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::GuildScheduledEventDelete</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">110</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ThreadCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">111</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ThreadUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">112</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ThreadDelete</span>));
+        <span class="macro">assert_eq!</span>(
+            <span class="number">121</span>,
+            <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::ApplicationCommandPermissionUpdate</span>)
+        );
+        <span class="macro">assert_eq!</span>(<span class="number">140</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::AutoModerationRuleCreate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">141</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::AutoModerationRuleUpdate</span>));
+        <span class="macro">assert_eq!</span>(<span class="number">142</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::AutoModerationRuleDelete</span>));
+        <span class="macro">assert_eq!</span>(
+            <span class="number">143</span>,
+            <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::AutoModerationBlockMessage</span>)
+        );
+        <span class="macro">assert_eq!</span>(<span class="number">250</span>, <span class="ident">u16::from</span>(<span class="ident">AuditLogEventType::Unknown</span>(<span class="number">250</span>)));
+    }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

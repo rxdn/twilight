@@ -804,17 +804,6 @@
 <span id="798">798</span>
 <span id="799">799</span>
 <span id="800">800</span>
-<span id="801">801</span>
-<span id="802">802</span>
-<span id="803">803</span>
-<span id="804">804</span>
-<span id="805">805</span>
-<span id="806">806</span>
-<span id="807">807</span>
-<span id="808">808</span>
-<span id="809">809</span>
-<span id="810">810</span>
-<span id="811">811</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">builder::ShardBuilder</span>,
     <span class="ident">command::Command</span>,
@@ -1043,9 +1032,6 @@
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;` is invalid&quot;</span>)
             }
-            <span class="ident">ShardStartErrorType::RetrievingGatewayUrl</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;retrieving the gateway URL via HTTP failed&quot;</span>)
-            }
         }
     }
 }
@@ -1075,8 +1061,6 @@
         <span class="doccomment">/// URL that couldn&#39;t be parsed.</span>
         <span class="ident">url</span>: <span class="ident">String</span>,
     },
-    <span class="doccomment">/// Retrieving the gateway URL via the Twilight HTTP client failed.</span>
-    <span class="ident">RetrievingGatewayUrl</span>,
 }
 
 <span class="doccomment">/// Information about a shard, including its latency, current session sequence,</span>
@@ -1192,8 +1176,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// let (shard, mut events) = Shard::builder(token, Intents::GUILD_MESSAGES)</span>
 <span class="doccomment">///     .event_types(event_types)</span>
-<span class="doccomment">///     .build()</span>
-<span class="doccomment">///     .await?;</span>
+<span class="doccomment">///     .build();</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// // Start the shard.</span>
 <span class="doccomment">/// shard.start().await?;</span>
@@ -1244,7 +1227,7 @@
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let intents = Intents::GUILD_MESSAGES | Intents::GUILD_MESSAGE_TYPING;</span>
-    <span class="doccomment">/// let (shard, _) = Shard::new(token, intents).await?;</span>
+    <span class="doccomment">/// let (shard, _) = Shard::new(token, intents);</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// tokio_time::sleep(Duration::from_secs(1)).await;</span>
@@ -1254,14 +1237,9 @@
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`ShardStartErrorType::RetrievingGatewayUrl`] error type if</span>
-    <span class="doccomment">/// the gateway URL couldn&#39;t be retrieved from the HTTP API.</span>
-    <span class="doccomment">///</span>
     <span class="doccomment">/// [`start`]: Self::start</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Events</span>), <span class="ident">ShardStartError</span><span class="op">&gt;</span> {
-        <span class="ident"><span class="self">Self</span>::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="ident">build</span>().<span class="kw">await</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">token</span>: <span class="ident">String</span>, <span class="ident">intents</span>: <span class="ident">Intents</span>) -&gt; (<span class="self">Self</span>, <span class="ident">Events</span>) {
+        <span class="ident"><span class="self">Self</span>::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="ident">build</span>()
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_with_config</span>(<span class="ident">config</span>: <span class="ident">Config</span>) -&gt; (<span class="self">Self</span>, <span class="ident">Events</span>) {
@@ -1406,7 +1384,7 @@
     <span class="doccomment">/// let intents = Intents::GUILDS;</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let (shard, _events) = Shard::new(token, intents).await?;</span>
+    <span class="doccomment">/// let (shard, _events) = Shard::new(token, intents);</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let minimal_activity = MinimalActivity {</span>
@@ -1460,7 +1438,7 @@
     <span class="doccomment">/// use twilight_gateway::{shard::{raw_message::Message, Shard}, Intents};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS).await?;</span>
+    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS);</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// shard.send(Message::Ping(Vec::new())).await?;</span>
@@ -1481,7 +1459,7 @@
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let token = env::var(&quot;DISCORD_TOKEN&quot;)?;</span>
-    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS).await?;</span>
+    <span class="doccomment">/// let (shard, _) = Shard::new(token, Intents::GUILDS);</span>
     <span class="doccomment">/// shard.start().await?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let close = CloseFrame::from((1000, &quot;&quot;));</span>
@@ -1627,5 +1605,5 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">Shard</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

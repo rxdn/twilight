@@ -250,9 +250,6 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">application</span>::{<span class="ident">command::CommandOptionChoice</span>, <span class="ident">component::Component</span>},
     <span class="ident">channel</span>::{
@@ -286,7 +283,7 @@
 <span class="doccomment">/// });</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let interaction_response_data = InteractionResponseDataBuilder::new()</span>
-<span class="doccomment">///     .content(&quot;Callback message&quot;.to_string())</span>
+<span class="doccomment">///     .content(&quot;Callback message&quot;)</span>
 <span class="doccomment">///     .flags(MessageFlags::EPHEMERAL)</span>
 <span class="doccomment">///     .components([component.clone()])</span>
 <span class="doccomment">///     .build();</span>
@@ -364,9 +361,8 @@
     <span class="doccomment">/// Set the message content of the callback.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">content</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">content</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">content</span>.<span class="ident">into</span>());
 
         <span class="self">self</span>
     }
@@ -374,9 +370,8 @@
     <span class="doccomment">/// Set the custom ID of the callback.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">custom_id</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">custom_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">custom_id</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">custom_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">custom_id</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">custom_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">custom_id</span>.<span class="ident">into</span>());
 
         <span class="self">self</span>
     }
@@ -407,9 +402,8 @@
     <span class="doccomment">/// Set the title of the callback.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to [`None`].</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">title</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">title</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">title</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">title</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">title</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>.<span class="ident">into</span>());
 
         <span class="self">self</span>
     }
@@ -480,7 +474,7 @@
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">InteractionResponseDataBuilder::new</span>()
             .<span class="ident">allowed_mentions</span>(<span class="ident">allowed_mentions</span>.<span class="ident">clone</span>())
             .<span class="ident">components</span>([<span class="ident">component</span>.<span class="ident">clone</span>()])
-            .<span class="ident">content</span>(<span class="string">&quot;a content&quot;</span>.<span class="ident">into</span>())
+            .<span class="ident">content</span>(<span class="string">&quot;a content&quot;</span>)
             .<span class="ident">embeds</span>([<span class="ident">embed</span>.<span class="ident">clone</span>()])
             .<span class="ident">flags</span>(<span class="ident">MessageFlags::empty</span>())
             .<span class="ident">tts</span>(<span class="bool-val">false</span>)
@@ -503,5 +497,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

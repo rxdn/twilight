@@ -146,12 +146,30 @@
 <span id="140">140</span>
 <span id="141">141</span>
 <span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">guild::Permissions</span>,
     <span class="ident">id</span>::{<span class="ident">marker::GenericMarker</span>, <span class="ident">Id</span>},
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">serde_repr</span>::{<span class="ident">Deserialize_repr</span>, <span class="ident">Serialize_repr</span>};
 
 <span class="doccomment">/// Permission overwrite data for a role or member.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
@@ -165,15 +183,36 @@
 
 <span class="doccomment">/// Type of a permission overwrite target.</span>
 <span class="comment">// Keep in sync with `twilight_util::permission_calculator::PermissionCalculator`!</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize_repr</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize_repr</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;u8&quot;</span>, <span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;u8&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PermissionOverwriteType</span> {
     <span class="doccomment">/// Permission overwrite targets an individual member.</span>
-    <span class="ident">Member</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">Member</span>,
     <span class="doccomment">/// Permission overwrite targets an individual role.</span>
-    <span class="ident">Role</span> <span class="op">=</span> <span class="number">0</span>,
+    <span class="ident">Role</span>,
+    <span class="doccomment">/// Variant value is unknown to the library.</span>
+    <span class="ident">Unknown</span>(<span class="ident">u8</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PermissionOverwriteType</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="number">0</span> =&gt; <span class="ident">PermissionOverwriteType::Role</span>,
+            <span class="number">1</span> =&gt; <span class="ident">PermissionOverwriteType::Member</span>,
+            <span class="ident">unknown</span> =&gt; <span class="ident">PermissionOverwriteType::Unknown</span>(<span class="ident">unknown</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PermissionOverwriteType</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u8</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">PermissionOverwriteType</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="ident">PermissionOverwriteType::Member</span> =&gt; <span class="number">1</span>,
+            <span class="ident">PermissionOverwriteType::Role</span> =&gt; <span class="number">0</span>,
+            <span class="ident">PermissionOverwriteType::Unknown</span>(<span class="ident">unknown</span>) =&gt; <span class="ident">unknown</span>,
+        }
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -182,7 +221,7 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::id::Id</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>, <span class="ident">const_assert_eq</span>};
+    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>};
 
     <span class="macro">assert_fields!</span>(<span class="ident">PermissionOverwrite</span>: <span class="ident">allow</span>, <span class="ident">deny</span>, <span class="ident">id</span>, <span class="ident">kind</span>);
@@ -207,8 +246,6 @@
         <span class="ident">Send</span>,
         <span class="ident">Sync</span>
     );
-    <span class="macro">const_assert_eq!</span>(<span class="number">0</span>, <span class="ident">PermissionOverwriteType::Role</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">1</span>, <span class="ident">PermissionOverwriteType::Member</span> <span class="kw">as</span> <span class="ident">u8</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">overwrite</span>() {
@@ -234,7 +271,7 @@
                 <span class="ident">Token::NewtypeStruct</span> { <span class="ident">name</span>: <span class="string">&quot;Id&quot;</span> },
                 <span class="ident">Token::Str</span>(<span class="string">&quot;12345678&quot;</span>),
                 <span class="ident">Token::Str</span>(<span class="string">&quot;type&quot;</span>),
-                <span class="ident">Token::U8</span>(<span class="ident">PermissionOverwriteType::Member</span> <span class="kw">as</span> <span class="ident">u8</span>),
+                <span class="ident">Token::U8</span>(<span class="ident">PermissionOverwriteType::Member</span>.<span class="ident">into</span>()),
                 <span class="ident">Token::StructEnd</span>,
             ],
         );
@@ -286,8 +323,9 @@
     <span class="kw">fn</span> <span class="ident">overwrite_type_name</span>() {
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">PermissionOverwriteType::Member</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">1</span>)]);
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">PermissionOverwriteType::Role</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">0</span>)]);
+        <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">PermissionOverwriteType::Unknown</span>(<span class="number">99</span>), <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">99</span>)]);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

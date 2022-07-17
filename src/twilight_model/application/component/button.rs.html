@@ -113,8 +113,31 @@
 <span id="107">107</span>
 <span id="108">108</span>
 <span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::channel::ReactionType</span>;
-<span class="kw">use</span> <span class="ident">serde_repr</span>::{<span class="ident">Deserialize_repr</span>, <span class="ident">Serialize_repr</span>};
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// Clickable interactive components that render on messages.</span>
 <span class="doccomment">///</span>
@@ -152,35 +175,62 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [the Discord Docs/Button Object]: https://discord.com/developers/docs/interactions/message-components#button-object-button-styles</span>
 <span class="comment">// Keep in sync with `twilight-validate::component`!</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize_repr</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize_repr</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;u8&quot;</span>, <span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;u8&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ButtonStyle</span> {
     <span class="doccomment">/// Button indicates a primary action.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Selecting this button style requires specifying the</span>
     <span class="doccomment">/// [`Button::custom_id`] field.</span>
-    <span class="ident">Primary</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">Primary</span>,
     <span class="doccomment">/// Button indicates a secondary action.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Selecting this button style requires specifying the</span>
     <span class="doccomment">/// [`Button::custom_id`] field.</span>
-    <span class="ident">Secondary</span> <span class="op">=</span> <span class="number">2</span>,
+    <span class="ident">Secondary</span>,
     <span class="doccomment">/// Button indicates a successful action.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Selecting this button style requires specifying the</span>
     <span class="doccomment">/// [`Button::custom_id`] field.</span>
-    <span class="ident">Success</span> <span class="op">=</span> <span class="number">3</span>,
+    <span class="ident">Success</span>,
     <span class="doccomment">/// Button indicates a dangerous action.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Selecting this button style requires specifying the</span>
     <span class="doccomment">/// [`Button::custom_id`] field.</span>
-    <span class="ident">Danger</span> <span class="op">=</span> <span class="number">4</span>,
+    <span class="ident">Danger</span>,
     <span class="doccomment">/// Button indicates an action with a link.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Selecting this button style requires specifying the [`Button::url`]</span>
     <span class="doccomment">/// field.</span>
-    <span class="ident">Link</span> <span class="op">=</span> <span class="number">5</span>,
+    <span class="ident">Link</span>,
+    <span class="doccomment">/// Variant value is unknown to the library.</span>
+    <span class="ident">Unknown</span>(<span class="ident">u8</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ButtonStyle</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">u8</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="number">1</span> =&gt; <span class="ident">ButtonStyle::Primary</span>,
+            <span class="number">2</span> =&gt; <span class="ident">ButtonStyle::Secondary</span>,
+            <span class="number">3</span> =&gt; <span class="ident">ButtonStyle::Success</span>,
+            <span class="number">4</span> =&gt; <span class="ident">ButtonStyle::Danger</span>,
+            <span class="number">5</span> =&gt; <span class="ident">ButtonStyle::Link</span>,
+            <span class="ident">unknown</span> =&gt; <span class="ident">ButtonStyle::Unknown</span>(<span class="ident">unknown</span>),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">ButtonStyle</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u8</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">ButtonStyle</span>) -&gt; <span class="self">Self</span> {
+        <span class="kw">match</span> <span class="ident">value</span> {
+            <span class="ident">ButtonStyle::Primary</span> =&gt; <span class="number">1</span>,
+            <span class="ident">ButtonStyle::Secondary</span> =&gt; <span class="number">2</span>,
+            <span class="ident">ButtonStyle::Success</span> =&gt; <span class="number">3</span>,
+            <span class="ident">ButtonStyle::Danger</span> =&gt; <span class="number">4</span>,
+            <span class="ident">ButtonStyle::Link</span> =&gt; <span class="number">5</span>,
+            <span class="ident">ButtonStyle::Unknown</span>(<span class="ident">unknown</span>) =&gt; <span class="ident">unknown</span>,
+        }
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -189,7 +239,7 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>, <span class="ident">const_assert_eq</span>};
+    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>};
 
     <span class="macro">assert_fields!</span>(<span class="ident">Button</span>: <span class="ident">custom_id</span>, <span class="ident">disabled</span>, <span class="ident">emoji</span>, <span class="ident">label</span>, <span class="ident">style</span>, <span class="ident">url</span>);
@@ -207,11 +257,6 @@
         <span class="ident">Serialize</span>,
         <span class="ident">Sync</span>
     );
-    <span class="macro">const_assert_eq!</span>(<span class="number">1</span>, <span class="ident">ButtonStyle::Primary</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">2</span>, <span class="ident">ButtonStyle::Secondary</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">3</span>, <span class="ident">ButtonStyle::Success</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">4</span>, <span class="ident">ButtonStyle::Danger</span> <span class="kw">as</span> <span class="ident">u8</span>);
-    <span class="macro">const_assert_eq!</span>(<span class="number">5</span>, <span class="ident">ButtonStyle::Link</span> <span class="kw">as</span> <span class="ident">u8</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">button_style</span>() {
@@ -220,8 +265,9 @@
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">ButtonStyle::Success</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">3</span>)]);
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">ButtonStyle::Danger</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">4</span>)]);
         <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">ButtonStyle::Link</span>, <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">5</span>)]);
+        <span class="ident">serde_test::assert_tokens</span>(<span class="kw-2">&amp;</span><span class="ident">ButtonStyle::Unknown</span>(<span class="number">99</span>), <span class="kw-2">&amp;</span>[<span class="ident">Token::U8</span>(<span class="number">99</span>)]);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

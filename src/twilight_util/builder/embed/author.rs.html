@@ -88,18 +88,6 @@
 <span id="82">82</span>
 <span id="83">83</span>
 <span id="84">84</span>
-<span id="85">85</span>
-<span id="86">86</span>
-<span id="87">87</span>
-<span id="88">88</span>
-<span id="89">89</span>
-<span id="90">90</span>
-<span id="91">91</span>
-<span id="92">92</span>
-<span id="93">93</span>
-<span id="94">94</span>
-<span id="95">95</span>
-<span id="96">96</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Create embed authors.</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::image_source::ImageSource</span>;
@@ -116,10 +104,10 @@
 
 <span class="kw">impl</span> <span class="ident">EmbedAuthorBuilder</span> {
     <span class="doccomment">/// Create a new embed author builder.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">EmbedAuthor</span> {
             <span class="ident">icon_url</span>: <span class="prelude-val">None</span>,
-            <span class="ident">name</span>,
+            <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">into</span>(),
             <span class="ident">proxy_icon_url</span>: <span class="prelude-val">None</span>,
             <span class="ident">url</span>: <span class="prelude-val">None</span>,
         })
@@ -135,18 +123,6 @@
     <span class="doccomment">/// Add an author icon.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">icon_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">image_source</span>: <span class="ident">ImageSource</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">icon_url</span>.<span class="ident">replace</span>(<span class="ident">image_source</span>.<span class="number">0</span>);
-
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// The author&#39;s name.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Refer to [`AUTHOR_NAME_LENGTH`] for the maximum number of UTF-16 code</span>
-    <span class="doccomment">/// points that can be in an author name.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`AUTHOR_NAME_LENGTH`]: twilight_validate::embed::AUTHOR_NAME_LENGTH</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">into</span>();
 
         <span class="self">self</span>
     }
@@ -188,7 +164,7 @@
         };
 
         <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">ImageSource::url</span>(<span class="string">&quot;https://example.com/1.png&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">EmbedAuthorBuilder::new</span>(<span class="string">&quot;an author&quot;</span>.<span class="ident">to_owned</span>())
+        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">EmbedAuthorBuilder::new</span>(<span class="string">&quot;an author&quot;</span>)
             .<span class="ident">icon_url</span>(<span class="ident">source</span>)
             .<span class="ident">url</span>(<span class="string">&quot;https://example.com&quot;</span>)
             .<span class="ident">build</span>();
@@ -197,5 +173,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

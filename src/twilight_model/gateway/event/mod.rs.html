@@ -477,6 +477,28 @@
 <span id="471">471</span>
 <span id="472">472</span>
 <span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::wildcard_imports</span>)]</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">gateway</span>;
@@ -502,6 +524,14 @@
 <span class="doccomment">/// [`GatewayEvent`]s, and [`ShardEvent`]s.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span> {
+    <span class="doccomment">/// Message was blocked by AutoMod according to a rule.</span>
+    <span class="ident">AutoModerationActionExecution</span>(<span class="ident">AutoModerationActionExecution</span>),
+    <span class="doccomment">/// Sent when an auto moderation rule is created.</span>
+    <span class="ident">AutoModerationRuleCreate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AutoModerationRuleCreate</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Sent when an auto moderation rule is deleted.</span>
+    <span class="ident">AutoModerationRuleDelete</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AutoModerationRuleDelete</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// Sent when an auto moderation rule is updated.</span>
+    <span class="ident">AutoModerationRuleUpdate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">AutoModerationRuleUpdate</span><span class="op">&gt;</span>),
     <span class="doccomment">/// A user was banned from a guild.</span>
     <span class="ident">BanAdd</span>(<span class="ident">BanAdd</span>),
     <span class="doccomment">/// A user&#39;s ban from a guild was removed.</span>
@@ -559,7 +589,7 @@
     <span class="doccomment">/// A guild integration was deleted.</span>
     <span class="ident">IntegrationUpdate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">IntegrationUpdate</span><span class="op">&gt;</span>),
     <span class="doccomment">/// An interaction was invoked by a user.</span>
-    <span class="ident">InteractionCreate</span>(<span class="ident">InteractionCreate</span>),
+    <span class="ident">InteractionCreate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">InteractionCreate</span><span class="op">&gt;</span>),
     <span class="doccomment">/// A invite was made.</span>
     <span class="ident">InviteCreate</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">InviteCreate</span><span class="op">&gt;</span>),
     <span class="doccomment">/// A invite was deleted.</span>
@@ -658,6 +688,10 @@
 <span class="kw">impl</span> <span class="ident">Event</span> {
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">EventType</span> {
         <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident"><span class="self">Self</span>::AutoModerationActionExecution</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationActionExecution</span>,
+            <span class="ident"><span class="self">Self</span>::AutoModerationRuleCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationRuleCreate</span>,
+            <span class="ident"><span class="self">Self</span>::AutoModerationRuleDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationRuleDelete</span>,
+            <span class="ident"><span class="self">Self</span>::AutoModerationRuleUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationRuleUpdate</span>,
             <span class="ident"><span class="self">Self</span>::BanAdd</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::BanAdd</span>,
             <span class="ident"><span class="self">Self</span>::BanRemove</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::BanRemove</span>,
             <span class="ident"><span class="self">Self</span>::ChannelCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelCreate</span>,
@@ -736,6 +770,12 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DispatchEvent</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">event</span>: <span class="ident">DispatchEvent</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">event</span> {
+            <span class="ident">DispatchEvent::AutoModerationActionExecution</span>(<span class="ident">v</span>) =&gt; {
+                <span class="ident"><span class="self">Self</span>::AutoModerationActionExecution</span>(<span class="ident">v</span>)
+            }
+            <span class="ident">DispatchEvent::AutoModerationRuleCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationRuleCreate</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::AutoModerationRuleDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationRuleDelete</span>(<span class="ident">v</span>),
+            <span class="ident">DispatchEvent::AutoModerationRuleUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationRuleUpdate</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::BanAdd</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::BanAdd</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::BanRemove</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::BanRemove</span>(<span class="ident">v</span>),
             <span class="ident">DispatchEvent::ChannelCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelCreate</span>(<span class="ident">v</span>),
@@ -887,6 +927,9 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span>() <span class="op">==</span> <span class="ident">EVENT_THRESHOLD</span>);
 
     <span class="comment">// Boxed events.</span>
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">AutoModerationRuleCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">AutoModerationRuleDelete</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">AutoModerationRuleUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelDelete</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
@@ -897,6 +940,7 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">IntegrationCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">IntegrationUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">InviteCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">InteractionCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">MemberAdd</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">MemberUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">MessageCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
@@ -905,13 +949,14 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ReactionAdd</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ReactionRemove</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Ready</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
-    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">TypingStart</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ThreadCreate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ThreadMemberUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ThreadUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">TypingStart</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">VoiceStateUpdate</span><span class="op">&gt;</span>() <span class="op">&gt;</span> <span class="ident">EVENT_THRESHOLD</span>);
 
     <span class="comment">// Unboxed.</span>
+    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">AutoModerationActionExecution</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">BanAdd</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">BanRemove</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ChannelPinsUpdate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
@@ -926,7 +971,6 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">GuildScheduledEventUserRemove</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Identifying</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">IntegrationDelete</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
-    <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">InteractionCreate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">InviteDelete</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">MemberChunk</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">MemberRemove</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
@@ -951,5 +995,5 @@
     <span class="macro">const_assert!</span>(<span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">WebhooksUpdate</span><span class="op">&gt;</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">EVENT_THRESHOLD</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

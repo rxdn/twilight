@@ -294,72 +294,6 @@
 <span id="288">288</span>
 <span id="289">289</span>
 <span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Iterators over the various resources stored in the cache.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The entry point to the module is [`InMemoryCacheIter`]. It exposes methods</span>
@@ -381,11 +315,8 @@
     },
     <span class="ident">GuildResource</span>, <span class="ident">InMemoryCache</span>,
 };
-<span class="kw">use</span> <span class="ident">dashmap</span>::{
-    <span class="ident">iter::Iter</span>,
-    <span class="ident">mapref</span>::{<span class="ident">multiple::RefMulti</span>, <span class="ident">one::Ref</span>},
-};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::VecDeque</span>, <span class="ident">hash::Hash</span>, <span class="ident">ops::Deref</span>};
+<span class="kw">use</span> <span class="ident">dashmap</span>::{<span class="ident">iter::Iter</span>, <span class="ident">mapref::multiple::RefMulti</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">hash::Hash</span>, <span class="ident">ops::Deref</span>};
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::{<span class="ident">Channel</span>, <span class="ident">StageInstance</span>},
     <span class="ident">guild</span>::{<span class="ident">GuildIntegration</span>, <span class="ident">Role</span>},
@@ -616,71 +547,9 @@
     }
 }
 
-<span class="doccomment">/// Iterator over a channel&#39;s list of recent message IDs.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The iterator is descending: the first is the most recent ID, the second is</span>
-<span class="doccomment">/// the second most recent ID, and so on.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Iterate over the messages in a channel:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// # fn try_main() -&gt; Option&lt;()&gt; {</span>
-<span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-<span class="doccomment">/// use twilight_model::id::{ChannelId, MessageId};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let channel_id = ChannelId::new(1);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let cache = InMemoryCache::new();</span>
-<span class="doccomment">/// let message_ids = cache.channel_messages(channel_id)?;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// for message_id in message_ids {</span>
-<span class="doccomment">///     if let Some(message) = cache.message(message_id) {</span>
-<span class="doccomment">///         println!(&quot;message {message_id} content: {}&quot;, message.content());</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// # Some(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">index</span>: <span class="ident">usize</span>,
-    <span class="ident">message_ids</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">message_ids</span>: <span class="ident">Ref</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">index</span>: <span class="number">0</span>,
-            <span class="ident">message_ids</span>,
-        }
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>;
-
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message_id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">message_ids</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="ident">index</span>) {
-            <span class="self">self</span>.<span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-
-            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">message_id</span>);
-        }
-
-        <span class="prelude-val">None</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">nth</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">n</span>: <span class="ident">usize</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">index</span>.<span class="ident">saturating_add</span>(<span class="ident">n</span>);
-
-        <span class="self">self</span>.<span class="ident">next</span>()
-    }
-}
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ChannelMessages</span>, <span class="ident">InMemoryCacheIter</span>, <span class="ident">IterReference</span>, <span class="ident">ResourceIter</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">InMemoryCacheIter</span>, <span class="ident">IterReference</span>, <span class="ident">ResourceIter</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">test</span>, <span class="ident">InMemoryCache</span>};
     <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">fmt::Debug</span>};
@@ -689,7 +558,6 @@
         <span class="ident">user::User</span>,
     };
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">ChannelMessages</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">InMemoryCacheIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">IterReference</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span>: <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">ResourceIter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>, <span class="ident">User</span><span class="op">&gt;</span>: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
@@ -717,5 +585,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>

@@ -801,11 +801,6 @@
 <span id="795">795</span>
 <span id="796">796</span>
 <span id="797">797</span>
-<span id="798">798</span>
-<span id="799">799</span>
-<span id="800">800</span>
-<span id="801">801</span>
-<span id="802">802</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Parse typed headers from a response.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Parsing response headers is necessary for the [`Ratelimiter`] to properly</span>
@@ -1033,15 +1028,18 @@
 
 <span class="doccomment">/// Ratelimit for all buckets encountered.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GlobalLimited</span> {
-    <span class="doccomment">/// Number of seconds until the global ratelimit bucket is reset.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Global</span> {
+    <span class="doccomment">/// Number of seconds to wait before retrying.</span>
     <span class="ident">retry_after</span>: <span class="ident">u64</span>,
     <span class="doccomment">/// Scope of the ratelimit.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This should always be present and should always be</span>
+    <span class="doccomment">/// [`RatelimitScope::Global`].</span>
     <span class="ident">scope</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">GlobalLimited</span> {
-    <span class="doccomment">/// Number of seconds before retrying.</span>
+<span class="kw">impl</span> <span class="ident">Global</span> {
+    <span class="doccomment">/// Number of seconds to wait before retrying.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">retry_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">retry_after</span>
@@ -1057,32 +1055,31 @@
     }
 }
 
-<span class="doccomment">/// Information about the ratelimit bucket is available.</span>
+<span class="doccomment">/// Ratelimit for some bucket present.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Present</span> {
-    <span class="doccomment">/// Hashed bucket ID, if any.</span>
+    <span class="doccomment">/// Bucket ID.</span>
     <span class="ident">bucket</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Total number of tickets allocated to a bucket.</span>
+    <span class="doccomment">/// Total number of tickets allocated to the bucket.</span>
     <span class="ident">limit</span>: <span class="ident">u64</span>,
     <span class="doccomment">/// Remaining number of tickets.</span>
     <span class="ident">remaining</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// Number of seconds until the bucket resets.</span>
+    <span class="doccomment">/// Number of milliseconds until the bucket resets.</span>
     <span class="ident">reset_after</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// When the bucket resets as a Unix timestamp in milliseconds.</span>
+    <span class="doccomment">/// When the bucket resets, as a Unix timestamp in milliseconds.</span>
     <span class="ident">reset</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// Scope of a ratelimit when one occurs.</span>
+    <span class="doccomment">/// Scope of the ratelimit.</span>
     <span class="ident">scope</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Present</span> {
-    <span class="doccomment">/// Immutable reference to the bucket.</span>
+    <span class="doccomment">/// Reference to the bucket ID.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bucket</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">as_deref</span>()
     }
 
-    <span class="doccomment">/// Consume the present ratelimit headers, returning the owned bucket if</span>
-    <span class="doccomment">/// available.</span>
+    <span class="doccomment">/// Consume the ratelimit headers, returning the owned bucket ID.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_bucket</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
@@ -1101,37 +1098,35 @@
         <span class="self">self</span>.<span class="ident">remaining</span>
     }
 
-    <span class="doccomment">/// Number of seconds until the bucket resets.</span>
+    <span class="doccomment">/// Number of milliseconds until the bucket resets.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">reset_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">reset_after</span>
     }
 
-    <span class="doccomment">/// When the bucket resets as a Unix timestamp in milliseconds.</span>
+    <span class="doccomment">/// When the bucket resets, as a Unix timestamp in milliseconds.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="self">self</span>.<span class="ident">reset</span>
     }
 
-    <span class="doccomment">/// Scope of a ratelimit when one occurs.</span>
+    <span class="doccomment">/// Scope of the ratelimit.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">scope</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">scope</span>
     }
 }
 
-<span class="doccomment">/// Scope of a ratelimit when one occurs.</span>
+<span class="doccomment">/// Scope of a ratelimit.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RatelimitScope</span> {
-    <span class="doccomment">/// Ratelimit is a global ratelimit and affects the application as a whole.</span>
+    <span class="doccomment">/// Ratelimit is global, affecting the application as a whole.</span>
     <span class="ident">Global</span>,
-    <span class="doccomment">/// Ratelimit is a shared ratelimit and affects all applications in the</span>
-    <span class="doccomment">/// resource.</span>
+    <span class="doccomment">/// Ratelimit is shared, affecting all users of the resource.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This does not affect the application&#39;s individual ratelimit buckets or</span>
-    <span class="doccomment">/// global limits.</span>
+    <span class="doccomment">/// Does not affect the application&#39;s individual buckets or global limits.</span>
     <span class="ident">Shared</span>,
-    <span class="doccomment">/// Ratelimit is a per-resource limit, such as for an individual bucket.</span>
+    <span class="doccomment">/// Ratelimit is per-resource, such as for an individual bucket.</span>
     <span class="ident">User</span>,
 }
 
@@ -1182,19 +1177,19 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RatelimitHeaders</span> {
-    <span class="doccomment">/// Ratelimit for all buckets encountered.</span>
-    <span class="ident">GlobalLimited</span>(<span class="ident">GlobalLimited</span>),
+    <span class="doccomment">/// Global ratelimit encountered.</span>
+    <span class="ident">Global</span>(<span class="ident">Global</span>),
     <span class="doccomment">/// No ratelimit headers present.</span>
     <span class="prelude-val">None</span>,
-    <span class="doccomment">/// Information about the ratelimit bucket is available.</span>
+    <span class="doccomment">/// Bucketed ratelimit present.</span>
     <span class="ident">Present</span>(<span class="ident">Present</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">RatelimitHeaders</span> {
-    <span class="doccomment">/// Whether the ratelimit headers are a global ratelimit.</span>
+    <span class="doccomment">/// Whether the ratelimit headers are global.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_global</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::GlobalLimited</span>(<span class="kw">_</span>))
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::Global</span>(<span class="kw">_</span>))
     }
 
     <span class="doccomment">/// Whether there are no ratelimit headers.</span>
@@ -1203,7 +1198,7 @@
         <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::None</span>)
     }
 
-    <span class="doccomment">/// Whether the ratelimit headers are a present and not a global ratelimit.</span>
+    <span class="doccomment">/// Whether the ratelimit headers are for a bucket.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_present</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::Present</span>(<span class="kw">_</span>))
@@ -1212,9 +1207,7 @@
     <span class="doccomment">/// Parse headers from an iterator of tuples containing the header name and</span>
     <span class="doccomment">/// value.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Headers names must be UTF-8 valid and lowercased while values *may* be</span>
-    <span class="doccomment">/// UTF-8 valid. Most values will still be checked for validity prior to</span>
-    <span class="doccomment">/// parsing.</span>
+    <span class="doccomment">/// Headers names must be lowercase.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
@@ -1222,18 +1215,20 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use std::array::IntoIter;</span>
     <span class="doccomment">/// use twilight_http_ratelimiting::RatelimitHeaders;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let iter = IntoIter::new([</span>
-    <span class="doccomment">///     (&quot;x-ratelimit-bucket&quot;, &quot;d721dea6054f6322373d361f98e5c38b&quot;.as_bytes()),</span>
+    <span class="doccomment">/// let headers = [</span>
+    <span class="doccomment">///     (</span>
+    <span class="doccomment">///         &quot;x-ratelimit-bucket&quot;,</span>
+    <span class="doccomment">///         &quot;d721dea6054f6322373d361f98e5c38b&quot;.as_bytes(),</span>
+    <span class="doccomment">///     ),</span>
     <span class="doccomment">///     (&quot;x-ratelimit-limit&quot;, &quot;10&quot;.as_bytes()),</span>
     <span class="doccomment">///     (&quot;x-ratelimit-remaining&quot;, &quot;9&quot;.as_bytes()),</span>
     <span class="doccomment">///     (&quot;x-ratelimit-reset&quot;, &quot;1573795260.333&quot;.as_bytes()),</span>
     <span class="doccomment">///     (&quot;x-ratelimit-reset-after&quot;, &quot;10.000&quot;.as_bytes()),</span>
-    <span class="doccomment">/// ]);</span>
+    <span class="doccomment">/// ];</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let headers = RatelimitHeaders::from_pairs(iter)?;</span>
+    <span class="doccomment">/// let headers = RatelimitHeaders::from_pairs(headers.into_iter())?;</span>
     <span class="doccomment">/// assert!(matches!(</span>
     <span class="doccomment">///     headers,</span>
     <span class="doccomment">///     RatelimitHeaders::Present(p) if p.remaining() == 9,</span>
@@ -1246,26 +1241,25 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use std::array::IntoIter;</span>
     <span class="doccomment">/// use twilight_http_ratelimiting::RatelimitHeaders;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let headers = Vec::from([</span>
+    <span class="doccomment">/// let headers = [</span>
     <span class="doccomment">///     (&quot;retry-after&quot;, &quot;487&quot;.as_bytes()),</span>
     <span class="doccomment">///     (&quot;x-ratelimit-global&quot;, &quot;true&quot;.as_bytes()),</span>
-    <span class="doccomment">/// ]);</span>
+    <span class="doccomment">/// ];</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let headers = RatelimitHeaders::from_pairs(headers.into_iter())?;</span>
     <span class="doccomment">/// assert!(matches!(</span>
     <span class="doccomment">///     headers,</span>
-    <span class="doccomment">///     RatelimitHeaders::GlobalLimited(g) if g.retry_after() == 487,</span>
+    <span class="doccomment">///     RatelimitHeaders::Global(g) if g.retry_after() == 487,</span>
     <span class="doccomment">/// ));</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method will error if a required header is missing or the header</span>
-    <span class="doccomment">/// value is of an invalid type.</span>
+    <span class="doccomment">/// Errors if a required header is missing or if a header value is of an</span>
+    <span class="doccomment">/// invalid type.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="ident">headers</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])<span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
@@ -1299,11 +1293,10 @@
                     <span class="ident">reset</span>.<span class="ident">replace</span>((<span class="ident">reset_value</span> <span class="op">*</span> <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>);
                 }
                 <span class="ident">HeaderName::RESET_AFTER</span> =&gt; {
-                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_sign_loss</span>, <span class="ident">clippy::cast_possible_truncation</span>)]</span>
-                    <span class="kw">let</span> <span class="ident">reset_after_value</span> <span class="op">=</span>
-                        (<span class="ident">header_float</span>(<span class="ident">HeaderName::ResetAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span> <span class="op">*</span> <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+                    <span class="kw">let</span> <span class="ident">reset_after_value</span> <span class="op">=</span> <span class="ident">header_float</span>(<span class="ident">HeaderName::ResetAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
-                    <span class="ident">reset_after</span>.<span class="ident">replace</span>(<span class="ident">reset_after_value</span>);
+                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_sign_loss</span>, <span class="ident">clippy::cast_possible_truncation</span>)]</span>
+                    <span class="ident">reset_after</span>.<span class="ident">replace</span>((<span class="ident">reset_after_value</span> <span class="op">*</span> <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>);
                 }
                 <span class="ident">HeaderName::RETRY_AFTER</span> =&gt; {
                     <span class="kw">let</span> <span class="ident">retry_after_value</span> <span class="op">=</span> <span class="ident">header_int</span>(<span class="ident">HeaderName::RetryAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
@@ -1324,10 +1317,7 @@
             <span class="kw">let</span> <span class="ident">retry_after</span> <span class="op">=</span>
                 <span class="ident">retry_after</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::RetryAfter</span>))<span class="question-mark">?</span>;
 
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">RatelimitHeaders::GlobalLimited</span>(<span class="ident">GlobalLimited</span> {
-                <span class="ident">retry_after</span>,
-                <span class="ident">scope</span>,
-            }));
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">RatelimitHeaders::Global</span>(<span class="ident">Global</span> { <span class="ident">retry_after</span>, <span class="ident">scope</span> }));
         }
 
         <span class="comment">// If none of the values have been set then there are no ratelimit headers.</span>
@@ -1413,7 +1403,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{
-        <span class="ident">GlobalLimited</span>, <span class="ident">HeaderName</span>, <span class="ident">HeaderParsingError</span>, <span class="ident">HeaderParsingErrorType</span>, <span class="ident">HeaderType</span>, <span class="ident">Present</span>,
+        <span class="ident">Global</span>, <span class="ident">HeaderName</span>, <span class="ident">HeaderParsingError</span>, <span class="ident">HeaderParsingErrorType</span>, <span class="ident">HeaderType</span>, <span class="ident">Present</span>,
         <span class="ident">RatelimitHeaders</span>,
     };
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::headers::RatelimitScope</span>;
@@ -1449,7 +1439,7 @@
         <span class="ident">Send</span>,
         <span class="ident">Sync</span>
     );
-    <span class="macro">assert_impl_all!</span>(<span class="ident">GlobalLimited</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">Global</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">Present</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
     <span class="macro">assert_impl_all!</span>(<span class="ident">RatelimitHeaders</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
@@ -1471,7 +1461,7 @@
 
         <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
         <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
-        <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">headers</span>, <span class="ident">RatelimitHeaders::GlobalLimited</span>(<span class="ident">g</span>) <span class="kw">if</span> <span class="ident">g</span>.<span class="ident">retry_after</span>() <span class="op">==</span> <span class="number">65</span>));
+        <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">headers</span>, <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">g</span>) <span class="kw">if</span> <span class="ident">g</span>.<span class="ident">retry_after</span>() <span class="op">==</span> <span class="number">65</span>));
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -1499,13 +1489,13 @@
         <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
         <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::GlobalLimited</span>(<span class="kw-2">ref</span> <span class="ident">global</span>)
+            <span class="kw-2">&amp;</span><span class="ident">headers</span>,
+            <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">global</span>)
             <span class="kw">if</span> <span class="ident">global</span>.<span class="ident">retry_after</span>() <span class="op">==</span> <span class="number">65</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::GlobalLimited</span>(<span class="ident">global</span>)
+            <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">global</span>)
             <span class="kw">if</span> <span class="ident">global</span>.<span class="ident">scope</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">RatelimitScope::Global</span>)
         ));
 
@@ -1547,28 +1537,28 @@
         <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
         <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::Present</span>(<span class="kw-2">ref</span> <span class="ident">present</span>)
+            <span class="kw-2">&amp;</span><span class="ident">headers</span>,
+            <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
             <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">bucket</span>.<span class="ident">as_deref</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="string">&quot;abcd1234&quot;</span>)
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::Present</span>(<span class="kw-2">ref</span> <span class="ident">present</span>)
+            <span class="kw-2">&amp;</span><span class="ident">headers</span>,
+            <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
             <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">limit</span> <span class="op">==</span> <span class="number">10</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::Present</span>(<span class="kw-2">ref</span> <span class="ident">present</span>)
+            <span class="kw-2">&amp;</span><span class="ident">headers</span>,
+            <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
             <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">remaining</span> <span class="op">==</span> <span class="number">9</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::Present</span>(<span class="kw-2">ref</span> <span class="ident">present</span>)
+            <span class="kw-2">&amp;</span><span class="ident">headers</span>,
+            <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
             <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">reset_after</span> <span class="op">==</span> <span class="number">64_570</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">headers</span>,
-            <span class="ident">RatelimitHeaders::Present</span>(<span class="kw-2">ref</span> <span class="ident">present</span>)
+            <span class="kw-2">&amp;</span><span class="ident">headers</span>,
+            <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
             <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">reset</span> <span class="op">==</span> <span class="number">1_470_173_023_123</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
@@ -1609,5 +1599,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (06754d885 2022-07-08)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d5e7f4782 2022-07-16)" ></div>
 </body></html>
