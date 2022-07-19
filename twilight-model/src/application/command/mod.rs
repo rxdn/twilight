@@ -4,8 +4,8 @@
 //! [`twilight-util`] to create [`Command`]s; [`CommandOption`] is especially
 //! verbose.
 //!
-//! [`CommandBuilder]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/index.html
-//! [`twilight-util]: https://docs.rs/twilight-util
+//! [`CommandBuilder`]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/index.html
+//! [`twilight-util`]: https://docs.rs/twilight-util
 
 pub mod permissions;
 
