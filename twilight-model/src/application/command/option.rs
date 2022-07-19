@@ -11,7 +11,7 @@ use std::{cmp::Eq, collections::HashMap};
 /// Fields' default values may be used by setting them to [`None`].
 ///
 /// Choices, descriptions and names may be localized in any [available locale],
-/// see [Discord Docs/Localization] for more info.
+/// see [Discord Docs/Localization].
 ///
 /// [available locale]: https://discord.com/developers/docs/reference#locales
 /// [`Command`]: super::Command
@@ -134,7 +134,7 @@ pub struct CommandOption {
     /// **Note**: at least one option is required and [`SubCommandGroup`] may
     /// only contain [`SubCommand`]s.
     ///
-    /// See [Discord Docs/Subcommands and Subcommand Groups] for more info.
+    /// See [Discord Docs/Subcommands and Subcommand Groups].
     ///
     /// [Discord Docs/Subcommands and Subcommand Groups]: https://discord.com/developers/docs/interactions/application-commands#subcommands-and-subcommand-groups
     /// [`SubCommand`]: CommandOptionType::SubCommand
