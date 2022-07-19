@@ -1,8 +1,8 @@
 //! Used for building commands to send to Discord.
 //!
 //! It is highly recommended to use the associated [`CommandBuilder`] in the
-//! [`twilight-util`] to create [`Command`]s instead of building them manually;
-//! [`CommandOption`] is especially verbose.
+//! [`twilight-util`] to create [`Command`]s; [`CommandOption`] is especially
+//! verbose.
 //!
 //! [`CommandBuilder]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/index.html
 //! [`twilight-util]: https://docs.rs/twilight-util
