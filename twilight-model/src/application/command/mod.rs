@@ -102,7 +102,7 @@ mod tests {
 
     #[test]
     #[allow(clippy::too_many_lines)]
-    fn test_command_option_full() {
+    fn command_option_full() {
         let value = Command {
             application_id: Some(Id::new(100)),
             default_member_permissions: Some(Permissions::ADMINISTRATOR),

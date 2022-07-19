@@ -68,6 +68,7 @@ pub struct CommandOption {
     /// Applicable for [`CommandOption`]s of type [`String`].
     ///
     /// [`String`]: CommandOptionType::String
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_length: Option<u16>,
     /// Maximum allowed value.
     ///
@@ -84,6 +85,7 @@ pub struct CommandOption {
     /// Applicable for [`CommandOption`]s of type [`String`].
     ///
     /// [`String`]: CommandOptionType::String
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub min_length: Option<u16>,
     /// Minimum allowed value.
     ///
