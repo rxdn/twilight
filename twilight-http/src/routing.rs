@@ -107,18 +107,6 @@ pub enum Route<'a> {
     },
     /// Route information to create a private channel.
     CreatePrivateChannel,
-    /// Route information to create a thread in a channel.
-    CreateThread {
-        /// ID of the channel.
-        channel_id: u64,
-    },
-    /// Route information to create a thread from a message.
-    CreateThreadFromMessage {
-        /// ID of the channel.
-        channel_id: u64,
-        /// ID of the message.
-        message_id: u64,
-    },
     /// Route information to create a reaction on a message.
     CreateReaction {
         /// The ID of the channel.
@@ -139,6 +127,18 @@ pub enum Route<'a> {
     CreateTemplate {
         /// The ID of the guild.
         guild_id: u64,
+    },
+    /// Route information to create a thread in a channel.
+    CreateThread {
+        /// ID of the channel.
+        channel_id: u64,
+    },
+    /// Route information to create a thread from a message.
+    CreateThreadFromMessage {
+        /// ID of the channel.
+        channel_id: u64,
+        /// ID of the message.
+        message_id: u64,
     },
     /// Route information to create a typing trigger in a channel.
     CreateTypingTrigger {
@@ -218,11 +218,6 @@ pub enum Route<'a> {
         /// ID of the sticker.
         sticker_id: u64,
     },
-    /// Route information to delete an invite.
-    DeleteInvite {
-        /// The unique invite code.
-        code: &'a str,
-    },
     /// Route information to delete the original interaction response.
     DeleteInteractionOriginal {
         /// The ID of the owner application
@@ -230,17 +225,17 @@ pub enum Route<'a> {
         /// The token of the interaction.
         interaction_token: &'a str,
     },
+    /// Route information to delete an invite.
+    DeleteInvite {
+        /// The unique invite code.
+        code: &'a str,
+    },
     /// Route information to delete a channel's message.
     DeleteMessage {
         /// The ID of the channel.
         channel_id: u64,
         /// The ID of the message.
         message_id: u64,
-    },
-    /// Route information to bulk delete messages in a channel.
-    DeleteMessages {
-        /// The ID of the channel.
-        channel_id: u64,
     },
     /// Route information to delete all of the reactions on a message.
     DeleteMessageReactions {
@@ -259,6 +254,11 @@ pub enum Route<'a> {
         /// The ID of the message.
         message_id: u64,
     },
+    /// Route information to bulk delete messages in a channel.
+    DeleteMessages {
+        /// The ID of the channel.
+        channel_id: u64,
+    },
     /// Route information to delete a permission overwrite for a role or user in
     /// a channel.
     DeletePermissionOverwrite {
@@ -266,15 +266,6 @@ pub enum Route<'a> {
         channel_id: u64,
         /// The ID of the target role or user.
         target_id: u64,
-    },
-    /// Route information to delete the current user's reaction on a message.
-    DeleteReactionCurrentUser {
-        /// ID of the channel.
-        channel_id: u64,
-        /// URI encoded custom or unicode emoji.
-        emoji: &'a RequestReactionType<'a>,
-        /// ID of the message.
-        message_id: u64,
     },
     /// Route information to delete a user's reaction on a message.
     DeleteReaction {
@@ -286,6 +277,15 @@ pub enum Route<'a> {
         message_id: u64,
         /// The ID of the user.
         user_id: u64,
+    },
+    /// Route information to delete the current user's reaction on a message.
+    DeleteReactionCurrentUser {
+        /// ID of the channel.
+        channel_id: u64,
+        /// URI encoded custom or unicode emoji.
+        emoji: &'a RequestReactionType<'a>,
+        /// ID of the message.
+        message_id: u64,
     },
     /// Route information to delete a guild's role.
     DeleteRole {
@@ -306,19 +306,19 @@ pub enum Route<'a> {
         /// The target template code.
         template_code: &'a str,
     },
+    /// Route information to delete a webhook.
+    DeleteWebhook {
+        /// The token of the webhook.
+        token: Option<&'a str>,
+        /// The ID of the webhook.
+        webhook_id: u64,
+    },
     /// Route information to delete a message created by a webhook.
     DeleteWebhookMessage {
         message_id: u64,
         /// ID of the thread channel, if there is one.
         thread_id: Option<u64>,
         token: &'a str,
-        webhook_id: u64,
-    },
-    /// Route information to delete a webhook.
-    DeleteWebhook {
-        /// The token of the webhook.
-        token: Option<&'a str>,
-        /// The ID of the webhook.
         webhook_id: u64,
     },
     /// Route information to execute a webhook by ID and token.
@@ -407,10 +407,10 @@ pub enum Route<'a> {
         /// The ID of the guild.
         guild_id: u64,
     },
-    /// Route information to get info about application the current bot user belongs to
-    GetCurrentUserApplicationInfo,
     /// Route information to get the current user.
     GetCurrentUser,
+    /// Route information to get info about application the current bot user belongs to
+    GetCurrentUserApplicationInfo,
     /// Route information to get the current user as a member object within a guild.
     GetCurrentUserGuildMember {
         /// ID of the guild.
@@ -544,13 +544,6 @@ pub enum Route<'a> {
         /// Whether to include user counts.
         with_user_count: bool,
     },
-    /// Route information to get a guild's scheduled events.
-    GetGuildScheduledEvents {
-        /// ID of the guild.
-        guild_id: u64,
-        /// Whether to include user counts.
-        with_user_count: bool,
-    },
     /// Route information to get a guild scheduled event's members.
     GetGuildScheduledEventUsers {
         /// Get members after this ID.
@@ -565,6 +558,13 @@ pub enum Route<'a> {
         scheduled_event_id: u64,
         /// Whether to return a member object.
         with_member: bool,
+    },
+    /// Route information to get a guild's scheduled events.
+    GetGuildScheduledEvents {
+        /// ID of the guild.
+        guild_id: u64,
+        /// Whether to include user counts.
+        with_user_count: bool,
     },
     /// Route information to get a guild's sticker.
     GetGuildSticker {
@@ -931,11 +931,6 @@ pub enum Route<'a> {
         /// The ID of the guild.
         guild_id: u64,
     },
-    /// Route information to update a guild's widget.
-    UpdateGuildWidgetSettings {
-        /// The ID of the guild.
-        guild_id: u64,
-    },
     /// Route information to update a guild's integration.
     UpdateGuildIntegration {
         /// The ID of the guild.
@@ -960,6 +955,11 @@ pub enum Route<'a> {
     /// Route information to update a guild's welcome screen.
     UpdateGuildWelcomeScreen {
         /// ID of the guild.
+        guild_id: u64,
+    },
+    /// Route information to update a guild's widget.
+    UpdateGuildWidgetSettings {
+        /// The ID of the guild.
         guild_id: u64,
     },
     /// Update the original interaction response.
@@ -1027,19 +1027,19 @@ pub enum Route<'a> {
         /// ID of the user.
         user_id: u64,
     },
+    /// Route information to update a webhook.
+    UpdateWebhook {
+        /// The token of the webhook.
+        token: Option<&'a str>,
+        /// The ID of the webhook.
+        webhook_id: u64,
+    },
     /// Route information to update a message created by a webhook.
     UpdateWebhookMessage {
         message_id: u64,
         /// ID of the thread channel, if there is one.
         thread_id: Option<u64>,
         token: &'a str,
-        webhook_id: u64,
-    },
-    /// Route information to update a webhook.
-    UpdateWebhook {
-        /// The token of the webhook.
-        token: Option<&'a str>,
-        /// The ID of the webhook.
         webhook_id: u64,
     },
 }
