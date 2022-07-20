@@ -4009,12 +4009,18 @@ mod tests {
 
     #[test]
     fn get_guild_widget() {
+        let route = Route::GetGuildWidget { guild_id: GUILD_ID };
+        assert_eq!(route.to_string(), format!("guilds/{GUILD_ID}/widget.json"));
+    }
+
+    #[test]
+    fn get_guild_widget_settings() {
         let route = Route::GetGuildWidgetSettings { guild_id: GUILD_ID };
         assert_eq!(route.to_string(), format!("guilds/{GUILD_ID}/widget"));
     }
 
     #[test]
-    fn update_guild_widget() {
+    fn update_guild_widget_settings() {
         let route = Route::UpdateGuildWidgetSettings { guild_id: GUILD_ID };
         assert_eq!(route.to_string(), format!("guilds/{GUILD_ID}/widget"));
     }
