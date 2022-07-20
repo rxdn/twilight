@@ -29,7 +29,7 @@ mod tests {
     );
 
     #[test]
-    fn test_guild_widget() {
+    fn guild_widget_settings() {
         let value = GuildWidgetSettings {
             channel_id: Id::new(111_111_111_111_111_111),
             enabled: true,
