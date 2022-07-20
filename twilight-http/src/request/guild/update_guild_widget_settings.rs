@@ -1,7 +1,7 @@
 use crate::{
     client::Client,
     error::Error,
-    request::{AuditLogReason, Nullable, Request, TryIntoRequest},
+    request::{self, AuditLogReason, Nullable, Request, TryIntoRequest},
     response::ResponseFuture,
     routing::Route,
 };
@@ -89,6 +89,12 @@ impl TryIntoRequest for UpdateGuildWidgetSettings<'_> {
         });
 
         request = request.json(&self.fields)?;
+
+        if let Some(reason) = self.reason {
+            let header = request::audit_header(reason)?;
+
+            request = request.headers(header);
+        }
 
         Ok(request.build())
     }
