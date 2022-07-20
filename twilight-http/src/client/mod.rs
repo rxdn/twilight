@@ -56,7 +56,8 @@ use crate::{
             GetAuditLog, GetGuild, GetGuildChannels, GetGuildInvites, GetGuildPreview,
             GetGuildPruneCount, GetGuildVanityUrl, GetGuildVoiceRegions, GetGuildWebhooks,
             GetGuildWelcomeScreen, GetGuildWidget, GetGuildWidgetSettings, UpdateCurrentMember,
-            UpdateGuild, UpdateGuildChannelPositions, UpdateGuildWelcomeScreen, UpdateGuildWidget,
+            UpdateGuild, UpdateGuildChannelPositions, UpdateGuildWelcomeScreen,
+            UpdateGuildWidgetSettings,
         },
         scheduled_event::{
             CreateGuildScheduledEvent, DeleteGuildScheduledEvent, GetGuildScheduledEvent,
@@ -840,7 +841,7 @@ impl Client {
         UpdateGuildChannelPositions::new(self, guild_id, channel_positions)
     }
 
-    /// Get the guilds widget.
+    /// Get a guild's widget.
     ///
     /// See [Discord Docs/Get Guild Widget].
     ///
@@ -849,11 +850,11 @@ impl Client {
         GetGuildWidget::new(self, guild_id)
     }
 
-    /// Get the guilds' widget settings.
+    /// Get a guild's widget settings.
     ///
-    /// Refer to [the discord docs] for more information.
+    /// See [Discord Docs/Get Guild Widget Settings].
     ///
-    /// [the discord docs]: https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
+    /// [Discord Docs/Get Guild Widget Settings]: https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
     pub const fn guild_widget_settings(
         &self,
         guild_id: Id<GuildMarker>,
@@ -861,12 +862,12 @@ impl Client {
         GetGuildWidgetSettings::new(self, guild_id)
     }
 
-    /// Modify the guild widget.
+    /// Modify a guild's widget.
     pub const fn update_guild_widget_settings(
         &self,
         guild_id: Id<GuildMarker>,
-    ) -> UpdateGuildWidget<'_> {
-        UpdateGuildWidget::new(self, guild_id)
+    ) -> UpdateGuildWidgetSettings<'_> {
+        UpdateGuildWidgetSettings::new(self, guild_id)
     }
 
     /// Get the guild's integrations.

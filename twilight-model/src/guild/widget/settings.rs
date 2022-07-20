@@ -10,7 +10,23 @@ pub struct GuildWidgetSettings {
 #[cfg(test)]
 mod tests {
     use super::{GuildWidgetSettings, Id};
+    use serde::{Deserialize, Serialize};
     use serde_test::Token;
+    use static_assertions::{assert_fields, assert_impl_all};
+    use std::{fmt::Debug, hash::Hash};
+
+    assert_fields!(GuildWidgetSettings: channel_id, enabled);
+    assert_impl_all!(
+        GuildWidgetSettings: Clone,
+        Debug,
+        Deserialize<'static>,
+        Eq,
+        Hash,
+        PartialEq,
+        Serialize,
+        Send,
+        Sync
+    );
 
     #[test]
     fn test_guild_widget() {

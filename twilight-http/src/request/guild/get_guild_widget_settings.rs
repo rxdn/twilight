@@ -6,15 +6,15 @@ use crate::{
     routing::Route,
 };
 use twilight_model::{
-    guild::GuildWidgetSettings,
+    guild::widget::GuildWidgetSettings,
     id::{marker::GuildMarker, Id},
 };
 
 /// Get the guild's widget settings.
 ///
-/// Refer to [the discord docs] for more information.
+/// See [Discord Docs/Get Guild Widget Settings].
 ///
-/// [the discord docs]: https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
+/// [Discord Docs/Get Guild Widget Settings]: https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
 #[must_use = "requests must be configured and executed"]
 pub struct GetGuildWidgetSettings<'a> {
     guild_id: Id<GuildMarker>,
@@ -30,11 +30,12 @@ impl<'a> GetGuildWidgetSettings<'a> {
     ///
     /// [`Response`]: crate::response::Response
     pub fn exec(self) -> ResponseFuture<GuildWidgetSettings> {
-        let request = Request::from_route(&Route::GetGuildWidgetSettings {
-            guild_id: self.guild_id.get(),
-        });
+        let http = self.http;
 
-        self.http.request(request)
+        match self.try_into_request() {
+            Ok(request) => http.request(request),
+            Err(source) => ResponseFuture::error(source),
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 pub mod audit_log;
 pub mod auto_moderation;
 pub mod member;
+pub mod widget;
 
 mod ban;
 mod default_message_notification_level;
@@ -26,37 +27,18 @@ mod system_channel_flags;
 mod unavailable_guild;
 mod vanity_url;
 mod verification_level;
-mod widget;
-mod widget_settings;
 
 pub use self::{
-    ban::Ban,
-    default_message_notification_level::DefaultMessageNotificationLevel,
-    emoji::Emoji,
-    explicit_content_filter::ExplicitContentFilter,
-    feature::GuildFeature,
-    info::GuildInfo,
-    integration::GuildIntegration,
-    integration_account::IntegrationAccount,
+    ban::Ban, default_message_notification_level::DefaultMessageNotificationLevel, emoji::Emoji,
+    explicit_content_filter::ExplicitContentFilter, feature::GuildFeature, info::GuildInfo,
+    integration::GuildIntegration, integration_account::IntegrationAccount,
     integration_application::IntegrationApplication,
-    integration_expire_behavior::IntegrationExpireBehavior,
-    member::Member,
-    mfa_level::MfaLevel,
-    nsfw_level::NSFWLevel,
-    partial_guild::PartialGuild,
-    partial_member::PartialMember,
-    permissions::Permissions,
-    premium_tier::PremiumTier,
-    preview::GuildPreview,
-    prune::GuildPrune,
-    role::Role,
-    role_tags::RoleTags,
-    system_channel_flags::SystemChannelFlags,
-    unavailable_guild::UnavailableGuild,
-    vanity_url::VanityUrl,
+    integration_expire_behavior::IntegrationExpireBehavior, member::Member, mfa_level::MfaLevel,
+    nsfw_level::NSFWLevel, partial_guild::PartialGuild, partial_member::PartialMember,
+    permissions::Permissions, premium_tier::PremiumTier, preview::GuildPreview, prune::GuildPrune,
+    role::Role, role_tags::RoleTags, system_channel_flags::SystemChannelFlags,
+    unavailable_guild::UnavailableGuild, vanity_url::VanityUrl,
     verification_level::VerificationLevel,
-    widget::{GuildWidget, GuildWidgetChannel},
-    widget_settings::GuildWidgetSettings,
 };
 
 use self::member::MemberListDeserializer;

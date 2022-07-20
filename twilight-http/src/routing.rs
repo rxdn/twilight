@@ -490,16 +490,6 @@ pub enum Route<'a> {
         /// Whether to include full localization dictionaries.
         with_localizations: Option<bool>,
     },
-    /// Route information to get a guild's widget.
-    GetGuildWidget {
-        /// The ID of the guild.
-        guild_id: u64,
-    },
-    /// Route information to get a guild's widget settings.
-    GetGuildWidgetSettings {
-        /// The ID of the guild.
-        guild_id: u64,
-    },
     /// Route information to get a guild's integrations.
     GetGuildIntegrations {
         /// The ID of the guild.
@@ -598,14 +588,24 @@ pub enum Route<'a> {
         /// The ID of the guild.
         guild_id: u64,
     },
+    /// Route information to get a guild's webhooks.
+    GetGuildWebhooks {
+        /// The ID of the guild.
+        guild_id: u64,
+    },
     /// Route information to get a guild's welcome screen.
     GetGuildWelcomeScreen {
         /// ID of the guild.
         guild_id: u64,
     },
-    /// Route information to get a guild's webhooks.
-    GetGuildWebhooks {
-        /// The ID of the guild.
+    /// Route information to get a guild's widget.
+    GetGuildWidget {
+        /// ID of the guild.
+        guild_id: u64,
+    },
+    /// Route information to get a guild's widget settings.
+    GetGuildWidgetSettings {
+        /// ID of the guild.
         guild_id: u64,
     },
     /// Route information to get a paginated list of guilds.
@@ -639,6 +639,15 @@ pub enum Route<'a> {
         with_counts: bool,
         /// Whether to retrieve the expiration date of the invite.
         with_expiration: bool,
+    },
+    /// Route information to get joined private archived threads in a channel.
+    GetJoinedPrivateArchivedThreads {
+        /// Optional timestamp to return threads before.
+        before: Option<u64>,
+        /// ID of the channel.
+        channel_id: u64,
+        /// Optional maximum number of threads to return.
+        limit: Option<u64>,
     },
     /// Route information to get a member.
     GetMember {
@@ -674,15 +683,6 @@ pub enum Route<'a> {
     GetPins {
         /// The ID of the channel.
         channel_id: u64,
-    },
-    /// Route information to get joined private archived threads in a channel.
-    GetJoinedPrivateArchivedThreads {
-        /// Optional timestamp to return threads before.
-        before: Option<u64>,
-        /// ID of the channel.
-        channel_id: u64,
-        /// Optional maximum number of threads to return.
-        limit: Option<u64>,
     },
     /// Route information to get private archived threads in a channel.
     GetPrivateArchivedThreads {
@@ -1471,11 +1471,9 @@ impl<'a> Route<'a> {
             Self::GetGuild { guild_id, .. } | Self::UpdateGuild { guild_id } => {
                 Path::GuildsId(guild_id)
             }
-            Self::GetGuildWidget { guild_id } => Path::GuildsIdWidget(guild_id),
+            Self::GetGuildWidget { guild_id } => Path::GuildsIdWidgetJson(guild_id),
             Self::GetGuildWidgetSettings { guild_id }
-            | Self::UpdateGuildWidgetSettings { guild_id } => {
-                Path::GuildsIdWidgetSettings(guild_id)
-            }
+            | Self::UpdateGuildWidgetSettings { guild_id } => Path::GuildsIdWidget(guild_id),
             Self::GetGuildIntegrations { guild_id } => Path::GuildsIdIntegrations(guild_id),
             Self::GetGuildInvites { guild_id } => Path::GuildsIdInvites(guild_id),
             Self::GetGuildMembers { guild_id, .. } | Self::UpdateCurrentMember { guild_id, .. } => {

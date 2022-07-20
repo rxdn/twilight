@@ -6,7 +6,7 @@ use crate::{
     routing::Route,
 };
 use twilight_model::{
-    guild::GuildWidget,
+    guild::widget::GuildWidget,
     id::{marker::GuildMarker, Id},
 };
 

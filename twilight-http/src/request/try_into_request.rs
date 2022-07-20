@@ -64,7 +64,8 @@ mod private {
             GetAuditLog, GetGuild, GetGuildChannels, GetGuildInvites, GetGuildPreview,
             GetGuildPruneCount, GetGuildVanityUrl, GetGuildVoiceRegions, GetGuildWebhooks,
             GetGuildWelcomeScreen, GetGuildWidget, GetGuildWidgetSettings, UpdateCurrentMember,
-            UpdateGuild, UpdateGuildChannelPositions, UpdateGuildWelcomeScreen, UpdateGuildWidget,
+            UpdateGuild, UpdateGuildChannelPositions, UpdateGuildWelcomeScreen,
+            UpdateGuildWidgetSettings,
         },
         scheduled_event::{
             CreateGuildExternalScheduledEvent, CreateGuildScheduledEvent,
@@ -242,7 +243,7 @@ mod private {
     impl Sealed for UpdateGuildScheduledEvent<'_> {}
     impl Sealed for UpdateGuildSticker<'_> {}
     impl Sealed for UpdateGuildWelcomeScreen<'_> {}
-    impl Sealed for UpdateGuildWidget<'_> {}
+    impl Sealed for UpdateGuildWidgetSettings<'_> {}
     impl Sealed for UpdateMessage<'_> {}
     impl Sealed for UpdateResponse<'_> {}
     impl Sealed for UpdateRole<'_> {}

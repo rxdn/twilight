@@ -1,21 +1,22 @@
 use crate::{
     client::Client,
     error::Error,
-    request::{Nullable, Request, TryIntoRequest},
+    request::{AuditLogReason, Nullable, Request, TryIntoRequest},
     response::ResponseFuture,
     routing::Route,
 };
 use serde::Serialize;
 use twilight_model::{
-    guild::GuildWidgetSettings,
+    guild::widget::GuildWidgetSettings,
     id::{
         marker::{ChannelMarker, GuildMarker},
         Id,
     },
 };
+use twilight_validate::request::{audit_reason as validate_audit_reason, ValidationError};
 
 #[derive(Serialize)]
-struct UpdateGuildWidgetFields {
+struct UpdateGuildWidgetSettingsFields {
     #[serde(skip_serializing_if = "Option::is_none")]
     channel_id: Option<Nullable<Id<ChannelMarker>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -24,21 +25,23 @@ struct UpdateGuildWidgetFields {
 
 /// Modify the guild's widget settings.
 #[must_use = "requests must be configured and executed"]
-pub struct UpdateGuildWidget<'a> {
-    fields: UpdateGuildWidgetFields,
+pub struct UpdateGuildWidgetSettings<'a> {
+    fields: UpdateGuildWidgetSettingsFields,
     guild_id: Id<GuildMarker>,
     http: &'a Client,
+    reason: Option<&'a str>,
 }
 
-impl<'a> UpdateGuildWidget<'a> {
+impl<'a> UpdateGuildWidgetSettings<'a> {
     pub(crate) const fn new(http: &'a Client, guild_id: Id<GuildMarker>) -> Self {
         Self {
-            fields: UpdateGuildWidgetFields {
+            fields: UpdateGuildWidgetSettingsFields {
                 channel_id: None,
                 enabled: None,
             },
             guild_id,
             http,
+            reason: None,
         }
     }
 
@@ -69,7 +72,17 @@ impl<'a> UpdateGuildWidget<'a> {
     }
 }
 
-impl TryIntoRequest for UpdateGuildWidget<'_> {
+impl<'a> AuditLogReason<'a> for UpdateGuildWidgetSettings<'a> {
+    fn reason(mut self, reason: &'a str) -> Result<Self, ValidationError> {
+        validate_audit_reason(reason)?;
+
+        self.reason.replace(reason);
+
+        Ok(self)
+    }
+}
+
+impl TryIntoRequest for UpdateGuildWidgetSettings<'_> {
     fn try_into_request(self) -> Result<Request, Error> {
         let mut request = Request::builder(&Route::UpdateGuildWidgetSettings {
             guild_id: self.guild_id.get(),
