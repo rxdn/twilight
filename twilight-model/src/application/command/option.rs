@@ -1,7 +1,7 @@
 use crate::channel::ChannelType;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use std::{cmp::Eq, collections::HashMap};
+use std::collections::HashMap;
 
 /// Option for a [`Command`].
 ///
