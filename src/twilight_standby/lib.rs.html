@@ -1535,15 +1535,6 @@
 <span id="1529">1529</span>
 <span id="1530">1530</span>
 <span id="1531">1531</span>
-<span id="1532">1532</span>
-<span id="1533">1533</span>
-<span id="1534">1534</span>
-<span id="1535">1535</span>
-<span id="1536">1536</span>
-<span id="1537">1537</span>
-<span id="1538">1538</span>
-<span id="1539">1539</span>
-<span id="1540">1540</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">deny</span>(
     <span class="ident">clippy::all</span>,
     <span class="ident">clippy::missing_const_for_fn</span>,
@@ -1754,7 +1745,7 @@
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::future;</span>
     <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     gateway::event::{EventType, Event},</span>
+    <span class="doccomment">///     gateway::event::{Event, EventType},</span>
     <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
@@ -1763,9 +1754,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// let guild_id = Id::new(123);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let reaction = standby.wait_for(guild_id, |event: &amp;Event| {</span>
-    <span class="doccomment">///     event.kind() == EventType::BanAdd</span>
-    <span class="doccomment">/// }).await?;</span>
+    <span class="doccomment">/// let reaction = standby</span>
+    <span class="doccomment">///     .wait_for(guild_id, |event: &amp;Event| event.kind() == EventType::BanAdd)</span>
+    <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -1803,7 +1794,7 @@
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::stream::StreamExt;</span>
     <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     gateway::event::{EventType, Event},</span>
+    <span class="doccomment">///     gateway::event::{Event, EventType},</span>
     <span class="doccomment">///     id::Id,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
@@ -1812,19 +1803,14 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// let guild_id = Id::new(123);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut stream = standby.wait_for_stream(guild_id, |event: &amp;Event| {</span>
-    <span class="doccomment">///     event.kind() == EventType::BanAdd</span>
-    <span class="doccomment">/// });</span>
+    <span class="doccomment">/// let mut stream =</span>
+    <span class="doccomment">///     standby.wait_for_stream(guild_id, |event: &amp;Event| event.kind() == EventType::BanAdd);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// while let Some(event) = stream.next().await {</span>
     <span class="doccomment">///     if let Event::BanAdd(ban) = event {</span>
-    <span class="doccomment">///         println!(</span>
-    <span class="doccomment">///             &quot;user {} was banned in guild {}&quot;,</span>
-    <span class="doccomment">///             ban.user.id,</span>
-    <span class="doccomment">///             ban.guild_id,</span>
-    <span class="doccomment">///         );</span>
+    <span class="doccomment">///         println!(&quot;user {} was banned in guild {}&quot;, ban.user.id, ban.guild_id);</span>
     <span class="doccomment">///     }</span>
-    <span class="doccomment">///  }</span>
+    <span class="doccomment">/// }</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -1861,18 +1847,20 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::future;</span>
-    <span class="doccomment">/// use twilight_model::gateway::event::{EventType, Event};</span>
+    <span class="doccomment">/// use twilight_model::gateway::event::{Event, EventType};</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let ready = standby.wait_for_event(|event: &amp;Event| {</span>
-    <span class="doccomment">///     if let Event::Ready(ready) = event {</span>
-    <span class="doccomment">///         ready.shard.map(|[id, _]| id == 5).unwrap_or(false)</span>
-    <span class="doccomment">///     } else {</span>
-    <span class="doccomment">///         false</span>
-    <span class="doccomment">///     }</span>
-    <span class="doccomment">/// }).await?;</span>
+    <span class="doccomment">/// let ready = standby</span>
+    <span class="doccomment">///     .wait_for_event(|event: &amp;Event| {</span>
+    <span class="doccomment">///         if let Event::Ready(ready) = event {</span>
+    <span class="doccomment">///             ready.shard.map(|[id, _]| id == 5).unwrap_or(false)</span>
+    <span class="doccomment">///         } else {</span>
+    <span class="doccomment">///             false</span>
+    <span class="doccomment">///         }</span>
+    <span class="doccomment">///     })</span>
+    <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -1917,7 +1905,7 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::stream::StreamExt;</span>
-    <span class="doccomment">/// use twilight_model::gateway::event::{EventType, Event};</span>
+    <span class="doccomment">/// use twilight_model::gateway::event::{Event, EventType};</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
@@ -1975,10 +1963,7 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::future;</span>
-    <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     gateway::payload::incoming::MessageCreate,</span>
-    <span class="doccomment">///     id::Id,</span>
-    <span class="doccomment">/// };</span>
+    <span class="doccomment">/// use twilight_model::{gateway::payload::incoming::MessageCreate, id::Id};</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
@@ -1986,9 +1971,11 @@
     <span class="doccomment">/// let author_id = Id::new(456);</span>
     <span class="doccomment">/// let channel_id = Id::new(123);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let message = standby.wait_for_message(channel_id, move |event: &amp;MessageCreate| {</span>
-    <span class="doccomment">///     event.author.id == author_id &amp;&amp; event.content == &quot;test&quot;</span>
-    <span class="doccomment">/// }).await?;</span>
+    <span class="doccomment">/// let message = standby</span>
+    <span class="doccomment">///     .wait_for_message(channel_id, move |event: &amp;MessageCreate| {</span>
+    <span class="doccomment">///         event.author.id == author_id &amp;&amp; event.content == &quot;test&quot;</span>
+    <span class="doccomment">///     })</span>
+    <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -2025,10 +2012,7 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::stream::StreamExt;</span>
-    <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     gateway::payload::incoming::MessageCreate,</span>
-    <span class="doccomment">///     id::Id,</span>
-    <span class="doccomment">/// };</span>
+    <span class="doccomment">/// use twilight_model::{gateway::payload::incoming::MessageCreate, id::Id};</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
@@ -2077,10 +2061,7 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::future;</span>
-    <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     gateway::payload::incoming::ReactionAdd,</span>
-    <span class="doccomment">///     id::Id,</span>
-    <span class="doccomment">/// };</span>
+    <span class="doccomment">/// use twilight_model::{gateway::payload::incoming::ReactionAdd, id::Id};</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
@@ -2088,9 +2069,11 @@
     <span class="doccomment">/// let message_id = Id::new(123);</span>
     <span class="doccomment">/// let user_id = Id::new(456);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let reaction = standby.wait_for_reaction(message_id, move |event: &amp;ReactionAdd| {</span>
-    <span class="doccomment">///     event.user_id == user_id</span>
-    <span class="doccomment">/// }).await?;</span>
+    <span class="doccomment">/// let reaction = standby</span>
+    <span class="doccomment">///     .wait_for_reaction(message_id, move |event: &amp;ReactionAdd| {</span>
+    <span class="doccomment">///         event.user_id == user_id</span>
+    <span class="doccomment">///     })</span>
+    <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -2179,18 +2162,17 @@
     <span class="doccomment">/// ```no_run</span>
     <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// use futures_util::future;</span>
-    <span class="doccomment">/// use twilight_model::{</span>
-    <span class="doccomment">///     application::interaction::Interaction,</span>
-    <span class="doccomment">///     id::Id,</span>
-    <span class="doccomment">/// };</span>
+    <span class="doccomment">/// use twilight_model::{application::interaction::Interaction, id::Id};</span>
     <span class="doccomment">/// use twilight_standby::Standby;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let standby = Standby::new();</span>
     <span class="doccomment">/// let message_id = Id::new(123);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let component = standby.wait_for_component(message_id, |event: &amp;Interaction| {</span>
-    <span class="doccomment">///     event.author_id() == Some(Id::new(456))</span>
-    <span class="doccomment">/// }).await?;</span>
+    <span class="doccomment">/// let component = standby</span>
+    <span class="doccomment">///     .wait_for_component(message_id, |event: &amp;Interaction| {</span>
+    <span class="doccomment">///         event.author_id() == Some(Id::new(456))</span>
+    <span class="doccomment">///     })</span>
+    <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -3085,5 +3067,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_standby" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d68e7ebc3 2022-07-20)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_standby" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (93ffde6f0 2022-07-23)" ></div>
 </body></html>

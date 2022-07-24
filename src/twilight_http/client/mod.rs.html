@@ -2532,6 +2532,8 @@
 <span id="2526">2526</span>
 <span id="2527">2527</span>
 <span id="2528">2528</span>
+<span id="2529">2529</span>
+<span id="2530">2530</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">connector</span>;
 <span class="kw">mod</span> <span class="ident">interaction</span>;
@@ -2705,8 +2707,8 @@
 <span class="doccomment">/// Use [`ClientBuilder`] to create a client called `client`, with a shorter</span>
 <span class="doccomment">/// timeout:</span>
 <span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// use twilight_http::Client;</span>
 <span class="doccomment">/// use std::time::Duration;</span>
+<span class="doccomment">/// use twilight_http::Client;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # #[tokio::main]</span>
 <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
@@ -2831,11 +2833,7 @@
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// # let client = Client::new(&quot;token&quot;.to_owned());</span>
     <span class="doccomment">/// let guild_id = Id::new(101);</span>
-    <span class="doccomment">/// let audit_log = client</span>
-    <span class="doccomment">/// // not done</span>
-    <span class="doccomment">///     .audit_log(guild_id)</span>
-    <span class="doccomment">///     .exec()</span>
-    <span class="doccomment">///     .await?;</span>
+    <span class="doccomment">/// let audit_log = client.audit_log(guild_id).exec().await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">audit_log</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">GetAuditLog</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
@@ -2890,7 +2888,8 @@
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// let guild_id = Id::new(100);</span>
     <span class="doccomment">/// let user_id = Id::new(200);</span>
-    <span class="doccomment">/// client.create_ban(guild_id, user_id)</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .create_ban(guild_id, user_id)</span>
     <span class="doccomment">///     .delete_message_days(1)?</span>
     <span class="doccomment">///     .reason(&quot;memes&quot;)?</span>
     <span class="doccomment">///     .exec()</span>
@@ -3055,9 +3054,7 @@
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// use twilight_model::{</span>
     <span class="doccomment">///     guild::Permissions,</span>
-    <span class="doccomment">///     http::permission_overwrite::{</span>
-    <span class="doccomment">///         PermissionOverwrite, PermissionOverwriteType,</span>
-    <span class="doccomment">///     },</span>
+    <span class="doccomment">///     http::permission_overwrite::{PermissionOverwrite, PermissionOverwriteType},</span>
     <span class="doccomment">///     id::{marker::RoleMarker, Id},</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
@@ -3070,7 +3067,8 @@
     <span class="doccomment">///     kind: PermissionOverwriteType::Role,</span>
     <span class="doccomment">/// };</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// client.update_channel_permission(channel_id, &amp;permission_overwrite)</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .update_channel_permission(channel_id, &amp;permission_overwrite)</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
@@ -3154,7 +3152,8 @@
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// let after = Id::new(300);</span>
     <span class="doccomment">/// let before = Id::new(400);</span>
-    <span class="doccomment">/// let guilds = client.current_user_guilds()</span>
+    <span class="doccomment">/// let guilds = client</span>
+    <span class="doccomment">///     .current_user_guilds()</span>
     <span class="doccomment">///     .after(after)</span>
     <span class="doccomment">///     .before(before)</span>
     <span class="doccomment">///     .limit(25)?</span>
@@ -3461,7 +3460,8 @@
     <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let guild_id = Id::new(100);</span>
-    <span class="doccomment">/// let members = client.search_guild_members(guild_id, &quot;Wumpus&quot;)</span>
+    <span class="doccomment">/// let members = client</span>
+    <span class="doccomment">///     .search_guild_members(guild_id, &quot;Wumpus&quot;)</span>
     <span class="doccomment">///     .limit(10)?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
@@ -3537,7 +3537,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// let member = client.update_guild_member(Id::new(1), Id::new(2))</span>
+    <span class="doccomment">/// let member = client</span>
+    <span class="doccomment">///     .update_guild_member(Id::new(1), Id::new(2))</span>
     <span class="doccomment">///     .mute(true)</span>
     <span class="doccomment">///     .nick(Some(&quot;pinkie pie&quot;))?</span>
     <span class="doccomment">///     .exec()</span>
@@ -3545,7 +3546,10 @@
     <span class="doccomment">///     .model()</span>
     <span class="doccomment">///     .await?;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// println!(&quot;user {} now has the nickname &#39;{:?}&#39;&quot;, member.user.id, member.nick);</span>
+    <span class="doccomment">/// println!(</span>
+    <span class="doccomment">///     &quot;user {} now has the nickname &#39;{:?}&#39;&quot;,</span>
+    <span class="doccomment">///     member.user.id, member.nick,</span>
+    <span class="doccomment">/// );</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -3590,7 +3594,8 @@
     <span class="doccomment">/// let role_id = Id::new(2);</span>
     <span class="doccomment">/// let user_id = Id::new(3);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// client.add_guild_member_role(guild_id, user_id, role_id)</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .add_guild_member_role(guild_id, user_id, role_id)</span>
     <span class="doccomment">///     .reason(&quot;test&quot;)?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
@@ -3693,11 +3698,7 @@
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// # let client = Client::new(&quot;my token&quot;.to_owned());</span>
     <span class="doccomment">/// #</span>
-    <span class="doccomment">/// let invite = client</span>
-    <span class="doccomment">///     .invite(&quot;code&quot;)</span>
-    <span class="doccomment">///     .with_counts()</span>
-    <span class="doccomment">///     .exec()</span>
-    <span class="doccomment">///     .await?;</span>
+    <span class="doccomment">/// let invite = client.invite(&quot;code&quot;).with_counts().exec().await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -3722,11 +3723,7 @@
     <span class="doccomment">/// # let client = Client::new(&quot;my token&quot;.to_owned());</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// let channel_id = Id::new(123);</span>
-    <span class="doccomment">/// let invite = client</span>
-    <span class="doccomment">///     .create_invite(channel_id)</span>
-    <span class="doccomment">///     .max_uses(3)?</span>
-    <span class="doccomment">///     .exec()</span>
-    <span class="doccomment">///     .await?;</span>
+    <span class="doccomment">/// let invite = client.create_invite(channel_id).max_uses(3)?.exec().await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -3829,7 +3826,8 @@
     <span class="doccomment">/// use twilight_model::id::Id;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
-    <span class="doccomment">/// client.update_message(Id::new(1), Id::new(2))</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .update_message(Id::new(1), Id::new(2))</span>
     <span class="doccomment">///     .content(Some(&quot;test update&quot;))?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
@@ -3845,7 +3843,8 @@
     <span class="doccomment">/// # #[tokio::main]</span>
     <span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// # let client = Client::new(&quot;my token&quot;.to_owned());</span>
-    <span class="doccomment">/// client.update_message(Id::new(1), Id::new(2))</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .update_message(Id::new(1), Id::new(2))</span>
     <span class="doccomment">///     .content(None)?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
@@ -4014,7 +4013,8 @@
     <span class="doccomment">/// # let client = Client::new(&quot;my token&quot;.to_owned());</span>
     <span class="doccomment">/// let guild_id = Id::new(234);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// client.create_role(guild_id)</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .create_role(guild_id)</span>
     <span class="doccomment">///     .color(0xd90083)</span>
     <span class="doccomment">///     .name(&quot;Bright Pink&quot;)</span>
     <span class="doccomment">///     .exec()</span>
@@ -4186,7 +4186,8 @@
     <span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
     <span class="doccomment">/// let guild_id = Id::new(234);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let threads = client.active_threads(guild_id)</span>
+    <span class="doccomment">/// let threads = client</span>
+    <span class="doccomment">///     .active_threads(guild_id)</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?</span>
     <span class="doccomment">///     .model()</span>
@@ -4517,7 +4518,8 @@
     <span class="doccomment">/// use twilight_model::id::Id;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let client = Client::new(&quot;token&quot;.to_owned());</span>
-    <span class="doccomment">/// client.update_webhook_message(Id::new(1), &quot;token here&quot;, Id::new(2))</span>
+    <span class="doccomment">/// client</span>
+    <span class="doccomment">///     .update_webhook_message(Id::new(1), &quot;token here&quot;, Id::new(2))</span>
     <span class="doccomment">///     .content(Some(&quot;new message content&quot;))?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
@@ -4617,7 +4619,7 @@
     <span class="doccomment">///     .stage_instance(</span>
     <span class="doccomment">///         channel_id,</span>
     <span class="doccomment">///         &quot;Garfield Appreciation Hour&quot;,</span>
-    <span class="doccomment">///         &amp;garfield_start_time</span>
+    <span class="doccomment">///         &amp;garfield_start_time,</span>
     <span class="doccomment">///     )?</span>
     <span class="doccomment">///     .description(&quot;Discuss: How important is Garfield to You?&quot;)?</span>
     <span class="doccomment">///     .exec()</span>
@@ -4643,10 +4645,12 @@
     <span class="doccomment">///         &quot;Garfield Con 2022&quot;,</span>
     <span class="doccomment">///         &quot;Baltimore Convention Center&quot;,</span>
     <span class="doccomment">///         &amp;garfield_con_start_time,</span>
-    <span class="doccomment">///         &amp;garfield_con_end_time</span>
+    <span class="doccomment">///         &amp;garfield_con_end_time,</span>
     <span class="doccomment">///     )?</span>
-    <span class="doccomment">///     .description(&quot;In a spiritual successor to BronyCon, Garfield fans \</span>
-    <span class="doccomment">/// from around the globe celebrate all things related to the loveable cat.&quot;)?</span>
+    <span class="doccomment">///     .description(</span>
+    <span class="doccomment">///         &quot;In a spiritual successor to BronyCon, Garfield fans from \</span>
+    <span class="doccomment">/// around the globe celebrate all things related to the loveable cat.&quot;,</span>
+    <span class="doccomment">///     )?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?;</span>
     <span class="doccomment">/// # Ok(()) }</span>
@@ -4840,7 +4844,7 @@
     <span class="doccomment">///         &amp;&quot;sticker name&quot;,</span>
     <span class="doccomment">///         &amp;&quot;sticker description&quot;,</span>
     <span class="doccomment">///         &amp;&quot;sticker,tags&quot;,</span>
-    <span class="doccomment">///         &amp;[23,23,23,23]</span>
+    <span class="doccomment">///         &amp;[23, 23, 23, 23],</span>
     <span class="doccomment">///     )?</span>
     <span class="doccomment">///     .exec()</span>
     <span class="doccomment">///     .await?</span>
@@ -5061,5 +5065,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d68e7ebc3 2022-07-20)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (93ffde6f0 2022-07-23)" ></div>
 </body></html>

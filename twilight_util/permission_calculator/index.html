@@ -5,7 +5,7 @@
         </a><h2 class="location"><a href="#">Module permission_calculator</a></h2><div class="sidebar-elems"><section><div class="block"><ul><li><a href="#structs">Structs</a></li></ul></div></section></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_util/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
                                 <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
                         </div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
-    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">twilight_util</a>::<wbr><a class="mod" href="#">permission_calculator</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/twilight_util/permission_calculator/mod.rs.html#1-682">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>permission-calculator</code></strong> only.</div></span><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Calculate the permissions of a member on a guild-level or a channel-level.</p>
+    <h1 class="fqn"><span class="in-band">Module <a href="../index.html">twilight_util</a>::<wbr><a class="mod" href="#">permission_calculator</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../../src/twilight_util/permission_calculator/mod.rs.html#1-671">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>permission-calculator</code></strong> only.</div></span><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Calculate the permissions of a member on a guild-level or a channel-level.</p>
 <h2 id="examples"><a href="#examples">Examples</a></h2><h3 id="calculating-member-permissions-in-a-channel"><a href="#calculating-member-permissions-in-a-channel">Calculating member permissions in a channel</a></h3>
 <p>Take a scenario where a member has two roles: the <code>@everyone</code> role (with the
 same ID as the guild) that grants the <a href="../../twilight_model/guild/permissions/struct.Permissions.html#associatedconstant.VIEW_CHANNEL">View Channel</a> permission across the
@@ -28,18 +28,15 @@ denied the <a href="../../twilight_model/guild/permissions/struct.Permissions.ht
 a root level.</p>
 <p>Let’s see that in code:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">twilight_util::permission_calculator::PermissionCalculator</span>;
-<span class="kw">use</span> <span class="ident">twilight_model</span>::{
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::{
-        <span class="ident">permission_overwrite</span>::{
-            <span class="ident">PermissionOverwriteType</span>,
-            <span class="ident">PermissionOverwrite</span>,
-        },
-        <span class="ident">ChannelType</span>
+        <span class="ident">permission_overwrite</span>::{<span class="ident">PermissionOverwrite</span>, <span class="ident">PermissionOverwriteType</span>},
+        <span class="ident">ChannelType</span>,
     },
     <span class="ident">guild::Permissions</span>,
     <span class="ident">id::Id</span>,
 };
+<span class="kw">use</span> <span class="ident">twilight_util::permission_calculator::PermissionCalculator</span>;
 
 <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
 <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">3</span>);
@@ -74,16 +71,8 @@ a root level.</p>
     },
 ];
 
-<span class="kw">let</span> <span class="ident">calculator</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(
-    <span class="ident">guild_id</span>,
-    <span class="ident">user_id</span>,
-    <span class="ident">everyone_role</span>,
-    <span class="ident">member_roles</span>,
-);
-<span class="kw">let</span> <span class="ident">calculated_permissions</span> <span class="op">=</span> <span class="ident">calculator</span>.<span class="ident">in_channel</span>(
-    <span class="ident">ChannelType::GuildText</span>,
-    <span class="ident">channel_overwrites</span>,
-);
+<span class="kw">let</span> <span class="ident">calculator</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">member_roles</span>);
+<span class="kw">let</span> <span class="ident">calculated_permissions</span> <span class="op">=</span> <span class="ident">calculator</span>.<span class="ident">in_channel</span>(<span class="ident">ChannelType::GuildText</span>, <span class="ident">channel_overwrites</span>);
 
 <span class="comment">// Now that we&#39;ve got the member&#39;s permissions in the channel, we can</span>
 <span class="comment">// check that they have the server-wide View Channel permission and</span>
@@ -97,5 +86,5 @@ a root level.</p>
 <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">calculated_permissions</span>);</code></pre></div>
 </div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PermissionCalculator.html" title="twilight_util::permission_calculator::PermissionCalculator struct">PermissionCalculator</a></div><div class="item-right docblock-short"><p>Calculate the permissions of a member.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (d68e7ebc3 2022-07-20)" ></div>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (93ffde6f0 2022-07-23)" ></div>
 </body></html>
