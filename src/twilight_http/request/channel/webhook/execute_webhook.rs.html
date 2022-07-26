@@ -412,6 +412,16 @@
 <span id="406">406</span>
 <span id="407">407</span>
 <span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
@@ -463,6 +473,8 @@
     <span class="ident">flags</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MessageFlags</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">payload_json</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">thread_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">tts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -522,6 +534,7 @@
                 <span class="ident">embeds</span>: <span class="prelude-val">None</span>,
                 <span class="ident">flags</span>: <span class="prelude-val">None</span>,
                 <span class="ident">payload_json</span>: <span class="prelude-val">None</span>,
+                <span class="ident">thread_name</span>: <span class="prelude-val">None</span>,
                 <span class="ident">tts</span>: <span class="prelude-val">None</span>,
                 <span class="ident">username</span>: <span class="prelude-val">None</span>,
                 <span class="ident">allowed_mentions</span>: <span class="prelude-val">None</span>,
@@ -720,6 +733,13 @@
     <span class="doccomment">/// Execute in a thread belonging to the channel instead of the channel itself.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thread_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">thread_id</span>.<span class="ident">replace</span>(<span class="ident">thread_id</span>);
+
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set the name of the created thread when used in a forum channel.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">thread_name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">thread_name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">thread_name</span>);
 
         <span class="self">self</span>
     }
