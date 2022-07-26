@@ -4453,6 +4453,25 @@
 <span id="4447">4447</span>
 <span id="4448">4448</span>
 <span id="4449">4449</span>
+<span id="4450">4450</span>
+<span id="4451">4451</span>
+<span id="4452">4452</span>
+<span id="4453">4453</span>
+<span id="4454">4454</span>
+<span id="4455">4455</span>
+<span id="4456">4456</span>
+<span id="4457">4457</span>
+<span id="4458">4458</span>
+<span id="4459">4459</span>
+<span id="4460">4460</span>
+<span id="4461">4461</span>
+<span id="4462">4462</span>
+<span id="4463">4463</span>
+<span id="4464">4464</span>
+<span id="4465">4465</span>
+<span id="4466">4466</span>
+<span id="4467">4467</span>
+<span id="4468">4468</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">percent_encoding</span>::{<span class="ident">utf8_percent_encode</span>, <span class="ident">NON_ALPHANUMERIC</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">twilight_http_ratelimiting::request</span>::{<span class="ident">Path</span>, <span class="ident">PathParseError</span>, <span class="ident">PathParseErrorType</span>};
 
@@ -5393,6 +5412,11 @@
         <span class="doccomment">/// The ID of the integration.</span>
         <span class="ident">integration_id</span>: <span class="ident">u64</span>,
     },
+    <span class="doccomment">/// Route information to update a guild&#39;s MFA level.</span>
+    <span class="ident">UpdateGuildMfa</span> {
+        <span class="doccomment">/// ID of the guild.</span>
+        <span class="ident">guild_id</span>: <span class="ident">u64</span>,
+    },
     <span class="doccomment">/// Route information to update a scheduled event in a guild.</span>
     <span class="ident">UpdateGuildScheduledEvent</span> {
         <span class="doccomment">/// ID of the guild.</span>
@@ -5619,6 +5643,7 @@
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuild</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildChannels</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildCommand</span> { .. }
+            <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildMfa</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildWidget</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildIntegration</span> { .. }
             <span class="op">|</span> <span class="ident"><span class="self">Self</span>::UpdateGuildScheduledEvent</span> { .. }
@@ -5970,6 +5995,7 @@
                 <span class="ident">Path::ChannelsIdMessagesId</span>(<span class="ident">Method::Patch</span>, <span class="ident">channel_id</span>)
             }
             <span class="ident"><span class="self">Self</span>::UpdateNickname</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdMembersMeNick</span>(<span class="ident">guild_id</span>),
+            <span class="ident"><span class="self">Self</span>::UpdateGuildMfa</span> { <span class="ident">guild_id</span> } =&gt; <span class="ident">Path::GuildsIdMfa</span>(<span class="ident">guild_id</span>),
         }
     }
 }
@@ -7211,6 +7237,12 @@
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;/voice-states/&quot;</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">Display::fmt</span>(<span class="ident">user_id</span>, <span class="ident">f</span>)
+            }
+            <span class="ident">Route::UpdateGuildMfa</span> { <span class="ident">guild_id</span>, .. } =&gt; {
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;guilds/&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">Display::fmt</span>(<span class="ident">guild_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+
+                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;/mfa&quot;</span>)
             }
         }
     }
@@ -8900,6 +8932,12 @@
             <span class="ident">route</span>.<span class="ident">to_string</span>(),
             <span class="macro">format!</span>(<span class="string">&quot;guilds/{GUILD_ID}/members/search?query=foo%2Fbar&amp;limit=99&quot;</span>)
         );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">update_guild_mfa</span>() {
+        <span class="kw">let</span> <span class="ident">route</span> <span class="op">=</span> <span class="ident">Route::UpdateGuildMfa</span> { <span class="ident">guild_id</span>: <span class="ident">GUILD_ID</span> };
+        <span class="macro">assert_eq!</span>(<span class="ident">route</span>.<span class="ident">to_string</span>(), <span class="macro">format!</span>(<span class="string">&quot;guilds/{GUILD_ID}/mfa&quot;</span>));
     }
 }
 </code></pre></div>

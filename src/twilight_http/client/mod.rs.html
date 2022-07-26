@@ -2534,6 +2534,17 @@
 <span id="2528">2528</span>
 <span id="2529">2529</span>
 <span id="2530">2530</span>
+<span id="2531">2531</span>
+<span id="2532">2532</span>
+<span id="2533">2533</span>
+<span id="2534">2534</span>
+<span id="2535">2535</span>
+<span id="2536">2536</span>
+<span id="2537">2537</span>
+<span id="2538">2538</span>
+<span id="2539">2539</span>
+<span id="2540">2540</span>
+<span id="2541">2541</span>
 </pre><pre class="rust"><code><span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">connector</span>;
 <span class="kw">mod</span> <span class="ident">interaction</span>;
@@ -2592,7 +2603,8 @@
             <span class="ident">GetAuditLog</span>, <span class="ident">GetGuild</span>, <span class="ident">GetGuildChannels</span>, <span class="ident">GetGuildInvites</span>, <span class="ident">GetGuildPreview</span>,
             <span class="ident">GetGuildPruneCount</span>, <span class="ident">GetGuildVanityUrl</span>, <span class="ident">GetGuildVoiceRegions</span>, <span class="ident">GetGuildWebhooks</span>,
             <span class="ident">GetGuildWelcomeScreen</span>, <span class="ident">GetGuildWidget</span>, <span class="ident">UpdateCurrentMember</span>, <span class="ident">UpdateGuild</span>,
-            <span class="ident">UpdateGuildChannelPositions</span>, <span class="ident">UpdateGuildWelcomeScreen</span>, <span class="ident">UpdateGuildWidget</span>,
+            <span class="ident">UpdateGuildChannelPositions</span>, <span class="ident">UpdateGuildMfa</span>, <span class="ident">UpdateGuildWelcomeScreen</span>,
+            <span class="ident">UpdateGuildWidget</span>,
         },
         <span class="ident">scheduled_event</span>::{
             <span class="ident">CreateGuildScheduledEvent</span>, <span class="ident">DeleteGuildScheduledEvent</span>, <span class="ident">GetGuildScheduledEvent</span>,
@@ -2630,6 +2642,7 @@
 <span class="kw">use</span> <span class="ident">twilight_http_ratelimiting::Ratelimiter</span>;
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
     <span class="ident">channel</span>::{<span class="ident">message::allowed_mentions::AllowedMentions</span>, <span class="ident">ChannelType</span>},
+    <span class="ident">guild::MfaLevel</span>,
     <span class="ident">http::permission_overwrite::PermissionOverwrite</span>,
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{
@@ -3408,6 +3421,15 @@
     <span class="doccomment">/// [`MANAGE_GUILD`]: twilight_model::guild::Permissions::MANAGE_GUILD</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_invites</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">GetGuildInvites</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
         <span class="ident">GetGuildInvites::new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>)
+    }
+
+    <span class="doccomment">/// Update a guild&#39;s MFA level.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_guild_mfa</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
+        <span class="ident">level</span>: <span class="ident">MfaLevel</span>,
+    ) -&gt; <span class="ident">UpdateGuildMfa</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+        <span class="ident">UpdateGuildMfa::new</span>(<span class="self">self</span>, <span class="ident">guild_id</span>, <span class="ident">level</span>)
     }
 
     <span class="doccomment">/// Get the members of a guild, by id.</span>
