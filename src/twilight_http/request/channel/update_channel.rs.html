@@ -260,6 +260,20 @@
 <span id="254">254</span>
 <span id="255">255</span>
 <span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
@@ -296,6 +310,8 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">rate_limit_per_user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="ident">rtc_region</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Nullable</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">topic</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="ident">user_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
@@ -330,6 +346,7 @@
                 <span class="ident">permission_overwrites</span>: <span class="prelude-val">None</span>,
                 <span class="ident">position</span>: <span class="prelude-val">None</span>,
                 <span class="ident">rate_limit_per_user</span>: <span class="prelude-val">None</span>,
+                <span class="ident">rtc_region</span>: <span class="prelude-val">None</span>,
                 <span class="ident">topic</span>: <span class="prelude-val">None</span>,
                 <span class="ident">user_limit</span>: <span class="prelude-val">None</span>,
                 <span class="ident">video_quality_mode</span>: <span class="prelude-val">None</span>,
@@ -340,7 +357,9 @@
         }
     }
 
-    <span class="doccomment">/// Set the bitrate of the channel. Applicable to voice channels only.</span>
+    <span class="doccomment">/// For voice and stage channels, set the bitrate of the channel.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Must be at least 8000.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">bitrate</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bitrate</span>: <span class="ident">u32</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">bitrate</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">bitrate</span>);
 
@@ -425,6 +444,15 @@
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">rate_limit_per_user</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">rate_limit_per_user</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
+    }
+
+    <span class="doccomment">/// For voice and stage channels, set the channel&#39;s RTC region.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Set to `None` to clear.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">rtc_region</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rtc_region</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">rtc_region</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Nullable</span>(<span class="ident">rtc_region</span>));
+
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the topic.</span>
