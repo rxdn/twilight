@@ -400,15 +400,10 @@
 <span id="400">400</span>
 <span id="401">401</span>
 <span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Client to manage nodes and players.</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">model</span>::{<span class="ident">SlimVoiceServerUpdate</span>, <span class="ident">VoiceUpdate</span>},
+    <span class="ident">model::VoiceUpdate</span>,
     <span class="ident">node</span>::{<span class="ident">IncomingEvents</span>, <span class="ident">Node</span>, <span class="ident">NodeConfig</span>, <span class="ident">NodeError</span>, <span class="ident">Resume</span>},
     <span class="ident">player</span>::{<span class="ident">Player</span>, <span class="ident">PlayerManager</span>},
 };
@@ -420,7 +415,7 @@
     <span class="ident">sync::Arc</span>,
 };
 <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">gateway::event::Event</span>,
+    <span class="ident">gateway</span>::{<span class="ident">event::Event</span>, <span class="ident">payload::incoming::VoiceServerUpdate</span>},
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">GuildMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
@@ -509,7 +504,7 @@
     <span class="ident">resume</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Resume</span><span class="op">&gt;</span>,
     <span class="ident">shard_count</span>: <span class="ident">u64</span>,
     <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
-    <span class="ident">server_updates</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">SlimVoiceServerUpdate</span><span class="op">&gt;</span>,
+    <span class="ident">server_updates</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">VoiceServerUpdate</span><span class="op">&gt;</span>,
     <span class="ident">sessions</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
@@ -589,13 +584,8 @@
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
             }
             <span class="ident">Event::VoiceServerUpdate</span>(<span class="ident">e</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>) <span class="op">=</span> <span class="ident">e</span>.<span class="ident">guild_id</span> {
-                    <span class="self">self</span>.<span class="ident">server_updates</span>.<span class="ident">insert</span>(<span class="ident">guild_id</span>, <span class="ident">e</span>.<span class="ident">clone</span>().<span class="ident">into</span>());
-                    <span class="ident">guild_id</span>
-                } <span class="kw">else</span> {
-                    <span class="macro">tracing::trace!</span>(<span class="string">&quot;event has no guild ID: {e:?}&quot;</span>);
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
-                }
+                <span class="self">self</span>.<span class="ident">server_updates</span>.<span class="ident">insert</span>(<span class="ident">e</span>.<span class="ident">guild_id</span>, <span class="ident">e</span>.<span class="ident">clone</span>());
+                <span class="ident">e</span>.<span class="ident">guild_id</span>
             }
             <span class="ident">Event::VoiceStateUpdate</span>(<span class="ident">e</span>) =&gt; {
                 <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">user_id</span> <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">user_id</span> {

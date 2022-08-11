@@ -999,40 +999,6 @@
 <span id="999">999</span>
 <span id="1000">1000</span>
 <span id="1001">1001</span>
-<span id="1002">1002</span>
-<span id="1003">1003</span>
-<span id="1004">1004</span>
-<span id="1005">1005</span>
-<span id="1006">1006</span>
-<span id="1007">1007</span>
-<span id="1008">1008</span>
-<span id="1009">1009</span>
-<span id="1010">1010</span>
-<span id="1011">1011</span>
-<span id="1012">1012</span>
-<span id="1013">1013</span>
-<span id="1014">1014</span>
-<span id="1015">1015</span>
-<span id="1016">1016</span>
-<span id="1017">1017</span>
-<span id="1018">1018</span>
-<span id="1019">1019</span>
-<span id="1020">1020</span>
-<span id="1021">1021</span>
-<span id="1022">1022</span>
-<span id="1023">1023</span>
-<span id="1024">1024</span>
-<span id="1025">1025</span>
-<span id="1026">1026</span>
-<span id="1027">1027</span>
-<span id="1028">1028</span>
-<span id="1029">1029</span>
-<span id="1030">1030</span>
-<span id="1031">1031</span>
-<span id="1032">1032</span>
-<span id="1033">1033</span>
-<span id="1034">1034</span>
-<span id="1035">1035</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Models to (de)serialize incoming/outgoing websocket events and HTTP</span>
 <span class="doccomment">//! responses.</span>
 
@@ -1410,7 +1376,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VoiceUpdate</span> {
         <span class="doccomment">/// The inner event being forwarded to a node.</span>
-        <span class="kw">pub</span> <span class="ident">event</span>: <span class="ident">SlimVoiceServerUpdate</span>,
+        <span class="kw">pub</span> <span class="ident">event</span>: <span class="ident">VoiceServerUpdate</span>,
         <span class="doccomment">/// The guild ID of the player.</span>
         <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The opcode of the event.</span>
@@ -1424,45 +1390,19 @@
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
             <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
             <span class="ident">session_id</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-            <span class="ident">event</span>: <span class="ident">SlimVoiceServerUpdate</span>,
+            <span class="ident">event</span>: <span class="ident">VoiceServerUpdate</span>,
         ) -&gt; <span class="self">Self</span> {
             <span class="ident"><span class="self">Self</span>::from</span>((<span class="ident">guild_id</span>, <span class="ident">session_id</span>, <span class="ident">event</span>))
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">SlimVoiceServerUpdate</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceUpdate</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(
-            (<span class="ident">guild_id</span>, <span class="ident">session_id</span>, <span class="ident">event</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">SlimVoiceServerUpdate</span>),
-        ) -&gt; <span class="self">Self</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">VoiceServerUpdate</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VoiceUpdate</span> {
+        <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">guild_id</span>, <span class="ident">session_id</span>, <span class="ident">event</span>): (<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">VoiceServerUpdate</span>)) -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">event</span>,
                 <span class="ident">guild_id</span>,
                 <span class="ident">op</span>: <span class="ident">Opcode::VoiceUpdate</span>,
                 <span class="ident">session_id</span>: <span class="ident">session_id</span>.<span class="ident">into</span>(),
-            }
-        }
-    }
-
-    <span class="doccomment">/// A slimmed version of a twilight voice server update.</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-    <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SlimVoiceServerUpdate</span> {
-        <span class="doccomment">/// The endpoint of the Discord voice server.</span>
-        <span class="kw">pub</span> <span class="ident">endpoint</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// The guild ID of the player.</span>
-        <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// The authentication token used by the bot to connect to the Discord</span>
-        <span class="doccomment">/// voice server.</span>
-        <span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">String</span>,
-    }
-
-    <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">VoiceServerUpdate</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SlimVoiceServerUpdate</span> {
-        <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">update</span>: <span class="ident">VoiceServerUpdate</span>) -&gt; <span class="self">Self</span> {
-            <span class="self">Self</span> {
-                <span class="ident">endpoint</span>: <span class="ident">update</span>.<span class="ident">endpoint</span>,
-                <span class="ident">guild_id</span>: <span class="ident">update</span>.<span class="ident">guild_id</span>,
-                <span class="ident">token</span>: <span class="ident">update</span>.<span class="ident">token</span>,
             }
         }
     }
@@ -1597,7 +1537,7 @@
     }
 
     <span class="doccomment">/// CPU information about a node and its host.</span>
-    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
     <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StatsFrames</span> {
@@ -1702,8 +1642,8 @@
         <span class="ident">TrackEnd</span>, <span class="ident">TrackEventType</span>, <span class="ident">TrackStart</span>, <span class="ident">WebsocketClosed</span>,
     },
     <span class="ident">outgoing</span>::{
-        <span class="ident">Destroy</span>, <span class="ident">Equalizer</span>, <span class="ident">EqualizerBand</span>, <span class="ident">OutgoingEvent</span>, <span class="ident">Pause</span>, <span class="ident">Play</span>, <span class="ident">Seek</span>, <span class="ident">SlimVoiceServerUpdate</span>,
-        <span class="ident">Stop</span>, <span class="ident">VoiceUpdate</span>, <span class="ident">Volume</span>,
+        <span class="ident">Destroy</span>, <span class="ident">Equalizer</span>, <span class="ident">EqualizerBand</span>, <span class="ident">OutgoingEvent</span>, <span class="ident">Pause</span>, <span class="ident">Play</span>, <span class="ident">Seek</span>, <span class="ident">Stop</span>, <span class="ident">VoiceUpdate</span>,
+        <span class="ident">Volume</span>,
     },
 };
 
@@ -1715,8 +1655,8 @@
             <span class="ident">StatsMemory</span>, <span class="ident">TrackEnd</span>, <span class="ident">TrackEventType</span>, <span class="ident">TrackStart</span>, <span class="ident">WebsocketClosed</span>,
         },
         <span class="ident">outgoing</span>::{
-            <span class="ident">Destroy</span>, <span class="ident">Equalizer</span>, <span class="ident">EqualizerBand</span>, <span class="ident">OutgoingEvent</span>, <span class="ident">Pause</span>, <span class="ident">Play</span>, <span class="ident">Seek</span>,
-            <span class="ident">SlimVoiceServerUpdate</span>, <span class="ident">Stop</span>, <span class="ident">VoiceUpdate</span>, <span class="ident">Volume</span>,
+            <span class="ident">Destroy</span>, <span class="ident">Equalizer</span>, <span class="ident">EqualizerBand</span>, <span class="ident">OutgoingEvent</span>, <span class="ident">Pause</span>, <span class="ident">Play</span>, <span class="ident">Seek</span>, <span class="ident">Stop</span>, <span class="ident">VoiceUpdate</span>,
+            <span class="ident">Volume</span>,
         },
         <span class="ident">Opcode</span>,
     };
@@ -1724,7 +1664,10 @@
     <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
     <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
     <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-    <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>};
+    <span class="kw">use</span> <span class="ident">twilight_model</span>::{
+        <span class="ident">gateway::payload::incoming::VoiceServerUpdate</span>,
+        <span class="ident">id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>},
+    };
 
     <span class="macro">assert_fields!</span>(<span class="ident">Destroy</span>: <span class="ident">guild_id</span>, <span class="ident">op</span>);
     <span class="macro">assert_impl_all!</span>(
@@ -1856,17 +1799,6 @@
         <span class="ident">Serialize</span>,
         <span class="ident">Sync</span>,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">SlimVoiceServerUpdate</span>: <span class="ident">endpoint</span>, <span class="ident">guild_id</span>, <span class="ident">token</span>);
-    <span class="macro">assert_impl_all!</span>(
-        <span class="ident">SlimVoiceServerUpdate</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
-    );
     <span class="macro">assert_fields!</span>(
         <span class="ident">Stats</span>: <span class="ident">cpu</span>,
         <span class="ident">frames</span>,
@@ -1973,7 +1905,7 @@
         <span class="ident">Debug</span>,
         <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">Eq</span>,
-        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">SlimVoiceServerUpdate</span>)<span class="op">&gt;</span>,
+        <span class="ident">From</span><span class="op">&lt;</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">String</span>, <span class="ident">VoiceServerUpdate</span>)<span class="op">&gt;</span>,
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Serialize</span>,

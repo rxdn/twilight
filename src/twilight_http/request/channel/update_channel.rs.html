@@ -268,6 +268,19 @@
 <span id="268">268</span>
 <span id="269">269</span>
 <span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">client::Client</span>,
     <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
@@ -281,7 +294,10 @@
     <span class="ident">id</span>::{<span class="ident">marker::ChannelMarker</span>, <span class="ident">Id</span>},
 };
 <span class="kw">use</span> <span class="ident">twilight_validate</span>::{
-    <span class="ident">channel</span>::{<span class="ident">name</span> <span class="kw">as</span> <span class="ident">validate_name</span>, <span class="ident">topic</span> <span class="kw">as</span> <span class="ident">validate_topic</span>, <span class="ident">ChannelValidationError</span>},
+    <span class="ident">channel</span>::{
+        <span class="ident">bitrate</span> <span class="kw">as</span> <span class="ident">validate_bitrate</span>, <span class="ident">name</span> <span class="kw">as</span> <span class="ident">validate_name</span>, <span class="ident">topic</span> <span class="kw">as</span> <span class="ident">validate_topic</span>,
+        <span class="ident">ChannelValidationError</span>,
+    },
     <span class="ident">request</span>::{<span class="ident">audit_reason</span> <span class="kw">as</span> <span class="ident">validate_audit_reason</span>, <span class="ident">ValidationError</span>},
 };
 
@@ -354,10 +370,20 @@
     <span class="doccomment">/// For voice and stage channels, set the bitrate of the channel.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Must be at least 8000.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">bitrate</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bitrate</span>: <span class="ident">u32</span>) -&gt; <span class="self">Self</span> {
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns an error of type [`BitrateInvalid`] if the bitrate is invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`BitrateInvalid`]: twilight_validate::channel::ChannelValidationErrorType::BitrateInvalid</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">bitrate</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bitrate</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ChannelValidationError</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">validate_bitrate</span>(<span class="ident">bitrate</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>);
+        }
+
         <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">bitrate</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">bitrate</span>);
 
-        <span class="self">self</span>
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Set the name.</span>
