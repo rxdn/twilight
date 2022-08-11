@@ -1,3 +1,3 @@
-(function() {var implementors = {};
-implementors["twilight_model"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/double_ended/trait.DoubleEndedIterator.html\" title=\"trait core::iter::traits::double_ended::DoubleEndedIterator\">DoubleEndedIterator</a> for <a class=\"struct\" href=\"twilight_model/util/image_hash/struct.Nibbles.html\" title=\"struct twilight_model::util::image_hash::Nibbles\">Nibbles</a>","synthetic":false,"types":["twilight_model::util::image_hash::Nibbles"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
+(function() {var implementors = {
+"twilight_model":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/iter/traits/double_ended/trait.DoubleEndedIterator.html\" title=\"trait core::iter::traits::double_ended::DoubleEndedIterator\">DoubleEndedIterator</a> for <a class=\"struct\" href=\"twilight_model/util/image_hash/struct.Nibbles.html\" title=\"struct twilight_model::util::image_hash::Nibbles\">Nibbles</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
