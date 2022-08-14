@@ -94,7 +94,7 @@ use std::{
 use tokio::time;
 use twilight_http_ratelimiting::Ratelimiter;
 use twilight_model::{
-    channel::{message::allowed_mentions::AllowedMentions, ChannelType},
+    channel::{message::AllowedMentions, ChannelType},
     guild::MfaLevel,
     http::permission_overwrite::PermissionOverwrite,
     id::{
