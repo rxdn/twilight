@@ -67,68 +67,68 @@
 </pre><pre class="rust"><code><span class="doccomment">//! HTTP connectors with different features.</span>
 
 <span class="doccomment">/// HTTPS connector using `rustls` as a TLS backend.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>))]</span>
-<span class="kw">type</span> <span class="ident">HttpsConnector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hyper_rustls::HttpsConnector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>, <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>))]</span>
+<span class="kw">type</span> <span class="ident">HttpsConnector</span>&lt;<span class="ident">T</span>&gt; = <span class="ident">hyper_rustls::HttpsConnector</span>&lt;<span class="ident">T</span>&gt;;
 <span class="doccomment">/// HTTPS connector using `hyper-tls` as a TLS backend.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-    <span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>))
+    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+    <span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>, <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>))
 ))]</span>
-<span class="kw">type</span> <span class="ident">HttpsConnector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">hyper_tls::HttpsConnector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">HttpsConnector</span>&lt;<span class="ident">T</span>&gt; = <span class="ident">hyper_tls::HttpsConnector</span>&lt;<span class="ident">T</span>&gt;;
 
 <span class="doccomment">/// HTTP connector using `trust-dns` as a DNS backend.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;trust-dns&quot;</span>)]</span>
-<span class="kw">type</span> <span class="ident">HttpConnector</span> <span class="op">=</span> <span class="ident">hyper_trust_dns::TrustDnsHttpConnector</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>)]</span>
+<span class="kw">type</span> <span class="ident">HttpConnector</span> = <span class="ident">hyper_trust_dns::TrustDnsHttpConnector</span>;
 <span class="doccomment">/// HTTP connector.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;trust-dns&quot;</span>))]</span>
-<span class="kw">type</span> <span class="ident">HttpConnector</span> <span class="op">=</span> <span class="ident">hyper::client::HttpConnector</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>))]</span>
+<span class="kw">type</span> <span class="ident">HttpConnector</span> = <span class="ident">hyper::client::HttpConnector</span>;
 
 <span class="doccomment">/// Re-exported generic connector for use in the client.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
 ))]</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Connector</span> <span class="op">=</span> <span class="ident">HttpsConnector</span><span class="op">&lt;</span><span class="ident">HttpConnector</span><span class="op">&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Connector</span> = <span class="ident">HttpsConnector</span>&lt;<span class="ident">HttpConnector</span>&gt;;
 <span class="doccomment">/// Re-exported generic connector for use in the client.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
 )))]</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Connector</span> <span class="op">=</span> <span class="ident">HttpConnector</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Connector</span> = <span class="ident">HttpConnector</span>;
 
 <span class="doccomment">/// Create a connector with the specified features.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>() -&gt; <span class="ident">Connector</span> {
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;trust-dns&quot;</span>))]</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper::client::HttpConnector::new</span>();
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;trust-dns&quot;</span>)]</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_trust_dns::TrustDnsResolver::default</span>().<span class="ident">into_http_connector</span>();
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>))]</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> = <span class="ident">hyper::client::HttpConnector::new</span>();
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>)]</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> = <span class="ident">hyper_trust_dns::TrustDnsResolver::default</span>().<span class="ident">into_http_connector</span>();
 
     <span class="ident">connector</span>.<span class="ident">enforce_http</span>(<span class="bool-val">false</span>);
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>)]</span>
-    <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>)]</span>
+    <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
         .<span class="ident">with_native_roots</span>()
         .<span class="ident">https_or_http</span>()
         .<span class="ident">enable_http1</span>()
         .<span class="ident">enable_http2</span>()
         .<span class="ident">wrap_connector</span>(<span class="ident">connector</span>);
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>)))]</span>
-    <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>)))]</span>
+    <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
         .<span class="ident">with_webpki_roots</span>()
         .<span class="ident">https_or_http</span>()
         .<span class="ident">enable_http1</span>()
         .<span class="ident">enable_http2</span>()
         .<span class="ident">wrap_connector</span>(<span class="ident">connector</span>);
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-        <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-        <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>),
-        <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>)
+        <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+        <span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>),
+        <span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>)
     ))]</span>
-    <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">hyper_tls::HttpsConnector::new_with_connector</span>(<span class="ident">connector</span>);
+    <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">hyper_tls::HttpsConnector::new_with_connector</span>(<span class="ident">connector</span>);
 
     <span class="ident">connector</span>
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

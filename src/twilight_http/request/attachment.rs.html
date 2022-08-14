@@ -167,12 +167,12 @@
     <span class="ident">id</span>::{<span class="ident">marker::AttachmentMarker</span>, <span class="ident">Id</span>},
 };
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AttachmentManager</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">files</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Attachment</span><span class="op">&gt;</span>,
-    <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AttachmentMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AttachmentManager</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="ident">files</span>: <span class="ident">Vec</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Attachment</span>&gt;,
+    <span class="ident">ids</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">AttachmentMarker</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">AttachmentManager</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">AttachmentManager</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">files</span>: <span class="ident">Vec::new</span>(),
@@ -181,29 +181,29 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_form</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="ident">Form</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> <span class="op">=</span> <span class="ident">Form::new</span>().<span class="ident">json_part</span>(<span class="string">b&quot;payload_json&quot;</span>, <span class="ident">fields</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> = <span class="ident">Form::new</span>().<span class="ident">json_part</span>(<span class="string">b&quot;payload_json&quot;</span>, <span class="ident">fields</span>);
 
         <span class="kw">for</span> <span class="ident">file</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">files</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="number">7</span> <span class="op">+</span> <span class="ident">num_digits</span>(<span class="ident">file</span>.<span class="ident">id</span>));
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name</span> = <span class="ident">Vec::with_capacity</span>(<span class="number">7</span> + <span class="ident">num_digits</span>(<span class="ident">file</span>.<span class="ident">id</span>));
             <span class="ident">name</span>.<span class="ident">extend</span>(<span class="string">b&quot;files[&quot;</span>);
             <span class="ident">push_digits</span>(<span class="ident">file</span>.<span class="ident">id</span>, <span class="kw-2">&amp;mut</span> <span class="ident">name</span>);
             <span class="ident">name</span>.<span class="ident">extend</span>(<span class="string">b&quot;]&quot;</span>);
 
-            <span class="ident">form</span> <span class="op">=</span> <span class="ident">form</span>.<span class="ident">file_part</span>(<span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">file</span>.<span class="ident">filename</span>.<span class="ident">as_bytes</span>(), <span class="ident">file</span>.<span class="ident">file</span>.<span class="ident">as_ref</span>());
+            <span class="ident">form</span> = <span class="ident">form</span>.<span class="ident">file_part</span>(<span class="ident">name</span>.<span class="ident">as_ref</span>(), <span class="ident">file</span>.<span class="ident">filename</span>.<span class="ident">as_bytes</span>(), <span class="ident">file</span>.<span class="ident">file</span>.<span class="ident">as_ref</span>());
         }
 
         <span class="ident">form</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_partial_attachments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PartialAttachment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_partial_attachments</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">PartialAttachment</span>&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
         <span class="self">self</span>.<span class="ident">files</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">attachment</span><span class="op">|</span> <span class="ident">PartialAttachment</span> {
+            .<span class="ident">map</span>(|<span class="ident">attachment</span>| <span class="ident">PartialAttachment</span> {
                 <span class="ident">description</span>: <span class="ident">attachment</span>.<span class="ident">description</span>.<span class="ident">as_deref</span>(),
                 <span class="ident">filename</span>: <span class="prelude-val">Some</span>(<span class="ident">attachment</span>.<span class="ident">filename</span>.<span class="ident">as_ref</span>()),
                 <span class="ident">id</span>: <span class="ident">attachment</span>.<span class="ident">id</span>,
             })
-            .<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">ids</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">PartialAttachment</span> {
+            .<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">ids</span>.<span class="ident">iter</span>().<span class="ident">map</span>(|<span class="ident">id</span>| <span class="ident">PartialAttachment</span> {
                 <span class="ident">description</span>: <span class="prelude-val">None</span>,
                 <span class="ident">filename</span>: <span class="prelude-val">None</span>,
                 <span class="ident">id</span>: <span class="ident">id</span>.<span class="ident">get</span>(),
@@ -212,82 +212,82 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">ids</span>.<span class="ident">is_empty</span>()
+        <span class="self">self</span>.<span class="ident">files</span>.<span class="ident">is_empty</span>() &amp;&amp; <span class="self">self</span>.<span class="ident">ids</span>.<span class="ident">is_empty</span>()
     }
 
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Form&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Attachment</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">files</span> <span class="op">=</span> <span class="ident">files</span>;
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;has no effect if not built into a Form&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_files</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">files</span>: <span class="ident">Vec</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Attachment</span>&gt;) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">files</span> = <span class="ident">files</span>;
 
         <span class="self">self</span>
     }
 
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Form&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_ids</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AttachmentMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">ids</span> <span class="op">=</span> <span class="ident">ids</span>;
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;has no effect if not built into a Form&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_ids</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ids</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">AttachmentMarker</span>&gt;&gt;) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">ids</span> = <span class="ident">ids</span>;
 
         <span class="self">self</span>
     }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PartialAttachment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">filename</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PartialAttachment</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">filename</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u64</span>,
 }
 
 <span class="doccomment">/// Count the number of digits in a given number.</span>
 <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">num_digits</span>(<span class="ident">index</span>: <span class="ident">u64</span>) -&gt; <span class="ident">usize</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> = <span class="ident">index</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> = <span class="number">0</span>;
 
-    <span class="kw">if</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="number">10</span> {
+    <span class="kw">if</span> <span class="ident">index</span> &lt; <span class="number">10</span> {
         <span class="kw">return</span> <span class="number">1</span>;
     }
 
-    <span class="kw">while</span> <span class="ident">index</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="ident">index</span> <span class="op">/</span><span class="op">=</span> <span class="number">10</span>;
-        <span class="ident">len</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">while</span> <span class="ident">index</span> &gt; <span class="number">0</span> {
+        <span class="ident">index</span> /= <span class="number">10</span>;
+        <span class="ident">len</span> += <span class="number">1</span>;
     }
 
     <span class="ident">len</span>
 }
 
 <span class="doccomment">/// Value of &#39;0&#39; in ascii</span>
-<span class="kw">const</span> <span class="ident">ASCII_NUMBER</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0x30</span>;
+<span class="kw">const</span> <span class="ident">ASCII_NUMBER</span>: <span class="ident">u8</span> = <span class="number">0x30</span>;
 
 <span class="doccomment">/// Extend the buffer with the digits of the integer `id`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The reason for this is to get around a allocation by for example using</span>
 <span class="doccomment">/// `format!(&quot;files[{id}]&quot;)`.</span>
-<span class="kw">fn</span> <span class="ident">push_digits</span>(<span class="kw-2">mut</span> <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
+<span class="kw">fn</span> <span class="ident">push_digits</span>(<span class="kw-2">mut</span> <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;) {
     <span class="comment">// The largest 64 bit integer is 20 digits.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner_buf</span> <span class="op">=</span> [<span class="number">0_u8</span>; <span class="number">20</span>];
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inner_buf</span> = [<span class="number">0_u8</span>; <span class="number">20</span>];
     <span class="comment">// Amount of digits written to the inner buffer.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> = <span class="number">0</span>;
 
     <span class="comment">// While the number have more than one digit we print the last digit by</span>
     <span class="comment">// taking the rest after modulo 10. We then divide with 10 to truncate the</span>
     <span class="comment">// number from the right and then loop</span>
-    <span class="kw">while</span> <span class="ident">id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">10</span> {
+    <span class="kw">while</span> <span class="ident">id</span> &gt;= <span class="number">10</span> {
         <span class="comment">// To go from the integer to the ascii value we add the ascii value of</span>
         <span class="comment">// &#39;0&#39;.</span>
         <span class="comment">//</span>
         <span class="comment">// (id % 10) will always be less than 10 so truncation cannot happen.</span>
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
-        <span class="kw">let</span> <span class="ident">ascii</span> <span class="op">=</span> (<span class="ident">id</span> <span class="op">%</span> <span class="number">10</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">ASCII_NUMBER</span>;
-        <span class="ident">inner_buf</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">ascii</span>;
-        <span class="ident">id</span> <span class="op">/</span><span class="op">=</span> <span class="number">10</span>;
-        <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="kw">let</span> <span class="ident">ascii</span> = (<span class="ident">id</span> % <span class="number">10</span>) <span class="kw">as</span> <span class="ident">u8</span> + <span class="ident">ASCII_NUMBER</span>;
+        <span class="ident">inner_buf</span>[<span class="ident">i</span>] = <span class="ident">ascii</span>;
+        <span class="ident">id</span> /= <span class="number">10</span>;
+        <span class="ident">i</span> += <span class="number">1</span>;
     }
     <span class="comment">// (id % 10) will always be less than 10 so truncation cannot happen.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
-    <span class="kw">let</span> <span class="ident">ascii</span> <span class="op">=</span> (<span class="ident">id</span> <span class="op">%</span> <span class="number">10</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="ident">ASCII_NUMBER</span>;
-    <span class="ident">inner_buf</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">ascii</span>;
-    <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="ident">ascii</span> = (<span class="ident">id</span> % <span class="number">10</span>) <span class="kw">as</span> <span class="ident">u8</span> + <span class="ident">ASCII_NUMBER</span>;
+    <span class="ident">inner_buf</span>[<span class="ident">i</span>] = <span class="ident">ascii</span>;
+    <span class="ident">i</span> += <span class="number">1</span>;
 
     <span class="comment">// As we have written the digits in reverse we reverse the area of the array</span>
     <span class="comment">// we have been using to get the characters in the correct order.</span>
@@ -302,11 +302,11 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">push_digits_limits</span>() {
-        <span class="kw">let</span> <span class="ident">min_d</span> <span class="op">=</span> <span class="string">b&quot;0&quot;</span>;
-        <span class="kw">let</span> <span class="ident">max_d</span> <span class="op">=</span> <span class="string">b&quot;18446744073709551615&quot;</span>;
+        <span class="kw">let</span> <span class="ident">min_d</span> = <span class="string">b&quot;0&quot;</span>;
+        <span class="kw">let</span> <span class="ident">max_d</span> = <span class="string">b&quot;18446744073709551615&quot;</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">min_v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_v</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">min_v</span> = <span class="ident">Vec::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_v</span> = <span class="ident">Vec::new</span>();
 
         <span class="ident">push_digits</span>(<span class="ident">u64::MIN</span>, <span class="kw-2">&amp;mut</span> <span class="ident">min_v</span>);
         <span class="ident">push_digits</span>(<span class="ident">u64::MAX</span>, <span class="kw-2">&amp;mut</span> <span class="ident">max_v</span>);
@@ -323,4 +323,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

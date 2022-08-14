@@ -247,12 +247,12 @@
 <span class="doccomment">/// results to an error, then the API consumer dropped the sernding half of the</span>
 <span class="doccomment">/// channel. You should treat this as if the request happened.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketHeaders</span>(<span class="ident">Receiver</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketHeaders</span>(<span class="ident">Receiver</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;);
 
 <span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">TicketHeaders</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span>, <span class="ident">RecvError</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;, <span class="ident">RecvError</span>&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
         <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>)
     }
 }
@@ -260,7 +260,7 @@
 <span class="doccomment">/// Indicate to the ratelimit consumer that their ticket has been granted and</span>
 <span class="doccomment">/// they may now send a request.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketNotifier</span>(<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketNotifier</span>(<span class="ident">Sender</span>&lt;<span class="ident">Sender</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;&gt;);
 
 <span class="kw">impl</span> <span class="ident">TicketNotifier</span> {
     <span class="doccomment">/// Signal to the ratelimiter consumer (an HTTP client) that a request may</span>
@@ -273,8 +273,8 @@
     <span class="doccomment">/// Returns a `None` if the consumer has dropped their</span>
     <span class="doccomment">/// [`TicketReceiver`] half. The ticket is considered canceled.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TicketHeaders</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">TicketHeaders</span>&gt; {
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
 
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">tx</span>).<span class="ident">ok</span>()<span class="question-mark">?</span>;
 
@@ -290,12 +290,12 @@
 <span class="doccomment">/// Once one is available, a [`TicketSender`] will be produced which can be used to</span>
 <span class="doccomment">/// send the associated HTTP response&#39;s ratelimit headers.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketReceiver</span>(<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketReceiver</span>(<span class="ident">Receiver</span>&lt;<span class="ident">Sender</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;&gt;);
 
 <span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">TicketReceiver</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TicketSender</span>, <span class="ident">RecvError</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">TicketSender</span>, <span class="ident">RecvError</span>&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
         <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>).<span class="ident">map_ok</span>(<span class="ident">TicketSender</span>)
     }
 }
@@ -311,7 +311,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`headers`]: Self::headers</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketSender</span>(<span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketSender</span>(<span class="ident">Sender</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;);
 
 <span class="kw">impl</span> <span class="ident">TicketSender</span> {
     <span class="doccomment">/// Send the response&#39;s ratelimit headers to the ratelimiter.</span>
@@ -328,8 +328,8 @@
     <span class="doccomment">/// occurred.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(
         <span class="self">self</span>,
-        <span class="ident">headers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitHeaders</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident">headers</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt; {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">headers</span>)
     }
 }
@@ -344,9 +344,9 @@
 <span class="doccomment">/// [module-level]: self</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span>() -&gt; (<span class="ident">TicketNotifier</span>, <span class="ident">TicketReceiver</span>) {
-    <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+    <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
 
     (<span class="ident">TicketNotifier</span>(<span class="ident">tx</span>), <span class="ident">TicketReceiver</span>(<span class="ident">rx</span>))
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

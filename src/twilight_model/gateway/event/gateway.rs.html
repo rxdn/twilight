@@ -1011,7 +1011,7 @@
 <span class="doccomment">/// stateful updates or a heartbeat, hello, etc. that a shard needs to operate.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">GatewayEvent</span> {
-    <span class="ident">Dispatch</span>(<span class="ident">u64</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">DispatchEvent</span><span class="op">&gt;</span>),
+    <span class="ident">Dispatch</span>(<span class="ident">u64</span>, <span class="ident">Box</span>&lt;<span class="ident">DispatchEvent</span>&gt;),
     <span class="ident">Heartbeat</span>(<span class="ident">u64</span>),
     <span class="ident">HeartbeatAck</span>,
     <span class="ident">Hello</span>(<span class="ident">u64</span>),
@@ -1019,10 +1019,10 @@
     <span class="ident">Reconnect</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GatewayEvent</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">EventConversionError</span>;
+<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;<span class="ident">Event</span>&gt; <span class="kw">for</span> <span class="ident">GatewayEvent</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">EventConversionError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">event</span> {
             <span class="ident">Event::GatewayHeartbeat</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Heartbeat</span>(<span class="ident">v</span>),
             <span class="ident">Event::GatewayHeartbeatAck</span> =&gt; <span class="ident"><span class="self">Self</span>::HeartbeatAck</span>,
@@ -1036,7 +1036,7 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> = <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="kw">enum</span> <span class="ident">Field</span> {
     <span class="ident">D</span>,
     <span class="ident">Op</span>,
@@ -1058,9 +1058,9 @@
 <span class="doccomment">/// like `simd-json`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GatewayEventDeserializerOwned</span> {
-    <span class="ident">event_type</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="ident">event_type</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     <span class="ident">op</span>: <span class="ident">u8</span>,
-    <span class="ident">sequence</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="ident">sequence</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">GatewayEventDeserializerOwned</span> {
@@ -1069,7 +1069,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This might be useful if you scan the payload for this information and</span>
     <span class="doccomment">/// do some work with the event type prior to deserializing the payload.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">op</span>: <span class="ident">u8</span>, <span class="ident">sequence</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">event_type</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">op</span>: <span class="ident">u8</span>, <span class="ident">sequence</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;, <span class="ident">event_type</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;&gt;) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">event_type</span>: <span class="ident">event_type</span>.<span class="ident">into</span>(),
             <span class="ident">op</span>,
@@ -1077,13 +1077,13 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_json</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">deser</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_json</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let</span> <span class="ident">deser</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">GatewayEventDeserializer</span> {
             <span class="ident">event_type</span>,
             <span class="ident">op</span>,
             <span class="ident">sequence</span>,
-        } <span class="op">=</span> <span class="ident">deser</span>;
+        } = <span class="ident">deser</span>;
 
         <span class="prelude-val">Some</span>(<span class="self">Self</span> {
             <span class="ident">event_type</span>: <span class="ident">event_type</span>.<span class="ident">map</span>(<span class="ident">ToOwned::to_owned</span>),
@@ -1093,7 +1093,7 @@
     }
 
     <span class="doccomment">/// Return an immutable reference to the event type of the payload.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">event_type_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">event_type_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>&gt; {
         <span class="self">self</span>.<span class="ident">event_type</span>.<span class="ident">as_deref</span>()
     }
 
@@ -1103,14 +1103,14 @@
     }
 
     <span class="doccomment">/// Return the sequence of the payload.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sequence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sequence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt; {
         <span class="self">self</span>.<span class="ident">sequence</span>
     }
 
     <span class="doccomment">/// Consume the deserializer, returning its opcode, sequence, and event type</span>
     <span class="doccomment">/// components.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">u8</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;, <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;) {
         (<span class="self">self</span>.<span class="ident">op</span>, <span class="self">self</span>.<span class="ident">sequence</span>, <span class="self">self</span>.<span class="ident">event_type</span>)
     }
 }
@@ -1123,19 +1123,19 @@
 <span class="doccomment">/// You should use this if you&#39;re using an immutable deserialization library</span>
 <span class="doccomment">/// like `serde_json`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GatewayEventDeserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">event_type</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GatewayEventDeserializer</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="ident">event_type</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
     <span class="ident">op</span>: <span class="ident">u8</span>,
-    <span class="ident">sequence</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="ident">sequence</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">GatewayEventDeserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">GatewayEventDeserializer</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="doccomment">/// Create a new gateway event deserializer when you already know the event</span>
     <span class="doccomment">/// type and opcode.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This might be useful if you scan the payload for this information and</span>
     <span class="doccomment">/// do some work with the event type prior to deserializing the payload.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">op</span>: <span class="ident">u8</span>, <span class="ident">sequence</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">event_type</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">op</span>: <span class="ident">u8</span>, <span class="ident">sequence</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;, <span class="ident">event_type</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">event_type</span>,
             <span class="ident">op</span>,
@@ -1149,10 +1149,10 @@
     <span class="doccomment">/// This will scan the payload for the opcode and, optionally, event type if</span>
     <span class="doccomment">/// provided. The opcode key (&quot;op&quot;), must be in the payload while the event</span>
     <span class="doccomment">/// type key (&quot;t&quot;) is optional and only required for event ops.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_json</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::find_opcode</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">event_type</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::find_event_type</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">sequence</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::find_sequence</span>(<span class="ident">input</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_json</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let</span> <span class="ident">op</span> = <span class="ident"><span class="self">Self</span>::find_opcode</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">event_type</span> = <span class="ident"><span class="self">Self</span>::find_event_type</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">sequence</span> = <span class="ident"><span class="self">Self</span>::find_sequence</span>(<span class="ident">input</span>);
 
         <span class="prelude-val">Some</span>(<span class="self">Self</span> {
             <span class="ident">event_type</span>,
@@ -1162,7 +1162,7 @@
     }
 
     <span class="doccomment">/// Return an immutable reference to the event type of the payload.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">event_type_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">event_type_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>&gt; {
         <span class="self">self</span>.<span class="ident">event_type</span>
     }
 
@@ -1172,82 +1172,82 @@
     }
 
     <span class="doccomment">/// Return the sequence of the payload.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sequence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sequence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt; {
         <span class="self">self</span>.<span class="ident">sequence</span>
     }
 
     <span class="doccomment">/// Consume the deserializer, returning its opcode and event type</span>
     <span class="doccomment">/// components.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">u8</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;) {
         (<span class="self">self</span>.<span class="ident">op</span>, <span class="self">self</span>.<span class="ident">sequence</span>, <span class="self">self</span>.<span class="ident">event_type</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">find_event_type</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_event_type</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt; {
         <span class="comment">// We&#39;re going to search for the event type key from the start. Discord</span>
         <span class="comment">// always puts it at the front before the D key from some testing of</span>
         <span class="comment">// several hundred payloads.</span>
         <span class="comment">//</span>
         <span class="comment">// If we find it, add 4, since that&#39;s the length of what we&#39;re searching</span>
         <span class="comment">// for.</span>
-        <span class="kw">let</span> <span class="ident">from</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">find</span>(<span class="string">r#&quot;&quot;t&quot;:&quot;#</span>)<span class="question-mark">?</span> <span class="op">+</span> <span class="number">4</span>;
+        <span class="kw">let</span> <span class="ident">from</span> = <span class="ident">input</span>.<span class="ident">find</span>(<span class="string">r#&quot;&quot;t&quot;:&quot;#</span>)<span class="question-mark">?</span> + <span class="number">4</span>;
 
         <span class="comment">// Now let&#39;s find where the value starts, which may be a string or null.</span>
         <span class="comment">// Or maybe something else. If it&#39;s anything but a string, then there&#39;s</span>
         <span class="comment">// no event type.</span>
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">from</span>..)<span class="question-mark">?</span>.<span class="ident">find</span>(<span class="op">|</span><span class="ident">c</span>: <span class="ident">char</span><span class="op">|</span> <span class="op">!</span><span class="ident">c</span>.<span class="ident">is_whitespace</span>())<span class="question-mark">?</span> <span class="op">+</span> <span class="ident">from</span> <span class="op">+</span> <span class="number">1</span>;
+        <span class="kw">let</span> <span class="ident">start</span> = <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">from</span>..)<span class="question-mark">?</span>.<span class="ident">find</span>(|<span class="ident">c</span>: <span class="ident">char</span>| !<span class="ident">c</span>.<span class="ident">is_whitespace</span>())<span class="question-mark">?</span> + <span class="ident">from</span> + <span class="number">1</span>;
 
         <span class="comment">// Check if the character just before the cursor is &#39;&quot;&#39;.</span>
-        <span class="kw">if</span> <span class="ident">input</span>.<span class="ident">as_bytes</span>().<span class="ident">get</span>(<span class="ident">start</span> <span class="op">-</span> <span class="number">1</span>).<span class="ident">copied</span>()<span class="question-mark">?</span> <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;&quot;&#39;</span> {
+        <span class="kw">if</span> <span class="ident">input</span>.<span class="ident">as_bytes</span>().<span class="ident">get</span>(<span class="ident">start</span> - <span class="number">1</span>).<span class="ident">copied</span>()<span class="question-mark">?</span> != <span class="string">b&#39;&quot;&#39;</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">to</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">start</span>..)<span class="question-mark">?</span>.<span class="ident">find</span>(<span class="string">&#39;&quot;&#39;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">to</span> = <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">start</span>..)<span class="question-mark">?</span>.<span class="ident">find</span>(<span class="string">&#39;&quot;&#39;</span>)<span class="question-mark">?</span>;
 
-        <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">start</span>..<span class="ident">start</span> <span class="op">+</span> <span class="ident">to</span>)
+        <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">start</span>..<span class="ident">start</span> + <span class="ident">to</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">find_opcode</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_opcode</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u8</span>&gt; {
         <span class="ident"><span class="self">Self</span>::find_integer</span>(<span class="ident">input</span>, <span class="string">r#&quot;&quot;op&quot;:&quot;#</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">find_sequence</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_sequence</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt; {
         <span class="ident"><span class="self">Self</span>::find_integer</span>(<span class="ident">input</span>, <span class="string">r#&quot;&quot;s&quot;:&quot;#</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">find_integer</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FromStr</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">find_integer</span>&lt;<span class="ident">T</span>: <span class="ident">FromStr</span>&gt;(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">T</span>&gt; {
         <span class="comment">// Find the op key&#39;s position and then search for where the first</span>
         <span class="comment">// character that&#39;s not base 10 is. This&#39;ll give us the bytes with the</span>
         <span class="comment">// op which can be parsed.</span>
         <span class="comment">//</span>
         <span class="comment">// Add 5 at the end since that&#39;s the length of what we&#39;re finding.</span>
-        <span class="kw">let</span> <span class="ident">from</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">find</span>(<span class="ident">key</span>)<span class="question-mark">?</span> <span class="op">+</span> <span class="ident">key</span>.<span class="ident">len</span>();
+        <span class="kw">let</span> <span class="ident">from</span> = <span class="ident">input</span>.<span class="ident">find</span>(<span class="ident">key</span>)<span class="question-mark">?</span> + <span class="ident">key</span>.<span class="ident">len</span>();
 
         <span class="comment">// Look for the first thing that isn&#39;t a base 10 digit or whitespace,</span>
         <span class="comment">// i.e. a comma (denoting another JSON field), curly brace (end of the</span>
         <span class="comment">// object), etc. This&#39;ll give us the op number, maybe with a little</span>
         <span class="comment">// whitespace.</span>
-        <span class="kw">let</span> <span class="ident">to</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">from</span>..)<span class="question-mark">?</span>.<span class="ident">find</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;,&#39;</span>, <span class="string">&#39;}&#39;</span>] <span class="kw">as</span> <span class="kw-2">&amp;</span>[<span class="kw">_</span>])<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">to</span> = <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">from</span>..)<span class="question-mark">?</span>.<span class="ident">find</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;,&#39;</span>, <span class="string">&#39;}&#39;</span>] <span class="kw">as</span> <span class="kw-2">&amp;</span>[<span class="kw">_</span>])<span class="question-mark">?</span>;
         <span class="comment">// We might have some whitespace, so let&#39;s trim this.</span>
-        <span class="kw">let</span> <span class="ident">clean</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">from</span>..<span class="ident">from</span> <span class="op">+</span> <span class="ident">to</span>)<span class="question-mark">?</span>.<span class="ident">trim</span>();
+        <span class="kw">let</span> <span class="ident">clean</span> = <span class="ident">input</span>.<span class="ident">get</span>(<span class="ident">from</span>..<span class="ident">from</span> + <span class="ident">to</span>)<span class="question-mark">?</span>.<span class="ident">trim</span>();
 
         <span class="ident">T::from_str</span>(<span class="ident">clean</span>).<span class="ident">ok</span>()
     }
 }
 
-<span class="kw">struct</span> <span class="ident">GatewayEventVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">u8</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>);
+<span class="kw">struct</span> <span class="ident">GatewayEventVisitor</span>&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;);
 
-<span class="kw">impl</span> <span class="ident">GatewayEventVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">field</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>, <span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+<span class="kw">impl</span> <span class="ident">GatewayEventVisitor</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">field</span>&lt;<span class="lifetime">&#39;de</span>, <span class="ident">T</span>: <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;de</span>&gt;, <span class="ident">V</span>: <span class="ident">MapAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(
         <span class="ident">map</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>,
         <span class="ident">field</span>: <span class="ident">Field</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">found</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">T</span>, <span class="ident">V::Error</span>&gt; {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">found</span> = <span class="prelude-val">None</span>;
 
         <span class="kw">loop</span> {
-            <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>::<span class="op">&lt;</span><span class="ident">Field</span><span class="op">&gt;</span>() {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) <span class="kw">if</span> <span class="ident">key</span> <span class="op">==</span> <span class="ident">field</span> =&gt; <span class="ident">found</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>),
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-                    <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+            <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>::&lt;<span class="ident">Field</span>&gt;() {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) <span class="kw">if</span> <span class="ident">key</span> == <span class="ident">field</span> =&gt; <span class="ident">found</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>),
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) | <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                    <span class="ident">map</span>.<span class="ident">next_value</span>::&lt;<span class="ident">IgnoredAny</span>&gt;()<span class="question-mark">?</span>;
 
                     <span class="kw">continue</span>;
                 }
@@ -1257,7 +1257,7 @@
             }
         }
 
-        <span class="ident">found</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+        <span class="ident">found</span>.<span class="ident">ok_or_else</span>(|| {
             <span class="ident">DeError::missing_field</span>(<span class="kw">match</span> <span class="ident">field</span> {
                 <span class="ident">Field::D</span> =&gt; <span class="string">&quot;d&quot;</span>,
                 <span class="ident">Field::Op</span> =&gt; <span class="string">&quot;op&quot;</span>,
@@ -1267,11 +1267,11 @@
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">ignore_all</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">map</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">V::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">ignore_all</span>&lt;<span class="lifetime">&#39;de</span>, <span class="ident">V</span>: <span class="ident">MapAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="ident">map</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">V::Error</span>&gt; {
         <span class="macro">tracing::trace!</span>(<span class="string">&quot;ignoring all other fields&quot;</span>);
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_key</span>::<span class="op">&lt;</span><span class="ident">Field</span><span class="op">&gt;</span>() {
-            <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) | <span class="prelude-val">Err</span>(<span class="kw">_</span>) = <span class="ident">map</span>.<span class="ident">next_key</span>::&lt;<span class="ident">Field</span>&gt;() {
+            <span class="ident">map</span>.<span class="ident">next_value</span>::&lt;<span class="ident">IgnoredAny</span>&gt;()<span class="question-mark">?</span>;
         }
 
         <span class="macro">tracing::trace!</span>(<span class="string">&quot;ignored all other fields&quot;</span>);
@@ -1280,19 +1280,19 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GatewayEventVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">GatewayEvent</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Visitor</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">GatewayEventVisitor</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">GatewayEvent</span>;
 
-    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">formatter</span>.<span class="ident">write_str</span>(<span class="string">&quot;struct GatewayEvent&quot;</span>)
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">GatewayEvent</span>, <span class="ident">V::Error</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">visit_map</span>&lt;<span class="ident">V</span>&gt;(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">GatewayEvent</span>, <span class="ident">V::Error</span>&gt;
     <span class="kw">where</span>
-        <span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+        <span class="ident">V</span>: <span class="ident">MapAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;,
     {
-        <span class="kw">static</span> <span class="ident">VALID_OPCODES</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+        <span class="kw">static</span> <span class="ident">VALID_OPCODES</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] = <span class="kw-2">&amp;</span>[
             <span class="string">&quot;EVENT&quot;</span>,
             <span class="string">&quot;HEARTBEAT&quot;</span>,
             <span class="string">&quot;HEARTBEAT_ACK&quot;</span>,
@@ -1302,34 +1302,34 @@
             <span class="string">&quot;RECONNECT&quot;</span>,
         ];
 
-        <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing gateway event&quot;</span>);
-        <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
-        <span class="macro">tracing::trace!</span>(<span class="ident">event_type</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="number">2</span>, <span class="ident">op</span><span class="op">=</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">seq</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="number">1</span>);
+        <span class="kw">let</span> <span class="ident">span</span> = <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing gateway event&quot;</span>);
+        <span class="kw">let</span> <span class="ident">_span_enter</span> = <span class="ident">span</span>.<span class="ident">enter</span>();
+        <span class="macro">tracing::trace!</span>(<span class="ident">event_type</span>=<span class="question-mark">?</span><span class="self">self</span>.<span class="number">2</span>, <span class="ident">op</span>=<span class="self">self</span>.<span class="number">0</span>, <span class="ident">seq</span>=<span class="question-mark">?</span><span class="self">self</span>.<span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">op_deser</span>: <span class="ident">U8Deserializer</span><span class="op">&lt;</span><span class="ident">V::Error</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">into_deserializer</span>();
+        <span class="kw">let</span> <span class="ident">op_deser</span>: <span class="ident">U8Deserializer</span>&lt;<span class="ident">V::Error</span>&gt; = <span class="self">self</span>.<span class="number">0</span>.<span class="ident">into_deserializer</span>();
 
-        <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">OpCode::deserialize</span>(<span class="ident">op_deser</span>).<span class="ident">ok</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="macro">tracing::trace!</span>(<span class="ident">op</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>, <span class="string">&quot;unknown opcode&quot;</span>);
-            <span class="kw">let</span> <span class="ident">unexpected</span> <span class="op">=</span> <span class="ident">Unexpected::Unsigned</span>(<span class="ident">u64::from</span>(<span class="self">self</span>.<span class="number">0</span>));
+        <span class="kw">let</span> <span class="ident">op</span> = <span class="ident">OpCode::deserialize</span>(<span class="ident">op_deser</span>).<span class="ident">ok</span>().<span class="ident">ok_or_else</span>(|| {
+            <span class="macro">tracing::trace!</span>(<span class="ident">op</span> = <span class="self">self</span>.<span class="number">0</span>, <span class="string">&quot;unknown opcode&quot;</span>);
+            <span class="kw">let</span> <span class="ident">unexpected</span> = <span class="ident">Unexpected::Unsigned</span>(<span class="ident">u64::from</span>(<span class="self">self</span>.<span class="number">0</span>));
 
             <span class="ident">DeError::invalid_value</span>(<span class="ident">unexpected</span>, <span class="kw-2">&amp;</span><span class="string">&quot;an opcode&quot;</span>)
         })<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">op</span> {
             <span class="ident">OpCode::Event</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="self">self</span>
+                <span class="kw">let</span> <span class="ident">t</span> = <span class="self">self</span>
                     .<span class="number">2</span>
-                    .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::custom</span>(<span class="string">&quot;event type not provided beforehand&quot;</span>))<span class="question-mark">?</span>;
+                    .<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::custom</span>(<span class="string">&quot;event type not provided beforehand&quot;</span>))<span class="question-mark">?</span>;
 
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway dispatch&quot;</span>);
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> = <span class="prelude-val">None</span>;
 
                 <span class="kw">loop</span> {
-                    <span class="kw">let</span> <span class="ident">span_child</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
-                    <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
+                    <span class="kw">let</span> <span class="ident">span_child</span> = <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
+                    <span class="kw">let</span> <span class="ident">_span_child_enter</span> = <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
-                    <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
+                    <span class="kw">let</span> <span class="ident">key</span> = <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
                             <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
@@ -1337,7 +1337,7 @@
                         }
                         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
                         <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
-                            <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                            <span class="ident">map</span>.<span class="ident">next_value</span>::&lt;<span class="ident">IgnoredAny</span>&gt;()<span class="question-mark">?</span>;
 
                             <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {why:?}&quot;</span>);
 
@@ -1351,20 +1351,20 @@
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;d&quot;</span>));
                             }
 
-                            <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">DispatchEventWithTypeDeserializer::new</span>(<span class="ident">t</span>);
+                            <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">DispatchEventWithTypeDeserializer::new</span>(<span class="ident">t</span>);
 
-                            <span class="ident">d</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>);
+                            <span class="ident">d</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value_seed</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>);
                         }
-                        <span class="ident">Field::Op</span> <span class="op">|</span> <span class="ident">Field::S</span> <span class="op">|</span> <span class="ident">Field::T</span> =&gt; {
-                            <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                        <span class="ident">Field::Op</span> | <span class="ident">Field::S</span> | <span class="ident">Field::T</span> =&gt; {
+                            <span class="ident">map</span>.<span class="ident">next_value</span>::&lt;<span class="ident">IgnoredAny</span>&gt;()<span class="question-mark">?</span>;
 
-                            <span class="macro">tracing::trace!</span>(<span class="ident">key</span><span class="op">=</span><span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;ignoring key&quot;</span>);
+                            <span class="macro">tracing::trace!</span>(<span class="ident">key</span>=<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;ignoring key&quot;</span>);
                         }
                     }
                 }
 
-                <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">d</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;d&quot;</span>))<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;s&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">d</span> = <span class="ident">d</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;d&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">s</span> = <span class="self">self</span>.<span class="number">1</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;s&quot;</span>))<span class="question-mark">?</span>;
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
 
@@ -1372,8 +1372,8 @@
             }
             <span class="ident">OpCode::Heartbeat</span> =&gt; {
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway heartbeat&quot;</span>);
-                <span class="kw">let</span> <span class="ident">seq</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::field</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
-                <span class="macro">tracing::trace!</span>(<span class="ident">seq</span> <span class="op">=</span> <span class="op">%</span><span class="ident">seq</span>);
+                <span class="kw">let</span> <span class="ident">seq</span> = <span class="ident"><span class="self">Self</span>::field</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
+                <span class="macro">tracing::trace!</span>(<span class="ident">seq</span> = %<span class="ident">seq</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
 
@@ -1388,8 +1388,8 @@
             }
             <span class="ident">OpCode::Hello</span> =&gt; {
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing gateway hello&quot;</span>);
-                <span class="kw">let</span> <span class="ident">hello</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::field</span>::<span class="op">&lt;</span><span class="ident">Hello</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
-                <span class="macro">tracing::trace!</span>(<span class="ident">hello</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">hello</span>);
+                <span class="kw">let</span> <span class="ident">hello</span> = <span class="ident"><span class="self">Self</span>::field</span>::&lt;<span class="ident">Hello</span>, <span class="kw">_</span>&gt;(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
+                <span class="macro">tracing::trace!</span>(<span class="ident">hello</span> = <span class="question-mark">?</span><span class="ident">hello</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
 
@@ -1397,8 +1397,8 @@
             }
             <span class="ident">OpCode::InvalidSession</span> =&gt; {
                 <span class="macro">tracing::trace!</span>(<span class="string">&quot;deserializing invalid session&quot;</span>);
-                <span class="kw">let</span> <span class="ident">invalidate</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::field</span>::<span class="op">&lt;</span><span class="ident">bool</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
-                <span class="macro">tracing::trace!</span>(<span class="ident">invalidate</span> <span class="op">=</span> <span class="op">%</span><span class="ident">invalidate</span>);
+                <span class="kw">let</span> <span class="ident">invalidate</span> = <span class="ident"><span class="self">Self</span>::field</span>::&lt;<span class="ident">bool</span>, <span class="kw">_</span>&gt;(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>, <span class="ident">Field::D</span>)<span class="question-mark">?</span>;
+                <span class="macro">tracing::trace!</span>(<span class="ident">invalidate</span> = %<span class="ident">invalidate</span>);
 
                 <span class="ident"><span class="self">Self</span>::ignore_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">map</span>)<span class="question-mark">?</span>;
 
@@ -1430,11 +1430,11 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GatewayEventDeserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">GatewayEvent</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">DeserializeSeed</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">GatewayEventDeserializer</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">GatewayEvent</span>;
 
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
-        <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;d&quot;</span>, <span class="string">&quot;s&quot;</span>];
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span>&gt; {
+        <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] = <span class="kw-2">&amp;</span>[<span class="string">&quot;d&quot;</span>, <span class="string">&quot;s&quot;</span>];
 
         <span class="ident">deserializer</span>.<span class="ident">deserialize_struct</span>(
             <span class="string">&quot;GatewayEvent&quot;</span>,
@@ -1444,11 +1444,11 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GatewayEventDeserializerOwned</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">GatewayEvent</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">DeserializeSeed</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">GatewayEventDeserializerOwned</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">GatewayEvent</span>;
 
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
-        <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;d&quot;</span>, <span class="string">&quot;s&quot;</span>];
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span>&gt; {
+        <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] = <span class="kw-2">&amp;</span>[<span class="string">&quot;d&quot;</span>, <span class="string">&quot;s&quot;</span>];
 
         <span class="ident">deserializer</span>.<span class="ident">deserialize_struct</span>(
             <span class="string">&quot;GatewayEvent&quot;</span>,
@@ -1459,7 +1459,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">GatewayEvent</span> {
-    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">serialize</span>&lt;<span class="ident">S</span>: <span class="ident">Serializer</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">S::Ok</span>, <span class="ident">S::Error</span>&gt; {
         <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">opcode</span>(<span class="ident">gateway_event</span>: <span class="kw-2">&amp;</span><span class="ident">GatewayEvent</span>) -&gt; <span class="ident">OpCode</span> {
             <span class="kw">match</span> <span class="ident">gateway_event</span> {
                 <span class="ident">GatewayEvent::Dispatch</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="ident">OpCode::Event</span>,
@@ -1471,9 +1471,9 @@
             }
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">serializer</span>.<span class="ident">serialize_struct</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">4</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> = <span class="ident">serializer</span>.<span class="ident">serialize_struct</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">4</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident"><span class="self">Self</span>::Dispatch</span>(<span class="ident">sequence</span>, <span class="ident">event</span>) <span class="op">=</span> <span class="self">self</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident"><span class="self">Self</span>::Dispatch</span>(<span class="ident">sequence</span>, <span class="ident">event</span>) = <span class="self">self</span> {
             <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;t&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">event</span>.<span class="ident">kind</span>())<span class="question-mark">?</span>;
             <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;s&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">sequence</span>)<span class="question-mark">?</span>;
             <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;op&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">opcode</span>(<span class="self">self</span>))<span class="question-mark">?</span>;
@@ -1483,8 +1483,8 @@
         }
 
         <span class="comment">// S and T are always null when not a Dispatch event</span>
-        <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;t&quot;</span>, <span class="kw-2">&amp;</span><span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>)<span class="question-mark">?</span>;
-        <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;s&quot;</span>, <span class="kw-2">&amp;</span><span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="question-mark">?</span>;
+        <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;t&quot;</span>, <span class="kw-2">&amp;</span><span class="prelude-val">None</span>::&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>&gt;)<span class="question-mark">?</span>;
+        <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;s&quot;</span>, <span class="kw-2">&amp;</span><span class="prelude-val">None</span>::&lt;<span class="ident">u64</span>&gt;)<span class="question-mark">?</span>;
         <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;op&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">opcode</span>(<span class="self">self</span>))<span class="question-mark">?</span>;
 
         <span class="kw">match</span> <span class="self">self</span> {
@@ -1493,7 +1493,7 @@
                 <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;d&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">sequence</span>)<span class="question-mark">?</span>;
             }
             <span class="ident"><span class="self">Self</span>::Hello</span>(<span class="ident">interval</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">hello</span> <span class="op">=</span> <span class="ident">Hello</span> {
+                <span class="kw">let</span> <span class="ident">hello</span> = <span class="ident">Hello</span> {
                     <span class="ident">heartbeat_interval</span>: <span class="kw-2">*</span><span class="ident">interval</span>,
                 };
 
@@ -1502,8 +1502,8 @@
             <span class="ident"><span class="self">Self</span>::InvalidateSession</span>(<span class="ident">invalidate</span>) =&gt; {
                 <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;d&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">invalidate</span>)<span class="question-mark">?</span>;
             }
-            <span class="ident"><span class="self">Self</span>::HeartbeatAck</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Reconnect</span> =&gt; {
-                <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;d&quot;</span>, <span class="kw-2">&amp;</span><span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>)<span class="question-mark">?</span>;
+            <span class="ident"><span class="self">Self</span>::HeartbeatAck</span> | <span class="ident"><span class="self">Self</span>::Reconnect</span> =&gt; {
+                <span class="ident">s</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;d&quot;</span>, <span class="kw-2">&amp;</span><span class="prelude-val">None</span>::&lt;<span class="ident">u64</span>&gt;)<span class="question-mark">?</span>;
             }
         }
 
@@ -1521,7 +1521,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_dispatch_role_delete</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;d&quot;: {
                 &quot;guild_id&quot;: &quot;1&quot;,
                 &quot;role_id&quot;: &quot;2&quot;
@@ -1531,15 +1531,15 @@
             &quot;t&quot;: &quot;GUILD_ROLE_DELETE&quot;
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">7</span>, <span class="kw">_</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_dispatch_guild_update</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">format!</span>(
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="macro">format!</span>(
             <span class="string">r#&quot;{{
   &quot;d&quot;: {{
     &quot;afk_channel_id&quot;: &quot;1337&quot;,
@@ -1604,20 +1604,20 @@
   &quot;s&quot;: 42,
   &quot;t&quot;: &quot;GUILD_UPDATE&quot;
 }}&quot;#</span>,
-            <span class="ident">icon</span> <span class="op">=</span> <span class="ident">image_hash::ICON_INPUT</span>,
-            <span class="ident">splash</span> <span class="op">=</span> <span class="ident">image_hash::SPLASH_INPUT</span>,
+            <span class="ident">icon</span> = <span class="ident">image_hash::ICON_INPUT</span>,
+            <span class="ident">splash</span> = <span class="ident">image_hash::SPLASH_INPUT</span>,
         );
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">42</span>, <span class="kw">_</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_dispatch_guild_update_2</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="macro">format!</span>(
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="macro">format!</span>(
             <span class="string">r#&quot;{{
   &quot;d&quot;: {{
     &quot;afk_channel_id&quot;: null,
@@ -1679,12 +1679,12 @@
   &quot;s&quot;: 1190911,
   &quot;t&quot;: &quot;GUILD_UPDATE&quot;
 }}&quot;#</span>,
-            <span class="ident">icon</span> <span class="op">=</span> <span class="ident">image_hash::ICON_INPUT</span>
+            <span class="ident">icon</span> = <span class="ident">image_hash::ICON_INPUT</span>
         );
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">1_190_911</span>, <span class="kw">_</span>)));
     }
@@ -1693,7 +1693,7 @@
     <span class="comment">// they contain it</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_dispatch_resumed</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
   &quot;t&quot;: &quot;RESUMED&quot;,
   &quot;s&quot;: 37448,
   &quot;op&quot;: 0,
@@ -1704,48 +1704,48 @@
   }
 }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Dispatch</span>(<span class="kw">_</span>, <span class="kw">_</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_heartbeat</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;t&quot;: null,
             &quot;s&quot;: null,
             &quot;op&quot;: 1,
             &quot;d&quot;: 123
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Heartbeat</span>(<span class="number">123</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_heartbeat_ack</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;t&quot;: null,
             &quot;s&quot;: null,
             &quot;op&quot;: 11,
             &quot;d&quot;: null
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::HeartbeatAck</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_hello</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;t&quot;: null,
             &quot;s&quot;: null,
             &quot;op&quot;: 10,
@@ -1757,41 +1757,41 @@
             }
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Hello</span>(<span class="number">41_250</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_invalidate_session</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;t&quot;: null,
             &quot;s&quot;: null,
             &quot;op&quot;: 9,
             &quot;d&quot;: true
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::InvalidateSession</span>(<span class="bool-val">true</span>)));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserialize_reconnect</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;t&quot;: null,
             &quot;s&quot;: null,
             &quot;op&quot;: 7,
             &quot;d&quot;: null
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::Reconnect</span>));
     }
@@ -1800,7 +1800,7 @@
     <span class="doccomment">/// while searching for the event type.</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserializer_from_json_nested_quotes</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
             &quot;t&quot;: &quot;DOESNT_MATTER&quot;,
             &quot;s&quot;: 5144,
             &quot;op&quot;: 0,
@@ -1809,7 +1809,7 @@
             }
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="ident">deserializer</span>.<span class="ident">event_type</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;DOESNT_MATTER&quot;</span>));
         <span class="macro">assert_eq!</span>(<span class="ident">deserializer</span>.<span class="ident">op</span>, <span class="number">0</span>);
     }
@@ -1819,23 +1819,23 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">deserializer_handles_null_event_types</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;t&quot;:null,&quot;op&quot;:11}&quot;#</span>;
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{&quot;t&quot;:null,&quot;op&quot;:11}&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">input</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">GatewayEvent::HeartbeatAck</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">serialize_dispatch</span>() {
-        <span class="kw">let</span> <span class="ident">role_delete</span> <span class="op">=</span> <span class="ident">RoleDelete</span> {
+        <span class="kw">let</span> <span class="ident">role_delete</span> = <span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         };
-        <span class="kw">let</span> <span class="ident">dispatch</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">DispatchEvent::RoleDelete</span>(<span class="ident">role_delete</span>));
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">2_048</span>, <span class="ident">dispatch</span>);
+        <span class="kw">let</span> <span class="ident">dispatch</span> = <span class="ident">Box::new</span>(<span class="ident">DispatchEvent::RoleDelete</span>(<span class="ident">role_delete</span>));
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">GatewayEvent::Dispatch</span>(<span class="number">2_048</span>, <span class="ident">dispatch</span>);
 
         <span class="ident">serde_test::assert_ser_tokens</span>(
             <span class="kw-2">&amp;</span><span class="ident">value</span>,
@@ -1944,7 +1944,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">serialize_invalidate</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">GatewayEvent::InvalidateSession</span>(<span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">GatewayEvent::InvalidateSession</span>(<span class="bool-val">true</span>);
 
         <span class="ident">serde_test::assert_ser_tokens</span>(
             <span class="kw-2">&amp;</span><span class="ident">value</span>,
@@ -1989,4 +1989,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

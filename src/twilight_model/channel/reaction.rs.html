@@ -365,16 +365,16 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Reaction</span> {
-    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">channel_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;,
     <span class="kw">pub</span> <span class="ident">emoji</span>: <span class="ident">ReactionType</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Member</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;&gt;,
+    <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Member</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">user_id</span>: <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> = <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">enum</span> <span class="ident">Field</span> {
     <span class="ident">ChannelId</span>,
     <span class="ident">Emoji</span>,
@@ -386,29 +386,29 @@
 
 <span class="kw">struct</span> <span class="ident">ReactionVisitor</span>;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ReactionVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Reaction</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Visitor</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">ReactionVisitor</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">Reaction</span>;
 
-    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;struct Reaction&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">emoji</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MemberIntermediary</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">fn</span> <span class="ident">visit_map</span>&lt;<span class="ident">V</span>: <span class="ident">MapAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">V::Error</span>&gt; {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">channel_id</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">emoji</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guild_id</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">MemberIntermediary</span>&gt; = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message_id</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">user_id</span> = <span class="prelude-val">None</span>;
 
-        <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing reaction&quot;</span>);
-        <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
+        <span class="kw">let</span> <span class="ident">span</span> = <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing reaction&quot;</span>);
+        <span class="kw">let</span> <span class="ident">_span_enter</span> = <span class="ident">span</span>.<span class="ident">enter</span>();
 
         <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">span_child</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
-            <span class="kw">let</span> <span class="ident">_span_child_enter</span> <span class="op">=</span> <span class="ident">span_child</span>.<span class="ident">enter</span>();
+            <span class="kw">let</span> <span class="ident">span_child</span> = <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;iterating over element&quot;</span>);
+            <span class="kw">let</span> <span class="ident">_span_child_enter</span> = <span class="ident">span_child</span>.<span class="ident">enter</span>();
 
-            <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
+            <span class="kw">let</span> <span class="ident">key</span> = <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; {
                     <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">key</span>, <span class="string">&quot;found key&quot;</span>);
 
@@ -417,7 +417,7 @@
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
                 <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
                     <span class="comment">// Encountered when we run into an unknown key.</span>
-                    <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                    <span class="ident">map</span>.<span class="ident">next_value</span>::&lt;<span class="ident">IgnoredAny</span>&gt;()<span class="question-mark">?</span>;
 
                     <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {why:?}&quot;</span>);
 
@@ -431,55 +431,55 @@
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;channel_id&quot;</span>));
                     }
 
-                    <span class="ident">channel_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                    <span class="ident">channel_id</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
                 <span class="ident">Field::Emoji</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">emoji</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;emoji&quot;</span>));
                     }
 
-                    <span class="ident">emoji</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                    <span class="ident">emoji</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
                 <span class="ident">Field::GuildId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">guild_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;guild_id&quot;</span>));
                     }
 
-                    <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
+                    <span class="ident">guild_id</span> = <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                 }
                 <span class="ident">Field::Member</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">member</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;member&quot;</span>));
                     }
 
-                    <span class="ident">member</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
+                    <span class="ident">member</span> = <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                 }
                 <span class="ident">Field::MessageId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">message_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;message_id&quot;</span>));
                     }
 
-                    <span class="ident">message_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                    <span class="ident">message_id</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
                 <span class="ident">Field::UserId</span> =&gt; {
                     <span class="kw">if</span> <span class="ident">user_id</span>.<span class="ident">is_some</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;user_id&quot;</span>));
                     }
 
-                    <span class="ident">user_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                    <span class="ident">user_id</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="ident">channel_id</span> <span class="op">=</span> <span class="ident">channel_id</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;channel_id&quot;</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">emoji</span> <span class="op">=</span> <span class="ident">emoji</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;emoji&quot;</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">message_id</span> <span class="op">=</span> <span class="ident">message_id</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;message_id&quot;</span>))<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">user_id</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;user_id&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">channel_id</span> = <span class="ident">channel_id</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;channel_id&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">emoji</span> = <span class="ident">emoji</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;emoji&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">message_id</span> = <span class="ident">message_id</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;message_id&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">user_id</span> = <span class="ident">user_id</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;user_id&quot;</span>))<span class="question-mark">?</span>;
 
         <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">channel_id</span>, <span class="question-mark">?</span><span class="ident">emoji</span>, <span class="question-mark">?</span><span class="ident">message_id</span>, <span class="question-mark">?</span><span class="ident">user_id</span>);
 
-        <span class="kw">let</span> <span class="ident">member</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">guild_id</span>), <span class="prelude-val">Some</span>(<span class="ident">member</span>)) <span class="op">=</span> (<span class="ident">guild_id</span>, <span class="ident">member</span>) {
-            <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="question-mark">?</span><span class="ident">member</span>, <span class="string">&quot;setting member guild id&quot;</span>);
+        <span class="kw">let</span> <span class="ident">member</span> = <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">guild_id</span>), <span class="prelude-val">Some</span>(<span class="ident">member</span>)) = (<span class="ident">guild_id</span>, <span class="ident">member</span>) {
+            <span class="macro">tracing::trace!</span>(%<span class="ident">guild_id</span>, <span class="question-mark">?</span><span class="ident">member</span>, <span class="string">&quot;setting member guild id&quot;</span>);
 
             <span class="prelude-val">Some</span>(<span class="ident">member</span>.<span class="ident">into_member</span>(<span class="ident">guild_id</span>))
         } <span class="kw">else</span> {
@@ -497,9 +497,9 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Reaction</span> {
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
-        <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">Reaction</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">D::Error</span>&gt; {
+        <span class="kw">const</span> <span class="ident">FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] = <span class="kw-2">&amp;</span>[
             <span class="string">&quot;channel_id&quot;</span>,
             <span class="string">&quot;emoji&quot;</span>,
             <span class="string">&quot;guild_id&quot;</span>,
@@ -527,10 +527,10 @@
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">reaction_with_member</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">reaction_with_member</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">TimestampParseError</span>&gt; {
+        <span class="kw">let</span> <span class="ident">joined_at</span> = <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2020-01-01T00:00:00.000000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Reaction</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Reaction</span> {
             <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">emoji</span>: <span class="ident">ReactionType::Unicode</span> {
                 <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_owned</span>(),
@@ -656,7 +656,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">reaction_without_member</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Reaction</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Reaction</span> {
             <span class="ident">channel_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
             <span class="ident">emoji</span>: <span class="ident">ReactionType::Unicode</span> {
                 <span class="ident">name</span>: <span class="string">&quot;a&quot;</span>.<span class="ident">to_owned</span>(),
@@ -701,4 +701,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

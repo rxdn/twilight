@@ -1548,7 +1548,7 @@
     <span class="ident">clippy::unnecessary_wraps</span>,
     <span class="ident">clippy::used_underscore_binding</span>
 )]</span>
-<span class="attribute">#![<span class="ident">doc</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span> = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">future</span>;
 
@@ -1583,18 +1583,18 @@
 
 <span class="doccomment">/// Map keyed by an ID - such as a channel ID or message ID - storing a list of</span>
 <span class="doccomment">/// bystanders.</span>
-<span class="kw">type</span> <span class="ident">BystanderMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">BystanderMap</span>&lt;<span class="ident">K</span>, <span class="ident">V</span>&gt; = <span class="ident">DashMap</span>&lt;<span class="ident">K</span>, <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">V</span>&gt;&gt;&gt;;
 
 <span class="doccomment">/// Sender to a caller that may be for a future bystander or a stream bystander.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span> {
+<span class="kw">enum</span> <span class="ident">Sender</span>&lt;<span class="ident">E</span>&gt; {
     <span class="doccomment">/// Bystander is a future and the sender is a oneshot.</span>
-    <span class="ident">Future</span>(<span class="ident">OneshotSender</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>),
+    <span class="ident">Future</span>(<span class="ident">OneshotSender</span>&lt;<span class="ident">E</span>&gt;),
     <span class="doccomment">/// Bystander is a stream and the sender is an MPSC.</span>
-    <span class="ident">Stream</span>(<span class="ident">MpscSender</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>),
+    <span class="ident">Stream</span>(<span class="ident">MpscSender</span>&lt;<span class="ident">E</span>&gt;),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="ident">E</span>&gt; <span class="ident">Sender</span>&lt;<span class="ident">E</span>&gt; {
     <span class="doccomment">/// Whether the channel is closed.</span>
     <span class="kw">fn</span> <span class="ident">is_closed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="self">self</span> {
@@ -1606,16 +1606,16 @@
 
 <span class="doccomment">/// Registration for a caller to wait for an event based on a predicate</span>
 <span class="doccomment">/// function.</span>
-<span class="kw">struct</span> <span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">Bystander</span>&lt;<span class="ident">T</span>&gt; {
     <span class="doccomment">/// Predicate check to perform on an event.</span>
-    <span class="ident">func</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>,
+    <span class="ident">func</span>: <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;,
     <span class="doccomment">/// [`Sender::Future`]s consume themselves once upon sending so the sender</span>
     <span class="doccomment">/// needs to be able to be taken out separately.</span>
-    <span class="ident">sender</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">sender</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Sender</span>&lt;<span class="ident">T</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Debug</span><span class="op">&gt;</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Debug</span>&gt; <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Bystander</span>&lt;<span class="ident">T</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Bystander&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;sender&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sender</span>)
             .<span class="ident">finish</span>()
@@ -1635,25 +1635,25 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Standby</span> {
     <span class="doccomment">/// List of component bystanders where the ID of the message is known</span>
     <span class="doccomment">/// beforehand.</span>
-    <span class="ident">components</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">Interaction</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">components</span>: <span class="ident">DashMap</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">Interaction</span>&gt;&gt;&gt;,
     <span class="doccomment">/// Bystanders for any event that may not be in any particular guild.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The key is generated via [`event_counter`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`event_counter`]: Self::event_counter</span>
-    <span class="ident">events</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">events</span>: <span class="ident">DashMap</span>&lt;<span class="ident">u64</span>, <span class="ident">Bystander</span>&lt;<span class="ident">Event</span>&gt;&gt;,
     <span class="doccomment">/// Event counter to be used as the key of [`events`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`events`]: Self::events</span>
     <span class="ident">event_counter</span>: <span class="ident">AtomicU64</span>,
     <span class="doccomment">/// List of bystanders where the ID of the guild is known beforehand.</span>
-    <span class="ident">guilds</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">guilds</span>: <span class="ident">DashMap</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">Event</span>&gt;&gt;&gt;,
     <span class="doccomment">/// List of message bystanders where the ID of the channel is known</span>
     <span class="doccomment">/// beforehand.</span>
-    <span class="ident">messages</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">MessageCreate</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">messages</span>: <span class="ident">DashMap</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">MessageCreate</span>&gt;&gt;&gt;,
     <span class="doccomment">/// List of reaction bystanders where the ID of the message is known</span>
     <span class="doccomment">/// beforehand.</span>
-    <span class="ident">reactions</span>: <span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">ReactionAdd</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">reactions</span>: <span class="ident">DashMap</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;, <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">ReactionAdd</span>&gt;&gt;&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">Standby</span> {
@@ -1666,7 +1666,7 @@
     <span class="doccomment">/// [`process`]: Self::process</span>
     <span class="doccomment">/// [`wait_for`]: Self::wait_for</span>
     <span class="doccomment">/// [`wait_for_message_stream`]: Self::wait_for_message_stream</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;must process events to be useful&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;must process events to be useful&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::default</span>()
     }
@@ -1683,14 +1683,14 @@
     <span class="doccomment">/// This function must be called when events are received in order for</span>
     <span class="doccomment">/// futures returned by methods to fulfill.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">ProcessResults</span> {
-        <span class="macro">tracing::trace!</span>(<span class="ident">event_type</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">event</span>.<span class="ident">kind</span>(), <span class="question-mark">?</span><span class="ident">event</span>, <span class="string">&quot;processing event&quot;</span>);
+        <span class="macro">tracing::trace!</span>(<span class="ident">event_type</span> = <span class="question-mark">?</span><span class="ident">event</span>.<span class="ident">kind</span>(), <span class="question-mark">?</span><span class="ident">event</span>, <span class="string">&quot;processing event&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">completions</span> <span class="op">=</span> <span class="ident">ProcessResults::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">completions</span> = <span class="ident">ProcessResults::new</span>();
 
         <span class="kw">match</span> <span class="ident">event</span> {
             <span class="ident">Event::InteractionCreate</span>(<span class="ident">e</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">InteractionType::MessageComponent</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">message</span> {
+                <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">kind</span> == <span class="ident">InteractionType::MessageComponent</span> {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) = <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">message</span> {
                         <span class="ident">completions</span>.<span class="ident">add_with</span>(<span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::process_specific_event</span>(
                             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">components</span>,
                             <span class="ident">message</span>.<span class="ident">id</span>,
@@ -1716,7 +1716,7 @@
             <span class="kw">_</span> =&gt; {}
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>) <span class="op">=</span> <span class="ident">event::guild_id</span>(<span class="ident">event</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>) = <span class="ident">event::guild_id</span>(<span class="ident">event</span>) {
             <span class="ident">completions</span>.<span class="ident">add_with</span>(<span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::process_specific_event</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">guilds</span>, <span class="ident">guild_id</span>, <span class="ident">event</span>));
         }
 
@@ -1762,12 +1762,12 @@
     <span class="doccomment">/// [`BanAdd`]: twilight_model::gateway::payload::incoming::BanAdd</span>
     <span class="doccomment">/// [`Canceled`]: future::Canceled</span>
     <span class="doccomment">/// [`wait_for_stream`]: Self::wait_for_stream</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForGuildEventFuture</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="string">&quot;waiting for event in guild&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">guild_id</span>, <span class="string">&quot;waiting for event in guild&quot;</span>);
 
         <span class="ident">WaitForGuildEventFuture</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_future</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">guilds</span>, <span class="ident">guild_id</span>, <span class="ident">check</span>),
@@ -1815,12 +1815,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`BanAdd`]: twilight_model::gateway::payload::incoming::BanAdd</span>
     <span class="doccomment">/// [`wait_for`]: Self::wait_for</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_stream</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForGuildEventStream</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="string">&quot;waiting for event in guild&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">guild_id</span>, <span class="string">&quot;waiting for event in guild&quot;</span>);
 
         <span class="ident">WaitForGuildEventStream</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">guilds</span>, <span class="ident">guild_id</span>, <span class="ident">check</span>),
@@ -1866,13 +1866,13 @@
     <span class="doccomment">/// [`Canceled`]: future::Canceled</span>
     <span class="doccomment">/// [`Ready`]: twilight_model::gateway::payload::incoming::Ready</span>
     <span class="doccomment">/// [`wait_for_event_stream`]: Self::wait_for_event_stream</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_event</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_event</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForEventFuture</span> {
         <span class="macro">tracing::trace!</span>(<span class="string">&quot;waiting for event&quot;</span>);
 
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
 
         <span class="self">self</span>.<span class="ident">events</span>.<span class="ident">insert</span>(
             <span class="self">self</span>.<span class="ident">next_event_id</span>(),
@@ -1925,13 +1925,13 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Ready`]: twilight_model::gateway::payload::incoming::Ready</span>
     <span class="doccomment">/// [`wait_for_event`]: Self::wait_for_event</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_event_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_event_stream</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Event</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForEventStream</span> {
         <span class="macro">tracing::trace!</span>(<span class="string">&quot;waiting for event&quot;</span>);
 
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc::unbounded_channel</span>();
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">mpsc::unbounded_channel</span>();
 
         <span class="self">self</span>.<span class="ident">events</span>.<span class="ident">insert</span>(
             <span class="self">self</span>.<span class="ident">next_event_id</span>(),
@@ -1980,12 +1980,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Canceled`]: future::Canceled</span>
     <span class="doccomment">/// [`wait_for_message_stream`]: Self::wait_for_message_stream</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_message</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_message</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForMessageFuture</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">channel_id</span>, <span class="string">&quot;waiting for message in channel&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">channel_id</span>, <span class="string">&quot;waiting for message in channel&quot;</span>);
 
         <span class="ident">WaitForMessageFuture</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_future</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">messages</span>, <span class="ident">channel_id</span>, <span class="ident">check</span>),
@@ -2030,12 +2030,12 @@
     <span class="doccomment">/// dropped.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`wait_for_message`]: Self::wait_for_message</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_message_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_message_stream</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">channel_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">channel_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForMessageStream</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">channel_id</span>, <span class="string">&quot;waiting for message in channel&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">channel_id</span>, <span class="string">&quot;waiting for message in channel&quot;</span>);
 
         <span class="ident">WaitForMessageStream</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">messages</span>, <span class="ident">channel_id</span>, <span class="ident">check</span>),
@@ -2078,12 +2078,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Canceled`]: future::Canceled</span>
     <span class="doccomment">/// [`wait_for_reaction_stream`]: Self::wait_for_reaction_stream</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_reaction</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_reaction</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForReactionFuture</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">message_id</span>, <span class="string">&quot;waiting for reaction on message&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">message_id</span>, <span class="string">&quot;waiting for reaction on message&quot;</span>);
 
         <span class="ident">WaitForReactionFuture</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_future</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reactions</span>, <span class="ident">message_id</span>, <span class="ident">check</span>),
@@ -2130,12 +2130,12 @@
     <span class="doccomment">/// dropped.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`wait_for_reaction`]: Self::wait_for_reaction</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_reaction_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_reaction_stream</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForReactionStream</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">message_id</span>, <span class="string">&quot;waiting for reaction on message&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">message_id</span>, <span class="string">&quot;waiting for reaction on message&quot;</span>);
 
         <span class="ident">WaitForReactionStream</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reactions</span>, <span class="ident">message_id</span>, <span class="ident">check</span>),
@@ -2171,12 +2171,12 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`wait_for_component_stream`]: Self::wait_for_component_stream</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_component</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Interaction</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_component</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Interaction</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForComponentFuture</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">message_id</span>, <span class="string">&quot;waiting for component on message&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">message_id</span>, <span class="string">&quot;waiting for component on message&quot;</span>);
 
         <span class="ident">WaitForComponentFuture</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_future</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">components</span>, <span class="ident">message_id</span>, <span class="ident">check</span>),
@@ -2222,12 +2222,12 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`wait_for_component`]: Self::wait_for_component</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_component_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Interaction</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wait_for_component_stream</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">Interaction</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">MessageMarker</span><span class="op">&gt;</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
     ) -&gt; <span class="ident">WaitForComponentStream</span> {
-        <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">message_id</span>, <span class="string">&quot;waiting for component on message&quot;</span>);
+        <span class="macro">tracing::trace!</span>(%<span class="ident">message_id</span>, <span class="string">&quot;waiting for component on message&quot;</span>);
 
         <span class="ident">WaitForComponentStream</span> {
             <span class="ident">rx</span>: <span class="ident"><span class="self">Self</span>::insert_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">components</span>, <span class="ident">message_id</span>, <span class="ident">check</span>),
@@ -2240,14 +2240,14 @@
     }
 
     <span class="doccomment">/// Append a new future bystander into a map according to the ID.</span>
-    <span class="kw">fn</span> <span class="ident">insert_future</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">V</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">K</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span>, <span class="ident">V</span><span class="op">&gt;</span>(
-        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">BystanderMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>,
+    <span class="kw">fn</span> <span class="ident">insert_future</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">V</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>, <span class="ident">K</span>: <span class="ident">Eq</span> + <span class="ident">Hash</span>, <span class="ident">V</span>&gt;(
+        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">BystanderMap</span>&lt;<span class="ident">K</span>, <span class="ident">V</span>&gt;,
         <span class="ident">id</span>: <span class="ident">K</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
+    ) -&gt; <span class="ident">Receiver</span>&lt;<span class="ident">V</span>&gt; {
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entry</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">entry</span>(<span class="ident">id</span>).<span class="ident">or_default</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entry</span> = <span class="ident">map</span>.<span class="ident">entry</span>(<span class="ident">id</span>).<span class="ident">or_default</span>();
         <span class="ident">entry</span>.<span class="ident">push</span>(<span class="ident">Bystander</span> {
             <span class="ident">func</span>: <span class="ident">check</span>.<span class="ident">into</span>(),
             <span class="ident">sender</span>: <span class="prelude-val">Some</span>(<span class="ident">Sender::Future</span>(<span class="ident">tx</span>)),
@@ -2257,14 +2257,14 @@
     }
 
     <span class="doccomment">/// Append a new stream bystander into a map according to the ID.</span>
-    <span class="kw">fn</span> <span class="ident">insert_stream</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">V</span>) -&gt; <span class="ident">bool</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">K</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span>, <span class="ident">V</span><span class="op">&gt;</span>(
-        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">BystanderMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>,
+    <span class="kw">fn</span> <span class="ident">insert_stream</span>&lt;<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">V</span>) -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>, <span class="ident">K</span>: <span class="ident">Eq</span> + <span class="ident">Hash</span>, <span class="ident">V</span>&gt;(
+        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">BystanderMap</span>&lt;<span class="ident">K</span>, <span class="ident">V</span>&gt;,
         <span class="ident">id</span>: <span class="ident">K</span>,
-        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc::unbounded_channel</span>();
+        <span class="ident">check</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">F</span>&gt;&gt;,
+    ) -&gt; <span class="ident">UnboundedReceiver</span>&lt;<span class="ident">V</span>&gt; {
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">mpsc::unbounded_channel</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entry</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">entry</span>(<span class="ident">id</span>).<span class="ident">or_default</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">entry</span> = <span class="ident">map</span>.<span class="ident">entry</span>(<span class="ident">id</span>).<span class="ident">or_default</span>();
         <span class="ident">entry</span>.<span class="ident">push</span>(<span class="ident">Bystander</span> {
             <span class="ident">func</span>: <span class="ident">check</span>.<span class="ident">into</span>(),
             <span class="ident">sender</span>: <span class="prelude-val">Some</span>(<span class="ident">Sender::Stream</span>(<span class="ident">tx</span>)),
@@ -2275,24 +2275,24 @@
 
     <span class="doccomment">/// Process a general event that is not of any particular type or in any</span>
     <span class="doccomment">/// particular guild.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> <span class="op">=</span> <span class="string">&quot;trace&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">process_event</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Display</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">V</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Debug</span><span class="op">&gt;</span>(
-        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> = <span class="string">&quot;trace&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">process_event</span>&lt;<span class="ident">K</span>: <span class="ident">Debug</span> + <span class="ident">Display</span> + <span class="ident">Eq</span> + <span class="ident">Hash</span> + <span class="ident">PartialEq</span> + <span class="lifetime">&#39;static</span>, <span class="ident">V</span>: <span class="ident">Clone</span> + <span class="ident">Debug</span>&gt;(
+        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">DashMap</span>&lt;<span class="ident">K</span>, <span class="ident">Bystander</span>&lt;<span class="ident">V</span>&gt;&gt;,
         <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">V</span>,
     ) -&gt; <span class="ident">ProcessResults</span> {
         <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">event</span>, <span class="string">&quot;processing event&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">ProcessResults::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> = <span class="ident">ProcessResults::new</span>();
 
-        <span class="ident">map</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">id</span>, <span class="ident">bystander</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::bystander_process</span>(<span class="ident">bystander</span>, <span class="ident">event</span>);
+        <span class="ident">map</span>.<span class="ident">retain</span>(|<span class="ident">id</span>, <span class="ident">bystander</span>| {
+            <span class="kw">let</span> <span class="ident">result</span> = <span class="ident"><span class="self">Self</span>::bystander_process</span>(<span class="ident">bystander</span>, <span class="ident">event</span>);
             <span class="ident">results</span>.<span class="ident">handle</span>(<span class="ident">result</span>);
 
-            <span class="macro">tracing::trace!</span>(<span class="ident">bystander_id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>, <span class="question-mark">?</span><span class="ident">result</span>, <span class="string">&quot;event bystander processed&quot;</span>);
+            <span class="macro">tracing::trace!</span>(<span class="ident">bystander_id</span> = %<span class="ident">id</span>, <span class="question-mark">?</span><span class="ident">result</span>, <span class="string">&quot;event bystander processed&quot;</span>);
 
             <span class="comment">// We want to retain bystanders that are *incomplete* and remove</span>
             <span class="comment">// bystanders that are *complete*.</span>
-            <span class="op">!</span><span class="ident">result</span>.<span class="ident">is_complete</span>()
+            !<span class="ident">result</span>.<span class="ident">is_complete</span>()
         });
 
         <span class="ident">results</span>
@@ -2300,29 +2300,29 @@
 
     <span class="doccomment">/// Process a general event that is either of a particular type or in a</span>
     <span class="doccomment">/// particular guild.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> <span class="op">=</span> <span class="string">&quot;trace&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">process_specific_event</span><span class="op">&lt;</span>
-        <span class="ident">K</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Display</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-        <span class="ident">V</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Debug</span>,
-    <span class="op">&gt;</span>(
-        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">DashMap</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> = <span class="string">&quot;trace&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">process_specific_event</span>&lt;
+        <span class="ident">K</span>: <span class="ident">Debug</span> + <span class="ident">Display</span> + <span class="ident">Eq</span> + <span class="ident">Hash</span> + <span class="ident">PartialEq</span> + <span class="lifetime">&#39;static</span>,
+        <span class="ident">V</span>: <span class="ident">Clone</span> + <span class="ident">Debug</span>,
+    &gt;(
+        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="ident">DashMap</span>&lt;<span class="ident">K</span>, <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">V</span>&gt;&gt;&gt;,
         <span class="ident">guild_id</span>: <span class="ident">K</span>,
         <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">V</span>,
     ) -&gt; <span class="ident">ProcessResults</span> {
         <span class="comment">// Iterate over a guild&#39;s bystanders and mark it for removal if there</span>
         <span class="comment">// are no bystanders remaining.</span>
-        <span class="kw">let</span> (<span class="ident">remove_guild</span>, <span class="ident">results</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">bystanders</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>) {
-            <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::bystander_iter</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bystanders</span>, <span class="ident">event</span>);
+        <span class="kw">let</span> (<span class="ident">remove_guild</span>, <span class="ident">results</span>) = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">bystanders</span>) = <span class="ident">map</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>) {
+            <span class="kw">let</span> <span class="ident">results</span> = <span class="ident"><span class="self">Self</span>::bystander_iter</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bystanders</span>, <span class="ident">event</span>);
 
             (<span class="ident">bystanders</span>.<span class="ident">is_empty</span>(), <span class="ident">results</span>)
         } <span class="kw">else</span> {
-            <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="string">&quot;guild has no event bystanders&quot;</span>);
+            <span class="macro">tracing::trace!</span>(%<span class="ident">guild_id</span>, <span class="string">&quot;guild has no event bystanders&quot;</span>);
 
             <span class="kw">return</span> <span class="ident">ProcessResults::new</span>();
         };
 
         <span class="kw">if</span> <span class="ident">remove_guild</span> {
-            <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">guild_id</span>, <span class="string">&quot;removing guild from map&quot;</span>);
+            <span class="macro">tracing::trace!</span>(%<span class="ident">guild_id</span>, <span class="string">&quot;removing guild from map&quot;</span>);
 
             <span class="ident">map</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">guild_id</span>);
         }
@@ -2331,9 +2331,9 @@
     }
 
     <span class="doccomment">/// Iterate over bystanders and remove the ones that match the predicate.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> <span class="op">=</span> <span class="string">&quot;trace&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">bystander_iter</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Debug</span><span class="op">&gt;</span>(
-        <span class="ident">bystanders</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> = <span class="string">&quot;trace&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">bystander_iter</span>&lt;<span class="ident">E</span>: <span class="ident">Clone</span> + <span class="ident">Debug</span>&gt;(
+        <span class="ident">bystanders</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Vec</span>&lt;<span class="ident">Bystander</span>&lt;<span class="ident">E</span>&gt;&gt;,
         <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">E</span>,
     ) -&gt; <span class="ident">ProcessResults</span> {
         <span class="macro">tracing::trace!</span>(<span class="question-mark">?</span><span class="ident">bystanders</span>, <span class="string">&quot;iterating over bystanders&quot;</span>);
@@ -2368,21 +2368,21 @@
         <span class="comment">// A form of enumeration can&#39;t be used because sometimes the index</span>
         <span class="comment">// doesn&#39;t advance; iterators would continue to provide incrementing</span>
         <span class="comment">// enumeration indexes while we sometimes want to re-use an index.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">ProcessResults::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> = <span class="number">0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> = <span class="ident">ProcessResults::new</span>();
 
-        <span class="kw">while</span> <span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">bystanders</span>.<span class="ident">len</span>() {
-            <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">index</span>, <span class="string">&quot;checking bystander&quot;</span>);
+        <span class="kw">while</span> <span class="ident">index</span> &lt; <span class="ident">bystanders</span>.<span class="ident">len</span>() {
+            <span class="macro">tracing::trace!</span>(%<span class="ident">index</span>, <span class="string">&quot;checking bystander&quot;</span>);
 
-            <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::bystander_process</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bystanders</span>[<span class="ident">index</span>], <span class="ident">event</span>);
+            <span class="kw">let</span> <span class="ident">status</span> = <span class="ident"><span class="self">Self</span>::bystander_process</span>(<span class="kw-2">&amp;mut</span> <span class="ident">bystanders</span>[<span class="ident">index</span>], <span class="ident">event</span>);
             <span class="ident">results</span>.<span class="ident">handle</span>(<span class="ident">status</span>);
 
-            <span class="macro">tracing::trace!</span>(<span class="op">%</span><span class="ident">index</span>, <span class="question-mark">?</span><span class="ident">status</span>, <span class="string">&quot;checked bystander&quot;</span>);
+            <span class="macro">tracing::trace!</span>(%<span class="ident">index</span>, <span class="question-mark">?</span><span class="ident">status</span>, <span class="string">&quot;checked bystander&quot;</span>);
 
             <span class="kw">if</span> <span class="ident">status</span>.<span class="ident">is_complete</span>() {
                 <span class="ident">bystanders</span>.<span class="ident">remove</span>(<span class="ident">index</span>);
             } <span class="kw">else</span> {
-                <span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="ident">index</span> += <span class="number">1</span>;
             }
         }
 
@@ -2394,14 +2394,14 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns whether the bystander is fulfilled; if the bystander has been</span>
     <span class="doccomment">/// fulfilled then the channel is now closed.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> <span class="op">=</span> <span class="string">&quot;trace&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">bystander_process</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Debug</span><span class="op">&gt;</span>(
-        <span class="ident">bystander</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Bystander</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> = <span class="string">&quot;trace&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">bystander_process</span>&lt;<span class="ident">T</span>: <span class="ident">Clone</span> + <span class="ident">Debug</span>&gt;(
+        <span class="ident">bystander</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Bystander</span>&lt;<span class="ident">T</span>&gt;,
         <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>,
     ) -&gt; <span class="ident">ProcessStatus</span> {
         <span class="comment">// We need to take the sender out because `OneshotSender`s consume</span>
         <span class="comment">// themselves when calling `OneshotSender::send`.</span>
-        <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=</span> <span class="ident">bystander</span>.<span class="ident">sender</span>.<span class="ident">take</span>() {
+        <span class="kw">let</span> <span class="ident">sender</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) = <span class="ident">bystander</span>.<span class="ident">sender</span>.<span class="ident">take</span>() {
             <span class="ident">sender</span>
         } <span class="kw">else</span> {
             <span class="macro">tracing::trace!</span>(<span class="string">&quot;bystander has no sender, indicating for removal&quot;</span>);
@@ -2419,7 +2419,7 @@
 
         <span class="comment">// Lastly check to see if the predicate matches the event. If it doesn&#39;t</span>
         <span class="comment">// then we can short-circuit.</span>
-        <span class="kw">if</span> <span class="op">!</span>(<span class="ident">bystander</span>.<span class="ident">func</span>)(<span class="ident">event</span>) {
+        <span class="kw">if</span> !(<span class="ident">bystander</span>.<span class="ident">func</span>)(<span class="ident">event</span>) {
             <span class="macro">tracing::trace!</span>(<span class="string">&quot;bystander check doesn&#39;t match, not removing&quot;</span>);
 
             <span class="comment">// Put the sender back into its bystander since we&#39;ll still need it</span>
@@ -2509,7 +2509,7 @@
     <span class="doccomment">/// [`fulfilled`]: Self::fulfilled</span>
     <span class="doccomment">/// [`sent`]: Self::sent</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">matched</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">fulfilled</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">sent</span>()
+        <span class="self">self</span>.<span class="ident">fulfilled</span>() + <span class="self">self</span>.<span class="ident">sent</span>()
     }
 
     <span class="doccomment">/// Number of [`Standby`] streaming calls that were matched and had an event</span>
@@ -2528,24 +2528,24 @@
 
     <span class="doccomment">/// Add another set of results to this set.</span>
     <span class="kw">fn</span> <span class="ident">add_with</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) {
-        <span class="self">self</span>.<span class="ident">dropped</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dropped</span>.<span class="ident">saturating_add</span>(<span class="ident">other</span>.<span class="ident">dropped</span>);
-        <span class="self">self</span>.<span class="ident">fulfilled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">fulfilled</span>.<span class="ident">saturating_add</span>(<span class="ident">other</span>.<span class="ident">fulfilled</span>);
-        <span class="self">self</span>.<span class="ident">sent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sent</span>.<span class="ident">saturating_add</span>(<span class="ident">other</span>.<span class="ident">sent</span>);
+        <span class="self">self</span>.<span class="ident">dropped</span> = <span class="self">self</span>.<span class="ident">dropped</span>.<span class="ident">saturating_add</span>(<span class="ident">other</span>.<span class="ident">dropped</span>);
+        <span class="self">self</span>.<span class="ident">fulfilled</span> = <span class="self">self</span>.<span class="ident">fulfilled</span>.<span class="ident">saturating_add</span>(<span class="ident">other</span>.<span class="ident">fulfilled</span>);
+        <span class="self">self</span>.<span class="ident">sent</span> = <span class="self">self</span>.<span class="ident">sent</span>.<span class="ident">saturating_add</span>(<span class="ident">other</span>.<span class="ident">sent</span>);
     }
 
     <span class="doccomment">/// Handle a process status.</span>
     <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">status</span>: <span class="ident">ProcessStatus</span>) {
         <span class="kw">match</span> <span class="ident">status</span> {
             <span class="ident">ProcessStatus::Dropped</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">dropped</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">dropped</span> += <span class="number">1</span>;
             }
             <span class="ident">ProcessStatus::SentFuture</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">fulfilled</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">fulfilled</span> += <span class="number">1</span>;
             }
             <span class="ident">ProcessStatus::SentStream</span> =&gt; {
-                <span class="self">self</span>.<span class="ident">sent</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">sent</span> += <span class="number">1</span>;
             }
-            <span class="ident">ProcessStatus::AlreadyComplete</span> <span class="op">|</span> <span class="ident">ProcessStatus::Skip</span> =&gt; {}
+            <span class="ident">ProcessStatus::AlreadyComplete</span> | <span class="ident">ProcessStatus::Skip</span> =&gt; {}
         }
     }
 }
@@ -2571,7 +2571,7 @@
     <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">is_complete</span>(<span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="macro">matches!</span>(
             <span class="self">self</span>,
-            <span class="ident"><span class="self">Self</span>::AlreadyComplete</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Dropped</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::SentFuture</span>
+            <span class="ident"><span class="self">Self</span>::AlreadyComplete</span> | <span class="ident"><span class="self">Self</span>::Dropped</span> | <span class="ident"><span class="self">Self</span>::SentFuture</span>
         )
     }
 }
@@ -2716,14 +2716,14 @@
     <span class="doccomment">/// statistic.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_dropped</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">guild_id</span> = <span class="ident">Id::new</span>(<span class="number">1</span>);
 
         {
-            <span class="kw">let</span> <span class="ident">_rx</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="bool-val">false</span>);
+            <span class="kw">let</span> <span class="ident">_rx</span> = <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id</span>, <span class="kw">move</span> |<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="bool-val">false</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
+        <span class="kw">let</span> <span class="ident">results</span> = <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>,
             <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
@@ -2737,24 +2737,24 @@
     <span class="doccomment">/// not matched by testing the returned matched amount.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_matched</span>() {
-        <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span> {
-            <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span> <span class="op">==</span> <span class="ident">guild_id</span>)
+        <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;) -&gt; <span class="ident">bool</span> {
+            <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span> == <span class="ident">guild_id</span>)
         }
 
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">guild_id_one</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">guild_id_two</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">2</span>);
-        <span class="kw">let</span> <span class="ident">_one</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_one</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">guild_id_one</span> = <span class="ident">Id::new</span>(<span class="number">1</span>);
+        <span class="kw">let</span> <span class="ident">guild_id_two</span> = <span class="ident">Id::new</span>(<span class="number">2</span>);
+        <span class="kw">let</span> <span class="ident">_one</span> = <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_one</span>, <span class="kw">move</span> |<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| {
             <span class="ident">check</span>(<span class="ident">event</span>, <span class="ident">guild_id_one</span>)
         });
-        <span class="kw">let</span> <span class="ident">_two</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_one</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">_two</span> = <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_one</span>, <span class="kw">move</span> |<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| {
             <span class="ident">check</span>(<span class="ident">event</span>, <span class="ident">guild_id_one</span>)
         });
-        <span class="kw">let</span> <span class="ident">_three</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_two</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">_three</span> = <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">guild_id_two</span>, <span class="kw">move</span> |<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| {
             <span class="ident">check</span>(<span class="ident">event</span>, <span class="ident">guild_id_two</span>)
         });
 
-        <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
+        <span class="kw">let</span> <span class="ident">results</span> = <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
@@ -2768,12 +2768,12 @@
     <span class="doccomment">/// sent to it.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_sent</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">guild_id</span> = <span class="ident">Id::new</span>(<span class="number">1</span>);
 
-        <span class="kw">let</span> <span class="ident">_rx</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_stream</span>(<span class="ident">guild_id</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">_rx</span> = <span class="ident">standby</span>.<span class="ident">wait_for_stream</span>(<span class="ident">guild_id</span>, <span class="kw">move</span> |<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="bool-val">true</span>);
 
-        <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
+        <span class="kw">let</span> <span class="ident">results</span> = <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>,
             <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
         }));
@@ -2786,10 +2786,10 @@
     <span class="doccomment">/// Test basic functionality of the [`Standby::wait_for`] method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for</span>(
             <span class="ident">Id::new</span>(<span class="number">1</span>),
-            <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">1</span>),
+            |<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>() == <span class="number">1</span>),
         );
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
@@ -2809,10 +2809,10 @@
     <span class="doccomment">/// Test basic functionality of the [`Standby::wait_for_stream`] method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_stream</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_stream</span>(
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> = <span class="ident">standby</span>.<span class="ident">wait_for_stream</span>(
             <span class="ident">Id::new</span>(<span class="number">1</span>),
-            <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">1</span>),
+            |<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="macro">matches!</span>(<span class="ident">event</span>, <span class="ident">Event::RoleDelete</span>(<span class="ident">e</span>) <span class="kw">if</span> <span class="ident">e</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>() == <span class="number">1</span>),
         );
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
@@ -2837,7 +2837,7 @@
                 <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>)
             }))
         );
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">standby</span>.<span class="ident">guilds</span>.<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!<span class="ident">standby</span>.<span class="ident">guilds</span>.<span class="ident">is_empty</span>());
         <span class="ident">drop</span>(<span class="ident">stream</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
@@ -2849,7 +2849,7 @@
     <span class="doccomment">/// Test basic functionality of the [`Standby::wait_for_event`] method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_event</span>() {
-        <span class="kw">let</span> <span class="ident">ready</span> <span class="op">=</span> <span class="ident">Ready</span> {
+        <span class="kw">let</span> <span class="ident">ready</span> = <span class="ident">Ready</span> {
             <span class="ident">application</span>: <span class="ident">PartialApplication</span> {
                 <span class="ident">flags</span>: <span class="ident">ApplicationFlags::empty</span>(),
                 <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
@@ -2875,14 +2875,14 @@
             },
             <span class="ident">version</span>: <span class="number">6</span>,
         };
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::Ready</span>(<span class="ident">Box::new</span>(<span class="ident">ready</span>));
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">Event::Ready</span>(<span class="ident">Box::new</span>(<span class="ident">ready</span>));
 
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">Event::Ready</span>(<span class="ident">ready</span>) =&gt; <span class="ident">ready</span>.<span class="ident">shard</span>.<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span>[<span class="ident">id</span>, <span class="kw">_</span>]<span class="op">|</span> <span class="ident">id</span> <span class="op">==</span> <span class="number">5</span>),
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(|<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="kw">match</span> <span class="ident">event</span> {
+            <span class="ident">Event::Ready</span>(<span class="ident">ready</span>) =&gt; <span class="ident">ready</span>.<span class="ident">shard</span>.<span class="ident">map_or</span>(<span class="bool-val">false</span>, |[<span class="ident">id</span>, <span class="kw">_</span>]| <span class="ident">id</span> == <span class="number">5</span>),
             <span class="kw">_</span> =&gt; <span class="bool-val">false</span>,
         });
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">standby</span>.<span class="ident">events</span>.<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!<span class="ident">standby</span>.<span class="ident">events</span>.<span class="ident">is_empty</span>());
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
         <span class="macro">assert_eq!</span>(<span class="ident">event</span>, <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">unwrap</span>());
@@ -2893,12 +2893,12 @@
     <span class="doccomment">/// method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_event_stream</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span>
-            <span class="ident">standby</span>.<span class="ident">wait_for_event_stream</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::Resumed</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> =
+            <span class="ident">standby</span>.<span class="ident">wait_for_event_stream</span>(|<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="ident">event</span>.<span class="ident">kind</span>() == <span class="ident">EventType::Resumed</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::Resumed</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">stream</span>.<span class="ident">next</span>().<span class="kw">await</span>, <span class="prelude-val">Some</span>(<span class="ident">Event::Resumed</span>));
-        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">standby</span>.<span class="ident">events</span>.<span class="ident">is_empty</span>());
+        <span class="macro">assert!</span>(!<span class="ident">standby</span>.<span class="ident">events</span>.<span class="ident">is_empty</span>());
         <span class="ident">drop</span>(<span class="ident">stream</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::Resumed</span>);
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">events</span>.<span class="ident">is_empty</span>());
@@ -2907,16 +2907,16 @@
     <span class="doccomment">/// Test basic functionality of the [`Standby::wait_for_message`] method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_message</span>() {
-        <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span>();
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>)));
+        <span class="kw">let</span> <span class="ident">message</span> = <span class="ident">message</span>();
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>)));
 
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_message</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="op">|</span><span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span><span class="op">|</span> {
-            <span class="ident">message</span>.<span class="ident">author</span>.<span class="ident">id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">2</span>
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_message</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), |<span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>| {
+            <span class="ident">message</span>.<span class="ident">author</span>.<span class="ident">id</span>.<span class="ident">get</span>() == <span class="number">2</span>
         });
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">msg</span><span class="op">|</span> <span class="ident">msg</span>.<span class="ident">id</span>.<span class="ident">get</span>()).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(|<span class="ident">msg</span>| <span class="ident">msg</span>.<span class="ident">id</span>.<span class="ident">get</span>()).<span class="ident">unwrap</span>());
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">messages</span>.<span class="ident">is_empty</span>());
     }
 
@@ -2924,8 +2924,8 @@
     <span class="doccomment">/// method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_message_stream</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_message_stream</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span><span class="op">|</span> <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> = <span class="ident">standby</span>.<span class="ident">wait_for_message_stream</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), |<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">MessageCreate</span>| <span class="bool-val">true</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>()))));
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>()))));
 
@@ -2940,18 +2940,18 @@
     <span class="doccomment">/// Test basic functionality of the [`Standby::wait_for_reaction`] method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_reaction</span>() {
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>())));
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>())));
 
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_reaction</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="op">|</span><span class="ident">reaction</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span><span class="op">|</span> {
-            <span class="ident">reaction</span>.<span class="ident">user_id</span>.<span class="ident">get</span>() <span class="op">==</span> <span class="number">3</span>
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_reaction</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), |<span class="ident">reaction</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>| {
+            <span class="ident">reaction</span>.<span class="ident">user_id</span>.<span class="ident">get</span>() == <span class="number">3</span>
         });
 
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
         <span class="macro">assert_eq!</span>(
             <span class="ident">Id::new</span>(<span class="number">3</span>),
-            <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">reaction</span><span class="op">|</span> <span class="ident">reaction</span>.<span class="ident">user_id</span>).<span class="ident">unwrap</span>()
+            <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(|<span class="ident">reaction</span>| <span class="ident">reaction</span>.<span class="ident">user_id</span>).<span class="ident">unwrap</span>()
         );
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">reactions</span>.<span class="ident">is_empty</span>());
     }
@@ -2960,8 +2960,8 @@
     <span class="doccomment">/// method.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_reaction_stream</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_reaction_stream</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span><span class="op">|</span> <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> = <span class="ident">standby</span>.<span class="ident">wait_for_reaction_stream</span>(<span class="ident">Id::new</span>(<span class="number">4</span>), |<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ReactionAdd</span>| <span class="bool-val">true</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));
 
@@ -2977,26 +2977,26 @@
     <span class="doccomment">/// the matching of a later event.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_component</span>() {
-        <span class="kw">let</span> <span class="ident">event</span> <span class="op">=</span> <span class="ident">Event::InteractionCreate</span>(<span class="ident">Box::new</span>(<span class="ident">InteractionCreate</span>(<span class="ident">button</span>())));
+        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">Event::InteractionCreate</span>(<span class="ident">Box::new</span>(<span class="ident">InteractionCreate</span>(<span class="ident">button</span>())));
 
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_component</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="op">|</span><span class="ident">button</span>: <span class="kw-2">&amp;</span><span class="ident">Interaction</span><span class="op">|</span> {
-            <span class="ident">button</span>.<span class="ident">author_id</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>))
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_component</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), |<span class="ident">button</span>: <span class="kw-2">&amp;</span><span class="ident">Interaction</span>| {
+            <span class="ident">button</span>.<span class="ident">author_id</span>() == <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>))
         });
 
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>);
 
         <span class="macro">assert_eq!</span>(
             <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
-            <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">button</span><span class="op">|</span> <span class="ident">button</span>.<span class="ident">author_id</span>()).<span class="ident">unwrap</span>()
+            <span class="ident">wait</span>.<span class="kw">await</span>.<span class="ident">map</span>(|<span class="ident">button</span>| <span class="ident">button</span>.<span class="ident">author_id</span>()).<span class="ident">unwrap</span>()
         );
         <span class="macro">assert!</span>(<span class="ident">standby</span>.<span class="ident">components</span>.<span class="ident">is_empty</span>());
     }
 
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_wait_for_component_stream</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_component_stream</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="op">|</span><span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Interaction</span><span class="op">|</span> <span class="bool-val">true</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> = <span class="ident">standby</span>.<span class="ident">wait_for_component_stream</span>(<span class="ident">Id::new</span>(<span class="number">3</span>), |<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">Interaction</span>| <span class="bool-val">true</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::InteractionCreate</span>(<span class="ident">Box::new</span>(<span class="ident">InteractionCreate</span>(
             <span class="ident">button</span>(),
         ))));
@@ -3016,8 +3016,8 @@
 
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_handles_wrong_events</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::Resumed</span>);
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(|<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="ident">event</span>.<span class="ident">kind</span>() == <span class="ident">EventType::Resumed</span>);
 
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::PresencesReplace</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::PresencesReplace</span>);
@@ -3032,20 +3032,20 @@
     <span class="doccomment">/// specific handler events as well.</span>
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">test_process_nonspecific_handling</span>() {
-        <span class="kw">let</span> <span class="ident">standby</span> <span class="op">=</span> <span class="ident">Standby::new</span>();
+        <span class="kw">let</span> <span class="ident">standby</span> = <span class="ident">Standby::new</span>();
 
         <span class="comment">// generic event handler gets message creates</span>
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::MessageCreate</span>);
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(|<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="ident">event</span>.<span class="ident">kind</span>() == <span class="ident">EventType::MessageCreate</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate</span>(<span class="ident">message</span>()))));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">wait</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event::MessageCreate</span>(<span class="kw">_</span>))));
 
         <span class="comment">// generic event handler gets reaction adds</span>
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::ReactionAdd</span>);
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(|<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="ident">event</span>.<span class="ident">kind</span>() == <span class="ident">EventType::ReactionAdd</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">wait</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event::ReactionAdd</span>(<span class="kw">_</span>))));
 
         <span class="comment">// generic event handler gets other guild events</span>
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(<span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::RoleDelete</span>);
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for_event</span>(|<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| <span class="ident">event</span>.<span class="ident">kind</span>() == <span class="ident">EventType::RoleDelete</span>);
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::RoleDelete</span>(<span class="ident">RoleDelete</span> {
             <span class="ident">guild_id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">role_id</span>: <span class="ident">Id::new</span>(<span class="number">2</span>),
@@ -3053,12 +3053,12 @@
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">wait</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event::RoleDelete</span>(<span class="kw">_</span>))));
 
         <span class="comment">// guild event handler gets message creates or reaction events</span>
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), <span class="op">|</span><span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span><span class="op">|</span> {
-            <span class="ident">event</span>.<span class="ident">kind</span>() <span class="op">==</span> <span class="ident">EventType::ReactionAdd</span>
+        <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">standby</span>.<span class="ident">wait_for</span>(<span class="ident">Id::new</span>(<span class="number">1</span>), |<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">Event</span>| {
+            <span class="ident">event</span>.<span class="ident">kind</span>() == <span class="ident">EventType::ReactionAdd</span>
         });
         <span class="ident">standby</span>.<span class="ident">process</span>(<span class="kw-2">&amp;</span><span class="ident">Event::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd</span>(<span class="ident">reaction</span>()))));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">wait</span>.<span class="kw">await</span>, <span class="prelude-val">Ok</span>(<span class="ident">Event::ReactionAdd</span>(<span class="kw">_</span>))));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_standby" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_standby" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -153,32 +153,32 @@
 
 <span class="kw">impl</span> <span class="ident">UpdatePresenceError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if let unused&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;retrieving the type has no effect if let unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">UpdatePresenceErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unused_self</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if let unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error and retrieving the source has no effect if let unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
         <span class="prelude-val">None</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
     ) -&gt; (
         <span class="ident">UpdatePresenceErrorType</span>,
-        <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
     ) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="prelude-val">None</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">UpdatePresenceError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">UpdatePresenceErrorType::MissingActivity</span> =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;at least one activity must be provided&quot;</span>)
@@ -211,12 +211,12 @@
     <span class="doccomment">/// Returns an error of type [`UpdatePresenceErrorType::MissingActivity`] if</span>
     <span class="doccomment">/// an empty set of activities is provided.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">activities</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">activities</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">Activity</span>&gt;&gt;,
         <span class="ident">afk</span>: <span class="ident">bool</span>,
-        <span class="ident">since</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">status</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Status</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">UpdatePresenceError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">UpdatePresencePayload::new</span>(<span class="ident">activities</span>, <span class="ident">afk</span>, <span class="ident">since</span>, <span class="ident">status</span>)<span class="question-mark">?</span>;
+        <span class="ident">since</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;&gt;,
+        <span class="ident">status</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Status</span>&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">UpdatePresenceError</span>&gt; {
+        <span class="kw">let</span> <span class="ident">d</span> = <span class="ident">UpdatePresencePayload::new</span>(<span class="ident">activities</span>, <span class="ident">afk</span>, <span class="ident">since</span>, <span class="ident">status</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">d</span>,
@@ -230,9 +230,9 @@
     <span class="doccomment">/// User&#39;s activities.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// At least one is required.</span>
-    <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span>&lt;<span class="ident">Activity</span>&gt;,
     <span class="kw">pub</span> <span class="ident">afk</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">since</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">Status</span>,
 }
 
@@ -244,20 +244,20 @@
     <span class="doccomment">/// Returns an [`UpdatePresenceErrorType::MissingActivity`] error type if an</span>
     <span class="doccomment">/// empty set of activities is provided.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">activities</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">activities</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">Activity</span>&gt;&gt;,
         <span class="ident">afk</span>: <span class="ident">bool</span>,
-        <span class="ident">since</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">status</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Status</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">UpdatePresenceError</span><span class="op">&gt;</span> {
+        <span class="ident">since</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;&gt;,
+        <span class="ident">status</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">Status</span>&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">UpdatePresenceError</span>&gt; {
         <span class="ident"><span class="self">Self</span>::_new</span>(<span class="ident">activities</span>.<span class="ident">into</span>(), <span class="ident">afk</span>, <span class="ident">since</span>.<span class="ident">into</span>(), <span class="ident">status</span>.<span class="ident">into</span>())
     }
 
     <span class="kw">fn</span> <span class="ident">_new</span>(
-        <span class="ident">activities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span>,
+        <span class="ident">activities</span>: <span class="ident">Vec</span>&lt;<span class="ident">Activity</span>&gt;,
         <span class="ident">afk</span>: <span class="ident">bool</span>,
-        <span class="ident">since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="ident">since</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="ident">status</span>: <span class="ident">Status</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">UpdatePresenceError</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">UpdatePresenceError</span>&gt; {
         <span class="kw">if</span> <span class="ident">activities</span>.<span class="ident">is_empty</span>() {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">UpdatePresenceError</span> {
                 <span class="ident">kind</span>: <span class="ident">UpdatePresenceErrorType::MissingActivity</span>,
@@ -273,4 +273,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

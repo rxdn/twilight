@@ -145,10 +145,10 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GuildCommandPermissions</span> {
-    <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">CommandMarker</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandPermissions</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">application_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="ident">Vec</span>&lt;<span class="ident">CommandPermissions</span>&gt;,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
@@ -159,15 +159,15 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CommandPermissionsType</span> {
-    <span class="ident">Role</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>),
-    <span class="ident">User</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>),
-    <span class="ident">Channel</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>),
+    <span class="ident">Role</span>(<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;),
+    <span class="ident">User</span>(<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;),
+    <span class="ident">Channel</span>(<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">CommandPermissionsData</span> {
-    <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;type&quot;</span>)]</span>
     <span class="ident">kind</span>: <span class="ident">CommandPermissionsDataType</span>,
     <span class="ident">permission</span>: <span class="ident">bool</span>,
 }
@@ -176,34 +176,34 @@
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
 <span class="kw">enum</span> <span class="ident">CommandPermissionsDataType</span> {
-    <span class="ident">Role</span> <span class="op">=</span> <span class="number">1</span>,
-    <span class="ident">User</span> <span class="op">=</span> <span class="number">2</span>,
-    <span class="ident">Channel</span> <span class="op">=</span> <span class="number">3</span>,
+    <span class="ident">Role</span> = <span class="number">1</span>,
+    <span class="ident">User</span> = <span class="number">2</span>,
+    <span class="ident">Channel</span> = <span class="number">3</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CommandPermissions</span> {
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">CommandPermissionsData::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">CommandPermissions</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">D::Error</span>&gt; {
+        <span class="kw">let</span> <span class="ident">data</span> = <span class="ident">CommandPermissionsData::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">span</span> <span class="op">=</span> <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing command permission&quot;</span>);
-        <span class="kw">let</span> <span class="ident">_span_enter</span> <span class="op">=</span> <span class="ident">span</span>.<span class="ident">enter</span>();
+        <span class="kw">let</span> <span class="ident">span</span> = <span class="macro">tracing::trace_span!</span>(<span class="string">&quot;deserializing command permission&quot;</span>);
+        <span class="kw">let</span> <span class="ident">_span_enter</span> = <span class="ident">span</span>.<span class="ident">enter</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">kind</span> {
+        <span class="kw">let</span> <span class="ident">id</span> = <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">kind</span> {
             <span class="ident">CommandPermissionsDataType::Role</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">id</span>.<span class="ident">cast</span>();
-                <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="ident">get</span>(), <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
+                <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">data</span>.<span class="ident">id</span>.<span class="ident">cast</span>();
+                <span class="macro">tracing::trace!</span>(<span class="ident">id</span> = %<span class="ident">id</span>.<span class="ident">get</span>(), <span class="ident">kind</span> = <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">CommandPermissionsType::Role</span>(<span class="ident">id</span>)
             }
             <span class="ident">CommandPermissionsDataType::User</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">id</span>.<span class="ident">cast</span>();
-                <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="ident">get</span>(), <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
+                <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">data</span>.<span class="ident">id</span>.<span class="ident">cast</span>();
+                <span class="macro">tracing::trace!</span>(<span class="ident">id</span> = %<span class="ident">id</span>.<span class="ident">get</span>(), <span class="ident">kind</span> = <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">CommandPermissionsType::User</span>(<span class="ident">id</span>)
             }
             <span class="ident">CommandPermissionsDataType::Channel</span> =&gt; {
-                <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">id</span>.<span class="ident">cast</span>();
-                <span class="macro">tracing::trace!</span>(<span class="ident">id</span> <span class="op">=</span> <span class="op">%</span><span class="ident">id</span>.<span class="ident">get</span>(), <span class="ident">kind</span> <span class="op">=</span> <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
+                <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">data</span>.<span class="ident">id</span>.<span class="ident">cast</span>();
+                <span class="macro">tracing::trace!</span>(<span class="ident">id</span> = %<span class="ident">id</span>.<span class="ident">get</span>(), <span class="ident">kind</span> = <span class="question-mark">?</span><span class="ident">data</span>.<span class="ident">kind</span>);
 
                 <span class="ident">CommandPermissionsType::Channel</span>(<span class="ident">id</span>)
             }
@@ -217,8 +217,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">CommandPermissions</span> {
-    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">CommandPermissionsData</span> {
+    <span class="kw">fn</span> <span class="ident">serialize</span>&lt;<span class="ident">S</span>: <span class="ident">Serializer</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">S::Ok</span>, <span class="ident">S::Error</span>&gt; {
+        <span class="kw">let</span> <span class="ident">data</span> = <span class="ident">CommandPermissionsData</span> {
             <span class="ident">id</span>: <span class="kw">match</span> <span class="self">self</span>.<span class="ident">id</span> {
                 <span class="ident">CommandPermissionsType::Role</span>(<span class="ident">role_id</span>) =&gt; <span class="ident">role_id</span>.<span class="ident">cast</span>(),
                 <span class="ident">CommandPermissionsType::User</span>(<span class="ident">user_id</span>) =&gt; <span class="ident">user_id</span>.<span class="ident">cast</span>(),
@@ -244,7 +244,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">command_permissions</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandPermissions</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandPermissions</span> {
             <span class="ident">id</span>: <span class="ident">CommandPermissionsType::Role</span>(<span class="ident">Id::new</span>(<span class="number">100</span>)),
             <span class="ident">permission</span>: <span class="bool-val">true</span>,
         };
@@ -269,4 +269,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

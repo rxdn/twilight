@@ -18,10 +18,10 @@ on shards to have a better understanding of what they are.</p>
 
 <span class="comment">// Use the value of the &quot;DISCORD_TOKEN&quot; environment variable as the bot&#39;s</span>
 <span class="comment">// token. Of course, you may pass this into your program however you want.</span>
-<span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
-<span class="kw">let</span> <span class="ident">event_types</span> <span class="op">=</span> <span class="ident">EventTypeFlags::MESSAGE_CREATE</span> <span class="op">|</span> <span class="ident">EventTypeFlags::MESSAGE_DELETE</span>;
+<span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">event_types</span> = <span class="ident">EventTypeFlags::MESSAGE_CREATE</span> | <span class="ident">EventTypeFlags::MESSAGE_DELETE</span>;
 
-<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw-2">mut</span> <span class="ident">events</span>) <span class="op">=</span> <span class="ident">Shard::builder</span>(<span class="ident">token</span>, <span class="ident">Intents::GUILD_MESSAGES</span>)
+<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw-2">mut</span> <span class="ident">events</span>) = <span class="ident">Shard::builder</span>(<span class="ident">token</span>, <span class="ident">Intents::GUILD_MESSAGES</span>)
     .<span class="ident">event_types</span>(<span class="ident">event_types</span>)
     .<span class="ident">build</span>();
 
@@ -30,7 +30,7 @@ on shards to have a better understanding of what they are.</p>
 
 <span class="comment">// Create a loop of only new message and deleted message events.</span>
 
-<span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">event</span>) <span class="op">=</span> <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
+<span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">event</span>) = <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
     <span class="kw">match</span> <span class="ident">event</span> {
         <span class="ident">Event::MessageCreate</span>(<span class="ident">message</span>) =&gt; {
             <span class="macro">println!</span>(<span class="string">&quot;message received with content: {}&quot;</span>, <span class="ident">message</span>.<span class="ident">content</span>);
@@ -51,15 +51,15 @@ current connection stage:</p>
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">env</span>, <span class="ident">time::Duration</span>};
 <span class="kw">use</span> <span class="ident">tokio::time</span> <span class="kw">as</span> <span class="ident">tokio_time</span>;
 
-<span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
 
-<span class="kw">let</span> <span class="ident">intents</span> <span class="op">=</span> <span class="ident">Intents::GUILD_MESSAGES</span> <span class="op">|</span> <span class="ident">Intents::GUILD_MESSAGE_TYPING</span>;
-<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>);
+<span class="kw">let</span> <span class="ident">intents</span> = <span class="ident">Intents::GUILD_MESSAGES</span> | <span class="ident">Intents::GUILD_MESSAGE_TYPING</span>;
+<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw">_</span>) = <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>);
 <span class="ident">shard</span>.<span class="ident">start</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
 <span class="ident">tokio_time::sleep</span>(<span class="ident">Duration::from_secs</span>(<span class="number">1</span>)).<span class="kw">await</span>;
 
-<span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">shard</span>.<span class="ident">info</span>()<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">info</span> = <span class="ident">shard</span>.<span class="ident">info</span>()<span class="question-mark">?</span>;
 <span class="macro">println!</span>(<span class="string">&quot;Shard stage: {}&quot;</span>, <span class="ident">info</span>.<span class="ident">stage</span>());</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.builder" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/twilight_gateway/shard/impl.rs.html#458-460">source</a></span><h4 class="code-header">pub fn <a href="#method.builder" class="fnname">builder</a>(token: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, intents: <a class="struct" href="../struct.Intents.html" title="struct twilight_gateway::Intents">Intents</a>) -&gt; <a class="struct" href="struct.ShardBuilder.html" title="struct twilight_gateway::shard::ShardBuilder">ShardBuilder</a></h4></section></summary><div class="docblock"><p>Create a builder to configure and construct a shard.</p>
 <p>Refer to the builder for more information.</p>
@@ -93,18 +93,18 @@ with the custom status “running on twilight”:</p>
     <span class="ident">presence</span>::{<span class="ident">Activity</span>, <span class="ident">ActivityType</span>, <span class="ident">MinimalActivity</span>, <span class="ident">Status</span>},
 };
 
-<span class="kw">let</span> <span class="ident">intents</span> <span class="op">=</span> <span class="ident">Intents::GUILDS</span>;
-<span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">intents</span> = <span class="ident">Intents::GUILDS</span>;
+<span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
 
-<span class="kw">let</span> (<span class="ident">shard</span>, <span class="ident">_events</span>) <span class="op">=</span> <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>);
+<span class="kw">let</span> (<span class="ident">shard</span>, <span class="ident">_events</span>) = <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>);
 <span class="ident">shard</span>.<span class="ident">start</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
-<span class="kw">let</span> <span class="ident">minimal_activity</span> <span class="op">=</span> <span class="ident">MinimalActivity</span> {
+<span class="kw">let</span> <span class="ident">minimal_activity</span> = <span class="ident">MinimalActivity</span> {
     <span class="ident">kind</span>: <span class="ident">ActivityType::Custom</span>,
     <span class="ident">name</span>: <span class="string">&quot;running on twilight&quot;</span>.<span class="ident">to_owned</span>(),
     <span class="ident">url</span>: <span class="prelude-val">None</span>,
 };
-<span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">UpdatePresence::new</span>(
+<span class="kw">let</span> <span class="ident">command</span> = <span class="ident">UpdatePresence::new</span>(
     <span class="ident">Vec::from</span>([<span class="ident">Activity::from</span>(<span class="ident">minimal_activity</span>)]),
     <span class="bool-val">false</span>,
     <span class="prelude-val">Some</span>(<span class="number">1</span>),
@@ -126,8 +126,8 @@ has not been started.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">std::env</span>;
 <span class="kw">use</span> <span class="ident">twilight_gateway</span>::{<span class="ident">shard</span>::{<span class="ident">raw_message::Message</span>, <span class="ident">Shard</span>}, <span class="ident">Intents</span>};
 
-<span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
-<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">Intents::GUILDS</span>);
+<span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw">_</span>) = <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">Intents::GUILDS</span>);
 <span class="ident">shard</span>.<span class="ident">start</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
 <span class="ident">shard</span>.<span class="ident">send</span>(<span class="ident">Message::Ping</span>(<span class="ident">Vec::new</span>())).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div>
@@ -142,12 +142,12 @@ has not been started.</p>
     <span class="ident">Intents</span>,
 };
 
-<span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
-<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">Intents::GUILDS</span>);
+<span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> (<span class="ident">shard</span>, <span class="kw">_</span>) = <span class="ident">Shard::new</span>(<span class="ident">token</span>, <span class="ident">Intents::GUILDS</span>);
 <span class="ident">shard</span>.<span class="ident">start</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
-<span class="kw">let</span> <span class="ident">close</span> <span class="op">=</span> <span class="ident">CloseFrame::from</span>((<span class="number">1000</span>, <span class="string">&quot;&quot;</span>));
-<span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">Message::Close</span>(<span class="prelude-val">Some</span>(<span class="ident">close</span>));
+<span class="kw">let</span> <span class="ident">close</span> = <span class="ident">CloseFrame::from</span>((<span class="number">1000</span>, <span class="string">&quot;&quot;</span>));
+<span class="kw">let</span> <span class="ident">message</span> = <span class="ident">Message::Close</span>(<span class="prelude-val">Some</span>(<span class="ident">close</span>));
 <span class="ident">shard</span>.<span class="ident">send</span>(<span class="ident">message</span>).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div>
 <h5 id="errors-3"><a href="#errors-3">Errors</a></h5>
 <p>Returns a <a href="enum.SendErrorType.html#variant.HeartbeaterNotStarted" title="SendErrorType::HeartbeaterNotStarted"><code>SendErrorType::HeartbeaterNotStarted</code></a> error type if the
@@ -187,4 +187,4 @@ to <a href="../cluster/struct.ClusterBuilder.html#method.resume_sessions"><code>
 <a href="https://docs.rs/tracing/0.1.36/tracing/instrument/struct.WithDispatch.html" title="WithDispatch"><code>WithDispatch</code></a> wrapper. <a href="https://docs.rs/tracing/0.1.36/tracing/instrument/trait.WithSubscriber.html#method.with_subscriber">Read more</a></p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.with_current_subscriber" class="method trait-impl has-srclink"><span class="rightside"><a class="srclink" href="https://docs.rs/tracing/0.1.36/src/tracing/instrument.rs.html#221">source</a></span><a href="#method.with_current_subscriber" class="anchor"></a><h4 class="code-header">fn <a href="https://docs.rs/tracing/0.1.36/tracing/instrument/trait.WithSubscriber.html#method.with_current_subscriber" class="fnname">with_current_subscriber</a>(self) -&gt; <a class="struct" href="https://docs.rs/tracing/0.1.36/tracing/instrument/struct.WithDispatch.html" title="struct tracing::instrument::WithDispatch">WithDispatch</a>&lt;Self&gt;</h4></section></summary><div class='docblock'><p>Attaches the current <a href="https://docs.rs/tracing/0.1.36/tracing/dispatcher/index.html#setting-the-default-subscriber">default</a> <a href="https://docs.rs/tracing-core/0.1.22/tracing_core/subscriber/trait.Subscriber.html"><code>Subscriber</code></a> to this type, returning a
 <a href="https://docs.rs/tracing/0.1.36/tracing/instrument/struct.WithDispatch.html" title="WithDispatch"><code>WithDispatch</code></a> wrapper. <a href="https://docs.rs/tracing/0.1.36/tracing/instrument/trait.WithSubscriber.html#method.with_current_subscriber">Read more</a></p>
-</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</div></details></div></details></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

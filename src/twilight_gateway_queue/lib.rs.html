@@ -188,25 +188,25 @@
     <span class="ident">clippy::unnecessary_wraps</span>,
     <span class="ident">clippy::used_underscore_binding</span>
 )]</span>
-<span class="attribute">#![<span class="ident">doc</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span> = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
 ))]</span>
 <span class="kw">mod</span> <span class="ident">day_limiter</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
 ))]</span>
 <span class="kw">mod</span> <span class="ident">large_bot_queue</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-webpki-roots&quot;</span>
+    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
 ))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">large_bot_queue::LargeBotQueue</span>;
 
@@ -232,13 +232,13 @@
 <span class="doccomment">/// information.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [module-level]: crate</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Queue</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Queue</span>: <span class="ident">Debug</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> {
     <span class="doccomment">/// A shard has requested the ability to request a session initialization</span>
     <span class="doccomment">/// with the gateway.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The returned future must resolve only when the shard can initiate the</span>
     <span class="doccomment">/// session.</span>
-    <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">request</span>&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = ()&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;a</span>&gt;&gt;;
 }
 
 <span class="doccomment">/// A local, in-process implementation of a [`Queue`] which manages the</span>
@@ -267,7 +267,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`gateway-queue`]: https://github.com/twilight-rs/gateway-queue</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LocalQueue</span>(<span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LocalQueue</span>(<span class="ident">UnboundedSender</span>&lt;<span class="ident">Sender</span>&lt;()&gt;&gt;);
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">LocalQueue</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
@@ -278,7 +278,7 @@
 <span class="kw">impl</span> <span class="ident">LocalQueue</span> {
     <span class="doccomment">/// Creates a new local queue.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">unbounded_channel</span>();
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">unbounded_channel</span>();
 
         <span class="ident">tokio::spawn</span>(<span class="ident">waiter</span>(<span class="ident">rx</span>));
 
@@ -286,10 +286,10 @@
     }
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">waiter</span>(<span class="kw-2">mut</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>) {
-    <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">waiter</span>(<span class="kw-2">mut</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span>&lt;<span class="ident">Sender</span>&lt;()&gt;&gt;) {
+    <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> = <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
+    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) = <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="ident">req</span>.<span class="ident">send</span>(()) {
             <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {source:?}&quot;</span>);
         }
         <span class="ident">sleep</span>(<span class="ident">DUR</span>).<span class="kw">await</span>;
@@ -300,18 +300,18 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">id</span>, <span class="ident">total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = ()&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;_</span>&gt;&gt; {
         <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
-            <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+            <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">tx</span>) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">tx</span>) {
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed: {source:?}&quot;</span>);
                 <span class="kw">return</span>;
             }
 
             <span class="macro">tracing::info!</span>(<span class="string">&quot;shard {id}/{total} waiting for allowance&quot;</span>);
 
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="kw">await</span>;
+            <span class="kw">let</span> <span class="kw">_</span> = <span class="ident">rx</span>.<span class="kw">await</span>;
         })
     }
 }
@@ -324,7 +324,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NoOpQueue</span>;
 
 <span class="kw">impl</span> <span class="ident">Queue</span> <span class="kw">for</span> <span class="ident">NoOpQueue</span> {
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">_id</span>, <span class="ident">_total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, [<span class="ident">_id</span>, <span class="ident">_total</span>]: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = ()&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;_</span>&gt;&gt; {
         <span class="ident">Box::pin</span>(<span class="ident">future::ready</span>(()))
     }
 }
@@ -341,4 +341,4 @@
     <span class="macro">assert_obj_safe!</span>(<span class="ident">Queue</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway_queue" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway_queue" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -359,9 +359,9 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Disconnected</span> {
     <span class="doccomment">/// The code for the disconnect if not initiated by the host, if any.</span>
-    <span class="kw">pub</span> <span class="ident">code</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">code</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u16</span>&gt;,
     <span class="doccomment">/// The reason for the disconnect if not initiated by the host, if any.</span>
-    <span class="kw">pub</span> <span class="ident">reason</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">reason</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     <span class="doccomment">/// The ID of the shard that&#39;s now disconnected.</span>
     <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
 }
@@ -380,7 +380,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Payload</span> {
     <span class="doccomment">/// The bytes that came in.</span>
-    <span class="kw">pub</span> <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">bytes</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
 }
 
 <span class="doccomment">/// Indicator that a shard is now reconnecting.</span>
@@ -422,10 +422,10 @@
     <span class="ident">Resuming</span>(<span class="ident">Resuming</span>),
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardEvent</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">EventConversionError</span>;
+<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;<span class="ident">Event</span>&gt; <span class="kw">for</span> <span class="ident">ShardEvent</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">EventConversionError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">event</span> {
             <span class="ident">Event::ShardConnected</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Connected</span>(<span class="ident">v</span>),
             <span class="ident">Event::ShardConnecting</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Connecting</span>(<span class="ident">v</span>),
@@ -450,7 +450,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">connected</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Connected</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Connected</span> {
             <span class="ident">heartbeat_interval</span>: <span class="number">41_250</span>,
             <span class="ident">shard_id</span>: <span class="number">4</span>,
         };
@@ -473,7 +473,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">connecting</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Connecting</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Connecting</span> {
             <span class="ident">gateway</span>: <span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">shard_id</span>: <span class="number">4</span>,
         };
@@ -496,7 +496,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">disconnected</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Disconnected</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Disconnected</span> {
             <span class="ident">code</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
             <span class="ident">reason</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;the reason&quot;</span>.<span class="ident">to_owned</span>()),
             <span class="ident">shard_id</span>: <span class="number">4</span>,
@@ -524,7 +524,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">identifying</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Identifying</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Identifying</span> {
             <span class="ident">shard_id</span>: <span class="number">4</span>,
             <span class="ident">shard_total</span>: <span class="number">7</span>,
         };
@@ -547,7 +547,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">payload</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Payload</span> { <span class="ident">bytes</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] };
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Payload</span> { <span class="ident">bytes</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] };
 
         <span class="ident">serde_test::assert_tokens</span>(
             <span class="kw-2">&amp;</span><span class="ident">value</span>,
@@ -568,7 +568,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">reconnecting</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Reconnecting</span> { <span class="ident">shard_id</span>: <span class="number">4</span> };
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Reconnecting</span> { <span class="ident">shard_id</span>: <span class="number">4</span> };
 
         <span class="ident">serde_test::assert_tokens</span>(
             <span class="kw-2">&amp;</span><span class="ident">value</span>,
@@ -586,7 +586,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">resuming</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Resuming</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Resuming</span> {
             <span class="ident">seq</span>: <span class="number">100</span>,
             <span class="ident">shard_id</span>: <span class="number">4</span>,
         };
@@ -609,7 +609,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">shard_event_try_from_event</span>() {
-        <span class="kw">let</span> <span class="ident">connected</span> <span class="op">=</span> <span class="ident">Event::ShardConnected</span>(<span class="ident">Connected</span> {
+        <span class="kw">let</span> <span class="ident">connected</span> = <span class="ident">Event::ShardConnected</span>(<span class="ident">Connected</span> {
             <span class="ident">heartbeat_interval</span>: <span class="number">41_250</span>,
             <span class="ident">shard_id</span>: <span class="number">4</span>,
         });
@@ -618,7 +618,7 @@
             <span class="ident">ShardEvent::Connected</span>(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">connecting</span> <span class="op">=</span> <span class="ident">Event::ShardConnecting</span>(<span class="ident">Connecting</span> {
+        <span class="kw">let</span> <span class="ident">connecting</span> = <span class="ident">Event::ShardConnecting</span>(<span class="ident">Connecting</span> {
             <span class="ident">gateway</span>: <span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>(),
             <span class="ident">shard_id</span>: <span class="number">4</span>,
         });
@@ -627,7 +627,7 @@
             <span class="ident">ShardEvent::Connecting</span>(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">disconnected</span> <span class="op">=</span> <span class="ident">Event::ShardDisconnected</span>(<span class="ident">Disconnected</span> {
+        <span class="kw">let</span> <span class="ident">disconnected</span> = <span class="ident">Event::ShardDisconnected</span>(<span class="ident">Disconnected</span> {
             <span class="ident">code</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
             <span class="ident">reason</span>: <span class="prelude-val">None</span>,
             <span class="ident">shard_id</span>: <span class="number">4</span>,
@@ -637,7 +637,7 @@
             <span class="ident">ShardEvent::Disconnected</span>(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">identifying</span> <span class="op">=</span> <span class="ident">Event::ShardIdentifying</span>(<span class="ident">Identifying</span> {
+        <span class="kw">let</span> <span class="ident">identifying</span> = <span class="ident">Event::ShardIdentifying</span>(<span class="ident">Identifying</span> {
             <span class="ident">shard_id</span>: <span class="number">4</span>,
             <span class="ident">shard_total</span>: <span class="number">7</span>,
         });
@@ -646,19 +646,19 @@
             <span class="ident">ShardEvent::Identifying</span>(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Event::ShardPayload</span>(<span class="ident">Payload</span> { <span class="ident">bytes</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] });
+        <span class="kw">let</span> <span class="ident">payload</span> = <span class="ident">Event::ShardPayload</span>(<span class="ident">Payload</span> { <span class="ident">bytes</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">payload</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
             <span class="ident">ShardEvent::Payload</span>(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">reconnecting</span> <span class="op">=</span> <span class="ident">Event::ShardReconnecting</span>(<span class="ident">Reconnecting</span> { <span class="ident">shard_id</span>: <span class="number">4</span> });
+        <span class="kw">let</span> <span class="ident">reconnecting</span> = <span class="ident">Event::ShardReconnecting</span>(<span class="ident">Reconnecting</span> { <span class="ident">shard_id</span>: <span class="number">4</span> });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">reconnecting</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
             <span class="ident">ShardEvent::Reconnecting</span>(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">resuming</span> <span class="op">=</span> <span class="ident">Event::ShardResuming</span>(<span class="ident">Resuming</span> {
+        <span class="kw">let</span> <span class="ident">resuming</span> = <span class="ident">Event::ShardResuming</span>(<span class="ident">Resuming</span> {
             <span class="ident">seq</span>: <span class="number">100</span>,
             <span class="ident">shard_id</span>: <span class="number">4</span>,
         });
@@ -669,4 +669,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

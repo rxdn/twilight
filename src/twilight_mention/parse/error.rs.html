@@ -305,36 +305,36 @@
 
 <span class="doccomment">/// Parsing a mention failed due to invalid syntax.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">kind</span>: <span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ParseMentionError</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">kind</span>: <span class="ident">ParseMentionErrorType</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">ParseMentionError</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ParseMentionErrorType</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
     ) -&gt; (
-        <span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-        <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">ParseMentionErrorType</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
+        <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
     ) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">trailing_arrow</span>(<span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">trailing_arrow</span>(<span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">char</span>&gt;) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">kind</span>: <span class="ident">ParseMentionErrorType::TrailingArrow</span> { <span class="ident">found</span> },
             <span class="ident">source</span>: <span class="prelude-val">None</span>,
@@ -342,8 +342,8 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ParseMentionError</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">ParseMentionErrorType::IdNotU64</span> { <span class="ident">found</span>, .. } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;id portion (&#39;&quot;</span>)<span class="question-mark">?</span>;
@@ -354,7 +354,7 @@
             <span class="ident">ParseMentionErrorType::LeadingArrow</span> { <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;expected to find a leading arrow (&#39;&lt;&#39;) but instead found &quot;</span>)<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">found</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) = <span class="ident">found</span> {
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&#39;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">c</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;mut</span> [<span class="number">0</span>; <span class="number">4</span>]))<span class="question-mark">?</span>;
 
@@ -378,14 +378,14 @@
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">sigil</span>)<span class="question-mark">?</span>;
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&#39;&quot;</span>)<span class="question-mark">?</span>;
 
-                    <span class="kw">if</span> <span class="ident">idx</span> <span class="op">&lt;</span> <span class="ident">expected</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> {
+                    <span class="kw">if</span> <span class="ident">idx</span> &lt; <span class="ident">expected</span>.<span class="ident">len</span>() - <span class="number">1</span> {
                         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
                     }
                 }
 
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;) but instead found &quot;</span>)<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">found</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) = <span class="ident">found</span> {
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&#39;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">c</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;mut</span> [<span class="number">0</span>; <span class="number">4</span>]))<span class="question-mark">?</span>;
 
@@ -403,7 +403,7 @@
             <span class="ident">ParseMentionErrorType::TrailingArrow</span> { <span class="ident">found</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;expected to find a trailing arrow (&#39;&gt;&#39;) but instead found &quot;</span>)<span class="question-mark">?</span>;
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span> <span class="ident">found</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">c</span>) = <span class="ident">found</span> {
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&#39;&quot;</span>)<span class="question-mark">?</span>;
                     <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">c</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;mut</span> [<span class="number">0</span>; <span class="number">4</span>]))<span class="question-mark">?</span>;
 
@@ -416,18 +416,18 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ParseMentionError</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
+            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
     }
 }
 
 <span class="doccomment">/// Type of [`ParseMentionError`] that occurred.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParseMentionErrorType</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="doccomment">/// ID portion of the mention isn&#39;t a u64.</span>
     <span class="ident">IdNotU64</span> {
         <span class="doccomment">/// String that could not be parsed into a u64.</span>
@@ -436,7 +436,7 @@
     <span class="doccomment">/// Leading arrow (`&lt;`) is not present.</span>
     <span class="ident">LeadingArrow</span> {
         <span class="doccomment">/// Character that was instead found where the leading arrow should be.</span>
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">char</span>&gt;,
     },
     <span class="doccomment">/// One or more parts of the mention are missing.</span>
     <span class="doccomment">///</span>
@@ -456,7 +456,7 @@
         <span class="doccomment">/// Possible sigils that were expected for the mention type.</span>
         <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>],
         <span class="doccomment">/// Character that was instead found where the sigil should be.</span>
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">char</span>&gt;,
     },
     <span class="doccomment">/// Timestamp style value is invalid.</span>
     <span class="ident">TimestampStyleInvalid</span> {
@@ -466,7 +466,7 @@
     <span class="doccomment">/// Trailing arrow (`&gt;`) is not present.</span>
     <span class="ident">TrailingArrow</span> {
         <span class="doccomment">/// Character that was instead found where the trailing arrow should be.</span>
-        <span class="ident">found</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span>,
+        <span class="ident">found</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">char</span>&gt;,
     },
 }
 
@@ -481,22 +481,22 @@
     <span class="macro">assert_fields!</span>(<span class="ident">ParseMentionErrorType::Sigil</span>: <span class="ident">expected</span>, <span class="ident">found</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">ParseMentionErrorType::TimestampStyleInvalid</span>: <span class="ident">found</span>);
     <span class="macro">assert_fields!</span>(<span class="ident">ParseMentionErrorType::TrailingArrow</span>: <span class="ident">found</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">ParseMentionErrorType</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">ParseMentionError</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>: <span class="ident">Debug</span>, <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">ParseMentionErrorType</span>&lt;<span class="lifetime">&#39;_</span>&gt;: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(<span class="ident">ParseMentionError</span>&lt;<span class="lifetime">&#39;_</span>&gt;: <span class="ident">Debug</span>, <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">display</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;id portion (&#39;abcd&#39;) of mention is not a u64&quot;</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">expected</span> = <span class="string">&quot;id portion (&#39;abcd&#39;) of mention is not a u64&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
                 <span class="ident">kind</span>: <span class="ident">ParseMentionErrorType::IdNotU64</span> { <span class="ident">found</span>: <span class="string">&quot;abcd&quot;</span> },
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="string">&quot;abcd&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>())),
+                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="string">&quot;abcd&quot;</span>.<span class="ident">parse</span>::&lt;<span class="ident">u64</span>&gt;().<span class="ident">unwrap_err</span>())),
             }
             .<span class="ident">to_string</span>(),
         );
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a leading arrow (&#39;&lt;&#39;) but instead found &#39;a&#39;&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a leading arrow (&#39;&lt;&#39;) but instead found &#39;a&#39;&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -506,7 +506,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a leading arrow (&#39;&lt;&#39;) but instead found nothing&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a leading arrow (&#39;&lt;&#39;) but instead found nothing&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -516,7 +516,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found &#39;#&#39;&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found &#39;#&#39;&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -529,7 +529,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found nothing&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found nothing&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -542,7 +542,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found &#39;#&#39;&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found &#39;#&#39;&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -555,7 +555,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found nothing&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a mention sigil (&#39;@&#39;) but instead found nothing&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -567,7 +567,7 @@
             }
             .<span class="ident">to_string</span>(),
         );
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;timestamp style value &#39;E&#39; is invalid&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;timestamp style value &#39;E&#39; is invalid&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -577,7 +577,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a trailing arrow (&#39;&gt;&#39;) but instead found &#39;a&#39;&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a trailing arrow (&#39;&gt;&#39;) but instead found &#39;a&#39;&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -587,7 +587,7 @@
             .<span class="ident">to_string</span>(),
         );
 
-        <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;expected to find a trailing arrow (&#39;&gt;&#39;) but instead found nothing&quot;</span>;
+        <span class="ident">expected</span> = <span class="string">&quot;expected to find a trailing arrow (&#39;&gt;&#39;) but instead found nothing&quot;</span>;
         <span class="macro">assert_eq!</span>(
             <span class="ident">expected</span>,
             <span class="ident">ParseMentionError</span> {
@@ -599,4 +599,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_mention" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_mention" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

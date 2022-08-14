@@ -281,9 +281,9 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AutoModerationRule</span> {
     <span class="doccomment">/// Actions which will execute when the rule is triggered.</span>
-    <span class="kw">pub</span> <span class="ident">actions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AutoModerationAction</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">actions</span>: <span class="ident">Vec</span>&lt;<span class="ident">AutoModerationAction</span>&gt;,
     <span class="doccomment">/// User which created the rule.</span>
-    <span class="kw">pub</span> <span class="ident">creator_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">creator_id</span>: <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;,
     <span class="doccomment">/// Whether the rule is enabled.</span>
     <span class="kw">pub</span> <span class="ident">enabled</span>: <span class="ident">bool</span>,
     <span class="doccomment">/// Rule event type.</span>
@@ -291,15 +291,15 @@
     <span class="doccomment">/// Channels that should not be affected by the rule.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Maximum of 50.</span>
-    <span class="kw">pub</span> <span class="ident">exempt_channels</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">exempt_channels</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     <span class="doccomment">/// Roles that should not be affected by the rule.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Maximum of 20.</span>
-    <span class="kw">pub</span> <span class="ident">exempt_roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">exempt_roles</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;,
     <span class="doccomment">/// ID of the guild the rule belongs to.</span>
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
     <span class="doccomment">/// ID of the rule.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AutoModerationRuleMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">AutoModerationRuleMarker</span>&gt;,
     <span class="doccomment">/// Name of the rule.</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Rule trigger metadata.</span>
@@ -340,7 +340,7 @@
     <span class="macro">assert_impl_all!</span>(
         <span class="ident">AutoModerationRule</span>: <span class="ident">Clone</span>,
         <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
         <span class="ident">Eq</span>,
         <span class="ident">Hash</span>,
         <span class="ident">PartialEq</span>,
@@ -352,14 +352,14 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">rule</span>() {
-        <span class="kw">const</span> <span class="ident">ACTION_CHANNEL_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_RULE_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AutoModerationRuleMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">2</span>);
-        <span class="kw">const</span> <span class="ident">CREATOR_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">3</span>);
-        <span class="kw">const</span> <span class="ident">EXEMPT_CHANNEL_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">4</span>);
-        <span class="kw">const</span> <span class="ident">EXEMPT_ROLE_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">5</span>);
-        <span class="kw">const</span> <span class="ident">GUILD_ID</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">6</span>);
+        <span class="kw">const</span> <span class="ident">ACTION_CHANNEL_ID</span>: <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt; = <span class="ident">Id::new</span>(<span class="number">1</span>);
+        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_RULE_ID</span>: <span class="ident">Id</span>&lt;<span class="ident">AutoModerationRuleMarker</span>&gt; = <span class="ident">Id::new</span>(<span class="number">2</span>);
+        <span class="kw">const</span> <span class="ident">CREATOR_ID</span>: <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt; = <span class="ident">Id::new</span>(<span class="number">3</span>);
+        <span class="kw">const</span> <span class="ident">EXEMPT_CHANNEL_ID</span>: <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt; = <span class="ident">Id::new</span>(<span class="number">4</span>);
+        <span class="kw">const</span> <span class="ident">EXEMPT_ROLE_ID</span>: <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt; = <span class="ident">Id::new</span>(<span class="number">5</span>);
+        <span class="kw">const</span> <span class="ident">GUILD_ID</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt; = <span class="ident">Id::new</span>(<span class="number">6</span>);
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">AutoModerationRule</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">AutoModerationRule</span> {
             <span class="ident">actions</span>: <span class="ident">Vec::from</span>([
                 <span class="ident">AutoModerationAction</span> {
                     <span class="ident">kind</span>: <span class="ident">AutoModerationActionType::BlockMessage</span>,
@@ -493,4 +493,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -110,7 +110,28 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Configure granular control over mentions and avoid phantom pings.</span>
+
+<span class="kw">mod</span> <span class="ident">builder</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::builder::AllowedMentionsBuilder</span>;
+
+<span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">id</span>::{
         <span class="ident">marker</span>::{<span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
         <span class="ident">Id</span>,
@@ -119,37 +140,46 @@
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">mod</span> <span class="ident">builder</span>;
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::builder::AllowedMentionsBuilder</span>;
-
-<span class="doccomment">/// Parse types.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParseTypes</span> {
-    <span class="ident">Everyone</span>,
-    <span class="ident">Roles</span>,
-    <span class="ident">Users</span>,
-}
-
-<span class="doccomment">/// Allowed mentions structure.</span>
+<span class="doccomment">/// Allows for more granular control over mentions.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Validates against the message content to avoid phantom pings, but you must</span>
+<span class="doccomment">/// still have e.g. `@everyone` in the message content to ping everyone.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AllowedMentions</span> {
+    <span class="doccomment">/// List of allowed [`ParseTypes`].</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">parse</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ParseTypes</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;is_false&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">parse</span>: <span class="ident">Vec</span>&lt;<span class="ident">ParseTypes</span>&gt;,
+    <span class="doccomment">/// List of [`Id&lt;UserMarker&gt;`] to mention.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">users</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;,
+    <span class="doccomment">/// List of [`Id&lt;RoleMarker&gt;`] to mention.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;,
+    <span class="doccomment">/// For replies, whether to mention the message author being replied to.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Defaults to false.</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;is_false&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">replied_user</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">AllowedMentions</span> {
+    <span class="doccomment">/// Create a new [`AllowedMentionsBuilder`].</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">builder</span>() -&gt; <span class="ident">AllowedMentionsBuilder</span> {
         <span class="ident">AllowedMentionsBuilder::new</span>()
     }
+}
+
+<span class="doccomment">/// Allowed mention type in message content.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
+<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ParseTypes</span> {
+    <span class="doccomment">/// `@everyone` and `here` mentions.</span>
+    <span class="ident">Everyone</span>,
+    <span class="doccomment">/// Role mentions.</span>
+    <span class="ident">Roles</span>,
+    <span class="doccomment">/// User mentions.</span>
+    <span class="ident">Users</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -160,7 +190,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">minimal</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">AllowedMentions</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">AllowedMentions</span> {
             <span class="ident">parse</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">users</span>: <span class="ident">Vec::new</span>(),
             <span class="ident">roles</span>: <span class="ident">Vec::new</span>(),
@@ -184,7 +214,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">full</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">AllowedMentions</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">AllowedMentions</span> {
             <span class="ident">parse</span>: <span class="macro">vec!</span>[<span class="ident">ParseTypes::Everyone</span>],
             <span class="ident">users</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">100</span>)],
             <span class="ident">roles</span>: <span class="macro">vec!</span>[<span class="ident">Id::new</span>(<span class="number">200</span>)],
@@ -223,4 +253,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

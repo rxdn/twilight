@@ -169,6 +169,7 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
+<span id="172">172</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">application::interaction::InteractionType</span>,
     <span class="ident">guild::PartialMember</span>,
@@ -177,16 +178,17 @@
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
+<span class="doccomment">/// Associated interaction metadata.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MessageInteraction</span> {
     <span class="doccomment">/// ID of the interaction.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">InteractionMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">InteractionMarker</span>&gt;,
     <span class="doccomment">/// Type of the interaction.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">InteractionType</span>,
     <span class="doccomment">/// If in a guild, the member who invoked the interaction.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PartialMember</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">member</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">PartialMember</span>&gt;,
     <span class="doccomment">/// Name of the [`Command`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Command`]: crate::application::command::Command</span>
@@ -208,10 +210,10 @@
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">message_interaction</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">message_interaction</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
+        <span class="kw">let</span> <span class="ident">joined_at</span> = <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">MessageInteraction</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">MessageInteraction</span> {
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">kind</span>: <span class="ident">InteractionType::ApplicationCommand</span>,
             <span class="ident">member</span>: <span class="prelude-val">Some</span>(<span class="ident">PartialMember</span> {
@@ -234,14 +236,14 @@
                 <span class="ident">bot</span>: <span class="bool-val">false</span>,
                 <span class="ident">discriminator</span>: <span class="number">1</span>,
                 <span class="ident">email</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;address@example.com&quot;</span>.<span class="ident">to_owned</span>()),
-                <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">UserFlags::PREMIUM_EARLY_SUPPORTER</span> <span class="op">|</span> <span class="ident">UserFlags::VERIFIED_DEVELOPER</span>),
+                <span class="ident">flags</span>: <span class="prelude-val">Some</span>(<span class="ident">UserFlags::PREMIUM_EARLY_SUPPORTER</span> | <span class="ident">UserFlags::VERIFIED_DEVELOPER</span>),
                 <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">3</span>),
                 <span class="ident">locale</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;en-us&quot;</span>.<span class="ident">to_owned</span>()),
                 <span class="ident">mfa_enabled</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
                 <span class="ident">name</span>: <span class="string">&quot;test&quot;</span>.<span class="ident">to_owned</span>(),
                 <span class="ident">premium_type</span>: <span class="prelude-val">Some</span>(<span class="ident">PremiumType::Nitro</span>),
                 <span class="ident">public_flags</span>: <span class="prelude-val">Some</span>(
-                    <span class="ident">UserFlags::PREMIUM_EARLY_SUPPORTER</span> <span class="op">|</span> <span class="ident">UserFlags::VERIFIED_DEVELOPER</span>,
+                    <span class="ident">UserFlags::PREMIUM_EARLY_SUPPORTER</span> | <span class="ident">UserFlags::VERIFIED_DEVELOPER</span>,
                 ),
                 <span class="ident">system</span>: <span class="prelude-val">None</span>,
                 <span class="ident">verified</span>: <span class="prelude-val">Some</span>(<span class="bool-val">true</span>),
@@ -341,4 +343,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

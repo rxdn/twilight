@@ -814,25 +814,25 @@
     <span class="doccomment">/// Detailed reason why the headers failed to be parsed.</span>
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType</span>,
     <span class="doccomment">/// Original error leading up to this one.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">HeaderParsingError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">HeaderParsingErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
         <span class="self">self</span>.<span class="ident">source</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">HeaderParsingErrorType</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">HeaderParsingErrorType</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
     }
 
@@ -845,7 +845,7 @@
     }
 
     <span class="doccomment">/// Create a new error because a header is not valid UTF-8.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">not_utf8</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">source</span>: <span class="ident">Utf8Error</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">not_utf8</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;, <span class="ident">source</span>: <span class="ident">Utf8Error</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::NotUtf8</span> { <span class="ident">name</span>, <span class="ident">value</span> },
             <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
@@ -854,7 +854,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">HeaderParsingError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">HeaderParsingErrorType::Missing</span> { <span class="ident">name</span> } =&gt; {
                 <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;at least one header, &#39;&quot;</span>)<span class="question-mark">?</span>;
@@ -884,10 +884,10 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">HeaderParsingError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
         <span class="self">self</span>.<span class="ident">source</span>
             .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>))
+            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
     }
 }
 
@@ -905,7 +905,7 @@
         <span class="doccomment">/// Name of the header.</span>
         <span class="ident">name</span>: <span class="ident">HeaderName</span>,
         <span class="doccomment">/// Value of the header.</span>
-        <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+        <span class="ident">value</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
     },
     <span class="doccomment">/// Header value is not of the expected type.</span>
     <span class="ident">Parsing</span> {
@@ -942,29 +942,29 @@
 
 <span class="kw">impl</span> <span class="ident">HeaderName</span> {
     <span class="doccomment">/// Lowercased name for the bucket header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BUCKET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-bucket&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BUCKET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-bucket&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the global header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">GLOBAL</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-global&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">GLOBAL</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-global&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the limit header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">LIMIT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-limit&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">LIMIT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-limit&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the remaining header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">REMAINING</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-remaining&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">REMAINING</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-remaining&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the reset-after header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RESET_AFTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-reset-after&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RESET_AFTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-reset-after&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the reset header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RESET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-reset&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RESET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-reset&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the retry-after header.</span>
     <span class="comment">// It&#39;s correct for this to not have the `x-ratelimit-` prefix.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RETRY_AFTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;retry-after&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RETRY_AFTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;retry-after&quot;</span>;
 
     <span class="doccomment">/// Lowercased name for the scope header.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SCOPE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;x-ratelimit-scope&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SCOPE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> = <span class="string">&quot;x-ratelimit-scope&quot;</span>;
 
     <span class="doccomment">/// Lowercased name of the header.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
@@ -983,7 +983,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">HeaderName</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">name</span>())
     }
 }
@@ -1015,7 +1015,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">HeaderType</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">name</span>())
     }
 }
@@ -1029,7 +1029,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This should always be present and should always be</span>
     <span class="doccomment">/// [`RatelimitScope::Global`].</span>
-    <span class="ident">scope</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span>,
+    <span class="ident">scope</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitScope</span>&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">Global</span> {
@@ -1044,7 +1044,7 @@
     <span class="doccomment">/// This should always be present and should always be</span>
     <span class="doccomment">/// [`RatelimitScope::Global`].</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">scope</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">scope</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitScope</span>&gt; {
         <span class="self">self</span>.<span class="ident">scope</span>
     }
 }
@@ -1053,7 +1053,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Present</span> {
     <span class="doccomment">/// Bucket ID.</span>
-    <span class="ident">bucket</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="ident">bucket</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     <span class="doccomment">/// Total number of tickets allocated to the bucket.</span>
     <span class="ident">limit</span>: <span class="ident">u64</span>,
     <span class="doccomment">/// Remaining number of tickets.</span>
@@ -1063,20 +1063,20 @@
     <span class="doccomment">/// When the bucket resets, as a Unix timestamp in milliseconds.</span>
     <span class="ident">reset</span>: <span class="ident">u64</span>,
     <span class="doccomment">/// Scope of the ratelimit.</span>
-    <span class="ident">scope</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span>,
+    <span class="ident">scope</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitScope</span>&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">Present</span> {
     <span class="doccomment">/// Reference to the bucket ID.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bucket</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bucket</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>&gt; {
         <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">as_deref</span>()
     }
 
     <span class="doccomment">/// Consume the ratelimit headers, returning the owned bucket ID.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_bucket</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_bucket</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt; {
         <span class="self">self</span>.<span class="ident">bucket</span>
     }
 
@@ -1106,7 +1106,7 @@
 
     <span class="doccomment">/// Scope of the ratelimit.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">scope</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RatelimitScope</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">scope</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitScope</span>&gt; {
         <span class="self">self</span>.<span class="ident">scope</span>
     }
 }
@@ -1125,7 +1125,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">RatelimitScope</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Global</span> =&gt; <span class="string">&quot;global&quot;</span>,
             <span class="ident"><span class="self">Self</span>::Shared</span> =&gt; <span class="string">&quot;shared&quot;</span>,
@@ -1135,9 +1135,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">RatelimitScope</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident">HeaderParsingError</span>;
+    <span class="kw">type</span> <span class="prelude-val">Err</span> = <span class="ident">HeaderParsingError</span>;
 
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span>&gt; {
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">s</span> {
             <span class="string">&quot;global&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Global</span>,
             <span class="string">&quot;shared&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::Shared</span>,
@@ -1156,10 +1156,10 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RatelimitScope</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">HeaderParsingError</span>;
+<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span>&gt; <span class="kw">for</span> <span class="ident">RatelimitScope</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">HeaderParsingError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
         <span class="ident"><span class="self">Self</span>::from_str</span>(<span class="ident">value</span>)
     }
 }
@@ -1254,17 +1254,17 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Errors if a required header is missing or if a header value is of an</span>
     <span class="doccomment">/// invalid type.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_pairs</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">headers</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])<span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bucket</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">global</span> <span class="op">=</span> <span class="bool-val">false</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">limit</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reset</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reset_after</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retry_after</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">scope</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_pairs</span>&lt;<span class="lifetime">&#39;a</span>&gt;(
+        <span class="ident">headers</span>: <span class="kw">impl</span> <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>])&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">HeaderParsingError</span>&gt; {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bucket</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">global</span> = <span class="bool-val">false</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">limit</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">remaining</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reset</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reset_after</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retry_after</span> = <span class="prelude-val">None</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">scope</span> = <span class="prelude-val">None</span>;
 
         <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">headers</span> {
             <span class="kw">match</span> <span class="ident">name</span> {
@@ -1272,7 +1272,7 @@
                     <span class="ident">bucket</span>.<span class="ident">replace</span>(<span class="ident">header_str</span>(<span class="ident">HeaderName::Bucket</span>, <span class="ident">value</span>)<span class="question-mark">?</span>);
                 }
                 <span class="ident">HeaderName::GLOBAL</span> =&gt; {
-                    <span class="ident">global</span> <span class="op">=</span> <span class="ident">header_bool</span>(<span class="ident">HeaderName::Global</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+                    <span class="ident">global</span> = <span class="ident">header_bool</span>(<span class="ident">HeaderName::Global</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
                 }
                 <span class="ident">HeaderName::LIMIT</span> =&gt; {
                     <span class="ident">limit</span>.<span class="ident">replace</span>(<span class="ident">header_int</span>(<span class="ident">HeaderName::Limit</span>, <span class="ident">value</span>)<span class="question-mark">?</span>);
@@ -1281,25 +1281,25 @@
                     <span class="ident">remaining</span>.<span class="ident">replace</span>(<span class="ident">header_int</span>(<span class="ident">HeaderName::Remaining</span>, <span class="ident">value</span>)<span class="question-mark">?</span>);
                 }
                 <span class="ident">HeaderName::RESET</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">reset_value</span> <span class="op">=</span> <span class="ident">header_float</span>(<span class="ident">HeaderName::Reset</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">reset_value</span> = <span class="ident">header_float</span>(<span class="ident">HeaderName::Reset</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
                     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>, <span class="ident">clippy::cast_sign_loss</span>)]</span>
-                    <span class="ident">reset</span>.<span class="ident">replace</span>((<span class="ident">reset_value</span> <span class="op">*</span> <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>);
+                    <span class="ident">reset</span>.<span class="ident">replace</span>((<span class="ident">reset_value</span> * <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>);
                 }
                 <span class="ident">HeaderName::RESET_AFTER</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">reset_after_value</span> <span class="op">=</span> <span class="ident">header_float</span>(<span class="ident">HeaderName::ResetAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">reset_after_value</span> = <span class="ident">header_float</span>(<span class="ident">HeaderName::ResetAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
                     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_sign_loss</span>, <span class="ident">clippy::cast_possible_truncation</span>)]</span>
-                    <span class="ident">reset_after</span>.<span class="ident">replace</span>((<span class="ident">reset_after_value</span> <span class="op">*</span> <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>);
+                    <span class="ident">reset_after</span>.<span class="ident">replace</span>((<span class="ident">reset_after_value</span> * <span class="number">1000.</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>);
                 }
                 <span class="ident">HeaderName::RETRY_AFTER</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">retry_after_value</span> <span class="op">=</span> <span class="ident">header_int</span>(<span class="ident">HeaderName::RetryAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">retry_after_value</span> = <span class="ident">header_int</span>(<span class="ident">HeaderName::RetryAfter</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
                     <span class="ident">retry_after</span>.<span class="ident">replace</span>(<span class="ident">retry_after_value</span>);
                 }
                 <span class="ident">HeaderName::SCOPE</span> =&gt; {
-                    <span class="kw">let</span> <span class="ident">scope_value</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">HeaderName::Scope</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">scope_parsed</span> <span class="op">=</span> <span class="ident">RatelimitScope::try_from</span>(<span class="ident">scope_value</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">scope_value</span> = <span class="ident">header_str</span>(<span class="ident">HeaderName::Scope</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">scope_parsed</span> = <span class="ident">RatelimitScope::try_from</span>(<span class="ident">scope_value</span>)<span class="question-mark">?</span>;
 
                     <span class="ident">scope</span>.<span class="ident">replace</span>(<span class="ident">scope_parsed</span>);
                 }
@@ -1308,8 +1308,8 @@
         }
 
         <span class="kw">if</span> <span class="ident">global</span> {
-            <span class="kw">let</span> <span class="ident">retry_after</span> <span class="op">=</span>
-                <span class="ident">retry_after</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::RetryAfter</span>))<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">retry_after</span> =
+                <span class="ident">retry_after</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::RetryAfter</span>))<span class="question-mark">?</span>;
 
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">RatelimitHeaders::Global</span>(<span class="ident">Global</span> { <span class="ident">retry_after</span>, <span class="ident">scope</span> }));
         }
@@ -1317,32 +1317,32 @@
         <span class="comment">// If none of the values have been set then there are no ratelimit headers.</span>
         <span class="comment">// This means that the route is not ratelimited.</span>
         <span class="kw">if</span> <span class="ident">bucket</span>.<span class="ident">is_none</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">limit</span>.<span class="ident">is_none</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">remaining</span>.<span class="ident">is_none</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">reset</span>.<span class="ident">is_none</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">reset_after</span>.<span class="ident">is_none</span>()
+            &amp;&amp; <span class="ident">limit</span>.<span class="ident">is_none</span>()
+            &amp;&amp; <span class="ident">remaining</span>.<span class="ident">is_none</span>()
+            &amp;&amp; <span class="ident">reset</span>.<span class="ident">is_none</span>()
+            &amp;&amp; <span class="ident">reset_after</span>.<span class="ident">is_none</span>()
         {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">RatelimitHeaders::None</span>);
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">RatelimitHeaders::Present</span>(<span class="ident">Present</span> {
             <span class="ident">bucket</span>: <span class="ident">bucket</span>.<span class="ident">map</span>(<span class="ident">Into::into</span>),
-            <span class="ident">limit</span>: <span class="ident">limit</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::Limit</span>))<span class="question-mark">?</span>,
+            <span class="ident">limit</span>: <span class="ident">limit</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::Limit</span>))<span class="question-mark">?</span>,
             <span class="ident">remaining</span>: <span class="ident">remaining</span>
-                .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::Remaining</span>))<span class="question-mark">?</span>,
-            <span class="ident">reset</span>: <span class="ident">reset</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::Reset</span>))<span class="question-mark">?</span>,
+                .<span class="ident">ok_or_else</span>(|| <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::Remaining</span>))<span class="question-mark">?</span>,
+            <span class="ident">reset</span>: <span class="ident">reset</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::Reset</span>))<span class="question-mark">?</span>,
             <span class="ident">reset_after</span>: <span class="ident">reset_after</span>
-                .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::ResetAfter</span>))<span class="question-mark">?</span>,
+                .<span class="ident">ok_or_else</span>(|| <span class="ident">HeaderParsingError::missing</span>(<span class="ident">HeaderName::ResetAfter</span>))<span class="question-mark">?</span>,
             <span class="ident">scope</span>,
         }))
     }
 }
 
 <span class="doccomment">/// Parse a value as a boolean.</span>
-<span class="kw">fn</span> <span class="ident">header_bool</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+<span class="kw">fn</span> <span class="ident">header_bool</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">bool</span>, <span class="ident">HeaderParsingError</span>&gt; {
+    <span class="kw">let</span> <span class="ident">text</span> = <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError</span> {
+    <span class="kw">let</span> <span class="ident">end</span> = <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">HeaderParsingError</span> {
         <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::Parsing</span> {
             <span class="ident">kind</span>: <span class="ident">HeaderType::Bool</span>,
             <span class="ident">name</span>,
@@ -1355,10 +1355,10 @@
 }
 
 <span class="doccomment">/// Parse a value expected to be a float.</span>
-<span class="kw">fn</span> <span class="ident">header_float</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">f64</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+<span class="kw">fn</span> <span class="ident">header_float</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">f64</span>, <span class="ident">HeaderParsingError</span>&gt; {
+    <span class="kw">let</span> <span class="ident">text</span> = <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError</span> {
+    <span class="kw">let</span> <span class="ident">end</span> = <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">HeaderParsingError</span> {
         <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::Parsing</span> {
             <span class="ident">kind</span>: <span class="ident">HeaderType::Float</span>,
             <span class="ident">name</span>,
@@ -1371,10 +1371,10 @@
 }
 
 <span class="doccomment">/// Parse a value expected to be an integer.</span>
-<span class="kw">fn</span> <span class="ident">header_int</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
+<span class="kw">fn</span> <span class="ident">header_int</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">u64</span>, <span class="ident">HeaderParsingError</span>&gt; {
+    <span class="kw">let</span> <span class="ident">text</span> = <span class="ident">header_str</span>(<span class="ident">name</span>, <span class="ident">value</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError</span> {
+    <span class="kw">let</span> <span class="ident">end</span> = <span class="ident">text</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">HeaderParsingError</span> {
         <span class="ident">kind</span>: <span class="ident">HeaderParsingErrorType::Parsing</span> {
             <span class="ident">kind</span>: <span class="ident">HeaderType::Integer</span>,
             <span class="ident">name</span>,
@@ -1387,9 +1387,9 @@
 }
 
 <span class="doccomment">/// Parse a value expected to be a UTF-8 valid string.</span>
-<span class="kw">fn</span> <span class="ident">header_str</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">HeaderParsingError</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">text</span> <span class="op">=</span> <span class="ident">str::from_utf8</span>(<span class="ident">value</span>)
-        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">source</span><span class="op">|</span> <span class="ident">HeaderParsingError::not_utf8</span>(<span class="ident">name</span>, <span class="ident">value</span>.<span class="ident">to_owned</span>(), <span class="ident">source</span>))<span class="question-mark">?</span>;
+<span class="kw">fn</span> <span class="ident">header_str</span>(<span class="ident">name</span>: <span class="ident">HeaderName</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">HeaderParsingError</span>&gt; {
+    <span class="kw">let</span> <span class="ident">text</span> = <span class="ident">str::from_utf8</span>(<span class="ident">value</span>)
+        .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">HeaderParsingError::not_utf8</span>(<span class="ident">name</span>, <span class="ident">value</span>.<span class="ident">to_owned</span>(), <span class="ident">source</span>))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(<span class="ident">text</span>)
 }
@@ -1438,9 +1438,9 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">RatelimitHeaders</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">global</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">HeaderMap::new</span>();
+    <span class="kw">fn</span> <span class="ident">global</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
+        <span class="kw">let</span> <span class="ident">map</span> = {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> = <span class="ident">HeaderMap::new</span>();
             <span class="ident">map</span>.<span class="ident">insert</span>(
                 <span class="ident">HttpHeaderName::from_static</span>(<span class="string">&quot;x-ratelimit-global&quot;</span>),
                 <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;true&quot;</span>),
@@ -1453,17 +1453,17 @@
             <span class="ident">map</span>
         };
 
-        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
-        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
-        <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">headers</span>, <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">g</span>) <span class="kw">if</span> <span class="ident">g</span>.<span class="ident">retry_after</span>() <span class="op">==</span> <span class="number">65</span>));
+        <span class="kw">let</span> <span class="ident">iter</span> = <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(|(<span class="ident">k</span>, <span class="ident">v</span>)| (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
+        <span class="kw">let</span> <span class="ident">headers</span> = <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
+        <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">headers</span>, <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">g</span>) <span class="kw">if</span> <span class="ident">g</span>.<span class="ident">retry_after</span>() == <span class="number">65</span>));
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">global_with_scope</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">HeaderMap::new</span>();
+    <span class="kw">fn</span> <span class="ident">global_with_scope</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
+        <span class="kw">let</span> <span class="ident">map</span> = {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> = <span class="ident">HeaderMap::new</span>();
             <span class="ident">map</span>.<span class="ident">insert</span>(
                 <span class="ident">HttpHeaderName::from_static</span>(<span class="string">&quot;x-ratelimit-global&quot;</span>),
                 <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;true&quot;</span>),
@@ -1480,26 +1480,26 @@
             <span class="ident">map</span>
         };
 
-        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
-        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">iter</span> = <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(|(<span class="ident">k</span>, <span class="ident">v</span>)| (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
+        <span class="kw">let</span> <span class="ident">headers</span> = <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">global</span>)
-            <span class="kw">if</span> <span class="ident">global</span>.<span class="ident">retry_after</span>() <span class="op">==</span> <span class="number">65</span>
+            <span class="kw">if</span> <span class="ident">global</span>.<span class="ident">retry_after</span>() == <span class="number">65</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">global</span>)
-            <span class="kw">if</span> <span class="ident">global</span>.<span class="ident">scope</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">RatelimitScope::Global</span>)
+            <span class="kw">if</span> <span class="ident">global</span>.<span class="ident">scope</span>() == <span class="prelude-val">Some</span>(<span class="ident">RatelimitScope::Global</span>)
         ));
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">present</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">HeaderMap::new</span>();
+    <span class="kw">fn</span> <span class="ident">present</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
+        <span class="kw">let</span> <span class="ident">map</span> = {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span> = <span class="ident">HeaderMap::new</span>();
             <span class="ident">map</span>.<span class="ident">insert</span>(
                 <span class="ident">HttpHeaderName::from_static</span>(<span class="string">&quot;x-ratelimit-limit&quot;</span>),
                 <span class="ident">HeaderValue::from_static</span>(<span class="string">&quot;10&quot;</span>),
@@ -1528,37 +1528,37 @@
             <span class="ident">map</span>
         };
 
-        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
-        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">iter</span> = <span class="ident">map</span>.<span class="ident">iter</span>().<span class="ident">map</span>(|(<span class="ident">k</span>, <span class="ident">v</span>)| (<span class="ident">k</span>.<span class="ident">as_str</span>(), <span class="ident">v</span>.<span class="ident">as_bytes</span>()));
+        <span class="kw">let</span> <span class="ident">headers</span> = <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
-            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">bucket</span>.<span class="ident">as_deref</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="string">&quot;abcd1234&quot;</span>)
+            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">bucket</span>.<span class="ident">as_deref</span>() == <span class="prelude-val">Some</span>(<span class="string">&quot;abcd1234&quot;</span>)
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
-            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">limit</span> <span class="op">==</span> <span class="number">10</span>
+            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">limit</span> == <span class="number">10</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
-            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">remaining</span> <span class="op">==</span> <span class="number">9</span>
+            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">remaining</span> == <span class="number">9</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
-            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">reset_after</span> <span class="op">==</span> <span class="number">64_570</span>
+            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">reset_after</span> == <span class="number">64_570</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
-            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">reset</span> <span class="op">==</span> <span class="number">1_470_173_023_123</span>
+            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">reset</span> == <span class="number">1_470_173_023_123</span>
         ));
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
             <span class="ident">headers</span>,
             <span class="ident">RatelimitHeaders::Present</span>(<span class="ident">present</span>)
-            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">scope</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">RatelimitScope::Shared</span>)
+            <span class="kw">if</span> <span class="ident">present</span>.<span class="ident">scope</span>() == <span class="prelude-val">Some</span>(<span class="ident">RatelimitScope::Shared</span>)
         ));
 
         <span class="prelude-val">Ok</span>(())
@@ -1593,4 +1593,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

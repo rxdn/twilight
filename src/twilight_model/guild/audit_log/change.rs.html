@@ -991,7 +991,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AffectedRole</span> {
     <span class="doccomment">/// ID of the role.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;,
     <span class="doccomment">/// Name of the role.</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
 }
@@ -1001,662 +1001,662 @@
 <span class="doccomment">/// [`AuditLogEntry`]: super::AuditLogEntry</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>, <span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;key&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;snake_case&quot;</span>, <span class="ident">tag</span> = <span class="string">&quot;key&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AuditLogChange</span> {
     <span class="doccomment">/// AFK channel ID was changed.</span>
     <span class="ident">AfkChannelId</span> {
         <span class="doccomment">/// New ID of the AFK channel.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old ID of the AFK channel.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Timeout to cause a user to be moved to an AFK voice channel.</span>
     <span class="ident">AfkTimeout</span> {
         <span class="doccomment">/// New timeout, in seconds.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>)]</span>
         <span class="ident">new</span>: <span class="ident">u64</span>,
         <span class="doccomment">/// Old timeout, in seconds.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>)]</span>
         <span class="ident">old</span>: <span class="ident">u64</span>,
     },
     <span class="doccomment">/// Allowed permissions of a permission overwrite target.</span>
     <span class="ident">Allow</span> {
         <span class="doccomment">/// New allowed permissions value.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
         <span class="doccomment">/// Old allowed permissions value.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
     },
     <span class="doccomment">/// ID of an application.</span>
     <span class="ident">ApplicationId</span> {
         <span class="doccomment">/// Application&#39;s ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ApplicationMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt;&gt;,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Thread is now archived/unarchived.</span>
     <span class="ident">Archived</span> {
         <span class="doccomment">/// Whether the thread is archived.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Asset of a sticker.</span>
     <span class="ident">Asset</span> {
         <span class="doccomment">/// Empty string.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Auto archive duration of a thread changed.</span>
     <span class="ident">AutoArchiveDuration</span> {
         <span class="doccomment">/// New auto archive duration.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AutoArchiveDuration</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">AutoArchiveDuration</span>&gt;,
         <span class="doccomment">/// Old auto archive duration.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AutoArchiveDuration</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">AutoArchiveDuration</span>&gt;,
     },
     <span class="doccomment">/// Availability of a sticker.</span>
     <span class="ident">Available</span> {
         <span class="doccomment">/// New availability.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Old availability.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Hash of an avatar.</span>
     <span class="ident">AvatarHash</span> {
         <span class="doccomment">/// New hash of an avatar.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
         <span class="doccomment">/// Old hash of an avatar.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
     },
     <span class="doccomment">/// Hash of a guild banner.</span>
     <span class="ident">BannerHash</span> {
         <span class="doccomment">/// New hash of a guild&#39;s banner.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
         <span class="doccomment">/// Old hash of a guild&#39;s banner.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
     },
     <span class="doccomment">/// Bitrate of an audio channel.</span>
     <span class="ident">Bitrate</span> {
         <span class="doccomment">/// New bitrate.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Old bitrate.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Channel for an invite code.</span>
     <span class="ident">ChannelId</span> {
         <span class="doccomment">/// New invite&#39;s channel.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old invite&#39;s channel.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Code of an invite.</span>
     <span class="ident">Code</span> {
         <span class="doccomment">/// New invite&#39;s code.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Color of a role.</span>
     <span class="ident">Color</span> {
         <span class="doccomment">/// New role color.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Old role color.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Permissions for a command were updated</span>
     <span class="ident">CommandId</span> {
         <span class="doccomment">/// New command permissions.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildCommandPermissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">GuildCommandPermissions</span>&gt;,
         <span class="doccomment">/// Old command permissions.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GuildCommandPermissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">GuildCommandPermissions</span>&gt;,
     },
     <span class="doccomment">/// Member timeout state changed.</span>
     <span class="ident">CommunicationDisabledUntil</span> {
         <span class="doccomment">/// New timeout timestamp.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Timestamp</span>&gt;,
         <span class="doccomment">/// Old timeout timestamp.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Timestamp</span>&gt;,
     },
     <span class="doccomment">/// Whether a member is guild deafened.</span>
     <span class="ident">Deaf</span> {
         <span class="doccomment">/// Whether a member is now guild deafened.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// default auto archive duration for newly created threads changed.</span>
     <span class="ident">DefaultAutoArchiveDuration</span> {
         <span class="doccomment">/// New auto archive duration.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AutoArchiveDuration</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">AutoArchiveDuration</span>&gt;,
         <span class="doccomment">/// Old auto archive duration.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AutoArchiveDuration</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">AutoArchiveDuration</span>&gt;,
     },
     <span class="doccomment">/// Default message notification level for a guild.</span>
     <span class="ident">DefaultMessageNotifications</span> {
         <span class="doccomment">/// New default message notification level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DefaultMessageNotificationLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">DefaultMessageNotificationLevel</span>&gt;,
         <span class="doccomment">/// Old default message notification level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DefaultMessageNotificationLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">DefaultMessageNotificationLevel</span>&gt;,
     },
     <span class="doccomment">/// Denied permissions of a permission overwrite target.</span>
     <span class="ident">Deny</span> {
         <span class="doccomment">/// New denied permissions level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
     },
     <span class="doccomment">/// Description of a guild or sticker.</span>
     <span class="ident">Description</span> {
         <span class="doccomment">/// New guild description.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old guild description.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Hash of a guild&#39;s discovery splash.</span>
     <span class="ident">DiscoverySplashHash</span> {
         <span class="doccomment">/// New discovery splash hash.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
         <span class="doccomment">/// Old discovery splash hash.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
     },
     <span class="doccomment">/// Whether emoticons are enabled.</span>
     <span class="ident">EnableEmoticons</span> {
         <span class="doccomment">/// Whether emoticons are now enabled.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Whether emoticons were enabled.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Entity type of guild scheduled event was changed.</span>
     <span class="ident">EntityType</span> {
         <span class="doccomment">/// New entity type.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Behavior of the expiration of an integration.</span>
     <span class="ident">ExpireBehavior</span> {
         <span class="doccomment">/// New expiration behavior.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Grace period of the expiration of an integration.</span>
     <span class="ident">ExpireGracePeriod</span> {
         <span class="doccomment">/// New expiration grace period.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Explicit content filter level of a guild.</span>
     <span class="ident">ExplicitContentFilter</span> {
         <span class="doccomment">/// New explicit content filter level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExplicitContentFilter</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ExplicitContentFilter</span>&gt;,
         <span class="doccomment">/// Old explicit content filter level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExplicitContentFilter</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ExplicitContentFilter</span>&gt;,
     },
     <span class="doccomment">/// Format type of a sticker.</span>
     <span class="ident">FormatType</span> {
         <span class="doccomment">/// New format type of a sticker.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StickerFormatType</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">StickerFormatType</span>&gt;,
         <span class="doccomment">/// Old format type of a sticker.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StickerFormatType</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">StickerFormatType</span>&gt;,
     },
     <span class="doccomment">/// Guild that a sticker is in.</span>
     <span class="ident">GuildId</span> {
         <span class="doccomment">/// New guild that a sticker is in.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old guild that a sticker is in.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Whether a role is hoisted.</span>
     <span class="ident">Hoist</span> {
         <span class="doccomment">/// Whether a role is now hoisted.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Whether a role was hoisted.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Hash of a guild icon.</span>
     <span class="ident">IconHash</span> {
         <span class="doccomment">/// New hash of a guild&#39;s icon.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
         <span class="doccomment">/// Old hash of a guild&#39;s icon.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
     },
     <span class="doccomment">/// ID of an entity.</span>
     <span class="ident">Id</span> {
         <span class="doccomment">/// New entity&#39;s ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;&gt;,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Hash of a guild scheduled event cover.</span>
     <span class="ident">ImageHash</span> {
         <span class="doccomment">/// New hash of a guild&#39;s icon.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
         <span class="doccomment">/// Old hash of a guild&#39;s icon.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
     },
     <span class="doccomment">/// Invitable state of a private thread.</span>
     <span class="ident">Invitable</span> {
         <span class="doccomment">/// New threads invitable state.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Old threads invitable state.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// ID of the user who created an invite.</span>
     <span class="ident">InviterId</span> {
         <span class="doccomment">/// User ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Location for a scheduled event changed.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Can be an [`Id&lt;ChannelMarker&gt;`] or a [`String`].</span>
     <span class="ident">Location</span> {
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Thread was locked or unlocked.</span>
     <span class="ident">Locked</span> {
         <span class="doccomment">/// Whether the thread is now locked.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Maximum age of an invite.</span>
     <span class="ident">MaxAge</span> {
         <span class="doccomment">/// New maximum age.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Maximum uses of an invite.</span>
     <span class="ident">MaxUses</span> {
         <span class="doccomment">/// New maximum uses.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Whether a role can be mentioned in a message.</span>
     <span class="ident">Mentionable</span> {
         <span class="doccomment">/// Whether a role is now mentionable.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Whether a role was mentionable.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Multi-Factor Authentication level required of a guild&#39;s moderators.</span>
     <span class="ident">MfaLevel</span> {
         <span class="doccomment">/// New MFA level of a guild.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MfaLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">MfaLevel</span>&gt;,
         <span class="doccomment">/// Old MFA level of a guild.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MfaLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">MfaLevel</span>&gt;,
     },
     <span class="doccomment">/// Whether a user is guild muted.</span>
     <span class="ident">Mute</span> {
         <span class="doccomment">/// Whether a member is now muted.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Whether a member was muted.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Name of an entity such as a channel or role.</span>
     <span class="ident">Name</span> {
         <span class="doccomment">/// New entity name.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old entity name.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Nickname of a member.</span>
     <span class="ident">Nick</span> {
         <span class="doccomment">/// New member nickname.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old member nickname.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Whether a channel is NSFW.</span>
     <span class="ident">Nsfw</span> {
         <span class="doccomment">/// New state.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// NSFW level of a guild.</span>
     <span class="ident">NsfwLevel</span> {
         <span class="doccomment">/// New NSFW level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NSFWLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">NSFWLevel</span>&gt;,
         <span class="doccomment">/// Old NSFW level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NSFWLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">NSFWLevel</span>&gt;,
     },
     <span class="doccomment">/// ID of the owner of a guild.</span>
     <span class="ident">OwnerId</span> {
         <span class="doccomment">/// New owner&#39;s ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old owner&#39;s ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Permission overwrites on a channel changed.</span>
     <span class="ident">PermissionOverwrites</span> {
         <span class="doccomment">/// New set of overwrites.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">PermissionOverwrite</span>&gt;&gt;,
         <span class="doccomment">/// Old set of overwrites.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">PermissionOverwrite</span>&gt;&gt;,
     },
     <span class="doccomment">/// Default permissions of a role.</span>
     <span class="ident">Permissions</span> {
         <span class="doccomment">/// New set of permissions.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
         <span class="doccomment">/// Old set of permissions.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
     },
     <span class="doccomment">/// Position of an entity such as a channel or role.</span>
     <span class="ident">Position</span> {
         <span class="doccomment">/// New position value.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Old position value.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Preferred locale of a guild.</span>
     <span class="ident">PreferredLocale</span> {
         <span class="doccomment">/// New preferred locale.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old preferred locale.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Privacy level of a stage instance.</span>
     <span class="ident">PrivacyLevel</span> {
         <span class="doccomment">/// New privacy level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PrivacyLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">PrivacyLevel</span>&gt;,
         <span class="doccomment">/// Old privacy level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PrivacyLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">PrivacyLevel</span>&gt;,
     },
     <span class="doccomment">/// Number of days&#39; worth of inactivity for a guild prune.</span>
     <span class="ident">PruneDeleteDays</span> {
         <span class="doccomment">/// Number of days.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// ID of a guild&#39;s public updates channel.</span>
     <span class="ident">PublicUpdatesChannelId</span> {
         <span class="doccomment">/// New public updates channel ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old public updates channel ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Ratelimit per user in a textual channel.</span>
     <span class="ident">RateLimitPerUser</span> {
         <span class="doccomment">/// New ratelimit, in seconds.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Old ratelimit, in seconds.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Region of a guild changed.</span>
     <span class="ident">Region</span> {
         <span class="doccomment">/// New region.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Role was added to a user.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;$add&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;$add&quot;</span>)]</span>
     <span class="ident">RoleAdded</span> {
         <span class="doccomment">/// Minimal information about a added role.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AffectedRole</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="ident">Vec</span>&lt;<span class="ident">AffectedRole</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AffectedRole</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="ident">Vec</span>&lt;<span class="ident">AffectedRole</span>&gt;,
     },
     <span class="doccomment">/// Role was removed from a user.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;$remove&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;$remove&quot;</span>)]</span>
     <span class="ident">RoleRemoved</span> {
         <span class="doccomment">/// Minimal information about a removed role.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AffectedRole</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="ident">Vec</span>&lt;<span class="ident">AffectedRole</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AffectedRole</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="ident">Vec</span>&lt;<span class="ident">AffectedRole</span>&gt;,
     },
     <span class="doccomment">/// Guild&#39;s rules channel.</span>
     <span class="ident">RulesChannelId</span> {
         <span class="doccomment">/// New rules channel.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old rules channel.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Hash of a guild&#39;s splash.</span>
     <span class="ident">SplashHash</span> {
         <span class="doccomment">/// Old hash of a guild&#39;s splash.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
         <span class="doccomment">/// New hash of a guild&#39;s splash.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
     },
     <span class="doccomment">/// Status of guild scheduled event was changed.</span>
     <span class="ident">Status</span> {
         <span class="doccomment">/// New status.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// ID of guild&#39;s system channel.</span>
     <span class="ident">SystemChannelId</span> {
         <span class="doccomment">/// New system channel ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old system channel ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Related emoji of a sticker.</span>
     <span class="ident">Tags</span> {
         <span class="doccomment">/// New related emoji of a sticker.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old related emoji of a sticker.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Whether an invite is temporary.</span>
     <span class="ident">Temporary</span> {
         <span class="doccomment">/// New temporary state.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Topic of a textual channel.</span>
     <span class="ident">Topic</span> {
         <span class="doccomment">/// New topic.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old topic.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Type of a created entity.</span>
     <span class="ident">Type</span> {
         <span class="doccomment">/// New target type.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Old target type.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Unicode emoji of a role icon changed.</span>
     <span class="ident">UnicodeEmoji</span> {
         <span class="doccomment">/// New unicode emoji.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old target type.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Maximum number of users in a voice channel.</span>
     <span class="ident">UserLimit</span> {
         <span class="doccomment">/// New limit.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Old limit.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Number of uses of an invite.</span>
     <span class="ident">Uses</span> {
         <span class="doccomment">/// Number of uses.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
         <span class="doccomment">/// Previous state, if any.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
     },
     <span class="doccomment">/// Code of a guild&#39;s vanity invite.</span>
     <span class="ident">VanityUrlCode</span> {
         <span class="doccomment">/// New vanity URL code.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
         <span class="doccomment">/// Old vanity URL code.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     },
     <span class="doccomment">/// Required verification level of new members in a guild.</span>
     <span class="ident">VerificationLevel</span> {
         <span class="doccomment">/// New verification level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VerificationLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">VerificationLevel</span>&gt;,
         <span class="doccomment">/// Old verification level.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">VerificationLevel</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">VerificationLevel</span>&gt;,
     },
     <span class="doccomment">/// Channel ID of a widget.</span>
     <span class="ident">WidgetChannelId</span> {
         <span class="doccomment">/// New channel ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
         <span class="doccomment">/// Old channel ID.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
     },
     <span class="doccomment">/// Whether a widget is enabled.</span>
     <span class="ident">WidgetEnabled</span> {
         <span class="doccomment">/// New state of a widget being enabled.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">new</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;new_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">new</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
         <span class="doccomment">/// Old state of a widget being enabled.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-        <span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;old_value&quot;</span>, <span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+        <span class="ident">old</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
     },
     <span class="doccomment">/// Other type of change not covered by other variants.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">other</span>)]</span>
@@ -1685,7 +1685,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Other`]: Self::Other</span>
     <span class="doccomment">/// [`Uses`]: Self::Uses</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AuditLogChangeKey</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">AuditLogChangeKey</span>&gt; {
         <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::AfkChannelId</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::AfkChannelId</span>,
             <span class="ident"><span class="self">Self</span>::AfkTimeout</span> { .. } =&gt; <span class="ident">AuditLogChangeKey::AfkTimeout</span>,
@@ -1841,7 +1841,7 @@
     <span class="macro">assert_impl_all!</span>(
         <span class="ident">AffectedRole</span>: <span class="ident">Clone</span>,
         <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
         <span class="ident">Eq</span>,
         <span class="ident">Hash</span>,
         <span class="ident">PartialEq</span>,
@@ -1852,7 +1852,7 @@
     <span class="macro">assert_impl_all!</span>(
         <span class="ident">AuditLogChange</span>: <span class="ident">Clone</span>,
         <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
         <span class="ident">Eq</span>,
         <span class="ident">Hash</span>,
         <span class="ident">PartialEq</span>,
@@ -1863,7 +1863,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">afk_channel_id</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">AuditLogChange::AfkChannelId</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">AuditLogChange::AfkChannelId</span> {
             <span class="ident">new</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">1</span>)),
             <span class="ident">old</span>: <span class="prelude-val">None</span>,
         };
@@ -1890,10 +1890,10 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">permissions</span>() {
-        <span class="kw">let</span> <span class="ident">old</span>: <span class="ident">Permissions</span> <span class="op">=</span> <span class="ident">Permissions::SEND_MESSAGES</span>;
-        <span class="kw">let</span> <span class="ident">new</span>: <span class="ident">Permissions</span> <span class="op">=</span> <span class="ident">old</span> <span class="op">|</span> <span class="ident">Permissions::EMBED_LINKS</span>;
+        <span class="kw">let</span> <span class="ident">old</span>: <span class="ident">Permissions</span> = <span class="ident">Permissions::SEND_MESSAGES</span>;
+        <span class="kw">let</span> <span class="ident">new</span>: <span class="ident">Permissions</span> = <span class="ident">old</span> | <span class="ident">Permissions::EMBED_LINKS</span>;
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">AuditLogChange::Permissions</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">AuditLogChange::Permissions</span> {
             <span class="ident">new</span>: <span class="prelude-val">Some</span>(<span class="ident">new</span>),
             <span class="ident">old</span>: <span class="prelude-val">Some</span>(<span class="ident">old</span>),
         };
@@ -1921,4 +1921,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

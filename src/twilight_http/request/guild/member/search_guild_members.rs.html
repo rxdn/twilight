@@ -122,9 +122,9 @@
     <span class="ident">search_guild_members_limit</span> <span class="kw">as</span> <span class="ident">validate_search_guild_members_limit</span>, <span class="ident">ValidationError</span>,
 };
 
-<span class="kw">struct</span> <span class="ident">SearchGuildMembersFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">SearchGuildMembersFields</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
+    <span class="ident">limit</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u16</span>&gt;,
 }
 
 <span class="doccomment">/// Search the members of a specific guild by a query.</span>
@@ -158,15 +158,15 @@
 <span class="doccomment">/// than 1000.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [`SearchGuildMembers`]: twilight_validate::request::ValidationErrorType::SearchGuildMembers</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SearchGuildMembers</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">fields</span>: <span class="ident">SearchGuildMembersFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-    <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
+<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SearchGuildMembers</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="ident">fields</span>: <span class="ident">SearchGuildMembersFields</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
+    <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">SearchGuildMembers</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">SearchGuildMembers</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">query</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">fields</span>: <span class="ident">SearchGuildMembersFields</span> { <span class="ident">query</span>, <span class="ident">limit</span>: <span class="prelude-val">None</span> },
             <span class="ident">guild_id</span>,
@@ -184,12 +184,12 @@
     <span class="doccomment">/// greater than 1000.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`SearchGuildMembers`]: twilight_validate::request::ValidationErrorType::SearchGuildMembers</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u16</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ValidationError</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">validate_search_guild_members_limit</span>(<span class="ident">limit</span>) {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u16</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">ValidationError</span>&gt; {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="ident">validate_search_guild_members_limit</span>(<span class="ident">limit</span>) {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>);
         }
 
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">limit</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">limit</span>);
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">limit</span> = <span class="prelude-val">Some</span>(<span class="ident">limit</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
@@ -197,13 +197,13 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">MemberListBody</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">guild_id</span>;
-        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span>&lt;<span class="ident">MemberListBody</span>&gt; {
+        <span class="kw">let</span> <span class="ident">guild_id</span> = <span class="self">self</span>.<span class="ident">guild_id</span>;
+        <span class="kw">let</span> <span class="ident">http</span> = <span class="self">self</span>.<span class="ident">http</span>;
 
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_into_request</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">future</span> <span class="op">=</span> <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>);
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">future</span> = <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>);
                 <span class="ident">future</span>.<span class="ident">set_guild_id</span>(<span class="ident">guild_id</span>);
 
                 <span class="ident">future</span>
@@ -213,8 +213,8 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">SearchGuildMembers</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">HttpError</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">SearchGuildMembers</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>, <span class="ident">HttpError</span>&gt; {
         <span class="prelude-val">Ok</span>(<span class="ident">Request::from_route</span>(<span class="kw-2">&amp;</span><span class="ident">Route::SearchGuildMembers</span> {
             <span class="ident">guild_id</span>: <span class="self">self</span>.<span class="ident">guild_id</span>.<span class="ident">get</span>(),
             <span class="ident">limit</span>: <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">limit</span>,
@@ -223,4 +223,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

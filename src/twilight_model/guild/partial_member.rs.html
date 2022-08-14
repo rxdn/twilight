@@ -100,23 +100,23 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PartialMember</span> {
     <span class="doccomment">/// Member&#39;s guild avatar.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ImageHash</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">communication_disabled_until</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">avatar</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">ImageHash</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">communication_disabled_until</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Timestamp</span>&gt;,
     <span class="kw">pub</span> <span class="ident">deaf</span>: <span class="ident">bool</span>,
     <span class="kw">pub</span> <span class="ident">joined_at</span>: <span class="ident">Timestamp</span>,
     <span class="kw">pub</span> <span class="ident">mute</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     <span class="doccomment">/// Permission data for the member.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Sent in an [`Interaction`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Interaction`]: crate::application::interaction::Interaction</span>
-    <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">user</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">permissions</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">premium_since</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Timestamp</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">Vec</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;,
+    <span class="kw">pub</span> <span class="ident">user</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">User</span>&gt;,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -130,10 +130,10 @@
     <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">partial_member</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TimestampParseError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">joined_at</span> <span class="op">=</span> <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">partial_member</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">TimestampParseError</span>&gt; {
+        <span class="kw">let</span> <span class="ident">joined_at</span> = <span class="ident">Timestamp::from_str</span>(<span class="string">&quot;2015-04-26T06:26:56.936000+00:00&quot;</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">PartialMember</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">PartialMember</span> {
             <span class="ident">avatar</span>: <span class="prelude-val">None</span>,
             <span class="ident">communication_disabled_until</span>: <span class="prelude-val">None</span>,
             <span class="ident">deaf</span>: <span class="bool-val">false</span>,
@@ -181,4 +181,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

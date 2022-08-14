@@ -82,20 +82,20 @@
     <span class="ident">id</span>::{<span class="ident">marker::WebhookMarker</span>, <span class="ident">Id</span>},
 };
 
-<span class="kw">struct</span> <span class="ident">GetWebhookFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
+<span class="kw">struct</span> <span class="ident">GetWebhookFields</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="ident">token</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
 }
 
 <span class="doccomment">/// Get a webhook by ID.</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">fields</span>: <span class="ident">GetWebhookFields</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GetWebhook</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="ident">fields</span>: <span class="ident">GetWebhookFields</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
     <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-    <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">WebhookMarker</span><span class="op">&gt;</span>,
+    <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">GetWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">WebhookMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">GetWebhook</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt;) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">fields</span>: <span class="ident">GetWebhookFields</span> { <span class="ident">token</span>: <span class="prelude-val">None</span> },
             <span class="ident">http</span>,
@@ -106,7 +106,7 @@
     <span class="doccomment">/// Specify the token for auth, if not already authenticated with a Bot</span>
     <span class="doccomment">/// token.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">token</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">token</span>);
+        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">token</span> = <span class="prelude-val">Some</span>(<span class="ident">token</span>);
 
         <span class="self">self</span>
     }
@@ -114,8 +114,8 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">Webhook</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span>&lt;<span class="ident">Webhook</span>&gt; {
+        <span class="kw">let</span> <span class="ident">http</span> = <span class="self">self</span>.<span class="ident">http</span>;
 
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_into_request</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
@@ -124,23 +124,23 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">GetWebhook</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> <span class="op">=</span> <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetWebhook</span> {
+<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">GetWebhook</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>, <span class="ident">Error</span>&gt; {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> = <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::GetWebhook</span> {
             <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">token</span>,
             <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">get</span>(),
         });
 
-        <span class="kw">let</span> <span class="ident">use_webhook_token</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">token</span>.<span class="ident">is_some</span>();
+        <span class="kw">let</span> <span class="ident">use_webhook_token</span> = <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">token</span>.<span class="ident">is_some</span>();
 
         <span class="comment">// If a webhook token has been configured, then we don&#39;t need to use</span>
         <span class="comment">// the client&#39;s authorization token.</span>
         <span class="kw">if</span> <span class="ident">use_webhook_token</span> {
-            <span class="ident">request</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>);
+            <span class="ident">request</span> = <span class="ident">request</span>.<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>);
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">request</span>.<span class="ident">build</span>())
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

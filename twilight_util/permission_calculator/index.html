@@ -31,26 +31,26 @@ a root level.</p>
 };
 <span class="kw">use</span> <span class="ident">twilight_util::permission_calculator::PermissionCalculator</span>;
 
-<span class="kw">let</span> <span class="ident">guild_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">1</span>);
-<span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">Id::new</span>(<span class="number">3</span>);
+<span class="kw">let</span> <span class="ident">guild_id</span> = <span class="ident">Id::new</span>(<span class="number">1</span>);
+<span class="kw">let</span> <span class="ident">user_id</span> = <span class="ident">Id::new</span>(<span class="number">3</span>);
 
 <span class="comment">// Guild-level @everyone role that, by default, allows everyone to view</span>
 <span class="comment">// channels.</span>
-<span class="kw">let</span> <span class="ident">everyone_role</span> <span class="op">=</span> <span class="ident">Permissions::VIEW_CHANNEL</span>;
+<span class="kw">let</span> <span class="ident">everyone_role</span> = <span class="ident">Permissions::VIEW_CHANNEL</span>;
 
 <span class="comment">// Roles that the member has assigned to them and their permissions. This</span>
 <span class="comment">// should not include the `@everyone` role.</span>
-<span class="kw">let</span> <span class="ident">member_roles</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[
+<span class="kw">let</span> <span class="ident">member_roles</span> = <span class="kw-2">&amp;</span>[
     <span class="comment">// Guild-level permission that grants members with the role the Send</span>
     <span class="comment">// Messages permission.</span>
     (<span class="ident">Id::new</span>(<span class="number">2</span>), <span class="ident">Permissions::SEND_MESSAGES</span>),
 ];
 
-<span class="kw">let</span> <span class="ident">channel_overwrites</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[
+<span class="kw">let</span> <span class="ident">channel_overwrites</span> = <span class="kw-2">&amp;</span>[
     <span class="comment">// All members are given the Add Reactions and Embed Links members via</span>
     <span class="comment">// the `@everyone` role.</span>
     <span class="ident">PermissionOverwrite</span> {
-        <span class="ident">allow</span>: <span class="ident">Permissions::ADD_REACTIONS</span> <span class="op">|</span> <span class="ident">Permissions::EMBED_LINKS</span>,
+        <span class="ident">allow</span>: <span class="ident">Permissions::ADD_REACTIONS</span> | <span class="ident">Permissions::EMBED_LINKS</span>,
         <span class="ident">deny</span>: <span class="ident">Permissions::empty</span>(),
         <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
         <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Role</span>,
@@ -64,8 +64,8 @@ a root level.</p>
     },
 ];
 
-<span class="kw">let</span> <span class="ident">calculator</span> <span class="op">=</span> <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">member_roles</span>);
-<span class="kw">let</span> <span class="ident">calculated_permissions</span> <span class="op">=</span> <span class="ident">calculator</span>.<span class="ident">in_channel</span>(<span class="ident">ChannelType::GuildText</span>, <span class="ident">channel_overwrites</span>);
+<span class="kw">let</span> <span class="ident">calculator</span> = <span class="ident">PermissionCalculator::new</span>(<span class="ident">guild_id</span>, <span class="ident">user_id</span>, <span class="ident">everyone_role</span>, <span class="ident">member_roles</span>);
+<span class="kw">let</span> <span class="ident">calculated_permissions</span> = <span class="ident">calculator</span>.<span class="ident">in_channel</span>(<span class="ident">ChannelType::GuildText</span>, <span class="ident">channel_overwrites</span>);
 
 <span class="comment">// Now that we&#39;ve got the member&#39;s permissions in the channel, we can</span>
 <span class="comment">// check that they have the server-wide View Channel permission and</span>
@@ -73,9 +73,9 @@ a root level.</p>
 <span class="comment">// permission was denied. Additionally, since the user can&#39;t send messages,</span>
 <span class="comment">// their Embed Links permission was removed.</span>
 
-<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">Permissions::ADD_REACTIONS</span> <span class="op">|</span> <span class="ident">Permissions::VIEW_CHANNEL</span>;
-<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">calculated_permissions</span>.<span class="ident">contains</span>(<span class="ident">Permissions::EMBED_LINKS</span>));
-<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">calculated_permissions</span>.<span class="ident">contains</span>(<span class="ident">Permissions::SEND_MESSAGES</span>));
+<span class="kw">let</span> <span class="ident">expected</span> = <span class="ident">Permissions::ADD_REACTIONS</span> | <span class="ident">Permissions::VIEW_CHANNEL</span>;
+<span class="macro">assert!</span>(!<span class="ident">calculated_permissions</span>.<span class="ident">contains</span>(<span class="ident">Permissions::EMBED_LINKS</span>));
+<span class="macro">assert!</span>(!<span class="ident">calculated_permissions</span>.<span class="ident">contains</span>(<span class="ident">Permissions::SEND_MESSAGES</span>));
 <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">calculated_permissions</span>);</code></pre></div>
 </div></details><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PermissionCalculator.html" title="twilight_util::permission_calculator::PermissionCalculator struct">PermissionCalculator</a></div><div class="item-right docblock-short"><p>Calculate the permissions of a member.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -364,9 +364,9 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Presence</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span>&lt;<span class="ident">Activity</span>&gt;,
     <span class="kw">pub</span> <span class="ident">client_status</span>: <span class="ident">ClientStatus</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">Status</span>,
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="ident">UserOrId</span>,
 }
@@ -375,12 +375,12 @@
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UserOrId</span> {
     <span class="ident">User</span>(<span class="ident">User</span>),
-    <span class="ident">UserId</span> { <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> },
+    <span class="ident">UserId</span> { <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt; },
 }
 
 <span class="kw">impl</span> <span class="ident">UserOrId</span> {
     <span class="doccomment">/// ID of the inner object.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt; {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">UserOrId::User</span>(<span class="ident">u</span>) =&gt; <span class="ident">u</span>.<span class="ident">id</span>,
             <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span> } =&gt; <span class="kw-2">*</span><span class="ident">id</span>,
@@ -391,17 +391,17 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceIntermediary</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Activity</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">activities</span>: <span class="ident">Vec</span>&lt;<span class="ident">Activity</span>&gt;,
     <span class="kw">pub</span> <span class="ident">client_status</span>: <span class="ident">ClientStatus</span>,
-    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;&gt;,
+    <span class="kw">pub</span> <span class="ident">nick</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
     <span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">Status</span>,
     <span class="kw">pub</span> <span class="ident">user</span>: <span class="ident">UserOrId</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">PresenceIntermediary</span> {
     <span class="doccomment">/// Inject guild ID into presence if not already present.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_presence</span>(<span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="ident">Presence</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_presence</span>(<span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;) -&gt; <span class="ident">Presence</span> {
         <span class="ident">Presence</span> {
             <span class="ident">activities</span>: <span class="self">self</span>.<span class="ident">activities</span>,
             <span class="ident">client_status</span>: <span class="self">self</span>.<span class="ident">client_status</span>,
@@ -412,18 +412,18 @@
     }
 }
 
-<span class="kw">struct</span> <span class="ident">PresenceVisitor</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
+<span class="kw">struct</span> <span class="ident">PresenceVisitor</span>(<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PresenceVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Presence</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Visitor</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">PresenceVisitor</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">Presence</span>;
 
-    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;Presence struct&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">map</span>: <span class="ident">M</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">M::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">deser</span> <span class="op">=</span> <span class="ident">MapAccessDeserializer::new</span>(<span class="ident">map</span>);
-        <span class="kw">let</span> <span class="ident">presence</span> <span class="op">=</span> <span class="ident">PresenceIntermediary::deserialize</span>(<span class="ident">deser</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">visit_map</span>&lt;<span class="ident">M</span>: <span class="ident">MapAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="ident">map</span>: <span class="ident">M</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">M::Error</span>&gt; {
+        <span class="kw">let</span> <span class="ident">deser</span> = <span class="ident">MapAccessDeserializer::new</span>(<span class="ident">map</span>);
+        <span class="kw">let</span> <span class="ident">presence</span> = <span class="ident">PresenceIntermediary::deserialize</span>(<span class="ident">deser</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">Presence</span> {
             <span class="ident">activities</span>: <span class="ident">presence</span>.<span class="ident">activities</span>,
@@ -436,48 +436,48 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceDeserializer</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceDeserializer</span>(<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;);
 
 <span class="kw">impl</span> <span class="ident">PresenceDeserializer</span> {
     <span class="doccomment">/// Create a new deserializer for a presence when you know the guild ID but</span>
     <span class="doccomment">/// the payload probably doesn&#39;t contain it.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">guild_id</span>)
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PresenceDeserializer</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Presence</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">DeserializeSeed</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">PresenceDeserializer</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">Presence</span>;
 
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span>&gt; {
         <span class="ident">deserializer</span>.<span class="ident">deserialize_map</span>(<span class="ident">PresenceVisitor</span>(<span class="self">self</span>.<span class="number">0</span>))
     }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceListDeserializer</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PresenceListDeserializer</span>(<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;);
 
 <span class="kw">impl</span> <span class="ident">PresenceListDeserializer</span> {
     <span class="doccomment">/// Create a new deserializer for a map of presences when you know the</span>
     <span class="doccomment">/// Guild ID but the payload probably doesn&#39;t contain it.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">guild_id</span>)
     }
 }
 
-<span class="kw">struct</span> <span class="ident">PresenceListDeserializerVisitor</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GuildMarker</span><span class="op">&gt;</span>);
+<span class="kw">struct</span> <span class="ident">PresenceListDeserializerVisitor</span>(<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PresenceListDeserializerVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Presence</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Visitor</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">PresenceListDeserializerVisitor</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">Vec</span>&lt;<span class="ident">Presence</span>&gt;;
 
-    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a sequence of presences&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_seq</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">SeqAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">seq</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">seq</span>.<span class="ident">size_hint</span>().<span class="ident">map_or_else</span>(<span class="ident">Vec::new</span>, <span class="ident">Vec::with_capacity</span>);
+    <span class="kw">fn</span> <span class="ident">visit_seq</span>&lt;<span class="ident">S</span>: <span class="ident">SeqAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">seq</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">S::Error</span>&gt; {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list</span> = <span class="ident">seq</span>.<span class="ident">size_hint</span>().<span class="ident">map_or_else</span>(<span class="ident">Vec::new</span>, <span class="ident">Vec::with_capacity</span>);
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">presence</span>) <span class="op">=</span> <span class="ident">seq</span>.<span class="ident">next_element_seed</span>(<span class="ident">PresenceDeserializer</span>(<span class="self">self</span>.<span class="number">0</span>))<span class="question-mark">?</span> {
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">presence</span>) = <span class="ident">seq</span>.<span class="ident">next_element_seed</span>(<span class="ident">PresenceDeserializer</span>(<span class="self">self</span>.<span class="number">0</span>))<span class="question-mark">?</span> {
             <span class="ident">list</span>.<span class="ident">push</span>(<span class="ident">presence</span>);
         }
 
@@ -485,10 +485,10 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">DeserializeSeed</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PresenceListDeserializer</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Presence</span><span class="op">&gt;</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">DeserializeSeed</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">PresenceListDeserializer</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">Vec</span>&lt;<span class="ident">Presence</span>&gt;;
 
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span>&gt; {
         <span class="ident">deserializer</span>.<span class="ident">deserialize_any</span>(<span class="ident">PresenceListDeserializerVisitor</span>(<span class="self">self</span>.<span class="number">0</span>))
     }
 }
@@ -507,7 +507,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
     <span class="kw">fn</span> <span class="ident">test_custom</span>() {
-        <span class="kw">let</span> <span class="ident">activity</span> <span class="op">=</span> <span class="ident">Activity</span> {
+        <span class="kw">let</span> <span class="ident">activity</span> = <span class="ident">Activity</span> {
             <span class="ident">application_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">assets</span>: <span class="prelude-val">None</span>,
             <span class="ident">buttons</span>: <span class="ident">Vec::new</span>(),
@@ -529,7 +529,7 @@
             <span class="ident">timestamps</span>: <span class="prelude-val">None</span>,
             <span class="ident">url</span>: <span class="prelude-val">None</span>,
         };
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">Presence</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Presence</span> {
             <span class="ident">activities</span>: <span class="macro">vec!</span>[<span class="ident">activity</span>],
             <span class="ident">client_status</span>: <span class="ident">ClientStatus</span> {
                 <span class="ident">desktop</span>: <span class="prelude-val">Some</span>(<span class="ident">Status::Online</span>),
@@ -620,7 +620,7 @@
     <span class="comment">// Can&#39;t test seeded deserializers with serde_test.</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">presence_map_guild_id_default</span>() {
-        <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">r#&quot;[{
+        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;[{
             &quot;user&quot;: {
                 &quot;id&quot;: &quot;1&quot;
             },
@@ -631,7 +631,7 @@
             &quot;activities&quot;: []
         }]&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">Vec::from</span>([<span class="ident">Presence</span> {
+        <span class="kw">let</span> <span class="ident">expected</span> = <span class="ident">Vec::from</span>([<span class="ident">Presence</span> {
             <span class="ident">activities</span>: <span class="macro">vec!</span>[],
             <span class="ident">client_status</span>: <span class="ident">ClientStatus</span> {
                 <span class="ident">desktop</span>: <span class="prelude-val">Some</span>(<span class="ident">Status::Online</span>),
@@ -643,12 +643,12 @@
             <span class="ident">user</span>: <span class="ident">UserOrId::UserId</span> { <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>) },
         }]);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> <span class="op">=</span> <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">deserializer</span> <span class="op">=</span> <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">Id::new</span>(<span class="number">2</span>));
-        <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
+        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">PresenceListDeserializer::new</span>(<span class="ident">Id::new</span>(<span class="number">2</span>));
+        <span class="kw">let</span> <span class="ident">actual</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq!</span>(<span class="ident">actual</span>, <span class="ident">expected</span>);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

@@ -9,14 +9,14 @@ disconnected, and when new message commands come in:</p>
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">env</span>, <span class="ident">sync::Arc</span>};
 
 <span class="attribute">#[<span class="ident">tokio::main</span>]</span>
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">intents</span> <span class="op">=</span> <span class="ident">Intents::GUILD_BANS</span> <span class="op">|</span> <span class="ident">Intents::GUILD_EMOJIS_AND_STICKERS</span> <span class="op">|</span> <span class="ident">Intents::GUILD_MESSAGES</span>;
-    <span class="kw">let</span> (<span class="ident">cluster</span>, <span class="kw-2">mut</span> <span class="ident">events</span>) <span class="op">=</span> <span class="ident">Cluster::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">cluster</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">cluster</span>);
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="ident">anyhow::Result</span>&lt;()&gt; {
+    <span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">intents</span> = <span class="ident">Intents::GUILD_BANS</span> | <span class="ident">Intents::GUILD_EMOJIS_AND_STICKERS</span> | <span class="ident">Intents::GUILD_MESSAGES</span>;
+    <span class="kw">let</span> (<span class="ident">cluster</span>, <span class="kw-2">mut</span> <span class="ident">events</span>) = <span class="ident">Cluster::new</span>(<span class="ident">token</span>, <span class="ident">intents</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">cluster</span> = <span class="ident">Arc::new</span>(<span class="ident">cluster</span>);
     <span class="ident">cluster</span>.<span class="ident">up</span>().<span class="kw">await</span>;
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">shard_id</span>, <span class="ident">event</span>)) <span class="op">=</span> <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
+    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">shard_id</span>, <span class="ident">event</span>)) = <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
         <span class="ident">tokio::spawn</span>(<span class="ident">handle_event</span>(<span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">cluster</span>), <span class="ident">shard_id</span>, <span class="ident">event</span>));
     }
 
@@ -25,7 +25,7 @@ disconnected, and when new message commands come in:</p>
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_event</span>(<span class="ident">cluster</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Cluster</span><span class="op">&gt;</span>, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">event</span>: <span class="ident">Event</span>) {
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_event</span>(<span class="ident">cluster</span>: <span class="ident">Arc</span>&lt;<span class="ident">Cluster</span>&gt;, <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">event</span>: <span class="ident">Event</span>) {
     <span class="kw">match</span> <span class="ident">event</span> {
         <span class="ident">Event::ShardConnected</span> { .. } =&gt; {
             <span class="macro">println!</span>(<span class="string">&quot;Shard {shard_id} is now connected&quot;</span>);
@@ -33,14 +33,14 @@ disconnected, and when new message commands come in:</p>
         <span class="ident">Event::ShardDisconnected</span> { .. } =&gt; {
             <span class="macro">println!</span>(<span class="string">&quot;Shard {shard_id} is now disconnected&quot;</span>);
         },
-        <span class="ident">Event::MessageCreate</span>(<span class="ident">msg</span>) <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">content</span> <span class="op">==</span> <span class="string">&quot;!latency&quot;</span> =&gt; {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">shard</span>) <span class="op">=</span> <span class="ident">cluster</span>.<span class="ident">shard</span>(<span class="ident">shard_id</span>) {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">info</span>) <span class="op">=</span> <span class="ident">shard</span>.<span class="ident">info</span>() {
+        <span class="ident">Event::MessageCreate</span>(<span class="ident">msg</span>) <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">content</span> == <span class="string">&quot;!latency&quot;</span> =&gt; {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">shard</span>) = <span class="ident">cluster</span>.<span class="ident">shard</span>(<span class="ident">shard_id</span>) {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">info</span>) = <span class="ident">shard</span>.<span class="ident">info</span>() {
                     <span class="macro">println!</span>(<span class="string">&quot;Shard {shard_id}&#39;s latency is {:?}&quot;</span>, <span class="ident">info</span>.<span class="ident">latency</span>());
                 }
             }
         },
-        <span class="ident">Event::MessageCreate</span>(<span class="ident">msg</span>) <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">content</span> <span class="op">==</span> <span class="string">&quot;!shutdown&quot;</span> =&gt; {
+        <span class="ident">Event::MessageCreate</span>(<span class="ident">msg</span>) <span class="kw">if</span> <span class="ident">msg</span>.<span class="ident">content</span> == <span class="string">&quot;!shutdown&quot;</span> =&gt; {
             <span class="macro">println!</span>(<span class="string">&quot;Got a shutdown request from shard {shard_id}&quot;</span>);
 
             <span class="ident">cluster</span>.<span class="ident">down</span>();
@@ -56,18 +56,18 @@ of 16:</p>
 <span class="kw">use</span> <span class="ident">std::env</span>;
 
 <span class="attribute">#[<span class="ident">tokio::main</span>]</span>
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">token</span> <span class="op">=</span> <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="ident">intents</span> <span class="op">=</span> <span class="ident">Intents::GUILD_MESSAGES</span>;
-    <span class="kw">let</span> <span class="ident">scheme</span> <span class="op">=</span> <span class="ident">ShardScheme::try_from</span>((<span class="number">1</span>, <span class="number">16</span>, <span class="number">320</span>))<span class="question-mark">?</span>;
-    <span class="kw">let</span> (<span class="ident">cluster</span>, <span class="kw-2">mut</span> <span class="ident">events</span>) <span class="op">=</span> <span class="ident">Cluster::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>)
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="ident">anyhow::Result</span>&lt;()&gt; {
+    <span class="kw">let</span> <span class="ident">token</span> = <span class="ident">env::var</span>(<span class="string">&quot;DISCORD_TOKEN&quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">intents</span> = <span class="ident">Intents::GUILD_MESSAGES</span>;
+    <span class="kw">let</span> <span class="ident">scheme</span> = <span class="ident">ShardScheme::try_from</span>((<span class="number">1</span>, <span class="number">16</span>, <span class="number">320</span>))<span class="question-mark">?</span>;
+    <span class="kw">let</span> (<span class="ident">cluster</span>, <span class="kw-2">mut</span> <span class="ident">events</span>) = <span class="ident">Cluster::builder</span>(<span class="ident">token</span>, <span class="ident">intents</span>)
         .<span class="ident">shard_scheme</span>(<span class="ident">scheme</span>)
         .<span class="ident">build</span>()
         .<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="ident">cluster</span>.<span class="ident">up</span>().<span class="kw">await</span>;
 
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">shard_id</span>, <span class="ident">event</span>)) <span class="op">=</span> <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
+    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">shard_id</span>, <span class="ident">event</span>)) = <span class="ident">events</span>.<span class="ident">next</span>().<span class="kw">await</span> {
         <span class="macro">println!</span>(<span class="string">&quot;got event type {:?}&quot;</span>, <span class="ident">event</span>.<span class="ident">kind</span>());
     }
 
@@ -85,4 +85,4 @@ of 16:</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Shards.html" title="twilight_gateway::cluster::Shards struct">Shards</a></div><div class="item-right docblock-short"><p>Iterator over a <a href="struct.Cluster.html" title="Cluster"><code>Cluster</code></a>’s managed <a href="../shard/struct.Shard.html" title="Shard">shards</a>.</p>
 </div></div></div><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ClusterCommandErrorType.html" title="twilight_gateway::cluster::ClusterCommandErrorType enum">ClusterCommandErrorType</a></div><div class="item-right docblock-short"><p>Type of <a href="struct.ClusterCommandError.html" title="ClusterCommandError"><code>ClusterCommandError</code></a> that occurred.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ClusterStartErrorType.html" title="twilight_gateway::cluster::ClusterStartErrorType enum">ClusterStartErrorType</a></div><div class="item-right docblock-short"><p>Type of <a href="enum.ClusterStartErrorType.html" title="ClusterStartErrorType"><code>ClusterStartErrorType</code></a> that occurred.</p>
-</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

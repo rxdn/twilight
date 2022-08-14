@@ -115,13 +115,13 @@
 };
 
 <span class="doccomment">/// Create an external scheduled event in a guild.</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreateGuildExternalScheduledEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">CreateGuildScheduledEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>);
+<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreateGuildExternalScheduledEvent</span>&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="ident">CreateGuildScheduledEvent</span>&lt;<span class="lifetime">&#39;a</span>&gt;);
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::needless_pass_by_value</span>)]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CreateGuildExternalScheduledEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">CreateGuildExternalScheduledEvent</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">inner</span>: <span class="ident">CreateGuildScheduledEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+        <span class="ident">inner</span>: <span class="ident">CreateGuildScheduledEvent</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
         <span class="ident">scheduled_start_time</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Timestamp</span>,
@@ -152,10 +152,10 @@
     <span class="doccomment">/// description is invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`ScheduledEventDescription`]: twilight_validate::request::ValidationErrorType::ScheduledEventDescription</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ValidationError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">ValidationError</span>&gt; {
         <span class="ident">validate_scheduled_event_description</span>(<span class="ident">description</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fields</span>.<span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">description</span>);
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fields</span>.<span class="ident">description</span> = <span class="prelude-val">Some</span>(<span class="ident">description</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
@@ -168,7 +168,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [Discord Docs/Image Data]: https://discord.com/developers/docs/reference#image-data</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">image</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">image</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fields</span>.<span class="ident">image</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">image</span>);
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">fields</span>.<span class="ident">image</span> = <span class="prelude-val">Some</span>(<span class="ident">image</span>);
 
         <span class="self">self</span>
     }
@@ -176,13 +176,13 @@
     <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span><span class="op">&lt;</span><span class="ident">GuildScheduledEvent</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span>&lt;<span class="ident">GuildScheduledEvent</span>&gt; {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">exec</span>()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">AuditLogReason</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CreateGuildExternalScheduledEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ValidationError</span><span class="op">&gt;</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">AuditLogReason</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="kw">for</span> <span class="ident">CreateGuildExternalScheduledEvent</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">reason</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">reason</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">ValidationError</span>&gt; {
         <span class="ident">validate_audit_reason</span>(<span class="ident">reason</span>)<span class="question-mark">?</span>;
 
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">reason</span>.<span class="ident">replace</span>(<span class="ident">reason</span>);
@@ -191,10 +191,10 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">CreateGuildExternalScheduledEvent</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">CreateGuildExternalScheduledEvent</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>, <span class="ident">Error</span>&gt; {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">try_into_request</span>()
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

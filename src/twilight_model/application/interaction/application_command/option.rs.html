@@ -683,19 +683,19 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">CommandDataOption</span> {
-    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">subcommand_is_empty</span> <span class="op">=</span> <span class="macro">matches!</span>(
+    <span class="kw">fn</span> <span class="ident">serialize</span>&lt;<span class="ident">S</span>: <span class="ident">Serializer</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">S::Ok</span>, <span class="ident">S::Error</span>&gt; {
+        <span class="kw">let</span> <span class="ident">subcommand_is_empty</span> = <span class="macro">matches!</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>,
             <span class="ident">CommandOptionValue::SubCommand</span>(<span class="ident">o</span>)
-            <span class="op">|</span> <span class="ident">CommandOptionValue::SubCommandGroup</span>(<span class="ident">o</span>)
+            | <span class="ident">CommandOptionValue::SubCommandGroup</span>(<span class="ident">o</span>)
                 <span class="kw">if</span> <span class="ident">o</span>.<span class="ident">is_empty</span>()
         );
 
-        <span class="kw">let</span> <span class="ident">focused</span> <span class="op">=</span> <span class="macro">matches!</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>, <span class="ident">CommandOptionValue::Focused</span>(<span class="kw">_</span>, <span class="kw">_</span>));
+        <span class="kw">let</span> <span class="ident">focused</span> = <span class="macro">matches!</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>, <span class="ident">CommandOptionValue::Focused</span>(<span class="kw">_</span>, <span class="kw">_</span>));
 
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="number">2</span> <span class="op">+</span> <span class="ident">usize::from</span>(<span class="op">!</span><span class="ident">subcommand_is_empty</span>) <span class="op">+</span> <span class="ident">usize::from</span>(<span class="ident">focused</span>);
+        <span class="kw">let</span> <span class="ident">len</span> = <span class="number">2</span> + <span class="ident">usize::from</span>(!<span class="ident">subcommand_is_empty</span>) + <span class="ident">usize::from</span>(<span class="ident">focused</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">serializer</span>.<span class="ident">serialize_struct</span>(<span class="string">&quot;CommandDataOption&quot;</span>, <span class="ident">len</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> = <span class="ident">serializer</span>.<span class="ident">serialize_struct</span>(<span class="string">&quot;CommandDataOption&quot;</span>, <span class="ident">len</span>)<span class="question-mark">?</span>;
 
         <span class="kw">if</span> <span class="ident">focused</span> {
             <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;focused&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">focused</span>)<span class="question-mark">?</span>;
@@ -716,8 +716,8 @@
             <span class="ident">CommandOptionValue::Role</span>(<span class="ident">r</span>) =&gt; <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;value&quot;</span>, <span class="ident">r</span>)<span class="question-mark">?</span>,
             <span class="ident">CommandOptionValue::String</span>(<span class="ident">s</span>) =&gt; <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;value&quot;</span>, <span class="ident">s</span>)<span class="question-mark">?</span>,
             <span class="ident">CommandOptionValue::User</span>(<span class="ident">u</span>) =&gt; <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;value&quot;</span>, <span class="ident">u</span>)<span class="question-mark">?</span>,
-            <span class="ident">CommandOptionValue::SubCommand</span>(<span class="ident">s</span>) <span class="op">|</span> <span class="ident">CommandOptionValue::SubCommandGroup</span>(<span class="ident">s</span>) =&gt; {
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">subcommand_is_empty</span> {
+            <span class="ident">CommandOptionValue::SubCommand</span>(<span class="ident">s</span>) | <span class="ident">CommandOptionValue::SubCommandGroup</span>(<span class="ident">s</span>) =&gt; {
+                <span class="kw">if</span> !<span class="ident">subcommand_is_empty</span> {
                     <span class="ident">state</span>.<span class="ident">serialize_field</span>(<span class="string">&quot;options&quot;</span>, <span class="ident">s</span>)<span class="question-mark">?</span>
                 }
             }
@@ -727,11 +727,11 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CommandDataOption</span> {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">CommandDataOption</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">D::Error</span>&gt; {
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>)]</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">field_identifier</span>, <span class="ident">rename_all</span> = <span class="string">&quot;snake_case&quot;</span>)]</span>
         <span class="kw">enum</span> <span class="ident">Fields</span> {
             <span class="ident">Name</span>,
             <span class="ident">Type</span>,
@@ -749,12 +749,12 @@
             <span class="ident">Boolean</span>(<span class="ident">bool</span>),
             <span class="ident">Integer</span>(<span class="ident">i64</span>),
             <span class="ident">Number</span>(<span class="ident">f64</span>),
-            <span class="ident">Id</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span>),
+            <span class="ident">Id</span>(<span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;),
             <span class="ident">String</span>(<span class="ident">String</span>),
         }
 
         <span class="kw">impl</span> <span class="ident">ValueEnvelope</span> {
-            <span class="kw">fn</span> <span class="ident">as_unexpected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Unexpected</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+            <span class="kw">fn</span> <span class="ident">as_unexpected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Unexpected</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
                 <span class="kw">match</span> <span class="self">self</span> {
                     <span class="ident"><span class="self">Self</span>::Boolean</span>(<span class="ident">b</span>) =&gt; <span class="ident">Unexpected::Bool</span>(<span class="kw-2">*</span><span class="ident">b</span>),
                     <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">i</span>) =&gt; <span class="ident">Unexpected::Signed</span>(<span class="kw-2">*</span><span class="ident">i</span>),
@@ -767,27 +767,27 @@
 
         <span class="kw">struct</span> <span class="ident">CommandDataOptionVisitor</span>;
 
-        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CommandDataOptionVisitor</span> {
-            <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">CommandDataOption</span>;
+        <span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Visitor</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">CommandDataOptionVisitor</span> {
+            <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">CommandDataOption</span>;
 
-            <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+            <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
                 <span class="ident">formatter</span>.<span class="ident">write_str</span>(<span class="string">&quot;CommandDataOption&quot;</span>)
             }
 
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-            <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">A</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">A::Error</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name_opt</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind_opt</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value_opt</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">focused</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+            <span class="kw">fn</span> <span class="ident">visit_map</span>&lt;<span class="ident">A</span>: <span class="ident">MapAccess</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">A</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">A::Error</span>&gt; {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">name_opt</span> = <span class="prelude-val">None</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kind_opt</span> = <span class="prelude-val">None</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">options</span> = <span class="ident">Vec::new</span>();
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value_opt</span> = <span class="prelude-val">None</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">focused</span> = <span class="prelude-val">None</span>;
 
                 <span class="kw">loop</span> {
-                    <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
+                    <span class="kw">let</span> <span class="ident">key</span> = <span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_key</span>() {
                         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">key</span>)) =&gt; <span class="ident">key</span>,
                         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">break</span>,
                         <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
-                            <span class="ident">map</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">IgnoredAny</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+                            <span class="ident">map</span>.<span class="ident">next_value</span>::&lt;<span class="ident">IgnoredAny</span>&gt;()<span class="question-mark">?</span>;
 
                             <span class="macro">tracing::trace!</span>(<span class="string">&quot;ran into an unknown key: {why:?}&quot;</span>);
 
@@ -801,45 +801,45 @@
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;name&quot;</span>));
                             }
 
-                            <span class="ident">name_opt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                            <span class="ident">name_opt</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
                         <span class="ident">Fields::Type</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">kind_opt</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;type&quot;</span>));
                             }
 
-                            <span class="ident">kind_opt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                            <span class="ident">kind_opt</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
                         <span class="ident">Fields::Value</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">value_opt</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;value&quot;</span>));
                             }
 
-                            <span class="ident">value_opt</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
+                            <span class="ident">value_opt</span> = <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                         }
                         <span class="ident">Fields::Options</span> =&gt; {
-                            <span class="kw">if</span> <span class="op">!</span><span class="ident">options</span>.<span class="ident">is_empty</span>() {
+                            <span class="kw">if</span> !<span class="ident">options</span>.<span class="ident">is_empty</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;options&quot;</span>));
                             }
 
-                            <span class="ident">options</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
+                            <span class="ident">options</span> = <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                         }
                         <span class="ident">Fields::Focused</span> =&gt; {
                             <span class="kw">if</span> <span class="ident">focused</span>.<span class="ident">is_some</span>() {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::duplicate_field</span>(<span class="string">&quot;focused&quot;</span>));
                             }
 
-                            <span class="ident">focused</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
+                            <span class="ident">focused</span> = <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>;
                         }
                     }
                 }
 
-                <span class="kw">let</span> <span class="ident">focused</span> <span class="op">=</span> <span class="ident">focused</span>.<span class="ident">unwrap_or_default</span>();
-                <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;name&quot;</span>))<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">kind_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;type&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">focused</span> = <span class="ident">focused</span>.<span class="ident">unwrap_or_default</span>();
+                <span class="kw">let</span> <span class="ident">name</span> = <span class="ident">name_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;name&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">kind</span> = <span class="ident">kind_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;type&quot;</span>))<span class="question-mark">?</span>;
 
-                <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">focused</span> {
-                    <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">value</span> = <span class="kw">if</span> <span class="ident">focused</span> {
+                    <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
                     <span class="kw">match</span> <span class="ident">val</span> {
                         <span class="ident">ValueEnvelope::Integer</span>(<span class="ident">i</span>) =&gt; {
@@ -854,9 +854,9 @@
                 } <span class="kw">else</span> {
                     <span class="kw">match</span> <span class="ident">kind</span> {
                         <span class="ident">CommandOptionType::Attachment</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::Attachment</span>(<span class="ident">id</span>.<span class="ident">cast</span>())
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(
@@ -866,18 +866,18 @@
                             }
                         }
                         <span class="ident">CommandOptionType::Boolean</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Boolean</span>(<span class="ident">b</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Boolean</span>(<span class="ident">b</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::Boolean</span>(<span class="ident">b</span>)
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(<span class="ident">val</span>.<span class="ident">as_unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;boolean&quot;</span>));
                             }
                         }
                         <span class="ident">CommandOptionType::Channel</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::Channel</span>(<span class="ident">id</span>.<span class="ident">cast</span>())
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(
@@ -887,18 +887,18 @@
                             }
                         }
                         <span class="ident">CommandOptionType::Integer</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Integer</span>(<span class="ident">i</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Integer</span>(<span class="ident">i</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::Integer</span>(<span class="ident">i</span>)
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(<span class="ident">val</span>.<span class="ident">as_unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;integer&quot;</span>));
                             }
                         }
                         <span class="ident">CommandOptionType::Mentionable</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::Mentionable</span>(<span class="ident">id</span>)
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(
@@ -908,7 +908,7 @@
                             }
                         }
                         <span class="ident">CommandOptionType::Number</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
                             <span class="kw">match</span> <span class="ident">val</span> {
                                 <span class="ident">ValueEnvelope::Integer</span>(<span class="ident">i</span>) =&gt; {
@@ -930,16 +930,16 @@
                             }
                         }
                         <span class="ident">CommandOptionType::Role</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::Role</span>(<span class="ident">id</span>.<span class="ident">cast</span>())
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(<span class="ident">val</span>.<span class="ident">as_unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;role id&quot;</span>));
                             }
                         }
                         <span class="ident">CommandOptionType::String</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
                             <span class="kw">match</span> <span class="ident">val</span> {
                                 <span class="ident">ValueEnvelope::String</span>(<span class="ident">s</span>) =&gt; <span class="ident">CommandOptionValue::String</span>(<span class="ident">s</span>),
@@ -959,9 +959,9 @@
                             <span class="ident">CommandOptionValue::SubCommandGroup</span>(<span class="ident">options</span>)
                         }
                         <span class="ident">CommandOptionType::User</span> =&gt; {
-                            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
+                            <span class="kw">let</span> <span class="ident">val</span> = <span class="ident">value_opt</span>.<span class="ident">ok_or_else</span>(|| <span class="ident">DeError::missing_field</span>(<span class="string">&quot;value&quot;</span>))<span class="question-mark">?</span>;
 
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">val</span> {
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueEnvelope::Id</span>(<span class="ident">id</span>) = <span class="ident">val</span> {
                                 <span class="ident">CommandOptionValue::User</span>(<span class="ident">id</span>.<span class="ident">cast</span>())
                             } <span class="kw">else</span> {
                                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::invalid_type</span>(<span class="ident">val</span>.<span class="ident">as_unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;user id&quot;</span>));
@@ -982,11 +982,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CommandOptionValue</span> {
     <span class="doccomment">/// Attachment option.</span>
-    <span class="ident">Attachment</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">AttachmentMarker</span><span class="op">&gt;</span>),
+    <span class="ident">Attachment</span>(<span class="ident">Id</span>&lt;<span class="ident">AttachmentMarker</span>&gt;),
     <span class="doccomment">/// Boolean option.</span>
     <span class="ident">Boolean</span>(<span class="ident">bool</span>),
     <span class="doccomment">/// Channel option.</span>
-    <span class="ident">Channel</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">ChannelMarker</span><span class="op">&gt;</span>),
+    <span class="ident">Channel</span>(<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;),
     <span class="doccomment">/// Focused option.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Since Discord does not validate focused fields, they are sent as strings.</span>
@@ -1002,19 +1002,19 @@
     <span class="doccomment">/// Integer option.</span>
     <span class="ident">Integer</span>(<span class="ident">i64</span>),
     <span class="doccomment">/// Mentionable option.</span>
-    <span class="ident">Mentionable</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span>),
+    <span class="ident">Mentionable</span>(<span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;),
     <span class="doccomment">/// Number option.</span>
     <span class="ident">Number</span>(<span class="ident">f64</span>),
     <span class="doccomment">/// Role option.</span>
-    <span class="ident">Role</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">RoleMarker</span><span class="op">&gt;</span>),
+    <span class="ident">Role</span>(<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;),
     <span class="doccomment">/// String option.</span>
     <span class="ident">String</span>(<span class="ident">String</span>),
     <span class="doccomment">/// Subcommand option.</span>
-    <span class="ident">SubCommand</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandDataOption</span><span class="op">&gt;</span>),
+    <span class="ident">SubCommand</span>(<span class="ident">Vec</span>&lt;<span class="ident">CommandDataOption</span>&gt;),
     <span class="doccomment">/// Subcommand group option.</span>
-    <span class="ident">SubCommandGroup</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CommandDataOption</span><span class="op">&gt;</span>),
+    <span class="ident">SubCommandGroup</span>(<span class="ident">Vec</span>&lt;<span class="ident">CommandDataOption</span>&gt;),
     <span class="doccomment">/// User option.</span>
-    <span class="ident">User</span>(<span class="ident">Id</span><span class="op">&lt;</span><span class="ident">UserMarker</span><span class="op">&gt;</span>),
+    <span class="ident">User</span>(<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;),
 }
 
 <span class="kw">impl</span> <span class="ident">CommandOptionValue</span> {
@@ -1051,7 +1051,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">no_options</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandData</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandData</span> {
             <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">name</span>: <span class="string">&quot;permissions&quot;</span>.<span class="ident">to_owned</span>(),
@@ -1085,7 +1085,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">with_option</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandData</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandData</span> {
             <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">name</span>: <span class="string">&quot;permissions&quot;</span>.<span class="ident">to_owned</span>(),
@@ -1137,7 +1137,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">with_normal_option_and_autocomplete</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandData</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandData</span> {
             <span class="ident">guild_id</span>: <span class="prelude-val">Some</span>(<span class="ident">Id::new</span>(<span class="number">2</span>)),
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">name</span>: <span class="string">&quot;permissions&quot;</span>.<span class="ident">to_owned</span>(),
@@ -1212,7 +1212,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">subcommand_without_option</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandData</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandData</span> {
             <span class="ident">guild_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">name</span>: <span class="string">&quot;photo&quot;</span>.<span class="ident">to_owned</span>(),
@@ -1258,7 +1258,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">numbers</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandDataOption</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandDataOption</span> {
             <span class="ident">name</span>: <span class="string">&quot;opt&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">value</span>: <span class="ident">CommandOptionValue::Number</span>(<span class="number">5.0</span>),
         };
@@ -1283,7 +1283,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">autocomplete</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">CommandDataOption</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">CommandDataOption</span> {
             <span class="ident">name</span>: <span class="string">&quot;opt&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">value</span>: <span class="ident">CommandOptionValue::Focused</span>(
                 <span class="string">&quot;not a number&quot;</span>.<span class="ident">to_owned</span>(),
@@ -1313,4 +1313,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

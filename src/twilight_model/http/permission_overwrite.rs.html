@@ -159,12 +159,12 @@
 <span class="doccomment">/// Permission overwrite data for a role or member.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PermissionOverwrite</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">allow</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">deny</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span><span class="op">&lt;</span><span class="ident">GenericMarker</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">allow</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">deny</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Permissions</span>&gt;,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType</span>,
 }
 
@@ -172,12 +172,12 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize_repr</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize_repr</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u8</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PermissionOverwriteType</span> {
     <span class="doccomment">/// Permission overwrite targets an individual member.</span>
-    <span class="ident">Member</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">Member</span> = <span class="number">1</span>,
     <span class="doccomment">/// Permission overwrite targets an individual role.</span>
-    <span class="ident">Role</span> <span class="op">=</span> <span class="number">0</span>,
+    <span class="ident">Role</span> = <span class="number">0</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -193,7 +193,7 @@
     <span class="macro">assert_impl_all!</span>(
         <span class="ident">PermissionOverwrite</span>: <span class="ident">Clone</span>,
         <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
         <span class="ident">Eq</span>,
         <span class="ident">Hash</span>,
         <span class="ident">PartialEq</span>,
@@ -216,7 +216,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">overwrite</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">PermissionOverwrite</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">PermissionOverwrite</span> {
             <span class="ident">allow</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::CREATE_INVITE</span>),
             <span class="ident">deny</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::KICK_MEMBERS</span>),
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">12_345_678</span>),
@@ -249,21 +249,21 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">blank_overwrite</span>() {
         <span class="comment">// Test integer deser used in guild templates.</span>
-        <span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="string">r#&quot;{
+        <span class="kw">let</span> <span class="ident">raw</span> = <span class="string">r#&quot;{
   &quot;allow&quot;: &quot;1&quot;,
   &quot;deny&quot;: &quot;2&quot;,
   &quot;id&quot;: 1,
   &quot;type&quot;: 1
 }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">PermissionOverwrite</span> {
+        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">PermissionOverwrite</span> {
             <span class="ident">allow</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::CREATE_INVITE</span>),
             <span class="ident">deny</span>: <span class="prelude-val">Some</span>(<span class="ident">Permissions::KICK_MEMBERS</span>),
             <span class="ident">id</span>: <span class="ident">Id::new</span>(<span class="number">1</span>),
             <span class="ident">kind</span>: <span class="ident">PermissionOverwriteType::Member</span>,
         };
 
-        <span class="kw">let</span> <span class="ident">deserialized</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>::<span class="op">&lt;</span><span class="ident">PermissionOverwrite</span><span class="op">&gt;</span>(<span class="ident">raw</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">deserialized</span> = <span class="ident">serde_json::from_str</span>::&lt;<span class="ident">PermissionOverwrite</span>&gt;(<span class="ident">raw</span>).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq!</span>(<span class="ident">deserialized</span>, <span class="ident">value</span>);
 
@@ -297,4 +297,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

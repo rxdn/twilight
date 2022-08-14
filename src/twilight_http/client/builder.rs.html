@@ -181,15 +181,15 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="doccomment">/// A builder for [`Client`].</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;has no effect if not built into a Client&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClientBuilder</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">default_allowed_mentions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AllowedMentions</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">proxy</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ratelimiter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Ratelimiter</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">default_allowed_mentions</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">AllowedMentions</span>&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">proxy</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">str</span>&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ratelimiter</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Ratelimiter</span>&gt;&gt;,
     <span class="ident">remember_invalid_token</span>: <span class="ident">bool</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">default_headers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">HeaderMap</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">default_headers</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">HeaderMap</span>&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">timeout</span>: <span class="ident">Duration</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">token</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">token</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">str</span>&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">use_http</span>: <span class="ident">bool</span>,
 }
 
@@ -201,11 +201,11 @@
 
     <span class="doccomment">/// Build the [`Client`].</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="ident">Client</span> {
-        <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">connector::create</span>();
+        <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">connector::create</span>();
 
-        <span class="kw">let</span> <span class="ident">http</span> <span class="op">=</span> <span class="ident">hyper::Client::builder</span>().<span class="ident">build</span>(<span class="ident">connector</span>);
+        <span class="kw">let</span> <span class="ident">http</span> = <span class="ident">hyper::Client::builder</span>().<span class="ident">build</span>(<span class="ident">connector</span>);
 
-        <span class="kw">let</span> <span class="ident">token_invalidated</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">remember_invalid_token</span> {
+        <span class="kw">let</span> <span class="ident">token_invalidated</span> = <span class="kw">if</span> <span class="self">self</span>.<span class="ident">remember_invalid_token</span> {
             <span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">AtomicBool::new</span>(<span class="bool-val">false</span>)))
         } <span class="kw">else</span> {
             <span class="prelude-val">None</span>
@@ -254,7 +254,7 @@
     <span class="doccomment">/// [twilight&#39;s HTTP proxy server]: https://github.com/twilight-rs/http-proxy</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">proxy</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">proxy_url</span>: <span class="ident">String</span>, <span class="ident">use_http</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">proxy</span>.<span class="ident">replace</span>(<span class="ident">proxy_url</span>.<span class="ident">into_boxed_str</span>());
-        <span class="self">self</span>.<span class="ident">use_http</span> <span class="op">=</span> <span class="ident">use_http</span>;
+        <span class="self">self</span>.<span class="ident">use_http</span> = <span class="ident">use_http</span>;
 
         <span class="self">self</span>
     }
@@ -267,8 +267,8 @@
     <span class="doccomment">/// If this method is not called at all then a default [`InMemoryRatelimiter`] will be</span>
     <span class="doccomment">/// created by [`ClientBuilder::build`].</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ratelimiter</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ratelimiter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Ratelimiter</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">ratelimiter</span> <span class="op">=</span> <span class="ident">ratelimiter</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ratelimiter</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ratelimiter</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Ratelimiter</span>&gt;&gt;) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">ratelimiter</span> = <span class="ident">ratelimiter</span>;
 
         <span class="self">self</span>
     }
@@ -277,7 +277,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The default is 10 seconds.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">duration</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="ident">duration</span>;
+        <span class="self">self</span>.<span class="ident">timeout</span> = <span class="ident">duration</span>;
 
         <span class="self">self</span>
     }
@@ -297,19 +297,19 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to true.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">remember_invalid_token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">remember</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">remember_invalid_token</span> <span class="op">=</span> <span class="ident">remember</span>;
+        <span class="self">self</span>.<span class="ident">remember_invalid_token</span> = <span class="ident">remember</span>;
 
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set the token to use for HTTP requests.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">token</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">is_bot</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bot &quot;</span>);
-        <span class="kw">let</span> <span class="ident">is_bearer</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bearer &quot;</span>);
+        <span class="kw">let</span> <span class="ident">is_bot</span> = <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bot &quot;</span>);
+        <span class="kw">let</span> <span class="ident">is_bearer</span> = <span class="ident">token</span>.<span class="ident">starts_with</span>(<span class="string">&quot;Bearer &quot;</span>);
 
         <span class="comment">// Make sure it is either a bot or bearer token, and assume it&#39;s a bot</span>
         <span class="comment">// token if no prefix is given</span>
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">is_bot</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">is_bearer</span> {
+        <span class="kw">if</span> !<span class="ident">is_bot</span> &amp;&amp; !<span class="ident">is_bearer</span> {
             <span class="ident">token</span>.<span class="ident">insert_str</span>(<span class="number">0</span>, <span class="string">&quot;Bot &quot;</span>);
         }
 
@@ -343,4 +343,4 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">ClientBuilder</span>: <span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

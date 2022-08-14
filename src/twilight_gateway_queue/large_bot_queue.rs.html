@@ -129,7 +129,7 @@
 <span class="doccomment">/// [module-level]: crate</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LargeBotQueue</span> {
-    <span class="ident">buckets</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">buckets</span>: <span class="ident">Vec</span>&lt;<span class="ident">UnboundedSender</span>&lt;<span class="ident">Sender</span>&lt;()&gt;&gt;&gt;,
     <span class="ident">limiter</span>: <span class="ident">DayLimiter</span>,
 }
 
@@ -138,17 +138,17 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// You must provide the number of buckets Discord requires your bot to</span>
     <span class="doccomment">/// connect with.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buckets</span>: <span class="ident">usize</span>, <span class="ident">http</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queues</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">buckets</span>);
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buckets</span>: <span class="ident">usize</span>, <span class="ident">http</span>: <span class="ident">Arc</span>&lt;<span class="ident">Client</span>&gt;) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queues</span> = <span class="ident">Vec::with_capacity</span>(<span class="ident">buckets</span>);
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">buckets</span> {
-            <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">unbounded_channel</span>();
+            <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">unbounded_channel</span>();
 
             <span class="ident">tokio::spawn</span>(<span class="ident">waiter</span>(<span class="ident">rx</span>));
 
             <span class="ident">queues</span>.<span class="ident">push</span>(<span class="ident">tx</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">limiter</span> <span class="op">=</span> <span class="ident">DayLimiter::new</span>(<span class="ident">http</span>).<span class="kw">await</span>.<span class="ident">expect</span>(
+        <span class="kw">let</span> <span class="ident">limiter</span> = <span class="ident">DayLimiter::new</span>(<span class="ident">http</span>).<span class="kw">await</span>.<span class="ident">expect</span>(
             <span class="string">&quot;Getting the first session limits failed, \
              Is network connection available?&quot;</span>,
         );
@@ -158,7 +158,7 @@
         <span class="comment">// And will return false if you do not use those features of if</span>
         <span class="comment">// You use the feature but then dynamically set a lower feature.</span>
         <span class="kw">if</span> <span class="macro">tracing::level_enabled!</span>(<span class="ident">tracing::Level::INFO</span>) {
-            <span class="kw">let</span> <span class="ident">lock</span> <span class="op">=</span> <span class="ident">limiter</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+            <span class="kw">let</span> <span class="ident">lock</span> = <span class="ident">limiter</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
 
             <span class="macro">tracing::info!</span>(
                 <span class="string">&quot;{}/{} identifies used before next reset in {:.2?}&quot;</span>,
@@ -175,10 +175,10 @@
     }
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">waiter</span>(<span class="kw-2">mut</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>) {
-    <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
-    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">send</span>(()) {
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">waiter</span>(<span class="kw-2">mut</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span>&lt;<span class="ident">Sender</span>&lt;()&gt;&gt;) {
+    <span class="kw">const</span> <span class="ident">DUR</span>: <span class="ident">Duration</span> = <span class="ident">Duration::from_secs</span>(<span class="number">6</span>);
+    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) = <span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="ident">req</span>.<span class="ident">send</span>(()) {
             <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed with: {source:?}&quot;</span>);
         }
         <span class="ident">sleep</span>(<span class="ident">DUR</span>).<span class="kw">await</span>;
@@ -189,21 +189,21 @@
     <span class="doccomment">/// Request to be able to identify with the gateway. This will place this</span>
     <span class="doccomment">/// request behind all other requests, and the returned future will resolve</span>
     <span class="doccomment">/// once the request has been completed.</span>
-    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>, <span class="ident">shard_id</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = ()&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;_</span>&gt;&gt; {
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
-        <span class="kw">let</span> <span class="ident">bucket</span> <span class="op">=</span> (<span class="ident">shard_id</span>[<span class="number">0</span>] <span class="op">%</span> (<span class="self">self</span>.<span class="ident">buckets</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)) <span class="kw">as</span> <span class="ident">usize</span>;
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+        <span class="kw">let</span> <span class="ident">bucket</span> = (<span class="ident">shard_id</span>[<span class="number">0</span>] % (<span class="self">self</span>.<span class="ident">buckets</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>)) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
 
         <span class="ident">Box::pin</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="self">self</span>.<span class="ident">limiter</span>.<span class="ident">get</span>().<span class="kw">await</span>;
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">buckets</span>[<span class="ident">bucket</span>].<span class="ident">send</span>(<span class="ident">tx</span>) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">buckets</span>[<span class="ident">bucket</span>].<span class="ident">send</span>(<span class="ident">tx</span>) {
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;skipping, send failed with: {source:?}&quot;</span>);
                 <span class="kw">return</span>;
             }
 
             <span class="macro">tracing::info!</span>(<span class="string">&quot;waiting for allowance on shard {}&quot;</span>, <span class="ident">shard_id</span>[<span class="number">0</span>]);
 
-            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="kw">await</span>;
+            <span class="kw">let</span> <span class="kw">_</span> = <span class="ident">rx</span>.<span class="kw">await</span>;
         })
     }
 }
@@ -217,4 +217,4 @@
     <span class="macro">assert_impl_all!</span>(<span class="ident">LargeBotQueue</span>: <span class="ident">Debug</span>, <span class="ident">Queue</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway_queue" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway_queue" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

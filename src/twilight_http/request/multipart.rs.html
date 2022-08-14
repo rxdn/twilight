@@ -172,38 +172,38 @@
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">distributions::Alphanumeric</span>, <span class="ident">Rng</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;has no effect if not built into a Form&quot;</span>]</span>
+<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;has no effect if not built into a Form&quot;</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Form</span> {
     <span class="ident">boundary</span>: [<span class="ident">u8</span>; <span class="number">15</span>],
-    <span class="ident">buffer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="ident">buffer</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">Form</span> {
-    <span class="kw">const</span> <span class="ident">APPLICATION_JSON</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">16</span>] <span class="op">=</span> <span class="string">b&quot;application/json&quot;</span>;
+    <span class="kw">const</span> <span class="ident">APPLICATION_JSON</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">16</span>] = <span class="string">b&quot;application/json&quot;</span>;
 
-    <span class="kw">const</span> <span class="ident">BOUNDARY_TERMINATOR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">2</span>] <span class="op">=</span> <span class="string">b&quot;--&quot;</span>;
-    <span class="kw">const</span> <span class="ident">CONTENT_DISPOSITION_1</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">38</span>] <span class="op">=</span> <span class="string">b&quot;Content-Disposition: form-data; name=\&quot;&quot;</span>;
-    <span class="kw">const</span> <span class="ident">CONTENT_DISPOSITION_2</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">13</span>] <span class="op">=</span> <span class="string">b&quot;\&quot;; filename=\&quot;&quot;</span>;
-    <span class="kw">const</span> <span class="ident">CONTENT_DISPOSITION_3</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">1</span>] <span class="op">=</span> <span class="string">b&quot;\&quot;&quot;</span>;
-    <span class="kw">const</span> <span class="ident">CONTENT_TYPE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">14</span>] <span class="op">=</span> <span class="string">b&quot;Content-Type: &quot;</span>;
-    <span class="kw">const</span> <span class="ident">NEWLINE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">2</span>] <span class="op">=</span> <span class="string">b&quot;\r\n&quot;</span>;
+    <span class="kw">const</span> <span class="ident">BOUNDARY_TERMINATOR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">2</span>] = <span class="string">b&quot;--&quot;</span>;
+    <span class="kw">const</span> <span class="ident">CONTENT_DISPOSITION_1</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">38</span>] = <span class="string">b&quot;Content-Disposition: form-data; name=\&quot;&quot;</span>;
+    <span class="kw">const</span> <span class="ident">CONTENT_DISPOSITION_2</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">13</span>] = <span class="string">b&quot;\&quot;; filename=\&quot;&quot;</span>;
+    <span class="kw">const</span> <span class="ident">CONTENT_DISPOSITION_3</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">1</span>] = <span class="string">b&quot;\&quot;&quot;</span>;
+    <span class="kw">const</span> <span class="ident">CONTENT_TYPE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">14</span>] = <span class="string">b&quot;Content-Type: &quot;</span>;
+    <span class="kw">const</span> <span class="ident">NEWLINE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">2</span>] = <span class="string">b&quot;\r\n&quot;</span>;
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::default</span>()
     }
 
     <span class="doccomment">/// Consume the form, returning the buffer&#39;s contents.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt; {
         <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">extend</span>(<span class="ident"><span class="self">Self</span>::BOUNDARY_TERMINATOR</span>);
 
         <span class="self">self</span>.<span class="ident">buffer</span>
     }
 
     <span class="doccomment">/// Get the form&#39;s appropriate content type for requests.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;multipart/form-data; boundary=&quot;</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt; {
+        <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> = <span class="string">&quot;multipart/form-data; boundary=&quot;</span>;
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content_type</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">NAME</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">boundary</span>.<span class="ident">len</span>());
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content_type</span> = <span class="ident">Vec::with_capacity</span>(<span class="ident">NAME</span>.<span class="ident">len</span>() + <span class="self">self</span>.<span class="ident">boundary</span>.<span class="ident">len</span>());
         <span class="ident">content_type</span>.<span class="ident">extend</span>(<span class="ident">NAME</span>.<span class="ident">as_bytes</span>());
         <span class="ident">content_type</span>.<span class="ident">extend</span>(<span class="self">self</span>.<span class="ident">boundary</span>);
 
@@ -253,7 +253,7 @@
     <span class="doccomment">/// Preview the built buffer&#39;s length without consuming the form.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::len_without_is_empty</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident"><span class="self">Self</span>::BOUNDARY_TERMINATOR</span>.<span class="ident">len</span>()
+        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">len</span>() + <span class="ident"><span class="self">Self</span>::BOUNDARY_TERMINATOR</span>.<span class="ident">len</span>()
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">json_part</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
@@ -283,7 +283,7 @@
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Form</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> <span class="op">=</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> = <span class="self">Self</span> {
             <span class="ident">boundary</span>: <span class="ident">random_boundary</span>(),
             <span class="ident">buffer</span>: <span class="ident">Vec::new</span>(),
         };
@@ -298,11 +298,11 @@
 
 <span class="doccomment">/// Generate a random boundary that is 15 characters long.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">random_boundary</span>() -&gt; [<span class="ident">u8</span>; <span class="number">15</span>] {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">boundary</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">15</span>];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::thread_rng</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">boundary</span> = [<span class="number">0</span>; <span class="number">15</span>];
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> = <span class="ident">rand::thread_rng</span>();
 
     <span class="kw">for</span> <span class="ident">value</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">boundary</span> {
-        <span class="kw-2">*</span><span class="ident">value</span> <span class="op">=</span> <span class="ident">rng</span>.<span class="ident">sample</span>(<span class="ident">Alphanumeric</span>);
+        <span class="kw-2">*</span><span class="ident">value</span> = <span class="ident">rng</span>.<span class="ident">sample</span>(<span class="ident">Alphanumeric</span>);
     }
 
     <span class="ident">boundary</span>
@@ -315,12 +315,12 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">form_builder</span>() {
-        <span class="kw">let</span> <span class="ident">form</span> <span class="op">=</span> <span class="ident">Form::new</span>()
+        <span class="kw">let</span> <span class="ident">form</span> = <span class="ident">Form::new</span>()
             .<span class="ident">json_part</span>(<span class="string">b&quot;payload_json&quot;</span>, <span class="string">b&quot;json_value&quot;</span>)
             .<span class="ident">file_part</span>(<span class="string">b&quot;files[0]&quot;</span>, <span class="string">b&quot;filename.jpg&quot;</span>, <span class="string">b&quot;file_value&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">boundary</span> <span class="op">=</span> <span class="ident">str::from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">form</span>.<span class="ident">boundary</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">format!</span>(
+        <span class="kw">let</span> <span class="ident">boundary</span> = <span class="ident">str::from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">form</span>.<span class="ident">boundary</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">expected</span> = <span class="macro">format!</span>(
             <span class="string">&quot;--{boundary}\r\n\
         Content-Disposition: form-data; name=\&quot;payload_json\&quot;\r\n\
         Content-Type: application/json\r\n\
@@ -333,12 +333,12 @@
         --{boundary}--&quot;</span>,
         );
 
-        <span class="kw">let</span> <span class="ident">buffer_len</span> <span class="op">=</span> <span class="ident">form</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">form</span>.<span class="ident">build</span>();
+        <span class="kw">let</span> <span class="ident">buffer_len</span> = <span class="ident">form</span>.<span class="ident">len</span>();
+        <span class="kw">let</span> <span class="ident">buffer</span> = <span class="ident">form</span>.<span class="ident">build</span>();
 
         <span class="macro">assert_eq!</span>(<span class="ident">expected</span>.<span class="ident">as_bytes</span>(), <span class="ident">buffer</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">buffer_len</span>, <span class="ident">buffer</span>.<span class="ident">len</span>());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

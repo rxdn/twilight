@@ -374,7 +374,7 @@
     <span class="doccomment">/// Duration after the [`Self::started_at`] time the bucket will refresh.</span>
     <span class="kw">pub</span> <span class="ident">reset_after</span>: <span class="ident">AtomicU64</span>,
     <span class="doccomment">/// When the bucket&#39;s ratelimit refresh countdown started.</span>
-    <span class="kw">pub</span> <span class="ident">started_at</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">started_at</span>: <span class="ident">Mutex</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt;&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">Bucket</span> {
@@ -409,22 +409,22 @@
 
     <span class="doccomment">/// Time remaining until this bucket will reset.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">time_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TimeRemaining</span> {
-        <span class="kw">let</span> <span class="ident">reset_after</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">reset_after</span>();
-        <span class="kw">let</span> <span class="ident">maybe_started_at</span> <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>);
+        <span class="kw">let</span> <span class="ident">reset_after</span> = <span class="self">self</span>.<span class="ident">reset_after</span>();
+        <span class="kw">let</span> <span class="ident">maybe_started_at</span> = <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">started_at</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">started_at</span>) <span class="op">=</span> <span class="ident">maybe_started_at</span> {
+        <span class="kw">let</span> <span class="ident">started_at</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">started_at</span>) = <span class="ident">maybe_started_at</span> {
             <span class="ident">started_at</span>
         } <span class="kw">else</span> {
             <span class="kw">return</span> <span class="ident">TimeRemaining::NotStarted</span>;
         };
 
-        <span class="kw">let</span> <span class="ident">elapsed</span> <span class="op">=</span> <span class="ident">started_at</span>.<span class="ident">elapsed</span>();
+        <span class="kw">let</span> <span class="ident">elapsed</span> = <span class="ident">started_at</span>.<span class="ident">elapsed</span>();
 
-        <span class="kw">if</span> <span class="ident">elapsed</span> <span class="op">&gt;</span> <span class="ident">Duration::from_millis</span>(<span class="ident">reset_after</span>) {
+        <span class="kw">if</span> <span class="ident">elapsed</span> &gt; <span class="ident">Duration::from_millis</span>(<span class="ident">reset_after</span>) {
             <span class="kw">return</span> <span class="ident">TimeRemaining::Finished</span>;
         }
 
-        <span class="ident">TimeRemaining::Some</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">reset_after</span>) <span class="op">-</span> <span class="ident">elapsed</span>)
+        <span class="ident">TimeRemaining::Some</span>(<span class="ident">Duration::from_millis</span>(<span class="ident">reset_after</span>) - <span class="ident">elapsed</span>)
     }
 
     <span class="doccomment">/// Try to reset this bucket&#39;s [`started_at`] value if it has finished.</span>
@@ -437,9 +437,9 @@
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">TimeRemaining::Finished</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">time_remaining</span>() {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">TimeRemaining::Finished</span> = <span class="self">self</span>.<span class="ident">time_remaining</span>() {
             <span class="self">self</span>.<span class="ident">remaining</span>.<span class="ident">store</span>(<span class="self">self</span>.<span class="ident">limit</span>(), <span class="ident">Ordering::Relaxed</span>);
-            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>) <span class="op">=</span> <span class="prelude-val">None</span>;
+            <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>) = <span class="prelude-val">None</span>;
 
             <span class="bool-val">true</span>
         } <span class="kw">else</span> {
@@ -448,19 +448,19 @@
     }
 
     <span class="doccomment">/// Update this bucket&#39;s ratelimit data after a request has been made.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ratelimits</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">bucket_limit</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">limit</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ratelimits</span>: <span class="prelude-ty">Option</span>&lt;(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)&gt;) {
+        <span class="kw">let</span> <span class="ident">bucket_limit</span> = <span class="self">self</span>.<span class="ident">limit</span>();
 
         {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">started_at</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">started_at</span> = <span class="self">self</span>.<span class="ident">started_at</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;bucket poisoned&quot;</span>);
 
             <span class="kw">if</span> <span class="ident">started_at</span>.<span class="ident">is_none</span>() {
                 <span class="ident">started_at</span>.<span class="ident">replace</span>(<span class="ident">Instant::now</span>());
             }
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">limit</span>, <span class="ident">remaining</span>, <span class="ident">reset_after</span>)) <span class="op">=</span> <span class="ident">ratelimits</span> {
-            <span class="kw">if</span> <span class="ident">bucket_limit</span> <span class="op">!</span><span class="op">=</span> <span class="ident">limit</span> <span class="op">&amp;&amp;</span> <span class="ident">bucket_limit</span> <span class="op">==</span> <span class="ident">u64::max_value</span>() {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">limit</span>, <span class="ident">remaining</span>, <span class="ident">reset_after</span>)) = <span class="ident">ratelimits</span> {
+            <span class="kw">if</span> <span class="ident">bucket_limit</span> != <span class="ident">limit</span> &amp;&amp; <span class="ident">bucket_limit</span> == <span class="ident">u64::max_value</span>() {
                 <span class="self">self</span>.<span class="ident">reset_after</span>.<span class="ident">store</span>(<span class="ident">reset_after</span>, <span class="ident">Ordering::SeqCst</span>);
                 <span class="self">self</span>.<span class="ident">limit</span>.<span class="ident">store</span>(<span class="ident">limit</span>, <span class="ident">Ordering::SeqCst</span>);
             }
@@ -476,20 +476,20 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BucketQueue</span> {
     <span class="doccomment">/// Receiver for the ratelimit requests.</span>
-    <span class="ident">rx</span>: <span class="ident">AsyncMutex</span><span class="op">&lt;</span><span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">TicketNotifier</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">rx</span>: <span class="ident">AsyncMutex</span>&lt;<span class="ident">UnboundedReceiver</span>&lt;<span class="ident">TicketNotifier</span>&gt;&gt;,
     <span class="doccomment">/// Sender for the ratelimit requests.</span>
-    <span class="ident">tx</span>: <span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">TicketNotifier</span><span class="op">&gt;</span>,
+    <span class="ident">tx</span>: <span class="ident">UnboundedSender</span>&lt;<span class="ident">TicketNotifier</span>&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">BucketQueue</span> {
     <span class="doccomment">/// Add a new ratelimit request to the queue.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tx</span>: <span class="ident">TicketNotifier</span>) {
-        <span class="kw">let</span> <span class="ident">_sent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">tx</span>);
+        <span class="kw">let</span> <span class="ident">_sent</span> = <span class="self">self</span>.<span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">tx</span>);
     }
 
     <span class="doccomment">/// Receive the first incoming ratelimit request.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeout_duration</span>: <span class="ident">Duration</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TicketNotifier</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rx</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeout_duration</span>: <span class="ident">Duration</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">TicketNotifier</span>&gt; {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rx</span> = <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
 
         <span class="ident">timeout</span>(<span class="ident">timeout_duration</span>, <span class="ident">rx</span>.<span class="ident">recv</span>()).<span class="kw">await</span>.<span class="ident">ok</span>().<span class="ident">flatten</span>()
     }
@@ -497,7 +497,7 @@
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BucketQueue</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc::unbounded_channel</span>();
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">mpsc::unbounded_channel</span>();
 
         <span class="self">Self</span> {
             <span class="ident">rx</span>: <span class="ident">AsyncMutex::new</span>(<span class="ident">rx</span>),
@@ -511,24 +511,24 @@
 <span class="doccomment">/// the [`Path`]-specific ratelimits.</span>
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">BucketQueueTask</span> {
     <span class="doccomment">/// The [`Bucket`] managed by this task.</span>
-    <span class="ident">bucket</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Bucket</span><span class="op">&gt;</span>,
+    <span class="ident">bucket</span>: <span class="ident">Arc</span>&lt;<span class="ident">Bucket</span>&gt;,
     <span class="doccomment">/// All buckets managed by the associated [`super::InMemoryRatelimiter`].</span>
-    <span class="ident">buckets</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Path</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Bucket</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">buckets</span>: <span class="ident">Arc</span>&lt;<span class="ident">Mutex</span>&lt;<span class="ident">HashMap</span>&lt;<span class="ident">Path</span>, <span class="ident">Arc</span>&lt;<span class="ident">Bucket</span>&gt;&gt;&gt;&gt;,
     <span class="doccomment">/// Global ratelimit data.</span>
-    <span class="ident">global</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GlobalLockPair</span><span class="op">&gt;</span>,
+    <span class="ident">global</span>: <span class="ident">Arc</span>&lt;<span class="ident">GlobalLockPair</span>&gt;,
     <span class="doccomment">/// The [`Path`] this [`Bucket`] belongs to.</span>
     <span class="ident">path</span>: <span class="ident">Path</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">BucketQueueTask</span> {
     <span class="doccomment">/// Timeout to wait for response headers after initiating a request.</span>
-    <span class="kw">const</span> <span class="ident">WAIT</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">10</span>);
+    <span class="kw">const</span> <span class="ident">WAIT</span>: <span class="ident">Duration</span> = <span class="ident">Duration::from_secs</span>(<span class="number">10</span>);
 
     <span class="doccomment">/// Create a new task to manage the ratelimit for a [`Bucket`].</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">bucket</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Bucket</span><span class="op">&gt;</span>,
-        <span class="ident">buckets</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Path</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Bucket</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">global</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">GlobalLockPair</span><span class="op">&gt;</span>,
+        <span class="ident">bucket</span>: <span class="ident">Arc</span>&lt;<span class="ident">Bucket</span>&gt;,
+        <span class="ident">buckets</span>: <span class="ident">Arc</span>&lt;<span class="ident">Mutex</span>&lt;<span class="ident">HashMap</span>&lt;<span class="ident">Path</span>, <span class="ident">Arc</span>&lt;<span class="ident">Bucket</span>&gt;&gt;&gt;&gt;,
+        <span class="ident">global</span>: <span class="ident">Arc</span>&lt;<span class="ident">GlobalLockPair</span>&gt;,
         <span class="ident">path</span>: <span class="ident">Path</span>,
     ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
@@ -541,14 +541,14 @@
 
     <span class="doccomment">/// Process incoming ratelimit requests to this bucket and update the state</span>
     <span class="doccomment">/// based on received [`RatelimitHeaders`].</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;background queue task&quot;</span>, <span class="ident">skip</span>(<span class="self">self</span>), <span class="ident">fields</span>(<span class="ident">path</span> <span class="op">=</span> <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>))]</span>
+    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">name</span> = <span class="string">&quot;background queue task&quot;</span>, <span class="ident">skip</span>(<span class="self">self</span>), <span class="ident">fields</span>(<span class="ident">path</span> = <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>))]</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="self">self</span>) {
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">queue_tx</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next</span>().<span class="kw">await</span> {
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">queue_tx</span>) = <span class="self">self</span>.<span class="ident">next</span>().<span class="kw">await</span> {
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">global</span>.<span class="ident">is_locked</span>() {
                 <span class="self">self</span>.<span class="ident">global</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">ticket_headers</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ticket_headers</span>) <span class="op">=</span> <span class="ident">queue_tx</span>.<span class="ident">available</span>() {
+            <span class="kw">let</span> <span class="ident">ticket_headers</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ticket_headers</span>) = <span class="ident">queue_tx</span>.<span class="ident">available</span>() {
                 <span class="ident">ticket_headers</span>
             } <span class="kw">else</span> {
                 <span class="kw">continue</span>;
@@ -580,7 +580,7 @@
 
     <span class="doccomment">/// Update the bucket&#39;s ratelimit state.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">headers</span>: <span class="kw-2">&amp;</span><span class="ident">RatelimitHeaders</span>) {
-        <span class="kw">let</span> <span class="ident">ratelimits</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">headers</span> {
+        <span class="kw">let</span> <span class="ident">ratelimits</span> = <span class="kw">match</span> <span class="ident">headers</span> {
             <span class="ident">RatelimitHeaders::Global</span>(<span class="ident">global</span>) =&gt; {
                 <span class="self">self</span>.<span class="ident">lock_global</span>(<span class="ident">Duration::from_secs</span>(<span class="ident">global</span>.<span class="ident">retry_after</span>()))
                     .<span class="kw">await</span>;
@@ -593,15 +593,15 @@
             }
         };
 
-        <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;updating bucket&quot;</span>);
+        <span class="macro">tracing::debug!</span>(<span class="ident">path</span>=<span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;updating bucket&quot;</span>);
         <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">update</span>(<span class="ident">ratelimits</span>);
     }
 
     <span class="doccomment">/// Lock the global ratelimit for a specified duration.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">lock_global</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">wait</span>: <span class="ident">Duration</span>) {
-        <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;request got global ratelimited&quot;</span>);
+        <span class="macro">tracing::debug!</span>(<span class="ident">path</span>=<span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;request got global ratelimited&quot;</span>);
         <span class="self">self</span>.<span class="ident">global</span>.<span class="ident">lock</span>();
-        <span class="kw">let</span> <span class="ident">lock</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">global</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">lock</span> = <span class="self">self</span>.<span class="ident">global</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
         <span class="ident">sleep</span>(<span class="ident">wait</span>).<span class="kw">await</span>;
         <span class="self">self</span>.<span class="ident">global</span>.<span class="ident">unlock</span>();
 
@@ -609,8 +609,8 @@
     }
 
     <span class="doccomment">/// Get the next [`TicketNotifier`] in the queue.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TicketNotifier</span><span class="op">&gt;</span> {
-        <span class="macro">tracing::debug!</span>(<span class="ident">path</span><span class="op">=</span><span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;starting to get next in queue&quot;</span>);
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">TicketNotifier</span>&gt; {
+        <span class="macro">tracing::debug!</span>(<span class="ident">path</span>=<span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>, <span class="string">&quot;starting to get next in queue&quot;</span>);
 
         <span class="self">self</span>.<span class="ident">wait_if_needed</span>().<span class="kw">await</span>;
 
@@ -618,10 +618,10 @@
     }
 
     <span class="doccomment">/// Wait for this bucket to refresh if it isn&#39;t ready yet.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;waiting for bucket to refresh&quot;</span>, <span class="ident">skip</span>(<span class="self">self</span>), <span class="ident">fields</span>(<span class="ident">path</span> <span class="op">=</span> <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>))]</span>
+    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">name</span> = <span class="string">&quot;waiting for bucket to refresh&quot;</span>, <span class="ident">skip</span>(<span class="self">self</span>), <span class="ident">fields</span>(<span class="ident">path</span> = <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">path</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">wait_if_needed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">wait</span> <span class="op">=</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">remaining</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+        <span class="kw">let</span> <span class="ident">wait</span> = {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bucket</span>.<span class="ident">remaining</span>() &gt; <span class="number">0</span> {
                 <span class="kw">return</span>;
             }
 
@@ -639,7 +639,7 @@
         };
 
         <span class="macro">tracing::debug!</span>(
-            <span class="ident">milliseconds</span><span class="op">=</span><span class="op">%</span><span class="ident">wait</span>.<span class="ident">as_millis</span>(),
+            <span class="ident">milliseconds</span>=%<span class="ident">wait</span>.<span class="ident">as_millis</span>(),
             <span class="string">&quot;waiting for ratelimit to pass&quot;</span>,
         );
 
@@ -651,4 +651,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>

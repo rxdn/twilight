@@ -468,32 +468,32 @@
 
 <span class="kw">impl</span> <span class="ident">ShardSchemeRangeError</span> {
     <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">ShardSchemeRangeErrorType</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::unused_self</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
         <span class="prelude-val">None</span>
     }
 
     <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
+    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(
         <span class="self">self</span>,
     ) -&gt; (
         <span class="ident">ShardSchemeRangeErrorType</span>,
-        <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
     ) {
         (<span class="self">self</span>.<span class="ident">kind</span>, <span class="prelude-val">None</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ShardSchemeRangeError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">FmtResult</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">ShardSchemeRangeErrorType::BucketTooLarge</span> {
                 <span class="ident">bucket_id</span>,
@@ -575,13 +575,13 @@
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShardSchemeIter</span> {
-    <span class="ident">inner</span>: <span class="ident">StepBy</span><span class="op">&lt;</span><span class="ident">RangeInclusive</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">inner</span>: <span class="ident">StepBy</span>&lt;<span class="ident">RangeInclusive</span>&lt;<span class="ident">u64</span>&gt;&gt;,
 }
 
 <span class="kw">impl</span> <span class="ident">ShardSchemeIter</span> {
     <span class="doccomment">/// Create an iterator of shard IDs out of a scheme.</span>
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">scheme</span>: <span class="kw-2">&amp;</span><span class="ident">ShardScheme</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">from</span>, <span class="ident">to</span>, <span class="ident">step</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">scheme</span> {
+        <span class="kw">let</span> (<span class="ident">from</span>, <span class="ident">to</span>, <span class="ident">step</span>) = <span class="kw">match</span> <span class="ident">scheme</span> {
             <span class="ident">ShardScheme::Bucket</span> {
                 <span class="ident">bucket_id</span>,
                 <span class="ident">concurrency</span>,
@@ -589,24 +589,24 @@
             } =&gt; {
                 <span class="comment">// It&#39;s reasonable to assume that no one will ever have a</span>
                 <span class="comment">// concurrency size greater than even 16 bits.</span>
-                <span class="kw">let</span> <span class="ident">concurrency</span> <span class="op">=</span> <span class="ident">usize::try_from</span>(<span class="kw-2">*</span><span class="ident">concurrency</span>)
+                <span class="kw">let</span> <span class="ident">concurrency</span> = <span class="ident">usize::try_from</span>(<span class="kw-2">*</span><span class="ident">concurrency</span>)
                     .<span class="ident">expect</span>(<span class="string">&quot;concurrency is larger than target pointer width&quot;</span>);
 
-                (<span class="kw-2">*</span><span class="ident">bucket_id</span>, <span class="kw-2">*</span><span class="ident">total</span> <span class="op">-</span> <span class="number">1</span>, <span class="ident">concurrency</span>)
+                (<span class="kw-2">*</span><span class="ident">bucket_id</span>, <span class="kw-2">*</span><span class="ident">total</span> - <span class="number">1</span>, <span class="ident">concurrency</span>)
             }
             <span class="ident">ShardScheme::Range</span> { <span class="ident">from</span>, <span class="ident">to</span>, .. } =&gt; (<span class="kw-2">*</span><span class="ident">from</span>, <span class="kw-2">*</span><span class="ident">to</span>, <span class="number">1</span>),
         };
 
         <span class="self">Self</span> {
-            <span class="ident">inner</span>: (<span class="ident">from</span>..<span class="op">=</span><span class="ident">to</span>).<span class="ident">step_by</span>(<span class="ident">step</span>),
+            <span class="ident">inner</span>: (<span class="ident">from</span>..=<span class="ident">to</span>).<span class="ident">step_by</span>(<span class="ident">step</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ShardSchemeIter</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">u64</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">u64</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt; {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>()
     }
 }
@@ -682,7 +682,7 @@
     <span class="doccomment">/// Total number of shards used by the bot across all clusters.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">total</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Bucket</span> { <span class="ident">total</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">total</span>, .. } =&gt; <span class="ident">total</span>,
+            <span class="ident"><span class="self">Self</span>::Bucket</span> { <span class="ident">total</span>, .. } | <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">total</span>, .. } =&gt; <span class="ident">total</span>,
         }
     }
 
@@ -694,33 +694,33 @@
                 <span class="ident">concurrency</span>,
                 <span class="ident">total</span>,
             } =&gt; {
-                <span class="kw">let</span> <span class="ident">buckets</span> <span class="op">=</span> <span class="ident">total</span> <span class="op">/</span> <span class="ident">concurrency</span>;
+                <span class="kw">let</span> <span class="ident">buckets</span> = <span class="ident">total</span> / <span class="ident">concurrency</span>;
 
                 <span class="comment">// Total is 1-indexed but shards are 0-indexed, so we need to</span>
                 <span class="comment">// subtract 1 here.</span>
-                <span class="ident">total</span> <span class="op">-</span> (<span class="ident">buckets</span> <span class="op">-</span> <span class="ident">bucket_id</span>) <span class="op">-</span> <span class="number">1</span>
+                <span class="ident">total</span> - (<span class="ident">buckets</span> - <span class="ident">bucket_id</span>) - <span class="number">1</span>
             }
             <span class="ident"><span class="self">Self</span>::Range</span> { <span class="ident">to</span>, .. } =&gt; <span class="ident">to</span>,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">RangeBounds</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardScheme</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ShardSchemeRangeError</span>;
+<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">RangeBounds</span>&lt;<span class="ident">u64</span>&gt;&gt; <span class="ident">TryFrom</span>&lt;(<span class="ident">T</span>, <span class="ident">u64</span>)&gt; <span class="kw">for</span> <span class="ident">ShardScheme</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">ShardSchemeRangeError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">range</span>, <span class="ident">total</span>): (<span class="ident">T</span>, <span class="ident">u64</span>)) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">start_bound</span>() {
-            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span> <span class="op">-</span> <span class="number">1</span>,
+    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">range</span>, <span class="ident">total</span>): (<span class="ident">T</span>, <span class="ident">u64</span>)) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        <span class="kw">let</span> <span class="ident">start</span> = <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">start_bound</span>() {
+            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span> - <span class="number">1</span>,
             <span class="ident">Bound::Included</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span>,
             <span class="ident">Bound::Unbounded</span> =&gt; <span class="number">0</span>,
         };
-        <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">end_bound</span>() {
-            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span> <span class="op">-</span> <span class="number">1</span>,
+        <span class="kw">let</span> <span class="ident">end</span> = <span class="kw">match</span> <span class="ident">range</span>.<span class="ident">end_bound</span>() {
+            <span class="ident">Bound::Excluded</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span> - <span class="number">1</span>,
             <span class="ident">Bound::Included</span>(<span class="ident">num</span>) =&gt; <span class="kw-2">*</span><span class="ident">num</span>,
-            <span class="ident">Bound::Unbounded</span> =&gt; <span class="ident">total</span> <span class="op">-</span> <span class="number">1</span>,
+            <span class="ident">Bound::Unbounded</span> =&gt; <span class="ident">total</span> - <span class="number">1</span>,
         };
 
-        <span class="kw">if</span> <span class="ident">start</span> <span class="op">&gt;</span> <span class="ident">end</span> {
+        <span class="kw">if</span> <span class="ident">start</span> &gt; <span class="ident">end</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ShardSchemeRangeError</span> {
                 <span class="ident">kind</span>: <span class="ident">ShardSchemeRangeErrorType::IdTooLarge</span> { <span class="ident">end</span>, <span class="ident">start</span>, <span class="ident">total</span> },
             });
@@ -756,13 +756,13 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// Returns [`ShardSchemeRangeErrorType::BucketTooLarge`] if the provided bucket ID</span>
 <span class="doccomment">/// is larger than the total number of buckets (`total / concurrency`).</span>
-<span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ShardScheme</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ShardSchemeRangeError</span>;
+<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)&gt; <span class="kw">for</span> <span class="ident">ShardScheme</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">ShardSchemeRangeError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">bucket_id</span>, <span class="ident">concurrency</span>, <span class="ident">total</span>): (<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">buckets</span> <span class="op">=</span> <span class="ident">total</span> <span class="op">/</span> <span class="ident">concurrency</span>;
+    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">bucket_id</span>, <span class="ident">concurrency</span>, <span class="ident">total</span>): (<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
+        <span class="kw">let</span> <span class="ident">buckets</span> = <span class="ident">total</span> / <span class="ident">concurrency</span>;
 
-        <span class="kw">if</span> <span class="ident">bucket_id</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">buckets</span> {
+        <span class="kw">if</span> <span class="ident">bucket_id</span> &gt;= <span class="ident">buckets</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ShardSchemeRangeError</span> {
                 <span class="ident">kind</span>: <span class="ident">ShardSchemeRangeErrorType::BucketTooLarge</span> {
                     <span class="ident">bucket_id</span>,
@@ -798,18 +798,18 @@
         <span class="ident">PartialEq</span>,
         <span class="ident">Send</span>,
         <span class="ident">Sync</span>,
-        <span class="ident">TryFrom</span><span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)<span class="op">&gt;</span>,
+        <span class="ident">TryFrom</span>&lt;(<span class="ident">u64</span>, <span class="ident">u64</span>, <span class="ident">u64</span>)&gt;,
     );
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">scheme</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">scheme</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
         <span class="macro">assert_eq!</span>(
             <span class="ident">ShardScheme::Range</span> {
                 <span class="ident">from</span>: <span class="number">0</span>,
                 <span class="ident">to</span>: <span class="number">9</span>,
                 <span class="ident">total</span>: <span class="number">10</span>,
             },
-            <span class="ident">ShardScheme::try_from</span>((<span class="number">0</span>..<span class="op">=</span><span class="number">9</span>, <span class="number">10</span>))<span class="question-mark">?</span>
+            <span class="ident">ShardScheme::try_from</span>((<span class="number">0</span>..=<span class="number">9</span>, <span class="number">10</span>))<span class="question-mark">?</span>
         );
 
         <span class="prelude-val">Ok</span>(())
@@ -900,9 +900,9 @@
             <span class="ident">ShardScheme::try_from</span>((<span class="number">25</span>, <span class="number">16</span>, <span class="number">320</span>)).<span class="ident">unwrap_err</span>(),
             <span class="ident">ShardSchemeRangeError</span> {
                 <span class="ident">kind</span>: <span class="ident">ShardSchemeRangeErrorType::BucketTooLarge</span> { <span class="ident">bucket_id</span>, <span class="ident">concurrency</span>, <span class="ident">total</span> }}
-            <span class="kw">if</span> <span class="ident">bucket_id</span> <span class="op">==</span> <span class="number">25</span> <span class="op">&amp;&amp;</span> <span class="ident">concurrency</span> <span class="op">==</span> <span class="number">16</span> <span class="op">&amp;&amp;</span> <span class="ident">total</span> <span class="op">==</span> <span class="number">320</span>
+            <span class="kw">if</span> <span class="ident">bucket_id</span> == <span class="number">25</span> &amp;&amp; <span class="ident">concurrency</span> == <span class="number">16</span> &amp;&amp; <span class="ident">total</span> == <span class="number">320</span>
         ));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (29e4a9ee0 2022-08-10)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
