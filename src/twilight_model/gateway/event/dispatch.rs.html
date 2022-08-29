@@ -444,6 +444,11 @@
 <span id="444">444</span>
 <span id="445">445</span>
 <span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
 </pre><pre class="rust"><code><span class="kw">use super</span>::{<span class="kw">super</span>::payload::incoming::<span class="kw-2">*</span>, Event, EventConversionError, EventType};
 <span class="kw">use </span>serde::{
     de::{Deserialize, DeserializeSeed, Deserializer, Error <span class="kw">as </span>DeError, IgnoredAny},
@@ -481,6 +486,7 @@
     GuildScheduledEventUpdate(Box&lt;GuildScheduledEventUpdate&gt;),
     GuildScheduledEventUserAdd(GuildScheduledEventUserAdd),
     GuildScheduledEventUserRemove(GuildScheduledEventUserRemove),
+    GuildStickersUpdate(GuildStickersUpdate),
     GuildUpdate(Box&lt;GuildUpdate&gt;),
     IntegrationCreate(Box&lt;IntegrationCreate&gt;),
     IntegrationDelete(IntegrationDelete),
@@ -549,6 +555,7 @@
             <span class="self">Self</span>::GuildScheduledEventUpdate(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventUpdate,
             <span class="self">Self</span>::GuildScheduledEventUserAdd(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventUserAdd,
             <span class="self">Self</span>::GuildScheduledEventUserRemove(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventUserRemove,
+            <span class="self">Self</span>::GuildStickersUpdate(<span class="kw">_</span>) =&gt; EventType::GuildStickersUpdate,
             <span class="self">Self</span>::GuildUpdate(<span class="kw">_</span>) =&gt; EventType::GuildUpdate,
             <span class="self">Self</span>::IntegrationCreate(<span class="kw">_</span>) =&gt; EventType::IntegrationCreate,
             <span class="self">Self</span>::IntegrationDelete(<span class="kw">_</span>) =&gt; EventType::IntegrationDelete,
@@ -765,6 +772,9 @@
             }
             <span class="string">&quot;GUILD_ROLE_UPDATE&quot; </span>=&gt; {
                 DispatchEvent::RoleUpdate(RoleUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
+            }
+            <span class="string">&quot;GUILD_STICKERS_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::GuildStickersUpdate(GuildStickersUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
             <span class="string">&quot;GUILD_UPDATE&quot; </span>=&gt; {
                 DispatchEvent::GuildUpdate(Box::new(GuildUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
