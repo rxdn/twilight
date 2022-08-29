@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway-queue/src/day_limiter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>day_limiter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_gateway_queue/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_gateway_queue/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_gateway_queue/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway-queue/src/day_limiter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>day_limiter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_gateway_queue/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_gateway_queue/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_gateway_queue/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -123,130 +123,130 @@
 <span id="123">123</span>
 <span id="124">124</span>
 <span id="125">125</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">sync::Arc</span>,
-    <span class="ident">time::Duration</span>,
+</pre><pre class="rust"><code><span class="kw">use </span>std::{
+    error::Error,
+    fmt::{Display, Formatter, <span class="prelude-ty">Result </span><span class="kw">as </span>FmtResult},
+    sync::Arc,
+    time::Duration,
 };
-<span class="kw">use</span> <span class="ident">tokio</span>::{
-    <span class="ident">sync::Mutex</span>,
-    <span class="ident">time</span>::{<span class="self">self</span>, <span class="ident">Instant</span>},
+<span class="kw">use </span>tokio::{
+    sync::Mutex,
+    time::{<span class="self">self</span>, Instant},
 };
-<span class="kw">use</span> <span class="ident">twilight_http::Client</span>;
+<span class="kw">use </span>twilight_http::Client;
 
-<span class="doccomment">/// Creating a day limiter queue failed.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DayLimiterError</span> {
-    <span class="ident">kind</span>: <span class="ident">DayLimiterErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
+<span class="doccomment">/// Creating a day limiter queue failed.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>DayLimiterError {
+    kind: DayLimiterErrorType,
+    source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">DayLimiterError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">DayLimiterErrorType::RetrievingSessionAvailability</span> { .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;retrieving the bot&#39;s gateway session availability failed&quot;</span>)
+<span class="kw">impl </span>Display <span class="kw">for </span>DayLimiterError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            DayLimiterErrorType::RetrievingSessionAvailability { .. } =&gt; {
+                f.write_str(<span class="string">&quot;retrieving the bot&#39;s gateway session availability failed&quot;</span>)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">DayLimiterError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
+<span class="kw">impl </span>Error <span class="kw">for </span>DayLimiterError {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+        <span class="self">self</span>.source
+            .as_ref()
+            .map(|source| <span class="kw-2">&amp;**</span>source <span class="kw">as </span><span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>))
     }
 }
 
-<span class="doccomment">/// Type of [`DayLimiterError`] that occurred.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DayLimiterErrorType</span> {
-    <span class="doccomment">/// Retrieving the bot&#39;s available gateway session initiation information</span>
-    <span class="doccomment">/// via the HTTP API failed.</span>
-    <span class="ident">RetrievingSessionAvailability</span>,
+<span class="doccomment">/// Type of [`DayLimiterError`] that occurred.
+</span><span class="attribute">#[derive(Debug)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>DayLimiterErrorType {
+    <span class="doccomment">/// Retrieving the bot&#39;s available gateway session initiation information
+    /// via the HTTP API failed.
+    </span>RetrievingSessionAvailability,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">DayLimiter</span>(<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">Mutex</span>&lt;<span class="ident">DayLimiterInner</span>&gt;);
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>DayLimiter(<span class="kw">pub</span>(<span class="kw">crate</span>) Mutex&lt;DayLimiterInner&gt;);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">DayLimiterInner</span> {
-    <span class="kw">pub</span> <span class="ident">http</span>: <span class="ident">Arc</span>&lt;<span class="ident">Client</span>&gt;,
-    <span class="kw">pub</span> <span class="ident">last_check</span>: <span class="ident">Instant</span>,
-    <span class="kw">pub</span> <span class="ident">next_reset</span>: <span class="ident">Duration</span>,
-    <span class="kw">pub</span> <span class="ident">total</span>: <span class="ident">u64</span>,
-    <span class="kw">pub</span> <span class="ident">current</span>: <span class="ident">u64</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>DayLimiterInner {
+    <span class="kw">pub </span>http: Arc&lt;Client&gt;,
+    <span class="kw">pub </span>last_check: Instant,
+    <span class="kw">pub </span>next_reset: Duration,
+    <span class="kw">pub </span>total: u64,
+    <span class="kw">pub </span>current: u64,
 }
 
-<span class="kw">impl</span> <span class="ident">DayLimiter</span> {
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">http</span>: <span class="ident">Arc</span>&lt;<span class="ident">Client</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">DayLimiterError</span>&gt; {
-        <span class="kw">let</span> <span class="ident">info</span> = <span class="ident">http</span>
-            .<span class="ident">gateway</span>()
-            .<span class="ident">authed</span>()
-            .<span class="ident">exec</span>()
-            .<span class="kw">await</span>
-            .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">DayLimiterError</span> {
-                <span class="ident">kind</span>: <span class="ident">DayLimiterErrorType::RetrievingSessionAvailability</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-            })<span class="question-mark">?</span>
-            .<span class="ident">model</span>()
-            .<span class="kw">await</span>
-            .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">DayLimiterError</span> {
-                <span class="ident">kind</span>: <span class="ident">DayLimiterErrorType::RetrievingSessionAvailability</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+<span class="kw">impl </span>DayLimiter {
+    <span class="kw">pub async fn </span>new(http: Arc&lt;Client&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, DayLimiterError&gt; {
+        <span class="kw">let </span>info = http
+            .gateway()
+            .authed()
+            .exec()
+            .<span class="kw">await
+            </span>.map_err(|source| DayLimiterError {
+                kind: DayLimiterErrorType::RetrievingSessionAvailability,
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
+            })<span class="question-mark">?
+            </span>.model()
+            .<span class="kw">await
+            </span>.map_err(|source| DayLimiterError {
+                kind: DayLimiterErrorType::RetrievingSessionAvailability,
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
             })<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">last_check</span> = <span class="ident">Instant::now</span>();
+        <span class="kw">let </span>last_check = Instant::now();
 
-        <span class="kw">let</span> <span class="ident">next_reset</span> = <span class="ident">Duration::from_millis</span>(<span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">reset_after</span>);
-        <span class="kw">let</span> <span class="ident">total</span> = <span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">total</span>;
-        <span class="kw">let</span> <span class="ident">remaining</span> = <span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">remaining</span>;
-        <span class="macro">debug_assert!</span>(<span class="ident">total</span> &gt;= <span class="ident">remaining</span>);
-        <span class="kw">let</span> <span class="ident">current</span> = <span class="ident">total</span> - <span class="ident">remaining</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">DayLimiter</span>(<span class="ident">Mutex::new</span>(<span class="ident">DayLimiterInner</span> {
-            <span class="ident">http</span>,
-            <span class="ident">last_check</span>,
-            <span class="ident">next_reset</span>,
-            <span class="ident">total</span>: <span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">total</span>,
-            <span class="ident">current</span>,
+        <span class="kw">let </span>next_reset = Duration::from_millis(info.session_start_limit.reset_after);
+        <span class="kw">let </span>total = info.session_start_limit.total;
+        <span class="kw">let </span>remaining = info.session_start_limit.remaining;
+        <span class="macro">debug_assert!</span>(total &gt;= remaining);
+        <span class="kw">let </span>current = total - remaining;
+        <span class="prelude-val">Ok</span>(DayLimiter(Mutex::new(DayLimiterInner {
+            http,
+            last_check,
+            next_reset,
+            total: info.session_start_limit.total,
+            current,
         })))
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lock</span> = <span class="self">self</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
-        <span class="kw">if</span> <span class="ident">lock</span>.<span class="ident">current</span> &lt; <span class="ident">lock</span>.<span class="ident">total</span> {
-            <span class="ident">lock</span>.<span class="ident">current</span> += <span class="number">1</span>;
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">wait</span> = <span class="ident">lock</span>.<span class="ident">last_check</span> + <span class="ident">lock</span>.<span class="ident">next_reset</span>;
-            <span class="ident">time::sleep_until</span>(<span class="ident">wait</span>).<span class="kw">await</span>;
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">res</span>) = <span class="ident">lock</span>.<span class="ident">http</span>.<span class="ident">gateway</span>().<span class="ident">authed</span>().<span class="ident">exec</span>().<span class="kw">await</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">info</span>) = <span class="ident">res</span>.<span class="ident">model</span>().<span class="kw">await</span> {
-                    <span class="kw">let</span> <span class="ident">last_check</span> = <span class="ident">Instant::now</span>();
-                    <span class="kw">let</span> <span class="ident">next_reset</span> = <span class="ident">Duration::from_millis</span>(<span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">remaining</span>);
+    <span class="kw">pub async fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>lock = <span class="self">self</span>.<span class="number">0</span>.lock().<span class="kw">await</span>;
+        <span class="kw">if </span>lock.current &lt; lock.total {
+            lock.current += <span class="number">1</span>;
+        } <span class="kw">else </span>{
+            <span class="kw">let </span>wait = lock.last_check + lock.next_reset;
+            time::sleep_until(wait).<span class="kw">await</span>;
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(res) = lock.http.gateway().authed().exec().<span class="kw">await </span>{
+                <span class="kw">if let </span><span class="prelude-val">Ok</span>(info) = res.model().<span class="kw">await </span>{
+                    <span class="kw">let </span>last_check = Instant::now();
+                    <span class="kw">let </span>next_reset = Duration::from_millis(info.session_start_limit.remaining);
 
                     <span class="macro">tracing::info!</span>(<span class="string">&quot;next session start limit reset in: {next_reset:.2?}&quot;</span>);
 
-                    <span class="kw">let</span> <span class="ident">total</span> = <span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">total</span>;
-                    <span class="kw">let</span> <span class="ident">remaining</span> = <span class="ident">info</span>.<span class="ident">session_start_limit</span>.<span class="ident">remaining</span>;
-                    <span class="macro">assert!</span>(<span class="ident">total</span> &gt;= <span class="ident">remaining</span>);
-                    <span class="kw">let</span> <span class="ident">current</span> = <span class="ident">total</span> - <span class="ident">remaining</span>;
-                    <span class="ident">lock</span>.<span class="ident">last_check</span> = <span class="ident">last_check</span>;
-                    <span class="ident">lock</span>.<span class="ident">next_reset</span> = <span class="ident">next_reset</span>;
-                    <span class="ident">lock</span>.<span class="ident">total</span> = <span class="ident">total</span>;
-                    <span class="ident">lock</span>.<span class="ident">current</span> = <span class="ident">current</span> + <span class="number">1</span>;
+                    <span class="kw">let </span>total = info.session_start_limit.total;
+                    <span class="kw">let </span>remaining = info.session_start_limit.remaining;
+                    <span class="macro">assert!</span>(total &gt;= remaining);
+                    <span class="kw">let </span>current = total - remaining;
+                    lock.last_check = last_check;
+                    lock.next_reset = next_reset;
+                    lock.total = total;
+                    lock.current = current + <span class="number">1</span>;
 
                     <span class="kw">return</span>;
                 }
             }
 
             <span class="macro">tracing::warn!</span>(
-                <span class="string">&quot;unable to get new session limits, skipping (this may cause bad things)&quot;</span>
-            );
+                <span class="string">&quot;unable to get new session limits, skipping (this may cause bad things)&quot;
+            </span>);
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway_queue" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway_queue" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

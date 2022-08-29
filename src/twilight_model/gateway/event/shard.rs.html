@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-model/src/gateway/event/shard.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>shard.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_model/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-model/src/gateway/event/shard.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>shard.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_model/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -333,340 +333,340 @@
 <span id="333">333</span>
 <span id="334">334</span>
 <span id="335">335</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Event</span>, <span class="ident">EventConversionError</span>};
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use super</span>::{Event, EventConversionError};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="doccomment">/// Indicator that a shard is now fully connected.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Connected</span> {
-    <span class="doccomment">/// The interval that heartbeats are being sent to the gateway.</span>
-    <span class="kw">pub</span> <span class="ident">heartbeat_interval</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The ID of the shard that&#39;s now connected.</span>
-    <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Indicator that a shard is now fully connected.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Connected {
+    <span class="doccomment">/// The interval that heartbeats are being sent to the gateway.
+    </span><span class="kw">pub </span>heartbeat_interval: u64,
+    <span class="doccomment">/// The ID of the shard that&#39;s now connected.
+    </span><span class="kw">pub </span>shard_id: u64,
 }
 
-<span class="doccomment">/// Indicator that a shard is now connecting.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Connecting</span> {
-    <span class="doccomment">/// The URL used to connect to the gateway.</span>
-    <span class="kw">pub</span> <span class="ident">gateway</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The ID of the shard that&#39;s now connecting.</span>
-    <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Indicator that a shard is now connecting.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Connecting {
+    <span class="doccomment">/// The URL used to connect to the gateway.
+    </span><span class="kw">pub </span>gateway: String,
+    <span class="doccomment">/// The ID of the shard that&#39;s now connecting.
+    </span><span class="kw">pub </span>shard_id: u64,
 }
 
-<span class="doccomment">/// Indicator that a shard is now disconnected and may soon be reconnecting if</span>
-<span class="doccomment">/// not explicitly shutdown.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Disconnected</span> {
-    <span class="doccomment">/// The code for the disconnect if not initiated by the host, if any.</span>
-    <span class="kw">pub</span> <span class="ident">code</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u16</span>&gt;,
-    <span class="doccomment">/// The reason for the disconnect if not initiated by the host, if any.</span>
-    <span class="kw">pub</span> <span class="ident">reason</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
-    <span class="doccomment">/// The ID of the shard that&#39;s now disconnected.</span>
-    <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Indicator that a shard is now disconnected and may soon be reconnecting if
+/// not explicitly shutdown.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Disconnected {
+    <span class="doccomment">/// The code for the disconnect if not initiated by the host, if any.
+    </span><span class="kw">pub </span>code: <span class="prelude-ty">Option</span>&lt;u16&gt;,
+    <span class="doccomment">/// The reason for the disconnect if not initiated by the host, if any.
+    </span><span class="kw">pub </span>reason: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="doccomment">/// The ID of the shard that&#39;s now disconnected.
+    </span><span class="kw">pub </span>shard_id: u64,
 }
 
-<span class="doccomment">/// Indicator that a shard is now identifying with the gateway to create a new</span>
-<span class="doccomment">/// session.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Identifying</span> {
-    <span class="doccomment">/// The ID of the shard that identified with the gateway.</span>
-    <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The total shards used by the bot.</span>
-    <span class="kw">pub</span> <span class="ident">shard_total</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Indicator that a shard is now identifying with the gateway to create a new
+/// session.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Identifying {
+    <span class="doccomment">/// The ID of the shard that identified with the gateway.
+    </span><span class="kw">pub </span>shard_id: u64,
+    <span class="doccomment">/// The total shards used by the bot.
+    </span><span class="kw">pub </span>shard_total: u64,
 }
 
-<span class="doccomment">/// A payload of bytes came in through the gateway.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Payload</span> {
-    <span class="doccomment">/// The bytes that came in.</span>
-    <span class="kw">pub</span> <span class="ident">bytes</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
+<span class="doccomment">/// A payload of bytes came in through the gateway.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Payload {
+    <span class="doccomment">/// The bytes that came in.
+    </span><span class="kw">pub </span>bytes: Vec&lt;u8&gt;,
 }
 
-<span class="doccomment">/// Indicator that a shard is now reconnecting.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Reconnecting</span> {
-    <span class="doccomment">/// The ID of the shard that began reconnecting.</span>
-    <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Indicator that a shard is now reconnecting.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Reconnecting {
+    <span class="doccomment">/// The ID of the shard that began reconnecting.
+    </span><span class="kw">pub </span>shard_id: u64,
 }
 
-<span class="doccomment">/// Indicator that a shard is now resuming a session after a disconnect.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Resuming</span> {
-    <span class="doccomment">/// The event sequence sent when resuming was initiated.</span>
-    <span class="kw">pub</span> <span class="ident">seq</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The ID of the shard that began resuming.</span>
-    <span class="kw">pub</span> <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Indicator that a shard is now resuming a session after a disconnect.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+</span><span class="kw">pub struct </span>Resuming {
+    <span class="doccomment">/// The event sequence sent when resuming was initiated.
+    </span><span class="kw">pub </span>seq: u64,
+    <span class="doccomment">/// The ID of the shard that began resuming.
+    </span><span class="kw">pub </span>shard_id: u64,
 }
 
-<span class="doccomment">/// &quot;Meta&quot; events about a shard&#39;s status, not from the gateway.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ShardEvent</span> {
-    <span class="doccomment">/// A shard is now in a Connected stage after being fully connected to the</span>
-    <span class="doccomment">/// gateway.</span>
-    <span class="ident">Connected</span>(<span class="ident">Connected</span>),
-    <span class="doccomment">/// A shard is now in a Connecting stage after starting to connect to the</span>
-    <span class="doccomment">/// gateway.</span>
-    <span class="ident">Connecting</span>(<span class="ident">Connecting</span>),
-    <span class="doccomment">/// A shard is now in a Disconnected stage after the connection was closed.</span>
-    <span class="ident">Disconnected</span>(<span class="ident">Disconnected</span>),
-    <span class="doccomment">/// A shard is now in a Identifying stage after starting a new session.</span>
-    <span class="ident">Identifying</span>(<span class="ident">Identifying</span>),
-    <span class="doccomment">/// A payload of bytes came in through the shard&#39;s connection.</span>
-    <span class="ident">Payload</span>(<span class="ident">Payload</span>),
-    <span class="doccomment">/// A shard is now in a Reconnecting stage after a disconnect or session was</span>
-    <span class="doccomment">/// ended.</span>
-    <span class="ident">Reconnecting</span>(<span class="ident">Reconnecting</span>),
-    <span class="doccomment">/// A shard is now in a Resuming stage after a disconnect.</span>
-    <span class="ident">Resuming</span>(<span class="ident">Resuming</span>),
+<span class="doccomment">/// &quot;Meta&quot; events about a shard&#39;s status, not from the gateway.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>ShardEvent {
+    <span class="doccomment">/// A shard is now in a Connected stage after being fully connected to the
+    /// gateway.
+    </span>Connected(Connected),
+    <span class="doccomment">/// A shard is now in a Connecting stage after starting to connect to the
+    /// gateway.
+    </span>Connecting(Connecting),
+    <span class="doccomment">/// A shard is now in a Disconnected stage after the connection was closed.
+    </span>Disconnected(Disconnected),
+    <span class="doccomment">/// A shard is now in a Identifying stage after starting a new session.
+    </span>Identifying(Identifying),
+    <span class="doccomment">/// A payload of bytes came in through the shard&#39;s connection.
+    </span>Payload(Payload),
+    <span class="doccomment">/// A shard is now in a Reconnecting stage after a disconnect or session was
+    /// ended.
+    </span>Reconnecting(Reconnecting),
+    <span class="doccomment">/// A shard is now in a Resuming stage after a disconnect.
+    </span>Resuming(Resuming),
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;<span class="ident">Event</span>&gt; <span class="kw">for</span> <span class="ident">ShardEvent</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">EventConversionError</span>;
+<span class="kw">impl </span>TryFrom&lt;Event&gt; <span class="kw">for </span>ShardEvent {
+    <span class="kw">type </span>Error = EventConversionError;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">Event::ShardConnected</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Connected</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ShardConnecting</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Connecting</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ShardDisconnected</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Disconnected</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ShardIdentifying</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Identifying</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ShardPayload</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Payload</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ShardReconnecting</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Reconnecting</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ShardResuming</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Resuming</span>(<span class="ident">v</span>),
+    <span class="kw">fn </span>try_from(event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span>event {
+            Event::ShardConnected(v) =&gt; <span class="self">Self</span>::Connected(v),
+            Event::ShardConnecting(v) =&gt; <span class="self">Self</span>::Connecting(v),
+            Event::ShardDisconnected(v) =&gt; <span class="self">Self</span>::Disconnected(v),
+            Event::ShardIdentifying(v) =&gt; <span class="self">Self</span>::Identifying(v),
+            Event::ShardPayload(v) =&gt; <span class="self">Self</span>::Payload(v),
+            Event::ShardReconnecting(v) =&gt; <span class="self">Self</span>::Reconnecting(v),
+            Event::ShardResuming(v) =&gt; <span class="self">Self</span>::Resuming(v),
 
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">EventConversionError::new</span>(<span class="ident">event</span>)),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(EventConversionError::new(event)),
         })
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{
-        <span class="ident">Connected</span>, <span class="ident">Connecting</span>, <span class="ident">Disconnected</span>, <span class="ident">Event</span>, <span class="ident">Identifying</span>, <span class="ident">Payload</span>, <span class="ident">Reconnecting</span>, <span class="ident">Resuming</span>,
-        <span class="ident">ShardEvent</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{
+        Connected, Connecting, Disconnected, Event, Identifying, Payload, Reconnecting, Resuming,
+        ShardEvent,
     };
-    <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
+    <span class="kw">use </span>serde_test::Token;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">connected</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Connected</span> {
-            <span class="ident">heartbeat_interval</span>: <span class="number">41_250</span>,
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>connected() {
+        <span class="kw">let </span>value = Connected {
+            heartbeat_interval: <span class="number">41_250</span>,
+            shard_id: <span class="number">4</span>,
         };
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Connected&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">2</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Connected&quot;</span>,
+                    len: <span class="number">2</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;heartbeat_interval&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">41_250</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_id&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">4</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;heartbeat_interval&quot;</span>),
+                Token::U64(<span class="number">41_250</span>),
+                Token::Str(<span class="string">&quot;shard_id&quot;</span>),
+                Token::U64(<span class="number">4</span>),
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">connecting</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Connecting</span> {
-            <span class="ident">gateway</span>: <span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>connecting() {
+        <span class="kw">let </span>value = Connecting {
+            gateway: <span class="string">&quot;https://example.com&quot;</span>.to_owned(),
+            shard_id: <span class="number">4</span>,
         };
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Connecting&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">2</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Connecting&quot;</span>,
+                    len: <span class="number">2</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;gateway&quot;</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;https://example.com&quot;</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_id&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">4</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;gateway&quot;</span>),
+                Token::Str(<span class="string">&quot;https://example.com&quot;</span>),
+                Token::Str(<span class="string">&quot;shard_id&quot;</span>),
+                Token::U64(<span class="number">4</span>),
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">disconnected</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Disconnected</span> {
-            <span class="ident">code</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
-            <span class="ident">reason</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;the reason&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>disconnected() {
+        <span class="kw">let </span>value = Disconnected {
+            code: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
+            reason: <span class="prelude-val">Some</span>(<span class="string">&quot;the reason&quot;</span>.to_owned()),
+            shard_id: <span class="number">4</span>,
         };
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Disconnected&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">3</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Disconnected&quot;</span>,
+                    len: <span class="number">3</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;code&quot;</span>),
-                <span class="ident">Token::Some</span>,
-                <span class="ident">Token::U16</span>(<span class="number">4_000</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;reason&quot;</span>),
-                <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;the reason&quot;</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_id&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">4</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;code&quot;</span>),
+                Token::Some,
+                Token::U16(<span class="number">4_000</span>),
+                Token::Str(<span class="string">&quot;reason&quot;</span>),
+                Token::Some,
+                Token::Str(<span class="string">&quot;the reason&quot;</span>),
+                Token::Str(<span class="string">&quot;shard_id&quot;</span>),
+                Token::U64(<span class="number">4</span>),
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">identifying</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Identifying</span> {
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
-            <span class="ident">shard_total</span>: <span class="number">7</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>identifying() {
+        <span class="kw">let </span>value = Identifying {
+            shard_id: <span class="number">4</span>,
+            shard_total: <span class="number">7</span>,
         };
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Identifying&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">2</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Identifying&quot;</span>,
+                    len: <span class="number">2</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_id&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">4</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_total&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">7</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;shard_id&quot;</span>),
+                Token::U64(<span class="number">4</span>),
+                Token::Str(<span class="string">&quot;shard_total&quot;</span>),
+                Token::U64(<span class="number">7</span>),
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">payload</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Payload</span> { <span class="ident">bytes</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] };
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>payload() {
+        <span class="kw">let </span>value = Payload { bytes: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] };
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Payload&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">1</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Payload&quot;</span>,
+                    len: <span class="number">1</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;bytes&quot;</span>),
-                <span class="ident">Token::Seq</span> { <span class="ident">len</span>: <span class="prelude-val">Some</span>(<span class="number">2</span>) },
-                <span class="ident">Token::U8</span>(<span class="number">1</span>),
-                <span class="ident">Token::U8</span>(<span class="number">2</span>),
-                <span class="ident">Token::SeqEnd</span>,
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;bytes&quot;</span>),
+                Token::Seq { len: <span class="prelude-val">Some</span>(<span class="number">2</span>) },
+                Token::U8(<span class="number">1</span>),
+                Token::U8(<span class="number">2</span>),
+                Token::SeqEnd,
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">reconnecting</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Reconnecting</span> { <span class="ident">shard_id</span>: <span class="number">4</span> };
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>reconnecting() {
+        <span class="kw">let </span>value = Reconnecting { shard_id: <span class="number">4 </span>};
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Reconnecting&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">1</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Reconnecting&quot;</span>,
+                    len: <span class="number">1</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_id&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">4</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;shard_id&quot;</span>),
+                Token::U64(<span class="number">4</span>),
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">resuming</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">Resuming</span> {
-            <span class="ident">seq</span>: <span class="number">100</span>,
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>resuming() {
+        <span class="kw">let </span>value = Resuming {
+            seq: <span class="number">100</span>,
+            shard_id: <span class="number">4</span>,
         };
 
-        <span class="ident">serde_test::assert_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;Resuming&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">2</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;Resuming&quot;</span>,
+                    len: <span class="number">2</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;seq&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">100</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;shard_id&quot;</span>),
-                <span class="ident">Token::U64</span>(<span class="number">4</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;seq&quot;</span>),
+                Token::U64(<span class="number">100</span>),
+                Token::Str(<span class="string">&quot;shard_id&quot;</span>),
+                Token::U64(<span class="number">4</span>),
+                Token::StructEnd,
             ],
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">shard_event_try_from_event</span>() {
-        <span class="kw">let</span> <span class="ident">connected</span> = <span class="ident">Event::ShardConnected</span>(<span class="ident">Connected</span> {
-            <span class="ident">heartbeat_interval</span>: <span class="number">41_250</span>,
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>shard_event_try_from_event() {
+        <span class="kw">let </span>connected = Event::ShardConnected(Connected {
+            heartbeat_interval: <span class="number">41_250</span>,
+            shard_id: <span class="number">4</span>,
         });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">connected</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Connected</span>(<span class="kw">_</span>)
+            connected.try_into().unwrap(),
+            ShardEvent::Connected(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">connecting</span> = <span class="ident">Event::ShardConnecting</span>(<span class="ident">Connecting</span> {
-            <span class="ident">gateway</span>: <span class="string">&quot;https://example.com&quot;</span>.<span class="ident">to_owned</span>(),
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+        <span class="kw">let </span>connecting = Event::ShardConnecting(Connecting {
+            gateway: <span class="string">&quot;https://example.com&quot;</span>.to_owned(),
+            shard_id: <span class="number">4</span>,
         });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">connecting</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Connecting</span>(<span class="kw">_</span>)
+            connecting.try_into().unwrap(),
+            ShardEvent::Connecting(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">disconnected</span> = <span class="ident">Event::ShardDisconnected</span>(<span class="ident">Disconnected</span> {
-            <span class="ident">code</span>: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
-            <span class="ident">reason</span>: <span class="prelude-val">None</span>,
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+        <span class="kw">let </span>disconnected = Event::ShardDisconnected(Disconnected {
+            code: <span class="prelude-val">Some</span>(<span class="number">4_000</span>),
+            reason: <span class="prelude-val">None</span>,
+            shard_id: <span class="number">4</span>,
         });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">disconnected</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Disconnected</span>(<span class="kw">_</span>)
+            disconnected.try_into().unwrap(),
+            ShardEvent::Disconnected(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">identifying</span> = <span class="ident">Event::ShardIdentifying</span>(<span class="ident">Identifying</span> {
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
-            <span class="ident">shard_total</span>: <span class="number">7</span>,
+        <span class="kw">let </span>identifying = Event::ShardIdentifying(Identifying {
+            shard_id: <span class="number">4</span>,
+            shard_total: <span class="number">7</span>,
         });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">identifying</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Identifying</span>(<span class="kw">_</span>)
+            identifying.try_into().unwrap(),
+            ShardEvent::Identifying(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">payload</span> = <span class="ident">Event::ShardPayload</span>(<span class="ident">Payload</span> { <span class="ident">bytes</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] });
+        <span class="kw">let </span>payload = Event::ShardPayload(Payload { bytes: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>] });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">payload</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Payload</span>(<span class="kw">_</span>)
+            payload.try_into().unwrap(),
+            ShardEvent::Payload(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">reconnecting</span> = <span class="ident">Event::ShardReconnecting</span>(<span class="ident">Reconnecting</span> { <span class="ident">shard_id</span>: <span class="number">4</span> });
+        <span class="kw">let </span>reconnecting = Event::ShardReconnecting(Reconnecting { shard_id: <span class="number">4 </span>});
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">reconnecting</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Reconnecting</span>(<span class="kw">_</span>)
+            reconnecting.try_into().unwrap(),
+            ShardEvent::Reconnecting(<span class="kw">_</span>)
         ));
 
-        <span class="kw">let</span> <span class="ident">resuming</span> = <span class="ident">Event::ShardResuming</span>(<span class="ident">Resuming</span> {
-            <span class="ident">seq</span>: <span class="number">100</span>,
-            <span class="ident">shard_id</span>: <span class="number">4</span>,
+        <span class="kw">let </span>resuming = Event::ShardResuming(Resuming {
+            seq: <span class="number">100</span>,
+            shard_id: <span class="number">4</span>,
         });
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">resuming</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">ShardEvent::Resuming</span>(<span class="kw">_</span>)
+            resuming.try_into().unwrap(),
+            ShardEvent::Resuming(<span class="kw">_</span>)
         ));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

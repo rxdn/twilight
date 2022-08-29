@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-model/src/gateway/event/dispatch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dispatch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_model/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-model/src/gateway/event/dispatch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dispatch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_model/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -444,451 +444,451 @@
 <span id="444">444</span>
 <span id="445">445</span>
 <span id="446">446</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident"><span class="kw">super</span>::payload::incoming</span>::<span class="kw-2">*</span>, <span class="ident">Event</span>, <span class="ident">EventConversionError</span>, <span class="ident">EventType</span>};
-<span class="kw">use</span> <span class="ident">serde</span>::{
-    <span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">DeserializeSeed</span>, <span class="ident">Deserializer</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">DeError</span>, <span class="ident">IgnoredAny</span>},
-    <span class="ident">Serialize</span>,
+</pre><pre class="rust"><code><span class="kw">use super</span>::{<span class="kw">super</span>::payload::incoming::<span class="kw-2">*</span>, Event, EventConversionError, EventType};
+<span class="kw">use </span>serde::{
+    de::{Deserialize, DeserializeSeed, Deserializer, Error <span class="kw">as </span>DeError, IgnoredAny},
+    Serialize,
 };
 
-<span class="doccomment">/// A dispatch event, containing information about a created guild, a member</span>
-<span class="doccomment">/// added, etc.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// You can deserialize into a `DispatchEvent` via</span>
-<span class="doccomment">/// [`DispatchEventWithTypeDeserializer`].</span>
-<span class="comment">// **NOTE**: When adding a variant, be sure to add it to the DeserializeSeed</span>
-<span class="comment">// implementation.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DispatchEvent</span> {
-    <span class="ident">AutoModerationActionExecution</span>(<span class="ident">AutoModerationActionExecution</span>),
-    <span class="ident">AutoModerationRuleCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">AutoModerationRuleCreate</span>&gt;),
-    <span class="ident">AutoModerationRuleDelete</span>(<span class="ident">Box</span>&lt;<span class="ident">AutoModerationRuleDelete</span>&gt;),
-    <span class="ident">AutoModerationRuleUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">AutoModerationRuleUpdate</span>&gt;),
-    <span class="ident">BanAdd</span>(<span class="ident">BanAdd</span>),
-    <span class="ident">BanRemove</span>(<span class="ident">BanRemove</span>),
-    <span class="ident">ChannelCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">ChannelCreate</span>&gt;),
-    <span class="ident">ChannelDelete</span>(<span class="ident">Box</span>&lt;<span class="ident">ChannelDelete</span>&gt;),
-    <span class="ident">ChannelPinsUpdate</span>(<span class="ident">ChannelPinsUpdate</span>),
-    <span class="ident">ChannelUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">ChannelUpdate</span>&gt;),
-    <span class="ident">CommandPermissionsUpdate</span>(<span class="ident">CommandPermissionsUpdate</span>),
-    <span class="ident">GiftCodeUpdate</span>,
-    <span class="ident">GuildCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">GuildCreate</span>&gt;),
-    <span class="ident">GuildDelete</span>(<span class="ident">GuildDelete</span>),
-    <span class="ident">GuildEmojisUpdate</span>(<span class="ident">GuildEmojisUpdate</span>),
-    <span class="ident">GuildIntegrationsUpdate</span>(<span class="ident">GuildIntegrationsUpdate</span>),
-    <span class="ident">GuildScheduledEventCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">GuildScheduledEventCreate</span>&gt;),
-    <span class="ident">GuildScheduledEventDelete</span>(<span class="ident">Box</span>&lt;<span class="ident">GuildScheduledEventDelete</span>&gt;),
-    <span class="ident">GuildScheduledEventUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">GuildScheduledEventUpdate</span>&gt;),
-    <span class="ident">GuildScheduledEventUserAdd</span>(<span class="ident">GuildScheduledEventUserAdd</span>),
-    <span class="ident">GuildScheduledEventUserRemove</span>(<span class="ident">GuildScheduledEventUserRemove</span>),
-    <span class="ident">GuildUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">GuildUpdate</span>&gt;),
-    <span class="ident">IntegrationCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">IntegrationCreate</span>&gt;),
-    <span class="ident">IntegrationDelete</span>(<span class="ident">IntegrationDelete</span>),
-    <span class="ident">IntegrationUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">IntegrationUpdate</span>&gt;),
-    <span class="ident">InteractionCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">InteractionCreate</span>&gt;),
-    <span class="ident">InviteCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">InviteCreate</span>&gt;),
-    <span class="ident">InviteDelete</span>(<span class="ident">InviteDelete</span>),
-    <span class="ident">MemberAdd</span>(<span class="ident">Box</span>&lt;<span class="ident">MemberAdd</span>&gt;),
-    <span class="ident">MemberRemove</span>(<span class="ident">MemberRemove</span>),
-    <span class="ident">MemberUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">MemberUpdate</span>&gt;),
-    <span class="ident">MemberChunk</span>(<span class="ident">MemberChunk</span>),
-    <span class="ident">MessageCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">MessageCreate</span>&gt;),
-    <span class="ident">MessageDelete</span>(<span class="ident">MessageDelete</span>),
-    <span class="ident">MessageDeleteBulk</span>(<span class="ident">MessageDeleteBulk</span>),
-    <span class="ident">MessageUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">MessageUpdate</span>&gt;),
-    <span class="ident">PresenceUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">PresenceUpdate</span>&gt;),
-    <span class="ident">PresencesReplace</span>,
-    <span class="ident">ReactionAdd</span>(<span class="ident">Box</span>&lt;<span class="ident">ReactionAdd</span>&gt;),
-    <span class="ident">ReactionRemove</span>(<span class="ident">Box</span>&lt;<span class="ident">ReactionRemove</span>&gt;),
-    <span class="ident">ReactionRemoveAll</span>(<span class="ident">ReactionRemoveAll</span>),
-    <span class="ident">ReactionRemoveEmoji</span>(<span class="ident">ReactionRemoveEmoji</span>),
-    <span class="ident">Ready</span>(<span class="ident">Box</span>&lt;<span class="ident">Ready</span>&gt;),
-    <span class="ident">Resumed</span>,
-    <span class="ident">RoleCreate</span>(<span class="ident">RoleCreate</span>),
-    <span class="ident">RoleDelete</span>(<span class="ident">RoleDelete</span>),
-    <span class="ident">RoleUpdate</span>(<span class="ident">RoleUpdate</span>),
-    <span class="ident">StageInstanceCreate</span>(<span class="ident">StageInstanceCreate</span>),
-    <span class="ident">StageInstanceDelete</span>(<span class="ident">StageInstanceDelete</span>),
-    <span class="ident">StageInstanceUpdate</span>(<span class="ident">StageInstanceUpdate</span>),
-    <span class="ident">ThreadCreate</span>(<span class="ident">Box</span>&lt;<span class="ident">ThreadCreate</span>&gt;),
-    <span class="ident">ThreadDelete</span>(<span class="ident">ThreadDelete</span>),
-    <span class="ident">ThreadListSync</span>(<span class="ident">ThreadListSync</span>),
-    <span class="ident">ThreadMemberUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">ThreadMemberUpdate</span>&gt;),
-    <span class="ident">ThreadMembersUpdate</span>(<span class="ident">ThreadMembersUpdate</span>),
-    <span class="ident">ThreadUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">ThreadUpdate</span>&gt;),
-    <span class="ident">TypingStart</span>(<span class="ident">Box</span>&lt;<span class="ident">TypingStart</span>&gt;),
-    <span class="ident">UnavailableGuild</span>(<span class="ident">UnavailableGuild</span>),
-    <span class="ident">UserUpdate</span>(<span class="ident">UserUpdate</span>),
-    <span class="ident">VoiceServerUpdate</span>(<span class="ident">VoiceServerUpdate</span>),
-    <span class="ident">VoiceStateUpdate</span>(<span class="ident">Box</span>&lt;<span class="ident">VoiceStateUpdate</span>&gt;),
-    <span class="ident">WebhooksUpdate</span>(<span class="ident">WebhooksUpdate</span>),
+<span class="doccomment">/// A dispatch event, containing information about a created guild, a member
+/// added, etc.
+///
+/// You can deserialize into a `DispatchEvent` via
+/// [`DispatchEventWithTypeDeserializer`].
+</span><span class="comment">// **NOTE**: When adding a variant, be sure to add it to the DeserializeSeed
+// implementation.
+</span><span class="attribute">#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>DispatchEvent {
+    AutoModerationActionExecution(AutoModerationActionExecution),
+    AutoModerationRuleCreate(Box&lt;AutoModerationRuleCreate&gt;),
+    AutoModerationRuleDelete(Box&lt;AutoModerationRuleDelete&gt;),
+    AutoModerationRuleUpdate(Box&lt;AutoModerationRuleUpdate&gt;),
+    BanAdd(BanAdd),
+    BanRemove(BanRemove),
+    ChannelCreate(Box&lt;ChannelCreate&gt;),
+    ChannelDelete(Box&lt;ChannelDelete&gt;),
+    ChannelPinsUpdate(ChannelPinsUpdate),
+    ChannelUpdate(Box&lt;ChannelUpdate&gt;),
+    CommandPermissionsUpdate(CommandPermissionsUpdate),
+    GiftCodeUpdate,
+    GuildCreate(Box&lt;GuildCreate&gt;),
+    GuildDelete(GuildDelete),
+    GuildEmojisUpdate(GuildEmojisUpdate),
+    GuildIntegrationsUpdate(GuildIntegrationsUpdate),
+    GuildScheduledEventCreate(Box&lt;GuildScheduledEventCreate&gt;),
+    GuildScheduledEventDelete(Box&lt;GuildScheduledEventDelete&gt;),
+    GuildScheduledEventUpdate(Box&lt;GuildScheduledEventUpdate&gt;),
+    GuildScheduledEventUserAdd(GuildScheduledEventUserAdd),
+    GuildScheduledEventUserRemove(GuildScheduledEventUserRemove),
+    GuildUpdate(Box&lt;GuildUpdate&gt;),
+    IntegrationCreate(Box&lt;IntegrationCreate&gt;),
+    IntegrationDelete(IntegrationDelete),
+    IntegrationUpdate(Box&lt;IntegrationUpdate&gt;),
+    InteractionCreate(Box&lt;InteractionCreate&gt;),
+    InviteCreate(Box&lt;InviteCreate&gt;),
+    InviteDelete(InviteDelete),
+    MemberAdd(Box&lt;MemberAdd&gt;),
+    MemberRemove(MemberRemove),
+    MemberUpdate(Box&lt;MemberUpdate&gt;),
+    MemberChunk(MemberChunk),
+    MessageCreate(Box&lt;MessageCreate&gt;),
+    MessageDelete(MessageDelete),
+    MessageDeleteBulk(MessageDeleteBulk),
+    MessageUpdate(Box&lt;MessageUpdate&gt;),
+    PresenceUpdate(Box&lt;PresenceUpdate&gt;),
+    PresencesReplace,
+    ReactionAdd(Box&lt;ReactionAdd&gt;),
+    ReactionRemove(Box&lt;ReactionRemove&gt;),
+    ReactionRemoveAll(ReactionRemoveAll),
+    ReactionRemoveEmoji(ReactionRemoveEmoji),
+    Ready(Box&lt;Ready&gt;),
+    Resumed,
+    RoleCreate(RoleCreate),
+    RoleDelete(RoleDelete),
+    RoleUpdate(RoleUpdate),
+    StageInstanceCreate(StageInstanceCreate),
+    StageInstanceDelete(StageInstanceDelete),
+    StageInstanceUpdate(StageInstanceUpdate),
+    ThreadCreate(Box&lt;ThreadCreate&gt;),
+    ThreadDelete(ThreadDelete),
+    ThreadListSync(ThreadListSync),
+    ThreadMemberUpdate(Box&lt;ThreadMemberUpdate&gt;),
+    ThreadMembersUpdate(ThreadMembersUpdate),
+    ThreadUpdate(Box&lt;ThreadUpdate&gt;),
+    TypingStart(Box&lt;TypingStart&gt;),
+    UnavailableGuild(UnavailableGuild),
+    UserUpdate(UserUpdate),
+    VoiceServerUpdate(VoiceServerUpdate),
+    VoiceStateUpdate(Box&lt;VoiceStateUpdate&gt;),
+    WebhooksUpdate(WebhooksUpdate),
 }
 
-<span class="kw">impl</span> <span class="ident">DispatchEvent</span> {
-    <span class="doccomment">/// Returns the type of event that this event is.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">EventType</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::AutoModerationActionExecution</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationActionExecution</span>,
-            <span class="ident"><span class="self">Self</span>::AutoModerationRuleCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationRuleCreate</span>,
-            <span class="ident"><span class="self">Self</span>::AutoModerationRuleDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationRuleDelete</span>,
-            <span class="ident"><span class="self">Self</span>::AutoModerationRuleUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::AutoModerationRuleUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::BanAdd</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::BanAdd</span>,
-            <span class="ident"><span class="self">Self</span>::BanRemove</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::BanRemove</span>,
-            <span class="ident"><span class="self">Self</span>::ChannelCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelCreate</span>,
-            <span class="ident"><span class="self">Self</span>::ChannelDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelDelete</span>,
-            <span class="ident"><span class="self">Self</span>::ChannelPinsUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelPinsUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::ChannelUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ChannelUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::CommandPermissionsUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::CommandPermissionsUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::GiftCodeUpdate</span> =&gt; <span class="ident">EventType::GiftCodeUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::GuildCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildCreate</span>,
-            <span class="ident"><span class="self">Self</span>::GuildDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildDelete</span>,
-            <span class="ident"><span class="self">Self</span>::GuildEmojisUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildEmojisUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::GuildIntegrationsUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildIntegrationsUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::GuildScheduledEventCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventCreate</span>,
-            <span class="ident"><span class="self">Self</span>::GuildScheduledEventDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventDelete</span>,
-            <span class="ident"><span class="self">Self</span>::GuildScheduledEventUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserAdd</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventUserAdd</span>,
-            <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserRemove</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildScheduledEventUserRemove</span>,
-            <span class="ident"><span class="self">Self</span>::GuildUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::GuildUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::IntegrationCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::IntegrationCreate</span>,
-            <span class="ident"><span class="self">Self</span>::IntegrationDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::IntegrationDelete</span>,
-            <span class="ident"><span class="self">Self</span>::IntegrationUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::IntegrationUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::InteractionCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::InteractionCreate</span>,
-            <span class="ident"><span class="self">Self</span>::InviteCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::InviteCreate</span>,
-            <span class="ident"><span class="self">Self</span>::InviteDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::InviteDelete</span>,
-            <span class="ident"><span class="self">Self</span>::MemberAdd</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MemberAdd</span>,
-            <span class="ident"><span class="self">Self</span>::MemberRemove</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MemberRemove</span>,
-            <span class="ident"><span class="self">Self</span>::MemberUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MemberUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::MemberChunk</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MemberChunk</span>,
-            <span class="ident"><span class="self">Self</span>::MessageCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MessageCreate</span>,
-            <span class="ident"><span class="self">Self</span>::MessageDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MessageDelete</span>,
-            <span class="ident"><span class="self">Self</span>::MessageDeleteBulk</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MessageDeleteBulk</span>,
-            <span class="ident"><span class="self">Self</span>::MessageUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::MessageUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::PresenceUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::PresenceUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::PresencesReplace</span> =&gt; <span class="ident">EventType::PresencesReplace</span>,
-            <span class="ident"><span class="self">Self</span>::ReactionAdd</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ReactionAdd</span>,
-            <span class="ident"><span class="self">Self</span>::ReactionRemove</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ReactionRemove</span>,
-            <span class="ident"><span class="self">Self</span>::ReactionRemoveAll</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ReactionRemoveAll</span>,
-            <span class="ident"><span class="self">Self</span>::ReactionRemoveEmoji</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ReactionRemoveEmoji</span>,
-            <span class="ident"><span class="self">Self</span>::Ready</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::Ready</span>,
-            <span class="ident"><span class="self">Self</span>::Resumed</span> =&gt; <span class="ident">EventType::Resumed</span>,
-            <span class="ident"><span class="self">Self</span>::RoleCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::RoleCreate</span>,
-            <span class="ident"><span class="self">Self</span>::RoleDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::RoleDelete</span>,
-            <span class="ident"><span class="self">Self</span>::RoleUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::RoleUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::StageInstanceCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::StageInstanceCreate</span>,
-            <span class="ident"><span class="self">Self</span>::StageInstanceDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::StageInstanceDelete</span>,
-            <span class="ident"><span class="self">Self</span>::StageInstanceUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::StageInstanceUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::ThreadCreate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ThreadCreate</span>,
-            <span class="ident"><span class="self">Self</span>::ThreadDelete</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ThreadDelete</span>,
-            <span class="ident"><span class="self">Self</span>::ThreadListSync</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ThreadListSync</span>,
-            <span class="ident"><span class="self">Self</span>::ThreadMemberUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ThreadMemberUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::ThreadMembersUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ThreadMembersUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::ThreadUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::ThreadUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::TypingStart</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::TypingStart</span>,
-            <span class="ident"><span class="self">Self</span>::UnavailableGuild</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::UnavailableGuild</span>,
-            <span class="ident"><span class="self">Self</span>::UserUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::UserUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::VoiceServerUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::VoiceServerUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::VoiceStateUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::VoiceStateUpdate</span>,
-            <span class="ident"><span class="self">Self</span>::WebhooksUpdate</span>(<span class="kw">_</span>) =&gt; <span class="ident">EventType::WebhooksUpdate</span>,
+<span class="kw">impl </span>DispatchEvent {
+    <span class="doccomment">/// Returns the type of event that this event is.
+    </span><span class="kw">pub const fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; EventType {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::AutoModerationActionExecution(<span class="kw">_</span>) =&gt; EventType::AutoModerationActionExecution,
+            <span class="self">Self</span>::AutoModerationRuleCreate(<span class="kw">_</span>) =&gt; EventType::AutoModerationRuleCreate,
+            <span class="self">Self</span>::AutoModerationRuleDelete(<span class="kw">_</span>) =&gt; EventType::AutoModerationRuleDelete,
+            <span class="self">Self</span>::AutoModerationRuleUpdate(<span class="kw">_</span>) =&gt; EventType::AutoModerationRuleUpdate,
+            <span class="self">Self</span>::BanAdd(<span class="kw">_</span>) =&gt; EventType::BanAdd,
+            <span class="self">Self</span>::BanRemove(<span class="kw">_</span>) =&gt; EventType::BanRemove,
+            <span class="self">Self</span>::ChannelCreate(<span class="kw">_</span>) =&gt; EventType::ChannelCreate,
+            <span class="self">Self</span>::ChannelDelete(<span class="kw">_</span>) =&gt; EventType::ChannelDelete,
+            <span class="self">Self</span>::ChannelPinsUpdate(<span class="kw">_</span>) =&gt; EventType::ChannelPinsUpdate,
+            <span class="self">Self</span>::ChannelUpdate(<span class="kw">_</span>) =&gt; EventType::ChannelUpdate,
+            <span class="self">Self</span>::CommandPermissionsUpdate(<span class="kw">_</span>) =&gt; EventType::CommandPermissionsUpdate,
+            <span class="self">Self</span>::GiftCodeUpdate =&gt; EventType::GiftCodeUpdate,
+            <span class="self">Self</span>::GuildCreate(<span class="kw">_</span>) =&gt; EventType::GuildCreate,
+            <span class="self">Self</span>::GuildDelete(<span class="kw">_</span>) =&gt; EventType::GuildDelete,
+            <span class="self">Self</span>::GuildEmojisUpdate(<span class="kw">_</span>) =&gt; EventType::GuildEmojisUpdate,
+            <span class="self">Self</span>::GuildIntegrationsUpdate(<span class="kw">_</span>) =&gt; EventType::GuildIntegrationsUpdate,
+            <span class="self">Self</span>::GuildScheduledEventCreate(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventCreate,
+            <span class="self">Self</span>::GuildScheduledEventDelete(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventDelete,
+            <span class="self">Self</span>::GuildScheduledEventUpdate(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventUpdate,
+            <span class="self">Self</span>::GuildScheduledEventUserAdd(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventUserAdd,
+            <span class="self">Self</span>::GuildScheduledEventUserRemove(<span class="kw">_</span>) =&gt; EventType::GuildScheduledEventUserRemove,
+            <span class="self">Self</span>::GuildUpdate(<span class="kw">_</span>) =&gt; EventType::GuildUpdate,
+            <span class="self">Self</span>::IntegrationCreate(<span class="kw">_</span>) =&gt; EventType::IntegrationCreate,
+            <span class="self">Self</span>::IntegrationDelete(<span class="kw">_</span>) =&gt; EventType::IntegrationDelete,
+            <span class="self">Self</span>::IntegrationUpdate(<span class="kw">_</span>) =&gt; EventType::IntegrationUpdate,
+            <span class="self">Self</span>::InteractionCreate(<span class="kw">_</span>) =&gt; EventType::InteractionCreate,
+            <span class="self">Self</span>::InviteCreate(<span class="kw">_</span>) =&gt; EventType::InviteCreate,
+            <span class="self">Self</span>::InviteDelete(<span class="kw">_</span>) =&gt; EventType::InviteDelete,
+            <span class="self">Self</span>::MemberAdd(<span class="kw">_</span>) =&gt; EventType::MemberAdd,
+            <span class="self">Self</span>::MemberRemove(<span class="kw">_</span>) =&gt; EventType::MemberRemove,
+            <span class="self">Self</span>::MemberUpdate(<span class="kw">_</span>) =&gt; EventType::MemberUpdate,
+            <span class="self">Self</span>::MemberChunk(<span class="kw">_</span>) =&gt; EventType::MemberChunk,
+            <span class="self">Self</span>::MessageCreate(<span class="kw">_</span>) =&gt; EventType::MessageCreate,
+            <span class="self">Self</span>::MessageDelete(<span class="kw">_</span>) =&gt; EventType::MessageDelete,
+            <span class="self">Self</span>::MessageDeleteBulk(<span class="kw">_</span>) =&gt; EventType::MessageDeleteBulk,
+            <span class="self">Self</span>::MessageUpdate(<span class="kw">_</span>) =&gt; EventType::MessageUpdate,
+            <span class="self">Self</span>::PresenceUpdate(<span class="kw">_</span>) =&gt; EventType::PresenceUpdate,
+            <span class="self">Self</span>::PresencesReplace =&gt; EventType::PresencesReplace,
+            <span class="self">Self</span>::ReactionAdd(<span class="kw">_</span>) =&gt; EventType::ReactionAdd,
+            <span class="self">Self</span>::ReactionRemove(<span class="kw">_</span>) =&gt; EventType::ReactionRemove,
+            <span class="self">Self</span>::ReactionRemoveAll(<span class="kw">_</span>) =&gt; EventType::ReactionRemoveAll,
+            <span class="self">Self</span>::ReactionRemoveEmoji(<span class="kw">_</span>) =&gt; EventType::ReactionRemoveEmoji,
+            <span class="self">Self</span>::Ready(<span class="kw">_</span>) =&gt; EventType::Ready,
+            <span class="self">Self</span>::Resumed =&gt; EventType::Resumed,
+            <span class="self">Self</span>::RoleCreate(<span class="kw">_</span>) =&gt; EventType::RoleCreate,
+            <span class="self">Self</span>::RoleDelete(<span class="kw">_</span>) =&gt; EventType::RoleDelete,
+            <span class="self">Self</span>::RoleUpdate(<span class="kw">_</span>) =&gt; EventType::RoleUpdate,
+            <span class="self">Self</span>::StageInstanceCreate(<span class="kw">_</span>) =&gt; EventType::StageInstanceCreate,
+            <span class="self">Self</span>::StageInstanceDelete(<span class="kw">_</span>) =&gt; EventType::StageInstanceDelete,
+            <span class="self">Self</span>::StageInstanceUpdate(<span class="kw">_</span>) =&gt; EventType::StageInstanceUpdate,
+            <span class="self">Self</span>::ThreadCreate(<span class="kw">_</span>) =&gt; EventType::ThreadCreate,
+            <span class="self">Self</span>::ThreadDelete(<span class="kw">_</span>) =&gt; EventType::ThreadDelete,
+            <span class="self">Self</span>::ThreadListSync(<span class="kw">_</span>) =&gt; EventType::ThreadListSync,
+            <span class="self">Self</span>::ThreadMemberUpdate(<span class="kw">_</span>) =&gt; EventType::ThreadMemberUpdate,
+            <span class="self">Self</span>::ThreadMembersUpdate(<span class="kw">_</span>) =&gt; EventType::ThreadMembersUpdate,
+            <span class="self">Self</span>::ThreadUpdate(<span class="kw">_</span>) =&gt; EventType::ThreadUpdate,
+            <span class="self">Self</span>::TypingStart(<span class="kw">_</span>) =&gt; EventType::TypingStart,
+            <span class="self">Self</span>::UnavailableGuild(<span class="kw">_</span>) =&gt; EventType::UnavailableGuild,
+            <span class="self">Self</span>::UserUpdate(<span class="kw">_</span>) =&gt; EventType::UserUpdate,
+            <span class="self">Self</span>::VoiceServerUpdate(<span class="kw">_</span>) =&gt; EventType::VoiceServerUpdate,
+            <span class="self">Self</span>::VoiceStateUpdate(<span class="kw">_</span>) =&gt; EventType::VoiceStateUpdate,
+            <span class="self">Self</span>::WebhooksUpdate(<span class="kw">_</span>) =&gt; EventType::WebhooksUpdate,
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;<span class="ident">Event</span>&gt; <span class="kw">for</span> <span class="ident">DispatchEvent</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">EventConversionError</span>;
+<span class="kw">impl </span>TryFrom&lt;Event&gt; <span class="kw">for </span>DispatchEvent {
+    <span class="kw">type </span>Error = EventConversionError;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">event</span>: <span class="ident">Event</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">Event::AutoModerationActionExecution</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationActionExecution</span>(<span class="ident">v</span>),
-            <span class="ident">Event::AutoModerationRuleCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationRuleCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::AutoModerationRuleDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationRuleDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::AutoModerationRuleUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::AutoModerationRuleUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::BanAdd</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::BanAdd</span>(<span class="ident">v</span>),
-            <span class="ident">Event::BanRemove</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::BanRemove</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ChannelCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ChannelDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ChannelPinsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelPinsUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ChannelUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ChannelUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::CommandPermissionsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::CommandPermissionsUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GiftCodeUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GiftCodeUpdate</span>,
-            <span class="ident">Event::GuildCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildEmojisUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildEmojisUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildIntegrationsUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildIntegrationsUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildScheduledEventCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildScheduledEventDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildScheduledEventUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildScheduledEventUserAdd</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserAdd</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildScheduledEventUserRemove</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildScheduledEventUserRemove</span>(<span class="ident">v</span>),
-            <span class="ident">Event::GuildUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::GuildUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::IntegrationCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::IntegrationCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::IntegrationDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::IntegrationDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::IntegrationUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::IntegrationUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::InteractionCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::InteractionCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::InviteCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::InviteCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::InviteDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::InviteDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MemberAdd</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MemberAdd</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MemberRemove</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MemberRemove</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MemberUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MemberUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MemberChunk</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MemberChunk</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MessageCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MessageCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MessageDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MessageDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MessageDeleteBulk</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MessageDeleteBulk</span>(<span class="ident">v</span>),
-            <span class="ident">Event::MessageUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::MessageUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::PresenceUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::PresenceUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::PresencesReplace</span> =&gt; <span class="ident"><span class="self">Self</span>::PresencesReplace</span>,
-            <span class="ident">Event::ReactionAdd</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ReactionAdd</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ReactionRemove</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ReactionRemove</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ReactionRemoveAll</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ReactionRemoveAll</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ReactionRemoveEmoji</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ReactionRemoveEmoji</span>(<span class="ident">v</span>),
-            <span class="ident">Event::Ready</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::Ready</span>(<span class="ident">v</span>),
-            <span class="ident">Event::Resumed</span> =&gt; <span class="ident"><span class="self">Self</span>::Resumed</span>,
-            <span class="ident">Event::RoleCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::RoleCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::RoleDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::RoleDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::RoleUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::RoleUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::StageInstanceCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::StageInstanceCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::StageInstanceDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::StageInstanceDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::StageInstanceUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::StageInstanceUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ThreadCreate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ThreadCreate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ThreadDelete</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ThreadDelete</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ThreadListSync</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ThreadListSync</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ThreadMemberUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ThreadMemberUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ThreadMembersUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ThreadMembersUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::ThreadUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::ThreadUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::TypingStart</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::TypingStart</span>(<span class="ident">v</span>),
-            <span class="ident">Event::UnavailableGuild</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::UnavailableGuild</span>(<span class="ident">v</span>),
-            <span class="ident">Event::UserUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::UserUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::VoiceServerUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::VoiceServerUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::VoiceStateUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::VoiceStateUpdate</span>(<span class="ident">v</span>),
-            <span class="ident">Event::WebhooksUpdate</span>(<span class="ident">v</span>) =&gt; <span class="ident"><span class="self">Self</span>::WebhooksUpdate</span>(<span class="ident">v</span>),
+    <span class="kw">fn </span>try_from(event: Event) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span>event {
+            Event::AutoModerationActionExecution(v) =&gt; <span class="self">Self</span>::AutoModerationActionExecution(v),
+            Event::AutoModerationRuleCreate(v) =&gt; <span class="self">Self</span>::AutoModerationRuleCreate(v),
+            Event::AutoModerationRuleDelete(v) =&gt; <span class="self">Self</span>::AutoModerationRuleDelete(v),
+            Event::AutoModerationRuleUpdate(v) =&gt; <span class="self">Self</span>::AutoModerationRuleUpdate(v),
+            Event::BanAdd(v) =&gt; <span class="self">Self</span>::BanAdd(v),
+            Event::BanRemove(v) =&gt; <span class="self">Self</span>::BanRemove(v),
+            Event::ChannelCreate(v) =&gt; <span class="self">Self</span>::ChannelCreate(v),
+            Event::ChannelDelete(v) =&gt; <span class="self">Self</span>::ChannelDelete(v),
+            Event::ChannelPinsUpdate(v) =&gt; <span class="self">Self</span>::ChannelPinsUpdate(v),
+            Event::ChannelUpdate(v) =&gt; <span class="self">Self</span>::ChannelUpdate(v),
+            Event::CommandPermissionsUpdate(v) =&gt; <span class="self">Self</span>::CommandPermissionsUpdate(v),
+            Event::GiftCodeUpdate =&gt; <span class="self">Self</span>::GiftCodeUpdate,
+            Event::GuildCreate(v) =&gt; <span class="self">Self</span>::GuildCreate(v),
+            Event::GuildDelete(v) =&gt; <span class="self">Self</span>::GuildDelete(v),
+            Event::GuildEmojisUpdate(v) =&gt; <span class="self">Self</span>::GuildEmojisUpdate(v),
+            Event::GuildIntegrationsUpdate(v) =&gt; <span class="self">Self</span>::GuildIntegrationsUpdate(v),
+            Event::GuildScheduledEventCreate(v) =&gt; <span class="self">Self</span>::GuildScheduledEventCreate(v),
+            Event::GuildScheduledEventDelete(v) =&gt; <span class="self">Self</span>::GuildScheduledEventDelete(v),
+            Event::GuildScheduledEventUpdate(v) =&gt; <span class="self">Self</span>::GuildScheduledEventUpdate(v),
+            Event::GuildScheduledEventUserAdd(v) =&gt; <span class="self">Self</span>::GuildScheduledEventUserAdd(v),
+            Event::GuildScheduledEventUserRemove(v) =&gt; <span class="self">Self</span>::GuildScheduledEventUserRemove(v),
+            Event::GuildUpdate(v) =&gt; <span class="self">Self</span>::GuildUpdate(v),
+            Event::IntegrationCreate(v) =&gt; <span class="self">Self</span>::IntegrationCreate(v),
+            Event::IntegrationDelete(v) =&gt; <span class="self">Self</span>::IntegrationDelete(v),
+            Event::IntegrationUpdate(v) =&gt; <span class="self">Self</span>::IntegrationUpdate(v),
+            Event::InteractionCreate(v) =&gt; <span class="self">Self</span>::InteractionCreate(v),
+            Event::InviteCreate(v) =&gt; <span class="self">Self</span>::InviteCreate(v),
+            Event::InviteDelete(v) =&gt; <span class="self">Self</span>::InviteDelete(v),
+            Event::MemberAdd(v) =&gt; <span class="self">Self</span>::MemberAdd(v),
+            Event::MemberRemove(v) =&gt; <span class="self">Self</span>::MemberRemove(v),
+            Event::MemberUpdate(v) =&gt; <span class="self">Self</span>::MemberUpdate(v),
+            Event::MemberChunk(v) =&gt; <span class="self">Self</span>::MemberChunk(v),
+            Event::MessageCreate(v) =&gt; <span class="self">Self</span>::MessageCreate(v),
+            Event::MessageDelete(v) =&gt; <span class="self">Self</span>::MessageDelete(v),
+            Event::MessageDeleteBulk(v) =&gt; <span class="self">Self</span>::MessageDeleteBulk(v),
+            Event::MessageUpdate(v) =&gt; <span class="self">Self</span>::MessageUpdate(v),
+            Event::PresenceUpdate(v) =&gt; <span class="self">Self</span>::PresenceUpdate(v),
+            Event::PresencesReplace =&gt; <span class="self">Self</span>::PresencesReplace,
+            Event::ReactionAdd(v) =&gt; <span class="self">Self</span>::ReactionAdd(v),
+            Event::ReactionRemove(v) =&gt; <span class="self">Self</span>::ReactionRemove(v),
+            Event::ReactionRemoveAll(v) =&gt; <span class="self">Self</span>::ReactionRemoveAll(v),
+            Event::ReactionRemoveEmoji(v) =&gt; <span class="self">Self</span>::ReactionRemoveEmoji(v),
+            Event::Ready(v) =&gt; <span class="self">Self</span>::Ready(v),
+            Event::Resumed =&gt; <span class="self">Self</span>::Resumed,
+            Event::RoleCreate(v) =&gt; <span class="self">Self</span>::RoleCreate(v),
+            Event::RoleDelete(v) =&gt; <span class="self">Self</span>::RoleDelete(v),
+            Event::RoleUpdate(v) =&gt; <span class="self">Self</span>::RoleUpdate(v),
+            Event::StageInstanceCreate(v) =&gt; <span class="self">Self</span>::StageInstanceCreate(v),
+            Event::StageInstanceDelete(v) =&gt; <span class="self">Self</span>::StageInstanceDelete(v),
+            Event::StageInstanceUpdate(v) =&gt; <span class="self">Self</span>::StageInstanceUpdate(v),
+            Event::ThreadCreate(v) =&gt; <span class="self">Self</span>::ThreadCreate(v),
+            Event::ThreadDelete(v) =&gt; <span class="self">Self</span>::ThreadDelete(v),
+            Event::ThreadListSync(v) =&gt; <span class="self">Self</span>::ThreadListSync(v),
+            Event::ThreadMemberUpdate(v) =&gt; <span class="self">Self</span>::ThreadMemberUpdate(v),
+            Event::ThreadMembersUpdate(v) =&gt; <span class="self">Self</span>::ThreadMembersUpdate(v),
+            Event::ThreadUpdate(v) =&gt; <span class="self">Self</span>::ThreadUpdate(v),
+            Event::TypingStart(v) =&gt; <span class="self">Self</span>::TypingStart(v),
+            Event::UnavailableGuild(v) =&gt; <span class="self">Self</span>::UnavailableGuild(v),
+            Event::UserUpdate(v) =&gt; <span class="self">Self</span>::UserUpdate(v),
+            Event::VoiceServerUpdate(v) =&gt; <span class="self">Self</span>::VoiceServerUpdate(v),
+            Event::VoiceStateUpdate(v) =&gt; <span class="self">Self</span>::VoiceStateUpdate(v),
+            Event::WebhooksUpdate(v) =&gt; <span class="self">Self</span>::WebhooksUpdate(v),
 
-            <span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">EventConversionError::new</span>(<span class="ident">event</span>)),
+            <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(EventConversionError::new(event)),
         })
     }
 }
 
-<span class="doccomment">/// Deserialize into a [`DispatchEvent`] by knowing its event name.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// An event name is something like `&quot;CHANNEL_CREATE&quot;` or `&quot;GUILD_MEMBER_ADD&quot;`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DispatchEventWithTypeDeserializer</span>&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>);
+<span class="doccomment">/// Deserialize into a [`DispatchEvent`] by knowing its event name.
+///
+/// An event name is something like `&quot;CHANNEL_CREATE&quot;` or `&quot;GUILD_MEMBER_ADD&quot;`.
+</span><span class="attribute">#[derive(PartialEq, Eq)]
+</span><span class="kw">pub struct </span>DispatchEventWithTypeDeserializer&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">DispatchEventWithTypeDeserializer</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="doccomment">/// Create a new deserializer.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">event_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">event_name</span>)
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DispatchEventWithTypeDeserializer&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Create a new deserializer.
+    </span><span class="kw">pub const fn </span>new(event_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(event_name)
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, <span class="lifetime">&#39;a</span>&gt; <span class="ident">DeserializeSeed</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">DispatchEventWithTypeDeserializer</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Value</span> = <span class="ident">DispatchEvent</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, <span class="lifetime">&#39;a</span>&gt; DeserializeSeed&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>DispatchEventWithTypeDeserializer&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">type </span>Value = DispatchEvent;
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, <span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">D::Error</span>&gt; {
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
-            <span class="string">&quot;AUTO_MODERATION_ACTION_EXECUTION&quot;</span> =&gt; <span class="ident">DispatchEvent::AutoModerationActionExecution</span>(
-                <span class="ident">AutoModerationActionExecution::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+    <span class="attribute">#[allow(clippy::too_many_lines)]
+    </span><span class="kw">fn </span>deserialize&lt;D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="self">self</span>, deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Value, D::Error&gt; {
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.<span class="number">0 </span>{
+            <span class="string">&quot;AUTO_MODERATION_ACTION_EXECUTION&quot; </span>=&gt; DispatchEvent::AutoModerationActionExecution(
+                AutoModerationActionExecution::deserialize(deserializer)<span class="question-mark">?</span>,
             ),
-            <span class="string">&quot;AUTO_MODERATION_RULE_CREATE&quot;</span> =&gt; <span class="ident">DispatchEvent::AutoModerationRuleCreate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">AutoModerationRuleCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;AUTO_MODERATION_RULE_CREATE&quot; </span>=&gt; DispatchEvent::AutoModerationRuleCreate(Box::new(
+                AutoModerationRuleCreate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;AUTO_MODERATION_RULE_DELETE&quot;</span> =&gt; <span class="ident">DispatchEvent::AutoModerationRuleDelete</span>(<span class="ident">Box::new</span>(
-                <span class="ident">AutoModerationRuleDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;AUTO_MODERATION_RULE_DELETE&quot; </span>=&gt; DispatchEvent::AutoModerationRuleDelete(Box::new(
+                AutoModerationRuleDelete::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;AUTO_MODERATION_RULE_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::AutoModerationRuleUpdate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">AutoModerationRuleUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;AUTO_MODERATION_RULE_UPDATE&quot; </span>=&gt; DispatchEvent::AutoModerationRuleUpdate(Box::new(
+                AutoModerationRuleUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;CHANNEL_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ChannelCreate</span>(<span class="ident">Box::new</span>(<span class="ident">ChannelCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;CHANNEL_CREATE&quot; </span>=&gt; {
+                DispatchEvent::ChannelCreate(Box::new(ChannelCreate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;CHANNEL_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ChannelDelete</span>(<span class="ident">Box::new</span>(<span class="ident">ChannelDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;CHANNEL_DELETE&quot; </span>=&gt; {
+                DispatchEvent::ChannelDelete(Box::new(ChannelDelete::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;CHANNEL_PINS_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ChannelPinsUpdate</span>(<span class="ident">ChannelPinsUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;CHANNEL_PINS_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::ChannelPinsUpdate(ChannelPinsUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;CHANNEL_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ChannelUpdate</span>(<span class="ident">Box::new</span>(<span class="ident">ChannelUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;CHANNEL_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::ChannelUpdate(Box::new(ChannelUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;APPLICATION_COMMAND_PERMISSIONS_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::CommandPermissionsUpdate</span>(
-                <span class="ident">CommandPermissionsUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;APPLICATION_COMMAND_PERMISSIONS_UPDATE&quot; </span>=&gt; DispatchEvent::CommandPermissionsUpdate(
+                CommandPermissionsUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             ),
-            <span class="string">&quot;GIFT_CODE_UPDATE&quot;</span> =&gt; {
-                <span class="ident">deserializer</span>.<span class="ident">deserialize_ignored_any</span>(<span class="ident">IgnoredAny</span>)<span class="question-mark">?</span>;
+            <span class="string">&quot;GIFT_CODE_UPDATE&quot; </span>=&gt; {
+                deserializer.deserialize_ignored_any(IgnoredAny)<span class="question-mark">?</span>;
 
-                <span class="ident">DispatchEvent::GiftCodeUpdate</span>
+                DispatchEvent::GiftCodeUpdate
             }
-            <span class="string">&quot;GUILD_BAN_ADD&quot;</span> =&gt; <span class="ident">DispatchEvent::BanAdd</span>(<span class="ident">BanAdd::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>),
-            <span class="string">&quot;GUILD_BAN_REMOVE&quot;</span> =&gt; <span class="ident">DispatchEvent::BanRemove</span>(<span class="ident">BanRemove::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>),
-            <span class="string">&quot;GUILD_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::GuildCreate</span>(<span class="ident">Box::new</span>(<span class="ident">GuildCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;GUILD_BAN_ADD&quot; </span>=&gt; DispatchEvent::BanAdd(BanAdd::deserialize(deserializer)<span class="question-mark">?</span>),
+            <span class="string">&quot;GUILD_BAN_REMOVE&quot; </span>=&gt; DispatchEvent::BanRemove(BanRemove::deserialize(deserializer)<span class="question-mark">?</span>),
+            <span class="string">&quot;GUILD_CREATE&quot; </span>=&gt; {
+                DispatchEvent::GuildCreate(Box::new(GuildCreate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;GUILD_DELETE&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildDelete</span>(<span class="ident">GuildDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>),
-            <span class="string">&quot;GUILD_EMOJIS_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::GuildEmojisUpdate</span>(<span class="ident">GuildEmojisUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;GUILD_DELETE&quot; </span>=&gt; DispatchEvent::GuildDelete(GuildDelete::deserialize(deserializer)<span class="question-mark">?</span>),
+            <span class="string">&quot;GUILD_EMOJIS_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::GuildEmojisUpdate(GuildEmojisUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;GUILD_INTEGRATIONS_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildIntegrationsUpdate</span>(
-                <span class="ident">GuildIntegrationsUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;GUILD_INTEGRATIONS_UPDATE&quot; </span>=&gt; DispatchEvent::GuildIntegrationsUpdate(
+                GuildIntegrationsUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             ),
-            <span class="string">&quot;GUILD_SCHEDULED_EVENT_CREATE&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildScheduledEventCreate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">GuildScheduledEventCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;GUILD_SCHEDULED_EVENT_CREATE&quot; </span>=&gt; DispatchEvent::GuildScheduledEventCreate(Box::new(
+                GuildScheduledEventCreate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;GUILD_SCHEDULED_EVENT_DELETE&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildScheduledEventDelete</span>(<span class="ident">Box::new</span>(
-                <span class="ident">GuildScheduledEventDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;GUILD_SCHEDULED_EVENT_DELETE&quot; </span>=&gt; DispatchEvent::GuildScheduledEventDelete(Box::new(
+                GuildScheduledEventDelete::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;GUILD_SCHEDULED_EVENT_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildScheduledEventUpdate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">GuildScheduledEventUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;GUILD_SCHEDULED_EVENT_UPDATE&quot; </span>=&gt; DispatchEvent::GuildScheduledEventUpdate(Box::new(
+                GuildScheduledEventUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;GUILD_SCHEDULED_EVENT_USER_ADD&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildScheduledEventUserAdd</span>(
-                <span class="ident">GuildScheduledEventUserAdd::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;GUILD_SCHEDULED_EVENT_USER_ADD&quot; </span>=&gt; DispatchEvent::GuildScheduledEventUserAdd(
+                GuildScheduledEventUserAdd::deserialize(deserializer)<span class="question-mark">?</span>,
             ),
-            <span class="string">&quot;GUILD_SCHEDULED_EVENT_USER_REMOVE&quot;</span> =&gt; <span class="ident">DispatchEvent::GuildScheduledEventUserRemove</span>(
-                <span class="ident">GuildScheduledEventUserRemove::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;GUILD_SCHEDULED_EVENT_USER_REMOVE&quot; </span>=&gt; DispatchEvent::GuildScheduledEventUserRemove(
+                GuildScheduledEventUserRemove::deserialize(deserializer)<span class="question-mark">?</span>,
             ),
-            <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MemberChunk</span>(<span class="ident">MemberChunk::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;GUILD_MEMBERS_CHUNK&quot; </span>=&gt; {
+                DispatchEvent::MemberChunk(MemberChunk::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;GUILD_MEMBER_ADD&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MemberAdd</span>(<span class="ident">Box::new</span>(<span class="ident">MemberAdd::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;GUILD_MEMBER_ADD&quot; </span>=&gt; {
+                DispatchEvent::MemberAdd(Box::new(MemberAdd::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;GUILD_MEMBER_REMOVE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MemberRemove</span>(<span class="ident">MemberRemove::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;GUILD_MEMBER_REMOVE&quot; </span>=&gt; {
+                DispatchEvent::MemberRemove(MemberRemove::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;GUILD_MEMBER_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MemberUpdate</span>(<span class="ident">Box::new</span>(<span class="ident">MemberUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;GUILD_MEMBER_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::MemberUpdate(Box::new(MemberUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;GUILD_ROLE_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::RoleCreate</span>(<span class="ident">RoleCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;GUILD_ROLE_CREATE&quot; </span>=&gt; {
+                DispatchEvent::RoleCreate(RoleCreate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;GUILD_ROLE_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::RoleDelete</span>(<span class="ident">RoleDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;GUILD_ROLE_DELETE&quot; </span>=&gt; {
+                DispatchEvent::RoleDelete(RoleDelete::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;GUILD_ROLE_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::RoleUpdate</span>(<span class="ident">RoleUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;GUILD_ROLE_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::RoleUpdate(RoleUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;GUILD_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::GuildUpdate</span>(<span class="ident">Box::new</span>(<span class="ident">GuildUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;GUILD_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::GuildUpdate(Box::new(GuildUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;INTEGRATION_CREATE&quot;</span> =&gt; <span class="ident">DispatchEvent::IntegrationCreate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">IntegrationCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;INTEGRATION_CREATE&quot; </span>=&gt; DispatchEvent::IntegrationCreate(Box::new(
+                IntegrationCreate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;INTEGRATION_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::IntegrationDelete</span>(<span class="ident">IntegrationDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;INTEGRATION_DELETE&quot; </span>=&gt; {
+                DispatchEvent::IntegrationDelete(IntegrationDelete::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;INTEGRATION_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::IntegrationUpdate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">IntegrationUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;INTEGRATION_UPDATE&quot; </span>=&gt; DispatchEvent::IntegrationUpdate(Box::new(
+                IntegrationUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;INTERACTION_CREATE&quot;</span> =&gt; <span class="ident">DispatchEvent::InteractionCreate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">InteractionCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;INTERACTION_CREATE&quot; </span>=&gt; DispatchEvent::InteractionCreate(Box::new(
+                InteractionCreate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;INVITE_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::InviteCreate</span>(<span class="ident">Box::new</span>(<span class="ident">InviteCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;INVITE_CREATE&quot; </span>=&gt; {
+                DispatchEvent::InviteCreate(Box::new(InviteCreate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;INVITE_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::InviteDelete</span>(<span class="ident">InviteDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;INVITE_DELETE&quot; </span>=&gt; {
+                DispatchEvent::InviteDelete(InviteDelete::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;MESSAGE_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MessageCreate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;MESSAGE_CREATE&quot; </span>=&gt; {
+                DispatchEvent::MessageCreate(Box::new(MessageCreate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;MESSAGE_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MessageDelete</span>(<span class="ident">MessageDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;MESSAGE_DELETE&quot; </span>=&gt; {
+                DispatchEvent::MessageDelete(MessageDelete::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;MESSAGE_DELETE_BULK&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MessageDeleteBulk</span>(<span class="ident">MessageDeleteBulk::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;MESSAGE_DELETE_BULK&quot; </span>=&gt; {
+                DispatchEvent::MessageDeleteBulk(MessageDeleteBulk::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;MESSAGE_REACTION_ADD&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ReactionAdd</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionAdd::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;MESSAGE_REACTION_ADD&quot; </span>=&gt; {
+                DispatchEvent::ReactionAdd(Box::new(ReactionAdd::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;MESSAGE_REACTION_REMOVE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ReactionRemove</span>(<span class="ident">Box::new</span>(<span class="ident">ReactionRemove::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;MESSAGE_REACTION_REMOVE&quot; </span>=&gt; {
+                DispatchEvent::ReactionRemove(Box::new(ReactionRemove::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;MESSAGE_REACTION_REMOVE_EMOJI&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ReactionRemoveEmoji</span>(<span class="ident">ReactionRemoveEmoji::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;MESSAGE_REACTION_REMOVE_EMOJI&quot; </span>=&gt; {
+                DispatchEvent::ReactionRemoveEmoji(ReactionRemoveEmoji::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;MESSAGE_REACTION_REMOVE_ALL&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ReactionRemoveAll</span>(<span class="ident">ReactionRemoveAll::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;MESSAGE_REACTION_REMOVE_ALL&quot; </span>=&gt; {
+                DispatchEvent::ReactionRemoveAll(ReactionRemoveAll::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;MESSAGE_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::MessageUpdate</span>(<span class="ident">Box::new</span>(<span class="ident">MessageUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;MESSAGE_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::MessageUpdate(Box::new(MessageUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;PRESENCE_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::PresenceUpdate</span>(<span class="ident">Box::new</span>(<span class="ident">PresenceUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;PRESENCE_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::PresenceUpdate(Box::new(PresenceUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;PRESENCES_REPLACE&quot;</span> =&gt; {
-                <span class="ident">deserializer</span>.<span class="ident">deserialize_ignored_any</span>(<span class="ident">IgnoredAny</span>)<span class="question-mark">?</span>;
+            <span class="string">&quot;PRESENCES_REPLACE&quot; </span>=&gt; {
+                deserializer.deserialize_ignored_any(IgnoredAny)<span class="question-mark">?</span>;
 
-                <span class="ident">DispatchEvent::PresencesReplace</span>
+                DispatchEvent::PresencesReplace
             }
-            <span class="string">&quot;READY&quot;</span> =&gt; <span class="ident">DispatchEvent::Ready</span>(<span class="ident">Box::new</span>(<span class="ident">Ready::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)),
-            <span class="string">&quot;RESUMED&quot;</span> =&gt; {
-                <span class="ident">deserializer</span>.<span class="ident">deserialize_ignored_any</span>(<span class="ident">IgnoredAny</span>)<span class="question-mark">?</span>;
+            <span class="string">&quot;READY&quot; </span>=&gt; DispatchEvent::Ready(Box::new(Ready::deserialize(deserializer)<span class="question-mark">?</span>)),
+            <span class="string">&quot;RESUMED&quot; </span>=&gt; {
+                deserializer.deserialize_ignored_any(IgnoredAny)<span class="question-mark">?</span>;
 
-                <span class="ident">DispatchEvent::Resumed</span>
+                DispatchEvent::Resumed
             }
-            <span class="string">&quot;STAGE_INSTANCE_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::StageInstanceCreate</span>(<span class="ident">StageInstanceCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;STAGE_INSTANCE_CREATE&quot; </span>=&gt; {
+                DispatchEvent::StageInstanceCreate(StageInstanceCreate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;STAGE_INSTANCE_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::StageInstanceDelete</span>(<span class="ident">StageInstanceDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;STAGE_INSTANCE_DELETE&quot; </span>=&gt; {
+                DispatchEvent::StageInstanceDelete(StageInstanceDelete::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;STAGE_INSTANCE_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::StageInstanceUpdate</span>(<span class="ident">StageInstanceUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;STAGE_INSTANCE_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::StageInstanceUpdate(StageInstanceUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;THREAD_CREATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ThreadCreate</span>(<span class="ident">Box::new</span>(<span class="ident">ThreadCreate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;THREAD_CREATE&quot; </span>=&gt; {
+                DispatchEvent::ThreadCreate(Box::new(ThreadCreate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;THREAD_DELETE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ThreadDelete</span>(<span class="ident">ThreadDelete::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;THREAD_DELETE&quot; </span>=&gt; {
+                DispatchEvent::ThreadDelete(ThreadDelete::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;THREAD_LIST_SYNC&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ThreadListSync</span>(<span class="ident">ThreadListSync::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;THREAD_LIST_SYNC&quot; </span>=&gt; {
+                DispatchEvent::ThreadListSync(ThreadListSync::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;THREAD_MEMBER_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::ThreadMemberUpdate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">ThreadMemberUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;THREAD_MEMBER_UPDATE&quot; </span>=&gt; DispatchEvent::ThreadMemberUpdate(Box::new(
+                ThreadMemberUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;THREAD_MEMBERS_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ThreadMembersUpdate</span>(<span class="ident">ThreadMembersUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;THREAD_MEMBERS_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::ThreadMembersUpdate(ThreadMembersUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;THREAD_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::ThreadUpdate</span>(<span class="ident">Box::new</span>(<span class="ident">ThreadUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;THREAD_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::ThreadUpdate(Box::new(ThreadUpdate::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;TYPING_START&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::TypingStart</span>(<span class="ident">Box::new</span>(<span class="ident">TypingStart::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+            <span class="string">&quot;TYPING_START&quot; </span>=&gt; {
+                DispatchEvent::TypingStart(Box::new(TypingStart::deserialize(deserializer)<span class="question-mark">?</span>))
             }
-            <span class="string">&quot;USER_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::UserUpdate</span>(<span class="ident">UserUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>),
-            <span class="string">&quot;VOICE_SERVER_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::VoiceServerUpdate</span>(<span class="ident">VoiceServerUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;USER_UPDATE&quot; </span>=&gt; DispatchEvent::UserUpdate(UserUpdate::deserialize(deserializer)<span class="question-mark">?</span>),
+            <span class="string">&quot;VOICE_SERVER_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::VoiceServerUpdate(VoiceServerUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="string">&quot;VOICE_STATE_UPDATE&quot;</span> =&gt; <span class="ident">DispatchEvent::VoiceStateUpdate</span>(<span class="ident">Box::new</span>(
-                <span class="ident">VoiceStateUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>,
+            <span class="string">&quot;VOICE_STATE_UPDATE&quot; </span>=&gt; DispatchEvent::VoiceStateUpdate(Box::new(
+                VoiceStateUpdate::deserialize(deserializer)<span class="question-mark">?</span>,
             )),
-            <span class="string">&quot;WEBHOOKS_UPDATE&quot;</span> =&gt; {
-                <span class="ident">DispatchEvent::WebhooksUpdate</span>(<span class="ident">WebhooksUpdate::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;WEBHOOKS_UPDATE&quot; </span>=&gt; {
+                DispatchEvent::WebhooksUpdate(WebhooksUpdate::deserialize(deserializer)<span class="question-mark">?</span>)
             }
-            <span class="ident">other</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DeError::unknown_variant</span>(<span class="ident">other</span>, <span class="kw-2">&amp;</span>[])),
+            other =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(DeError::unknown_variant(other, <span class="kw-2">&amp;</span>[])),
         })
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">DispatchEvent</span>, <span class="ident">DispatchEventWithTypeDeserializer</span>};
-    <span class="kw">use</span> <span class="ident">serde::de::DeserializeSeed</span>;
-    <span class="kw">use</span> <span class="ident">serde_json::Deserializer</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{DispatchEvent, DispatchEventWithTypeDeserializer};
+    <span class="kw">use </span>serde::de::DeserializeSeed;
+    <span class="kw">use </span>serde_json::Deserializer;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">gift_code_update</span>() {
-        <span class="comment">// Input will be ignored so long as it&#39;s valid JSON.</span>
-        <span class="kw">let</span> <span class="ident">input</span> = <span class="string">r#&quot;{
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>gift_code_update() {
+        <span class="comment">// Input will be ignored so long as it&#39;s valid JSON.
+        </span><span class="kw">let </span>input = <span class="string">r#&quot;{
             &quot;a&quot;: &quot;b&quot;
         }&quot;#</span>;
 
-        <span class="kw">let</span> <span class="ident">deserializer</span> = <span class="ident">DispatchEventWithTypeDeserializer::new</span>(<span class="string">&quot;GIFT_CODE_UPDATE&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">json_deserializer</span> = <span class="ident">Deserializer::from_str</span>(<span class="ident">input</span>);
-        <span class="kw">let</span> <span class="ident">event</span> = <span class="ident">deserializer</span>.<span class="ident">deserialize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">json_deserializer</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let </span>deserializer = DispatchEventWithTypeDeserializer::new(<span class="string">&quot;GIFT_CODE_UPDATE&quot;</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>json_deserializer = Deserializer::from_str(input);
+        <span class="kw">let </span>event = deserializer.deserialize(<span class="kw-2">&amp;mut </span>json_deserializer).unwrap();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">event</span>, <span class="ident">DispatchEvent::GiftCodeUpdate</span>);
+        <span class="macro">assert_eq!</span>(event, DispatchEvent::GiftCodeUpdate);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

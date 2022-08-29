@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/client/connector.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connector.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/client/connector.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connector.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -64,71 +64,71 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
-</pre><pre class="rust"><code><span class="doccomment">//! HTTP connectors with different features.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! HTTP connectors with different features.
 
-<span class="doccomment">/// HTTPS connector using `rustls` as a TLS backend.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>, <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>))]</span>
-<span class="kw">type</span> <span class="ident">HttpsConnector</span>&lt;<span class="ident">T</span>&gt; = <span class="ident">hyper_rustls::HttpsConnector</span>&lt;<span class="ident">T</span>&gt;;
-<span class="doccomment">/// HTTPS connector using `hyper-tls` as a TLS backend.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-    <span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>, <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>))
-))]</span>
-<span class="kw">type</span> <span class="ident">HttpsConnector</span>&lt;<span class="ident">T</span>&gt; = <span class="ident">hyper_tls::HttpsConnector</span>&lt;<span class="ident">T</span>&gt;;
+/// HTTPS connector using `rustls` as a TLS backend.
+</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;rustls-native-roots&quot;</span>, feature = <span class="string">&quot;rustls-webpki-roots&quot;</span>))]
+</span><span class="kw">type </span>HttpsConnector&lt;T&gt; = hyper_rustls::HttpsConnector&lt;T&gt;;
+<span class="doccomment">/// HTTPS connector using `hyper-tls` as a TLS backend.
+</span><span class="attribute">#[cfg(all(
+    feature = <span class="string">&quot;native&quot;</span>,
+    not(any(feature = <span class="string">&quot;rustls-native-roots&quot;</span>, feature = <span class="string">&quot;rustls-webpki-roots&quot;</span>))
+))]
+</span><span class="kw">type </span>HttpsConnector&lt;T&gt; = hyper_tls::HttpsConnector&lt;T&gt;;
 
-<span class="doccomment">/// HTTP connector using `trust-dns` as a DNS backend.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>)]</span>
-<span class="kw">type</span> <span class="ident">HttpConnector</span> = <span class="ident">hyper_trust_dns::TrustDnsHttpConnector</span>;
-<span class="doccomment">/// HTTP connector.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>))]</span>
-<span class="kw">type</span> <span class="ident">HttpConnector</span> = <span class="ident">hyper::client::HttpConnector</span>;
+<span class="doccomment">/// HTTP connector using `trust-dns` as a DNS backend.
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;trust-dns&quot;</span>)]
+</span><span class="kw">type </span>HttpConnector = hyper_trust_dns::TrustDnsHttpConnector;
+<span class="doccomment">/// HTTP connector.
+</span><span class="attribute">#[cfg(not(feature = <span class="string">&quot;trust-dns&quot;</span>))]
+</span><span class="kw">type </span>HttpConnector = hyper::client::HttpConnector;
 
-<span class="doccomment">/// Re-exported generic connector for use in the client.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-))]</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Connector</span> = <span class="ident">HttpsConnector</span>&lt;<span class="ident">HttpConnector</span>&gt;;
-<span class="doccomment">/// Re-exported generic connector for use in the client.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-)))]</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Connector</span> = <span class="ident">HttpConnector</span>;
+<span class="doccomment">/// Re-exported generic connector for use in the client.
+</span><span class="attribute">#[cfg(any(
+    feature = <span class="string">&quot;native&quot;</span>,
+    feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    feature = <span class="string">&quot;rustls-webpki-roots&quot;
+</span>))]
+</span><span class="kw">pub type </span>Connector = HttpsConnector&lt;HttpConnector&gt;;
+<span class="doccomment">/// Re-exported generic connector for use in the client.
+</span><span class="attribute">#[cfg(not(any(
+    feature = <span class="string">&quot;native&quot;</span>,
+    feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    feature = <span class="string">&quot;rustls-webpki-roots&quot;
+</span>)))]
+</span><span class="kw">pub type </span>Connector = HttpConnector;
 
-<span class="doccomment">/// Create a connector with the specified features.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create</span>() -&gt; <span class="ident">Connector</span> {
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>))]</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> = <span class="ident">hyper::client::HttpConnector::new</span>();
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;trust-dns&quot;</span>)]</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> = <span class="ident">hyper_trust_dns::TrustDnsResolver::default</span>().<span class="ident">into_http_connector</span>();
+<span class="doccomment">/// Create a connector with the specified features.
+</span><span class="kw">pub fn </span>create() -&gt; Connector {
+    <span class="attribute">#[cfg(not(feature = <span class="string">&quot;trust-dns&quot;</span>))]
+    </span><span class="kw">let </span><span class="kw-2">mut </span>connector = hyper::client::HttpConnector::new();
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;trust-dns&quot;</span>)]
+    </span><span class="kw">let </span><span class="kw-2">mut </span>connector = hyper_trust_dns::TrustDnsResolver::default().into_http_connector();
 
-    <span class="ident">connector</span>.<span class="ident">enforce_http</span>(<span class="bool-val">false</span>);
+    connector.enforce_http(<span class="bool-val">false</span>);
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>)]</span>
-    <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
-        .<span class="ident">with_native_roots</span>()
-        .<span class="ident">https_or_http</span>()
-        .<span class="ident">enable_http1</span>()
-        .<span class="ident">enable_http2</span>()
-        .<span class="ident">wrap_connector</span>(<span class="ident">connector</span>);
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>)))]</span>
-    <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">hyper_rustls::HttpsConnectorBuilder::new</span>()
-        .<span class="ident">with_webpki_roots</span>()
-        .<span class="ident">https_or_http</span>()
-        .<span class="ident">enable_http1</span>()
-        .<span class="ident">enable_http2</span>()
-        .<span class="ident">wrap_connector</span>(<span class="ident">connector</span>);
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(
-        <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-        <span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>),
-        <span class="ident">not</span>(<span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>)
-    ))]</span>
-    <span class="kw">let</span> <span class="ident">connector</span> = <span class="ident">hyper_tls::HttpsConnector::new_with_connector</span>(<span class="ident">connector</span>);
+    <span class="attribute">#[cfg(feature = <span class="string">&quot;rustls-native-roots&quot;</span>)]
+    </span><span class="kw">let </span>connector = hyper_rustls::HttpsConnectorBuilder::new()
+        .with_native_roots()
+        .https_or_http()
+        .enable_http1()
+        .enable_http2()
+        .wrap_connector(connector);
+    <span class="attribute">#[cfg(all(feature = <span class="string">&quot;rustls-webpki-roots&quot;</span>, not(feature = <span class="string">&quot;rustls-native-roots&quot;</span>)))]
+    </span><span class="kw">let </span>connector = hyper_rustls::HttpsConnectorBuilder::new()
+        .with_webpki_roots()
+        .https_or_http()
+        .enable_http1()
+        .enable_http2()
+        .wrap_connector(connector);
+    <span class="attribute">#[cfg(all(
+        feature = <span class="string">&quot;native&quot;</span>,
+        not(feature = <span class="string">&quot;rustls-native-roots&quot;</span>),
+        not(feature = <span class="string">&quot;rustls-webpki-roots&quot;</span>)
+    ))]
+    </span><span class="kw">let </span>connector = hyper_tls::HttpsConnector::new_with_connector(connector);
 
-    <span class="ident">connector</span>
+    connector
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

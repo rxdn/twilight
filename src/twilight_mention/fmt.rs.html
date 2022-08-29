@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-mention/src/fmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>fmt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_mention/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-mention/src/fmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>fmt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_mention/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -274,281 +274,281 @@
 <span id="274">274</span>
 <span id="275">275</span>
 <span id="276">276</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Formatters for creating mentions.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Formatters for creating mentions.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::timestamp::Timestamp</span>;
-<span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>};
-<span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">channel::Channel</span>,
-    <span class="ident">guild</span>::{<span class="ident">Emoji</span>, <span class="ident">Member</span>, <span class="ident">Role</span>},
-    <span class="ident">id</span>::{
-        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
-        <span class="ident">Id</span>,
+</span><span class="kw">use </span><span class="kw">super</span>::timestamp::Timestamp;
+<span class="kw">use </span>std::fmt::{Display, Formatter, <span class="prelude-ty">Result </span><span class="kw">as </span>FmtResult};
+<span class="kw">use </span>twilight_model::{
+    channel::Channel,
+    guild::{Emoji, Member, Role},
+    id::{
+        marker::{ChannelMarker, EmojiMarker, RoleMarker, UserMarker},
+        Id,
     },
-    <span class="ident">user</span>::{<span class="ident">CurrentUser</span>, <span class="ident">User</span>},
+    user::{CurrentUser, User},
 };
 
-<span class="doccomment">/// Formatter to mention a resource that implements `std::fmt::Display`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Mention a `Id&lt;UserMarker&gt;`:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_mention::Mention;</span>
-<span class="doccomment">/// use twilight_model::id::{marker::UserMarker, Id};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(&quot;&lt;@123&gt;&quot;, Id::&lt;UserMarker&gt;::new(123).mention().to_string());</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MentionFormat</span>&lt;<span class="ident">T</span>&gt;(<span class="ident">T</span>);
+<span class="doccomment">/// Formatter to mention a resource that implements `std::fmt::Display`.
+///
+/// # Examples
+///
+/// Mention a `Id&lt;UserMarker&gt;`:
+///
+/// ```
+/// use twilight_mention::Mention;
+/// use twilight_model::id::{marker::UserMarker, Id};
+///
+/// assert_eq!(&quot;&lt;@123&gt;&quot;, Id::&lt;UserMarker&gt;::new(123).mention().to_string());
+/// ```
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>MentionFormat&lt;T&gt;(T);
 
-<span class="doccomment">/// Mention a channel. This will format as `&lt;#ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt; {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;#&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="doccomment">/// Mention a channel. This will format as `&lt;#ID&gt;`.
+</span><span class="kw">impl </span>Display <span class="kw">for </span>MentionFormat&lt;Id&lt;ChannelMarker&gt;&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        f.write_str(<span class="string">&quot;&lt;#&quot;</span>)<span class="question-mark">?</span>;
+        Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, f)<span class="question-mark">?</span>;
 
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&gt;&quot;</span>)
+        f.write_str(<span class="string">&quot;&gt;&quot;</span>)
     }
 }
 
-<span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt; {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;:emoji:&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.
+</span><span class="kw">impl </span>Display <span class="kw">for </span>MentionFormat&lt;Id&lt;EmojiMarker&gt;&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        f.write_str(<span class="string">&quot;&lt;:emoji:&quot;</span>)<span class="question-mark">?</span>;
+        Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, f)<span class="question-mark">?</span>;
 
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&gt;&quot;</span>)
+        f.write_str(<span class="string">&quot;&gt;&quot;</span>)
     }
 }
 
-<span class="doccomment">/// Mention a role. This will format as `&lt;@&amp;ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt; {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;@&amp;&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="doccomment">/// Mention a role. This will format as `&lt;@&amp;ID&gt;`.
+</span><span class="kw">impl </span>Display <span class="kw">for </span>MentionFormat&lt;Id&lt;RoleMarker&gt;&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        f.write_str(<span class="string">&quot;&lt;@&amp;&quot;</span>)<span class="question-mark">?</span>;
+        Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, f)<span class="question-mark">?</span>;
 
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&gt;&quot;</span>)
+        f.write_str(<span class="string">&quot;&gt;&quot;</span>)
     }
 }
 
-<span class="doccomment">/// Mention a user. This will format as `&lt;t:UNIX&gt;` if a style is not specified or</span>
-<span class="doccomment">/// `&lt;t:UNIX:STYLE&gt;` if a style is specified.</span>
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span>&lt;<span class="ident">Timestamp</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;t:&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">unix</span>(), <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="doccomment">/// Mention a user. This will format as `&lt;t:UNIX&gt;` if a style is not specified or
+/// `&lt;t:UNIX:STYLE&gt;` if a style is specified.
+</span><span class="kw">impl </span>Display <span class="kw">for </span>MentionFormat&lt;Timestamp&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        f.write_str(<span class="string">&quot;&lt;t:&quot;</span>)<span class="question-mark">?</span>;
+        Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.unix(), f)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">style</span>) = <span class="self">self</span>.<span class="number">0</span>.<span class="ident">style</span>() {
-            <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;:&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="ident">style</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(style) = <span class="self">self</span>.<span class="number">0</span>.style() {
+            f.write_str(<span class="string">&quot;:&quot;</span>)<span class="question-mark">?</span>;
+            Display::fmt(<span class="kw-2">&amp;</span>style, f)<span class="question-mark">?</span>;
         }
 
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&gt;&quot;</span>)
+        f.write_str(<span class="string">&quot;&gt;&quot;</span>)
     }
 }
 
-<span class="doccomment">/// Mention a user. This will format as `&lt;@ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;@&quot;</span>)<span class="question-mark">?</span>;
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="doccomment">/// Mention a user. This will format as `&lt;@ID&gt;`.
+</span><span class="kw">impl </span>Display <span class="kw">for </span>MentionFormat&lt;Id&lt;UserMarker&gt;&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        f.write_str(<span class="string">&quot;&lt;@&quot;</span>)<span class="question-mark">?</span>;
+        Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, f)<span class="question-mark">?</span>;
 
-        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;&gt;&quot;</span>)
+        f.write_str(<span class="string">&quot;&gt;&quot;</span>)
     }
 }
 
-<span class="doccomment">/// Mention a resource, such as an emoji or user.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This will create a mention that will link to a user if it exists.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Look at the implementations list to see what you can mention.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Mention a channel ID:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_mention::Mention;</span>
-<span class="doccomment">/// use twilight_model::id::{marker::ChannelMarker, Id};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let id = Id::&lt;ChannelMarker&gt;::new(123);</span>
-<span class="doccomment">/// assert_eq!(&quot;&lt;#123&gt;&quot;, id.mention().to_string());</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Mention</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="doccomment">/// Mention a resource by using its ID.</span>
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">T</span>&gt;;
+<span class="doccomment">/// Mention a resource, such as an emoji or user.
+///
+/// This will create a mention that will link to a user if it exists.
+///
+/// Look at the implementations list to see what you can mention.
+///
+/// # Examples
+///
+/// Mention a channel ID:
+///
+/// ```
+/// use twilight_mention::Mention;
+/// use twilight_model::id::{marker::ChannelMarker, Id};
+///
+/// let id = Id::&lt;ChannelMarker&gt;::new(123);
+/// assert_eq!(&quot;&lt;#123&gt;&quot;, id.mention().to_string());
+/// ```
+</span><span class="kw">pub trait </span>Mention&lt;T&gt; {
+    <span class="doccomment">/// Mention a resource by using its ID.
+    </span><span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;T&gt;;
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>, <span class="ident">M</span>: <span class="ident">Mention</span>&lt;<span class="ident">T</span>&gt;&gt; <span class="ident">Mention</span>&lt;<span class="ident">T</span>&gt; <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">M</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">T</span>&gt; {
-        (<span class="kw-2">*</span><span class="self">self</span>).<span class="ident">mention</span>()
+<span class="kw">impl</span>&lt;T, M: Mention&lt;T&gt;&gt; Mention&lt;T&gt; <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span>M {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;T&gt; {
+        (<span class="kw-2">*</span><span class="self">self</span>).mention()
     }
 }
 
-<span class="doccomment">/// Mention a channel ID. This will format as `&lt;#ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="doccomment">/// Mention a channel ID. This will format as `&lt;#ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;ChannelMarker&gt;&gt; <span class="kw">for </span>Id&lt;ChannelMarker&gt; {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;ChannelMarker&gt;&gt; {
+        MentionFormat(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="doccomment">/// Mention a channel. This will format as `&lt;#ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Channel</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
+<span class="doccomment">/// Mention a channel. This will format as `&lt;#ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;ChannelMarker&gt;&gt; <span class="kw">for </span>Channel {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;ChannelMarker&gt;&gt; {
+        MentionFormat(<span class="self">self</span>.id)
     }
 }
 
-<span class="doccomment">/// Mention the current user. This will format as `&lt;@ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">CurrentUser</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
+<span class="doccomment">/// Mention the current user. This will format as `&lt;@ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;UserMarker&gt;&gt; <span class="kw">for </span>CurrentUser {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;UserMarker&gt;&gt; {
+        MentionFormat(<span class="self">self</span>.id)
     }
 }
 
-<span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;EmojiMarker&gt;&gt; <span class="kw">for </span>Id&lt;EmojiMarker&gt; {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;EmojiMarker&gt;&gt; {
+        MentionFormat(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Emoji</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
+<span class="doccomment">/// Mention an emoji. This will format as `&lt;:emoji:ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;EmojiMarker&gt;&gt; <span class="kw">for </span>Emoji {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;EmojiMarker&gt;&gt; {
+        MentionFormat(<span class="self">self</span>.id)
     }
 }
 
-<span class="doccomment">/// Mention a member&#39;s user. This will format as `&lt;@ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Member</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">user</span>.<span class="ident">id</span>)
+<span class="doccomment">/// Mention a member&#39;s user. This will format as `&lt;@ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;UserMarker&gt;&gt; <span class="kw">for </span>Member {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;UserMarker&gt;&gt; {
+        MentionFormat(<span class="self">self</span>.user.id)
     }
 }
 
-<span class="doccomment">/// Mention a role ID. This will format as `&lt;@&amp;ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="doccomment">/// Mention a role ID. This will format as `&lt;@&amp;ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;RoleMarker&gt;&gt; <span class="kw">for </span>Id&lt;RoleMarker&gt; {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;RoleMarker&gt;&gt; {
+        MentionFormat(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="doccomment">/// Mention a role ID. This will format as `&lt;@&amp;ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Role</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
+<span class="doccomment">/// Mention a role ID. This will format as `&lt;@&amp;ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;RoleMarker&gt;&gt; <span class="kw">for </span>Role {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;RoleMarker&gt;&gt; {
+        MentionFormat(<span class="self">self</span>.id)
     }
 }
 
-<span class="doccomment">/// Mention a timestamp. This will format as `&lt;t:UNIX&gt;` if a style is not</span>
-<span class="doccomment">/// specified or `&lt;t:UNIX:STYLE&gt;` if a style is specified.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="self">Self</span>&gt; <span class="kw">for</span> <span class="ident">Timestamp</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="doccomment">/// Mention a timestamp. This will format as `&lt;t:UNIX&gt;` if a style is not
+/// specified or `&lt;t:UNIX:STYLE&gt;` if a style is specified.
+</span><span class="kw">impl </span>Mention&lt;<span class="self">Self</span>&gt; <span class="kw">for </span>Timestamp {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;<span class="self">Self</span>&gt; {
+        MentionFormat(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="doccomment">/// Mention a user ID. This will format as `&lt;&amp;ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="kw-2">*</span><span class="self">self</span>)
+<span class="doccomment">/// Mention a user ID. This will format as `&lt;&amp;ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;UserMarker&gt;&gt; <span class="kw">for </span>Id&lt;UserMarker&gt; {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;UserMarker&gt;&gt; {
+        MentionFormat(<span class="kw-2">*</span><span class="self">self</span>)
     }
 }
 
-<span class="doccomment">/// Mention a user. This will format as `&lt;&amp;ID&gt;`.</span>
-<span class="kw">impl</span> <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; <span class="kw">for</span> <span class="ident">User</span> {
-    <span class="kw">fn</span> <span class="ident">mention</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt; {
-        <span class="ident">MentionFormat</span>(<span class="self">self</span>.<span class="ident">id</span>)
+<span class="doccomment">/// Mention a user. This will format as `&lt;&amp;ID&gt;`.
+</span><span class="kw">impl </span>Mention&lt;Id&lt;UserMarker&gt;&gt; <span class="kw">for </span>User {
+    <span class="kw">fn </span>mention(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MentionFormat&lt;Id&lt;UserMarker&gt;&gt; {
+        MentionFormat(<span class="self">self</span>.id)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::timestamp</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampStyle</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::timestamp::{Timestamp, TimestampStyle};
 
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Mention</span>, <span class="ident">MentionFormat</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std::fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>};
-    <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-        <span class="ident">channel::Channel</span>,
-        <span class="ident">guild</span>::{<span class="ident">Emoji</span>, <span class="ident">Member</span>, <span class="ident">Role</span>},
-        <span class="ident">id</span>::{
-            <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
-            <span class="ident">Id</span>,
+    <span class="kw">use super</span>::{Mention, MentionFormat};
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::fmt::{Debug, Display};
+    <span class="kw">use </span>twilight_model::{
+        channel::Channel,
+        guild::{Emoji, Member, Role},
+        id::{
+            marker::{ChannelMarker, EmojiMarker, RoleMarker, UserMarker},
+            Id,
         },
-        <span class="ident">user</span>::{<span class="ident">CurrentUser</span>, <span class="ident">User</span>},
+        user::{CurrentUser, User},
     };
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionFormat</span>&lt;()&gt;: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionFormat</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Channel</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Channel</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">CurrentUser</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">CurrentUser</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Emoji</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Emoji</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Member</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Member</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Role</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Role</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">User</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
-    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">User</span>: <span class="ident">Mention</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(MentionFormat&lt;()&gt;: Clone, Copy, Debug, Eq, PartialEq, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionFormat&lt;Id&lt;ChannelMarker&gt;&gt;: Clone, Copy, Debug, Display, Eq, PartialEq, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionFormat&lt;Id&lt;EmojiMarker&gt;&gt;: Clone, Copy, Debug, Display, Eq, PartialEq, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionFormat&lt;Id&lt;RoleMarker&gt;&gt;: Clone, Copy, Debug, Display, Eq, PartialEq, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionFormat&lt;Id&lt;UserMarker&gt;&gt;: Clone, Copy, Debug, Display, Eq, PartialEq, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(Id&lt;ChannelMarker&gt;: Mention&lt;Id&lt;ChannelMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Id&lt;ChannelMarker&gt;: Mention&lt;Id&lt;ChannelMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Channel: Mention&lt;Id&lt;ChannelMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Channel: Mention&lt;Id&lt;ChannelMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(CurrentUser: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>CurrentUser: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Id&lt;EmojiMarker&gt;: Mention&lt;Id&lt;EmojiMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Id&lt;EmojiMarker&gt;: Mention&lt;Id&lt;EmojiMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Emoji: Mention&lt;Id&lt;EmojiMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Emoji: Mention&lt;Id&lt;EmojiMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Member: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Member: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Id&lt;RoleMarker&gt;: Mention&lt;Id&lt;RoleMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Id&lt;RoleMarker&gt;: Mention&lt;Id&lt;RoleMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Role: Mention&lt;Id&lt;RoleMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Role: Mention&lt;Id&lt;RoleMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(Id&lt;UserMarker&gt;: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Id&lt;UserMarker&gt;: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(User: Mention&lt;Id&lt;UserMarker&gt;&gt;);
+    <span class="macro">assert_impl_all!</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>User: Mention&lt;Id&lt;UserMarker&gt;&gt;);
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mention_format_channel_id</span>() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>mention_format_channel_id() {
         <span class="macro">assert_eq!</span>(
             <span class="string">&quot;&lt;#123&gt;&quot;</span>,
-            <span class="ident">Id</span>::&lt;<span class="ident">ChannelMarker</span>&gt;<span class="ident">::new</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>()
+            Id::&lt;ChannelMarker&gt;::new(<span class="number">123</span>).mention().to_string()
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mention_format_emoji_id</span>() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>mention_format_emoji_id() {
         <span class="macro">assert_eq!</span>(
             <span class="string">&quot;&lt;:emoji:123&gt;&quot;</span>,
-            <span class="ident">Id</span>::&lt;<span class="ident">EmojiMarker</span>&gt;<span class="ident">::new</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>()
+            Id::&lt;EmojiMarker&gt;::new(<span class="number">123</span>).mention().to_string()
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mention_format_role_id</span>() {
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;@&amp;123&gt;&quot;</span>, <span class="ident">Id</span>::&lt;<span class="ident">RoleMarker</span>&gt;<span class="ident">::new</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>mention_format_role_id() {
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;@&amp;123&gt;&quot;</span>, Id::&lt;RoleMarker&gt;::new(<span class="number">123</span>).mention().to_string());
     }
 
-    <span class="doccomment">/// Test that a timestamp with a style displays correctly.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mention_format_timestamp_styled</span>() {
-        <span class="kw">let</span> <span class="ident">timestamp</span> = <span class="ident">Timestamp::new</span>(<span class="number">1_624_047_064</span>, <span class="prelude-val">Some</span>(<span class="ident">TimestampStyle::RelativeTime</span>));
+    <span class="doccomment">/// Test that a timestamp with a style displays correctly.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>mention_format_timestamp_styled() {
+        <span class="kw">let </span>timestamp = Timestamp::new(<span class="number">1_624_047_064</span>, <span class="prelude-val">Some</span>(TimestampStyle::RelativeTime));
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;t:1624047064:R&gt;&quot;</span>, <span class="ident">timestamp</span>.<span class="ident">mention</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;t:1624047064:R&gt;&quot;</span>, timestamp.mention().to_string());
     }
 
-    <span class="doccomment">/// Test that a timestamp without a style displays correctly.</span>
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mention_format_timestamp_unstyled</span>() {
-        <span class="kw">let</span> <span class="ident">timestamp</span> = <span class="ident">Timestamp::new</span>(<span class="number">1_624_047_064</span>, <span class="prelude-val">None</span>);
+    <span class="doccomment">/// Test that a timestamp without a style displays correctly.
+    </span><span class="attribute">#[test]
+    </span><span class="kw">fn </span>mention_format_timestamp_unstyled() {
+        <span class="kw">let </span>timestamp = Timestamp::new(<span class="number">1_624_047_064</span>, <span class="prelude-val">None</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;t:1624047064&gt;&quot;</span>, <span class="ident">timestamp</span>.<span class="ident">mention</span>().<span class="ident">to_string</span>());
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;t:1624047064&gt;&quot;</span>, timestamp.mention().to_string());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">mention_format_user_id</span>() {
-        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;@123&gt;&quot;</span>, <span class="ident">Id</span>::&lt;<span class="ident">UserMarker</span>&gt;<span class="ident">::new</span>(<span class="number">123</span>).<span class="ident">mention</span>().<span class="ident">to_string</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>mention_format_user_id() {
+        <span class="macro">assert_eq!</span>(<span class="string">&quot;&lt;@123&gt;&quot;</span>, Id::&lt;UserMarker&gt;::new(<span class="number">123</span>).mention().to_string());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_mention" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_mention" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

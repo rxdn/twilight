@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-lavalink/src/http.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>http.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_lavalink/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_lavalink/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_lavalink/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-lavalink/src/http.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>http.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_lavalink/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_lavalink/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_lavalink/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -547,554 +547,554 @@
 <span id="547">547</span>
 <span id="548">548</span>
 <span id="549">549</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Models to deserialize responses into and functions to create `http` crate</span>
-<span class="doccomment">//! requests.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Models to deserialize responses into and functions to create `http` crate
+//! requests.
 
-<span class="kw">use</span> <span class="ident">http</span>::{
-    <span class="ident">header</span>::{<span class="ident">HeaderValue</span>, <span class="ident">AUTHORIZATION</span>},
-    <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>, <span class="ident">Request</span>,
+</span><span class="kw">use </span>http::{
+    header::{HeaderValue, AUTHORIZATION},
+    Error <span class="kw">as </span>HttpError, Request,
 };
-<span class="kw">use</span> <span class="ident">percent_encoding::NON_ALPHANUMERIC</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::net</span>::{<span class="ident">IpAddr</span>, <span class="ident">SocketAddr</span>};
+<span class="kw">use </span>percent_encoding::NON_ALPHANUMERIC;
+<span class="kw">use </span>serde::{Deserialize, Deserializer, Serialize};
+<span class="kw">use </span>std::net::{IpAddr, SocketAddr};
 
-<span class="doccomment">/// The type of search result given.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">LoadType</span> {
-    <span class="doccomment">/// Loading the results failed.</span>
-    <span class="ident">LoadFailed</span>,
-    <span class="doccomment">/// There were no matches.</span>
-    <span class="ident">NoMatches</span>,
-    <span class="doccomment">/// A playlist was found.</span>
-    <span class="ident">PlaylistLoaded</span>,
-    <span class="doccomment">/// Some results were found.</span>
-    <span class="ident">SearchResult</span>,
-    <span class="doccomment">/// A single track was found.</span>
-    <span class="ident">TrackLoaded</span>,
+<span class="doccomment">/// The type of search result given.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;SCREAMING_SNAKE_CASE&quot;</span>)]
+</span><span class="kw">pub enum </span>LoadType {
+    <span class="doccomment">/// Loading the results failed.
+    </span>LoadFailed,
+    <span class="doccomment">/// There were no matches.
+    </span>NoMatches,
+    <span class="doccomment">/// A playlist was found.
+    </span>PlaylistLoaded,
+    <span class="doccomment">/// Some results were found.
+    </span>SearchResult,
+    <span class="doccomment">/// A single track was found.
+    </span>TrackLoaded,
 }
 
-<span class="doccomment">/// A track within a search result.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Track</span> {
-    <span class="doccomment">/// Details about a track, such as the author and title.</span>
-    <span class="kw">pub</span> <span class="ident">info</span>: <span class="ident">TrackInfo</span>,
-    <span class="doccomment">/// The base64 track string that you use in the [`Play`] event.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Play`]: crate::model::outgoing::Play</span>
-    <span class="kw">pub</span> <span class="ident">track</span>: <span class="ident">String</span>,
+<span class="doccomment">/// A track within a search result.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>Track {
+    <span class="doccomment">/// Details about a track, such as the author and title.
+    </span><span class="kw">pub </span>info: TrackInfo,
+    <span class="doccomment">/// The base64 track string that you use in the [`Play`] event.
+    ///
+    /// [`Play`]: crate::model::outgoing::Play
+    </span><span class="kw">pub </span>track: String,
 }
 
-<span class="doccomment">/// Additional information about a track, such as the author.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TrackInfo</span> {
-    <span class="doccomment">/// The name of the author, if provided.</span>
-    <span class="kw">pub</span> <span class="ident">author</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
-    <span class="doccomment">/// The identifier of the source of the track.</span>
-    <span class="kw">pub</span> <span class="ident">identifier</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// Whether the source is seekable.</span>
-    <span class="kw">pub</span> <span class="ident">is_seekable</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// Whether the source is a stream.</span>
-    <span class="kw">pub</span> <span class="ident">is_stream</span>: <span class="ident">bool</span>,
-    <span class="doccomment">/// The length of the audio in milliseconds.</span>
-    <span class="kw">pub</span> <span class="ident">length</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The position of the audio.</span>
-    <span class="kw">pub</span> <span class="ident">position</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The title, if provided.</span>
-    <span class="kw">pub</span> <span class="ident">title</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
-    <span class="doccomment">/// The source URI of the track.</span>
-    <span class="kw">pub</span> <span class="ident">uri</span>: <span class="ident">String</span>,
+<span class="doccomment">/// Additional information about a track, such as the author.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>TrackInfo {
+    <span class="doccomment">/// The name of the author, if provided.
+    </span><span class="kw">pub </span>author: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="doccomment">/// The identifier of the source of the track.
+    </span><span class="kw">pub </span>identifier: String,
+    <span class="doccomment">/// Whether the source is seekable.
+    </span><span class="kw">pub </span>is_seekable: bool,
+    <span class="doccomment">/// Whether the source is a stream.
+    </span><span class="kw">pub </span>is_stream: bool,
+    <span class="doccomment">/// The length of the audio in milliseconds.
+    </span><span class="kw">pub </span>length: u64,
+    <span class="doccomment">/// The position of the audio.
+    </span><span class="kw">pub </span>position: u64,
+    <span class="doccomment">/// The title, if provided.
+    </span><span class="kw">pub </span>title: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="doccomment">/// The source URI of the track.
+    </span><span class="kw">pub </span>uri: String,
 }
 
-<span class="doccomment">/// Information about a playlist from a search result.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PlaylistInfo</span> {
-    <span class="doccomment">/// The name of the playlist, if available.</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
-    <span class="doccomment">/// The selected track within the playlist, if available.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> = <span class="string">&quot;deserialize_selected_track&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">selected_track</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;,
+<span class="doccomment">/// Information about a playlist from a search result.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>PlaylistInfo {
+    <span class="doccomment">/// The name of the playlist, if available.
+    </span><span class="kw">pub </span>name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="doccomment">/// The selected track within the playlist, if available.
+    </span><span class="attribute">#[serde(default, deserialize_with = <span class="string">&quot;deserialize_selected_track&quot;</span>)]
+    </span><span class="kw">pub </span>selected_track: <span class="prelude-ty">Option</span>&lt;u64&gt;,
 }
 
-<span class="comment">// Any negative value should be treated as None.</span>
-<span class="kw">fn</span> <span class="ident">deserialize_selected_track</span>&lt;<span class="lifetime">&#39;de</span>, <span class="ident">D</span>&gt;(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">u64</span>&gt;, <span class="ident">D::Error</span>&gt;
-<span class="kw">where</span>
-    <span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;,
+<span class="comment">// Any negative value should be treated as None.
+</span><span class="kw">fn </span>deserialize_selected_track&lt;<span class="lifetime">&#39;de</span>, D&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;u64&gt;, D::Error&gt;
+<span class="kw">where
+    </span>D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
 {
-    <span class="prelude-val">Ok</span>(<span class="prelude-ty">Option</span>::&lt;<span class="ident">i64</span>&gt;<span class="ident">::deserialize</span>(<span class="ident">deserializer</span>)
-        .<span class="ident">ok</span>()
-        .<span class="ident">flatten</span>()
-        .<span class="ident">and_then</span>(|<span class="ident">selected</span>| <span class="ident">u64::try_from</span>(<span class="ident">selected</span>).<span class="ident">ok</span>()))
+    <span class="prelude-val">Ok</span>(<span class="prelude-ty">Option</span>::&lt;i64&gt;::deserialize(deserializer)
+        .ok()
+        .flatten()
+        .and_then(|selected| u64::try_from(selected).ok()))
 }
 
-<span class="doccomment">/// Possible track results for a query.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LoadedTracks</span> {
-    <span class="doccomment">/// The type of search result, such as a list of tracks or a playlist.</span>
-    <span class="kw">pub</span> <span class="ident">load_type</span>: <span class="ident">LoadType</span>,
-    <span class="doccomment">/// Information about the playlist, if provided.</span>
-    <span class="kw">pub</span> <span class="ident">playlist_info</span>: <span class="ident">PlaylistInfo</span>,
-    <span class="doccomment">/// The list of tracks returned for the search query.</span>
-    <span class="kw">pub</span> <span class="ident">tracks</span>: <span class="ident">Vec</span>&lt;<span class="ident">Track</span>&gt;,
+<span class="doccomment">/// Possible track results for a query.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>LoadedTracks {
+    <span class="doccomment">/// The type of search result, such as a list of tracks or a playlist.
+    </span><span class="kw">pub </span>load_type: LoadType,
+    <span class="doccomment">/// Information about the playlist, if provided.
+    </span><span class="kw">pub </span>playlist_info: PlaylistInfo,
+    <span class="doccomment">/// The list of tracks returned for the search query.
+    </span><span class="kw">pub </span>tracks: Vec&lt;Track&gt;,
 }
 
-<span class="doccomment">/// A failing IP address within the planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FailingAddress</span> {
-    <span class="doccomment">/// The IP address.</span>
-    <span class="kw">pub</span> <span class="ident">address</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The time that the address started failing in unix time.</span>
-    <span class="kw">pub</span> <span class="ident">failing_timestamp</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The time that the address started failing as a timestamp.</span>
-    <span class="kw">pub</span> <span class="ident">failing_time</span>: <span class="ident">String</span>,
+<span class="doccomment">/// A failing IP address within the planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>FailingAddress {
+    <span class="doccomment">/// The IP address.
+    </span><span class="kw">pub </span>address: String,
+    <span class="doccomment">/// The time that the address started failing in unix time.
+    </span><span class="kw">pub </span>failing_timestamp: u64,
+    <span class="doccomment">/// The time that the address started failing as a timestamp.
+    </span><span class="kw">pub </span>failing_time: String,
 }
 
-<span class="doccomment">/// The IP version in use by the block.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">IpBlockType</span> {
-    <span class="doccomment">/// An IPv4 block type.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;Inet4Address&quot;</span>)]</span>
-    <span class="ident">Inet4</span>,
-    <span class="doccomment">/// An IPv6 block type.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> = <span class="string">&quot;Inet6Address&quot;</span>)]</span>
-    <span class="ident">Inet6</span>,
+<span class="doccomment">/// The IP version in use by the block.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>IpBlockType {
+    <span class="doccomment">/// An IPv4 block type.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;Inet4Address&quot;</span>)]
+    </span>Inet4,
+    <span class="doccomment">/// An IPv6 block type.
+    </span><span class="attribute">#[serde(rename = <span class="string">&quot;Inet6Address&quot;</span>)]
+    </span>Inet6,
 }
 
-<span class="doccomment">/// A block of IP addresses.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IpBlock</span> {
-    <span class="doccomment">/// The IP version of the IP block.</span>
-    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">IpBlockType</span>,
-    <span class="doccomment">/// The size of the block&#39;s addresses.</span>
-    <span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// A block of IP addresses.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+</span><span class="kw">pub struct </span>IpBlock {
+    <span class="doccomment">/// The IP version of the IP block.
+    </span><span class="kw">pub </span>kind: IpBlockType,
+    <span class="doccomment">/// The size of the block&#39;s addresses.
+    </span><span class="kw">pub </span>size: u64,
 }
 
-<span class="doccomment">/// The type of route planner in use.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;PascalCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RoutePlannerType</span> {
-    <span class="doccomment">/// A Nano IP route planner.</span>
-    <span class="ident">NanoIp</span>,
-    <span class="doccomment">/// A Rotating IP route planner.</span>
-    <span class="ident">RotatingIp</span>,
-    <span class="doccomment">/// A Rotating Nano IP route planner.</span>
-    <span class="ident">RotatingNanoIp</span>,
+<span class="doccomment">/// The type of route planner in use.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;PascalCase&quot;</span>)]
+</span><span class="kw">pub enum </span>RoutePlannerType {
+    <span class="doccomment">/// A Nano IP route planner.
+    </span>NanoIp,
+    <span class="doccomment">/// A Rotating IP route planner.
+    </span>RotatingIp,
+    <span class="doccomment">/// A Rotating Nano IP route planner.
+    </span>RotatingNanoIp,
 }
 
-<span class="doccomment">/// The route planner in use.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RoutePlanner</span> {
-    <span class="doccomment">/// Information about a Nano IP route planner.</span>
-    <span class="ident">NanoIp</span>(<span class="ident">NanoIpRoutePlanner</span>),
-    <span class="doccomment">/// Information about a Rotating IP route planner.</span>
-    <span class="ident">RotatingIp</span>(<span class="ident">RotatingIpRoutePlanner</span>),
-    <span class="doccomment">/// Information about a Rotating Nano IP route planner.</span>
-    <span class="ident">RotatingNanoIp</span>(<span class="ident">RotatingNanoIpRoutePlanner</span>),
+<span class="doccomment">/// The route planner in use.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(untagged)]
+</span><span class="kw">pub enum </span>RoutePlanner {
+    <span class="doccomment">/// Information about a Nano IP route planner.
+    </span>NanoIp(NanoIpRoutePlanner),
+    <span class="doccomment">/// Information about a Rotating IP route planner.
+    </span>RotatingIp(RotatingIpRoutePlanner),
+    <span class="doccomment">/// Information about a Rotating Nano IP route planner.
+    </span>RotatingNanoIp(RotatingNanoIpRoutePlanner),
 }
 
-<span class="doccomment">/// A Nano IP planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NanoIpRoutePlanner</span> {
-    <span class="doccomment">/// The type of planner that is currently active.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For this planner, this is always [`RoutePlannerType::NanoIp`]</span>
-    <span class="kw">pub</span> <span class="ident">class</span>: <span class="ident">RoutePlannerType</span>,
-    <span class="doccomment">/// The details of the currently active Nano IP route planner.</span>
-    <span class="kw">pub</span> <span class="ident">details</span>: <span class="ident">NanoIpDetails</span>,
+<span class="doccomment">/// A Nano IP planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>NanoIpRoutePlanner {
+    <span class="doccomment">/// The type of planner that is currently active.
+    ///
+    /// For this planner, this is always [`RoutePlannerType::NanoIp`]
+    </span><span class="kw">pub </span>class: RoutePlannerType,
+    <span class="doccomment">/// The details of the currently active Nano IP route planner.
+    </span><span class="kw">pub </span>details: NanoIpDetails,
 }
 
-<span class="doccomment">/// Information about a Nano IP planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NanoIpDetails</span> {
-    <span class="doccomment">/// The active offset within the IP block.</span>
-    <span class="kw">pub</span> <span class="ident">current_address_index</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// A list of IP addresses in the range that are failing.</span>
-    <span class="kw">pub</span> <span class="ident">failing_addresses</span>: <span class="ident">Vec</span>&lt;<span class="ident">FailingAddress</span>&gt;,
-    <span class="doccomment">/// The associated IP block.</span>
-    <span class="kw">pub</span> <span class="ident">ip_block</span>: <span class="ident">IpBlock</span>,
+<span class="doccomment">/// Information about a Nano IP planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>NanoIpDetails {
+    <span class="doccomment">/// The active offset within the IP block.
+    </span><span class="kw">pub </span>current_address_index: u64,
+    <span class="doccomment">/// A list of IP addresses in the range that are failing.
+    </span><span class="kw">pub </span>failing_addresses: Vec&lt;FailingAddress&gt;,
+    <span class="doccomment">/// The associated IP block.
+    </span><span class="kw">pub </span>ip_block: IpBlock,
 }
 
-<span class="doccomment">/// A Rotating IP planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RotatingIpRoutePlanner</span> {
-    <span class="doccomment">/// The type of planner that is currently active.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For this planner, this is always [`RoutePlannerType::RotatingIp`]</span>
-    <span class="kw">pub</span> <span class="ident">class</span>: <span class="ident">RoutePlannerType</span>,
-    <span class="doccomment">/// The details of the currently active rotating IP route planner.</span>
-    <span class="kw">pub</span> <span class="ident">details</span>: <span class="ident">RotatingIpDetails</span>,
+<span class="doccomment">/// A Rotating IP planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>RotatingIpRoutePlanner {
+    <span class="doccomment">/// The type of planner that is currently active.
+    ///
+    /// For this planner, this is always [`RoutePlannerType::RotatingIp`]
+    </span><span class="kw">pub </span>class: RoutePlannerType,
+    <span class="doccomment">/// The details of the currently active rotating IP route planner.
+    </span><span class="kw">pub </span>details: RotatingIpDetails,
 }
 
-<span class="doccomment">/// Information about a Rotating IP planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RotatingIpDetails</span> {
-    <span class="doccomment">/// The currently used IP address.</span>
-    <span class="kw">pub</span> <span class="ident">current_address</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// A list of IP addresses in the range that are failing.</span>
-    <span class="kw">pub</span> <span class="ident">failing_addresses</span>: <span class="ident">Vec</span>&lt;<span class="ident">FailingAddress</span>&gt;,
-    <span class="doccomment">/// The associated IP block.</span>
-    <span class="kw">pub</span> <span class="ident">ip_block</span>: <span class="ident">IpBlock</span>,
-    <span class="doccomment">/// The current offset used within the IP block.</span>
-    <span class="kw">pub</span> <span class="ident">ip_index</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The number of rotations that have happened since the server started.</span>
-    <span class="kw">pub</span> <span class="ident">rotate_index</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Information about a Rotating IP planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>RotatingIpDetails {
+    <span class="doccomment">/// The currently used IP address.
+    </span><span class="kw">pub </span>current_address: String,
+    <span class="doccomment">/// A list of IP addresses in the range that are failing.
+    </span><span class="kw">pub </span>failing_addresses: Vec&lt;FailingAddress&gt;,
+    <span class="doccomment">/// The associated IP block.
+    </span><span class="kw">pub </span>ip_block: IpBlock,
+    <span class="doccomment">/// The current offset used within the IP block.
+    </span><span class="kw">pub </span>ip_index: u64,
+    <span class="doccomment">/// The number of rotations that have happened since the server started.
+    </span><span class="kw">pub </span>rotate_index: u64,
 }
 
-<span class="doccomment">/// A Rotating Nano IP planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RotatingNanoIpRoutePlanner</span> {
-    <span class="doccomment">/// The type of planner that is currently active.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For this planner, this is always [`RoutePlannerType::RotatingNanoIp`]</span>
-    <span class="kw">pub</span> <span class="ident">class</span>: <span class="ident">RoutePlannerType</span>,
-    <span class="doccomment">/// The details of the currently active rotating nano IP route planner.</span>
-    <span class="kw">pub</span> <span class="ident">details</span>: <span class="ident">RotatingNanoIpDetails</span>,
+<span class="doccomment">/// A Rotating Nano IP planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>RotatingNanoIpRoutePlanner {
+    <span class="doccomment">/// The type of planner that is currently active.
+    ///
+    /// For this planner, this is always [`RoutePlannerType::RotatingNanoIp`]
+    </span><span class="kw">pub </span>class: RoutePlannerType,
+    <span class="doccomment">/// The details of the currently active rotating nano IP route planner.
+    </span><span class="kw">pub </span>details: RotatingNanoIpDetails,
 }
 
-<span class="doccomment">/// Information about a Rotating Nano IP planner.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> = <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RotatingNanoIpDetails</span> {
-    <span class="doccomment">/// The block IPs that are chosen.</span>
-    <span class="kw">pub</span> <span class="ident">block_index</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The current IP address on rotation.</span>
-    <span class="kw">pub</span> <span class="ident">current_address_index</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// A list of IP addresses in the range that are failing.</span>
-    <span class="kw">pub</span> <span class="ident">failing_addresses</span>: <span class="ident">Vec</span>&lt;<span class="ident">FailingAddress</span>&gt;,
-    <span class="doccomment">/// The associated IP block.</span>
-    <span class="kw">pub</span> <span class="ident">ip_block</span>: <span class="ident">IpBlock</span>,
+<span class="doccomment">/// Information about a Rotating Nano IP planner.
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>RotatingNanoIpDetails {
+    <span class="doccomment">/// The block IPs that are chosen.
+    </span><span class="kw">pub </span>block_index: String,
+    <span class="doccomment">/// The current IP address on rotation.
+    </span><span class="kw">pub </span>current_address_index: u64,
+    <span class="doccomment">/// A list of IP addresses in the range that are failing.
+    </span><span class="kw">pub </span>failing_addresses: Vec&lt;FailingAddress&gt;,
+    <span class="doccomment">/// The associated IP block.
+    </span><span class="kw">pub </span>ip_block: IpBlock,
 }
 
-<span class="doccomment">/// Get a list of tracks that match an identifier.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The response will include a body which can be deserialized into a</span>
-<span class="doccomment">/// [`LoadedTracks`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Errors</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See the documentation for [`http::Error`].</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load_track</span>(
-    <span class="ident">address</span>: <span class="ident">SocketAddr</span>,
-    <span class="ident">identifier</span>: <span class="kw">impl</span> <span class="ident">AsRef</span>&lt;<span class="ident">str</span>&gt;,
-    <span class="ident">authorization</span>: <span class="kw">impl</span> <span class="ident">AsRef</span>&lt;<span class="ident">str</span>&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]&gt;, <span class="ident">HttpError</span>&gt; {
-    <span class="kw">let</span> <span class="ident">identifier</span> =
-        <span class="ident">percent_encoding::percent_encode</span>(<span class="ident">identifier</span>.<span class="ident">as_ref</span>().<span class="ident">as_bytes</span>(), <span class="ident">NON_ALPHANUMERIC</span>);
-    <span class="kw">let</span> <span class="ident">url</span> = <span class="macro">format!</span>(<span class="string">&quot;http://{address}/loadtracks?identifier={identifier}&quot;</span>);
+<span class="doccomment">/// Get a list of tracks that match an identifier.
+///
+/// The response will include a body which can be deserialized into a
+/// [`LoadedTracks`].
+///
+/// # Errors
+///
+/// See the documentation for [`http::Error`].
+</span><span class="kw">pub fn </span>load_track(
+    address: SocketAddr,
+    identifier: <span class="kw">impl </span>AsRef&lt;str&gt;,
+    authorization: <span class="kw">impl </span>AsRef&lt;str&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Request&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8]&gt;, HttpError&gt; {
+    <span class="kw">let </span>identifier =
+        percent_encoding::percent_encode(identifier.as_ref().as_bytes(), NON_ALPHANUMERIC);
+    <span class="kw">let </span>url = <span class="macro">format!</span>(<span class="string">&quot;http://{address}/loadtracks?identifier={identifier}&quot;</span>);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> = <span class="ident">Request::get</span>(<span class="ident">url</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>req = Request::get(url);
 
-    <span class="kw">let</span> <span class="ident">auth_value</span> = <span class="ident">HeaderValue::from_str</span>(<span class="ident">authorization</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
-    <span class="ident">req</span> = <span class="ident">req</span>.<span class="ident">header</span>(<span class="ident">AUTHORIZATION</span>, <span class="ident">auth_value</span>);
+    <span class="kw">let </span>auth_value = HeaderValue::from_str(authorization.as_ref())<span class="question-mark">?</span>;
+    req = req.header(AUTHORIZATION, auth_value);
 
-    <span class="ident">req</span>.<span class="ident">body</span>(<span class="string">b&quot;&quot;</span>)
+    req.body(<span class="string">b&quot;&quot;</span>)
 }
 
-<span class="doccomment">/// Get the configured route planner for a node by address.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The response will include a body which can be deserialized into a</span>
-<span class="doccomment">/// [`RoutePlanner`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Errors</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See the documentation for [`http::Error`].</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_route_planner</span>(
-    <span class="ident">address</span>: <span class="ident">SocketAddr</span>,
-    <span class="ident">authorization</span>: <span class="kw">impl</span> <span class="ident">AsRef</span>&lt;<span class="ident">str</span>&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]&gt;, <span class="ident">HttpError</span>&gt; {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> = <span class="ident">Request::get</span>(<span class="macro">format!</span>(<span class="string">&quot;{address}/routeplanner/status&quot;</span>));
+<span class="doccomment">/// Get the configured route planner for a node by address.
+///
+/// The response will include a body which can be deserialized into a
+/// [`RoutePlanner`].
+///
+/// # Errors
+///
+/// See the documentation for [`http::Error`].
+</span><span class="kw">pub fn </span>get_route_planner(
+    address: SocketAddr,
+    authorization: <span class="kw">impl </span>AsRef&lt;str&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Request&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8]&gt;, HttpError&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>req = Request::get(<span class="macro">format!</span>(<span class="string">&quot;{address}/routeplanner/status&quot;</span>));
 
-    <span class="kw">let</span> <span class="ident">auth_value</span> = <span class="ident">HeaderValue::from_str</span>(<span class="ident">authorization</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
-    <span class="ident">req</span> = <span class="ident">req</span>.<span class="ident">header</span>(<span class="ident">AUTHORIZATION</span>, <span class="ident">auth_value</span>);
+    <span class="kw">let </span>auth_value = HeaderValue::from_str(authorization.as_ref())<span class="question-mark">?</span>;
+    req = req.header(AUTHORIZATION, auth_value);
 
-    <span class="ident">req</span>.<span class="ident">body</span>(<span class="string">b&quot;&quot;</span>)
+    req.body(<span class="string">b&quot;&quot;</span>)
 }
 
-<span class="doccomment">/// Unmark an IP address as being failed, meaning that it can be used again.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The response will not include a body on success.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Errors</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See the documentation for [`http::Error`].</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unmark_failed_address</span>(
-    <span class="ident">node_address</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">SocketAddr</span>&gt;,
-    <span class="ident">authorization</span>: <span class="kw">impl</span> <span class="ident">AsRef</span>&lt;<span class="ident">str</span>&gt;,
-    <span class="ident">route_address</span>: <span class="kw">impl</span> <span class="ident">Into</span>&lt;<span class="ident">IpAddr</span>&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;&gt;, <span class="ident">HttpError</span>&gt; {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> = <span class="ident">Request::post</span>(<span class="macro">format!</span>(<span class="string">&quot;{}/routeplanner/status&quot;</span>, <span class="ident">node_address</span>.<span class="ident">into</span>()));
+<span class="doccomment">/// Unmark an IP address as being failed, meaning that it can be used again.
+///
+/// The response will not include a body on success.
+///
+/// # Errors
+///
+/// See the documentation for [`http::Error`].
+</span><span class="kw">pub fn </span>unmark_failed_address(
+    node_address: <span class="kw">impl </span>Into&lt;SocketAddr&gt;,
+    authorization: <span class="kw">impl </span>AsRef&lt;str&gt;,
+    route_address: <span class="kw">impl </span>Into&lt;IpAddr&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Request&lt;Vec&lt;u8&gt;&gt;, HttpError&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>req = Request::post(<span class="macro">format!</span>(<span class="string">&quot;{}/routeplanner/status&quot;</span>, node_address.into()));
 
-    <span class="kw">let</span> <span class="ident">auth_value</span> = <span class="ident">HeaderValue::from_str</span>(<span class="ident">authorization</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
-    <span class="ident">req</span> = <span class="ident">req</span>.<span class="ident">header</span>(<span class="ident">AUTHORIZATION</span>, <span class="ident">auth_value</span>);
+    <span class="kw">let </span>auth_value = HeaderValue::from_str(authorization.as_ref())<span class="question-mark">?</span>;
+    req = req.header(AUTHORIZATION, auth_value);
 
-    <span class="ident">req</span>.<span class="ident">body</span>(
-        <span class="ident">serde_json::to_vec</span>(<span class="kw-2">&amp;</span><span class="macro">serde_json::json!</span>({
-            <span class="string">&quot;address&quot;</span>: <span class="ident">route_address</span>.<span class="ident">into</span>(),
+    req.body(
+        serde_json::to_vec(<span class="kw-2">&amp;</span><span class="macro">serde_json::json!</span>({
+            <span class="string">&quot;address&quot;</span>: route_address.into(),
         }))
-        .<span class="ident">expect</span>(<span class="string">&quot;valid json&quot;</span>),
+        .expect(<span class="string">&quot;valid json&quot;</span>),
     )
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{
-        <span class="ident">FailingAddress</span>, <span class="ident">IpBlock</span>, <span class="ident">IpBlockType</span>, <span class="ident">LoadType</span>, <span class="ident">LoadedTracks</span>, <span class="ident">NanoIpDetails</span>,
-        <span class="ident">NanoIpRoutePlanner</span>, <span class="ident">PlaylistInfo</span>, <span class="ident">RotatingIpDetails</span>, <span class="ident">RotatingIpRoutePlanner</span>,
-        <span class="ident">RotatingNanoIpDetails</span>, <span class="ident">RotatingNanoIpRoutePlanner</span>, <span class="ident">RoutePlanner</span>, <span class="ident">RoutePlannerType</span>, <span class="ident">Track</span>,
-        <span class="ident">TrackInfo</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{
+        FailingAddress, IpBlock, IpBlockType, LoadType, LoadedTracks, NanoIpDetails,
+        NanoIpRoutePlanner, PlaylistInfo, RotatingIpDetails, RotatingIpRoutePlanner,
+        RotatingNanoIpDetails, RotatingNanoIpRoutePlanner, RoutePlanner, RoutePlannerType, Track,
+        TrackInfo,
     };
-    <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-    <span class="kw">use</span> <span class="ident">serde_test::Token</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+    <span class="kw">use </span>serde::{Deserialize, Serialize};
+    <span class="kw">use </span>serde_test::Token;
+    <span class="kw">use </span>static_assertions::{assert_fields, assert_impl_all};
+    <span class="kw">use </span>std::fmt::Debug;
 
-    <span class="macro">assert_fields!</span>(<span class="ident">FailingAddress</span>: <span class="ident">address</span>, <span class="ident">failing_timestamp</span>, <span class="ident">failing_time</span>);
+    <span class="macro">assert_fields!</span>(FailingAddress: address, failing_timestamp, failing_time);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">FailingAddress</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        FailingAddress: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">IpBlockType</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        IpBlockType: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">IpBlock</span>: <span class="ident">kind</span>, <span class="ident">size</span>);
+    <span class="macro">assert_fields!</span>(IpBlock: kind, size);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">IpBlock</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        IpBlock: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">LoadType</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        LoadType: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">LoadedTracks</span>: <span class="ident">load_type</span>, <span class="ident">playlist_info</span>, <span class="ident">tracks</span>);
+    <span class="macro">assert_fields!</span>(LoadedTracks: load_type, playlist_info, tracks);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">LoadedTracks</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        LoadedTracks: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_fields!</span>(
-        <span class="ident">NanoIpDetails</span>: <span class="ident">current_address_index</span>,
-        <span class="ident">failing_addresses</span>,
-        <span class="ident">ip_block</span>
+        NanoIpDetails: current_address_index,
+        failing_addresses,
+        ip_block
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">NanoIpDetails</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        NanoIpDetails: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">NanoIpRoutePlanner</span>: <span class="ident">class</span>, <span class="ident">details</span>);
+    <span class="macro">assert_fields!</span>(NanoIpRoutePlanner: class, details);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">NanoIpRoutePlanner</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        NanoIpRoutePlanner: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">PlaylistInfo</span>: <span class="ident">name</span>, <span class="ident">selected_track</span>);
+    <span class="macro">assert_fields!</span>(PlaylistInfo: name, selected_track);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">PlaylistInfo</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        PlaylistInfo: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_fields!</span>(
-        <span class="ident">RotatingIpDetails</span>: <span class="ident">current_address</span>,
-        <span class="ident">failing_addresses</span>,
-        <span class="ident">ip_block</span>,
-        <span class="ident">ip_index</span>,
-        <span class="ident">rotate_index</span>
+        RotatingIpDetails: current_address,
+        failing_addresses,
+        ip_block,
+        ip_index,
+        rotate_index
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">RotatingIpDetails</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        RotatingIpDetails: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">RotatingIpRoutePlanner</span>: <span class="ident">class</span>, <span class="ident">details</span>);
+    <span class="macro">assert_fields!</span>(RotatingIpRoutePlanner: class, details);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">RotatingIpRoutePlanner</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        RotatingIpRoutePlanner: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_fields!</span>(
-        <span class="ident">RotatingNanoIpDetails</span>: <span class="ident">block_index</span>,
-        <span class="ident">current_address_index</span>,
-        <span class="ident">failing_addresses</span>,
-        <span class="ident">ip_block</span>
+        RotatingNanoIpDetails: block_index,
+        current_address_index,
+        failing_addresses,
+        ip_block
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">RotatingNanoIpDetails</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        RotatingNanoIpDetails: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">RotatingNanoIpRoutePlanner</span>: <span class="ident">class</span>, <span class="ident">details</span>);
+    <span class="macro">assert_fields!</span>(RotatingNanoIpRoutePlanner: class, details);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">RotatingNanoIpRoutePlanner</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
-    );
-    <span class="macro">assert_impl_all!</span>(
-        <span class="ident">RoutePlannerType</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        RotatingNanoIpRoutePlanner: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">RoutePlanner</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>,
+        RoutePlannerType: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
+    );
+    <span class="macro">assert_impl_all!</span>(
+        RoutePlanner: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync,
     );
     <span class="macro">assert_fields!</span>(
-        <span class="ident">TrackInfo</span>: <span class="ident">author</span>,
-        <span class="ident">identifier</span>,
-        <span class="ident">is_seekable</span>,
-        <span class="ident">is_stream</span>,
-        <span class="ident">length</span>,
-        <span class="ident">position</span>,
-        <span class="ident">title</span>,
-        <span class="ident">uri</span>
+        TrackInfo: author,
+        identifier,
+        is_seekable,
+        is_stream,
+        length,
+        position,
+        title,
+        uri
     );
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">TrackInfo</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>
+        TrackInfo: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync
     );
-    <span class="macro">assert_fields!</span>(<span class="ident">Track</span>: <span class="ident">info</span>, <span class="ident">track</span>);
+    <span class="macro">assert_fields!</span>(Track: info, track);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">Track</span>: <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;static</span>&gt;,
-        <span class="ident">Eq</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Serialize</span>,
-        <span class="ident">Sync</span>
+        Track: Clone,
+        Debug,
+        Deserialize&lt;<span class="lifetime">&#39;static</span>&gt;,
+        Eq,
+        PartialEq,
+        Send,
+        Serialize,
+        Sync
     );
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">test_deserialize_playlist_info_negative_selected_track</span>() {
-        <span class="kw">let</span> <span class="ident">value</span> = <span class="ident">PlaylistInfo</span> {
-            <span class="ident">name</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;Test Playlist&quot;</span>.<span class="ident">to_owned</span>()),
-            <span class="ident">selected_track</span>: <span class="prelude-val">None</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">pub fn </span>test_deserialize_playlist_info_negative_selected_track() {
+        <span class="kw">let </span>value = PlaylistInfo {
+            name: <span class="prelude-val">Some</span>(<span class="string">&quot;Test Playlist&quot;</span>.to_owned()),
+            selected_track: <span class="prelude-val">None</span>,
         };
 
-        <span class="ident">serde_test::assert_de_tokens</span>(
-            <span class="kw-2">&amp;</span><span class="ident">value</span>,
+        serde_test::assert_de_tokens(
+            <span class="kw-2">&amp;</span>value,
             <span class="kw-2">&amp;</span>[
-                <span class="ident">Token::Struct</span> {
-                    <span class="ident">name</span>: <span class="string">&quot;PlaylistInfo&quot;</span>,
-                    <span class="ident">len</span>: <span class="number">13</span>,
+                Token::Struct {
+                    name: <span class="string">&quot;PlaylistInfo&quot;</span>,
+                    len: <span class="number">13</span>,
                 },
-                <span class="ident">Token::Str</span>(<span class="string">&quot;name&quot;</span>),
-                <span class="ident">Token::Some</span>,
-                <span class="ident">Token::Str</span>(<span class="string">&quot;Test Playlist&quot;</span>),
-                <span class="ident">Token::Str</span>(<span class="string">&quot;selectedTrack&quot;</span>),
-                <span class="ident">Token::I64</span>(-<span class="number">1</span>),
-                <span class="ident">Token::StructEnd</span>,
+                Token::Str(<span class="string">&quot;name&quot;</span>),
+                Token::Some,
+                Token::Str(<span class="string">&quot;Test Playlist&quot;</span>),
+                Token::Str(<span class="string">&quot;selectedTrack&quot;</span>),
+                Token::I64(-<span class="number">1</span>),
+                Token::StructEnd,
             ],
         );
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_lavalink" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_lavalink" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

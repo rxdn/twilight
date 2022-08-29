@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_gateway/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_gateway/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -431,438 +431,438 @@
 <span id="431">431</span>
 <span id="432">432</span>
 <span id="433">433</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
-<span class="kw">use</span> <span class="ident">twilight_model::gateway::event::EventType</span>;
+</pre><pre class="rust"><code><span class="kw">use </span>bitflags::bitflags;
+<span class="kw">use </span>twilight_model::gateway::event::EventType;
 
-<span class="macro">bitflags!</span> {
-    <span class="doccomment">/// Bitflags representing all of the possible types of events.</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EventTypeFlags</span>: <span class="ident">u128</span> {
-        <span class="doccomment">/// Message has been blocked by AutoMod according to a rule.</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_ACTION_EXECUTION</span> = <span class="number">1</span> &lt;&lt; <span class="number">71</span>;
-        <span class="doccomment">/// [`AutoModerationRule`] has been created.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_RULE_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">72</span>;
-        <span class="doccomment">/// [`AutoModerationRule`] has been deleted.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_RULE_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">73</span>;
-        <span class="doccomment">/// [`AutoModerationRule`] has been updated.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_RULE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">74</span>;
-        <span class="doccomment">/// User has been banned from a guild.</span>
-        <span class="kw">const</span> <span class="ident">BAN_ADD</span> = <span class="number">1</span>;
-        <span class="doccomment">/// User has been unbanned from a guild.</span>
-        <span class="kw">const</span> <span class="ident">BAN_REMOVE</span> = <span class="number">1</span> &lt;&lt; <span class="number">1</span>;
-        <span class="doccomment">/// Channel has been created.</span>
-        <span class="kw">const</span> <span class="ident">CHANNEL_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">2</span>;
-        <span class="doccomment">/// Channel has been deleted.</span>
-        <span class="kw">const</span> <span class="ident">CHANNEL_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">3</span>;
-        <span class="doccomment">/// Channel&#39;s pins have been updated.</span>
-        <span class="kw">const</span> <span class="ident">CHANNEL_PINS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;
-        <span class="doccomment">/// Channel has been updated.</span>
-        <span class="kw">const</span> <span class="ident">CHANNEL_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span>;
-        <span class="doccomment">/// A command&#39;s permissions has been updated.</span>
-        <span class="kw">const</span> <span class="ident">COMMAND_PERMISSIONS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">70</span>;
-        <span class="doccomment">/// Heartbeat has been created.</span>
-        <span class="kw">const</span> <span class="ident">GATEWAY_HEARTBEAT</span> = <span class="number">1</span> &lt;&lt; <span class="number">6</span>;
-        <span class="doccomment">/// Heartbeat has been acknowledged.</span>
-        <span class="kw">const</span> <span class="ident">GATEWAY_HEARTBEAT_ACK</span> = <span class="number">1</span> &lt;&lt; <span class="number">7</span>;
-        <span class="doccomment">/// A &quot;hello&quot; packet has been received from the gateway.</span>
-        <span class="kw">const</span> <span class="ident">GATEWAY_HELLO</span> = <span class="number">1</span> &lt;&lt; <span class="number">8</span>;
-        <span class="doccomment">/// Shard&#39;s session has been invalidated.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// A payload containing a boolean is included. If `true` the session is</span>
-        <span class="doccomment">/// resumable. If not, then the shard must initialize a new session.</span>
-        <span class="kw">const</span> <span class="ident">GATEWAY_INVALIDATE_SESSION</span> = <span class="number">1</span> &lt;&lt; <span class="number">69</span>;
-        <span class="doccomment">/// Gateway is indicating that a shard should perform a reconnect.</span>
-        <span class="kw">const</span> <span class="ident">GATEWAY_RECONNECT</span> = <span class="number">1</span> &lt;&lt; <span class="number">9</span>;
-        <span class="doccomment">/// Gift code sent in a channel has been updated.</span>
-        <span class="kw">const</span> <span class="ident">GIFT_CODE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">49</span>;
-        <span class="doccomment">/// A guild has been created.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">10</span>;
-        <span class="doccomment">/// A guild has been deleted or the current user has been removed from a guild.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">11</span>;
-        <span class="doccomment">/// A guild&#39;s emojis have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_EMOJIS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">12</span>;
-        <span class="doccomment">/// A guild&#39;s integrations have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_INTEGRATIONS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">13</span>;
-        <span class="doccomment">/// A guild&#39;s integrations have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENT_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">64</span>;
-        <span class="doccomment">/// A guild&#39;s integrations have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENT_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">65</span>;
-        <span class="doccomment">/// A guild&#39;s integrations have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENT_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">66</span>;
-        <span class="doccomment">/// A guild&#39;s integrations have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENT_USER_ADD</span> = <span class="number">1</span> &lt;&lt; <span class="number">67</span>;
-        <span class="doccomment">/// A guild&#39;s integrations have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENT_USER_REMOVE</span> = <span class="number">1</span> &lt;&lt; <span class="number">68</span>;
-        <span class="doccomment">/// A guild&#39;s stickers have been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_STICKERS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">63</span>;
-        <span class="doccomment">/// A guild has been updated.</span>
-        <span class="kw">const</span> <span class="ident">GUILD_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">14</span>;
-        <span class="doccomment">/// A guild integration was created.</span>
-        <span class="kw">const</span> <span class="ident">INTEGRATION_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">60</span>;
-        <span class="doccomment">/// A guild integration was deleted.</span>
-        <span class="kw">const</span> <span class="ident">INTEGRATION_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">61</span>;
-        <span class="doccomment">/// A guild integration was updated.</span>
-        <span class="kw">const</span> <span class="ident">INTEGRATION_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">62</span>;
-        <span class="doccomment">/// An interaction was invoked by a user.</span>
-        <span class="kw">const</span> <span class="ident">INTERACTION_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">56</span>;
-        <span class="doccomment">/// Invite for a channel has been created.</span>
-        <span class="kw">const</span> <span class="ident">INVITE_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">46</span>;
-        <span class="doccomment">/// Invite for a channel has been deleted.</span>
-        <span class="kw">const</span> <span class="ident">INVITE_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">47</span>;
-        <span class="doccomment">/// Member has been added to a guild.</span>
-        <span class="kw">const</span> <span class="ident">MEMBER_ADD</span> = <span class="number">1</span> &lt;&lt; <span class="number">15</span>;
-        <span class="doccomment">/// Member has been removed from a guild.</span>
-        <span class="kw">const</span> <span class="ident">MEMBER_REMOVE</span> = <span class="number">1</span> &lt;&lt; <span class="number">16</span>;
-        <span class="doccomment">/// Member in a guild has been updated.</span>
-        <span class="kw">const</span> <span class="ident">MEMBER_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">17</span>;
-        <span class="doccomment">/// Group of members from a guild.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This may be all of the remaining members or not; the chunk index in</span>
-        <span class="doccomment">/// the event payload needs to be confirmed.</span>
-        <span class="kw">const</span> <span class="ident">MEMBER_CHUNK</span> = <span class="number">1</span> &lt;&lt; <span class="number">18</span>;
-        <span class="doccomment">/// Message created in a channel.</span>
-        <span class="kw">const</span> <span class="ident">MESSAGE_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">19</span>;
-        <span class="doccomment">/// Message deleted in a channel.</span>
-        <span class="kw">const</span> <span class="ident">MESSAGE_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">20</span>;
-        <span class="doccomment">/// Multiple messages have been deleted in a channel.</span>
-        <span class="kw">const</span> <span class="ident">MESSAGE_DELETE_BULK</span> = <span class="number">1</span> &lt;&lt; <span class="number">21</span>;
-        <span class="doccomment">/// Message in a channel has been updated.</span>
-        <span class="kw">const</span> <span class="ident">MESSAGE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">22</span>;
-        <span class="doccomment">/// User&#39;s presence details are updated.</span>
-        <span class="kw">const</span> <span class="ident">PRESENCE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">23</span>;
-        <span class="doccomment">/// Group of presences are replaced.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This is a placeholder as it *can* happen for bots but has no real</span>
-        <span class="doccomment">/// meaning.</span>
-        <span class="kw">const</span> <span class="ident">PRESENCES_REPLACE</span> = <span class="number">1</span> &lt;&lt; <span class="number">24</span>;
-        <span class="doccomment">/// Reaction has been added to a message.</span>
-        <span class="kw">const</span> <span class="ident">REACTION_ADD</span> = <span class="number">1</span> &lt;&lt; <span class="number">25</span>;
-        <span class="doccomment">/// Reaction has been removed from a message.</span>
-        <span class="kw">const</span> <span class="ident">REACTION_REMOVE</span> = <span class="number">1</span> &lt;&lt; <span class="number">26</span>;
-        <span class="doccomment">/// All of the reactions for a message have been removed.</span>
-        <span class="kw">const</span> <span class="ident">REACTION_REMOVE_ALL</span> = <span class="number">1</span> &lt;&lt; <span class="number">27</span>;
-        <span class="doccomment">/// All of a given emoji&#39;s reactions for a message have been removed.</span>
-        <span class="kw">const</span> <span class="ident">REACTION_REMOVE_EMOJI</span> = <span class="number">1</span> &lt;&lt; <span class="number">48</span>;
-        <span class="doccomment">/// Session is initialized.</span>
-        <span class="kw">const</span> <span class="ident">READY</span> = <span class="number">1</span> &lt;&lt; <span class="number">28</span>;
-        <span class="doccomment">/// Session is resumed.</span>
-        <span class="kw">const</span> <span class="ident">RESUMED</span> = <span class="number">1</span> &lt;&lt; <span class="number">29</span>;
-        <span class="doccomment">/// Role has been created in a guild.</span>
-        <span class="kw">const</span> <span class="ident">ROLE_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;
-        <span class="doccomment">/// Role has been deleted in a guild.</span>
-        <span class="kw">const</span> <span class="ident">ROLE_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">31</span>;
-        <span class="doccomment">/// Role has been updated in a guild.</span>
-        <span class="kw">const</span> <span class="ident">ROLE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">32</span>;
-        <span class="doccomment">/// Shard has finalized a session with the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_CONNECTED</span> = <span class="number">1</span> &lt;&lt; <span class="number">33</span>;
-        <span class="doccomment">/// Shard has begun connecting to the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_CONNECTING</span> = <span class="number">1</span> &lt;&lt; <span class="number">34</span>;
-        <span class="doccomment">/// Shard has disconnected from the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_DISCONNECTED</span> = <span class="number">1</span> &lt;&lt; <span class="number">35</span>;
-        <span class="doccomment">/// Shard is identifying to create a session with the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_IDENTIFYING</span> = <span class="number">1</span> &lt;&lt; <span class="number">36</span>;
-        <span class="doccomment">/// Incoming message has been received from the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_PAYLOAD</span> = <span class="number">1</span> &lt;&lt; <span class="number">45</span>;
-        <span class="doccomment">/// Shard is reconnecting to the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_RECONNECTING</span> = <span class="number">1</span> &lt;&lt; <span class="number">37</span>;
-        <span class="doccomment">/// Shard is resuming a session with the gateway.</span>
-        <span class="kw">const</span> <span class="ident">SHARD_RESUMING</span> = <span class="number">1</span> &lt;&lt; <span class="number">38</span>;
-        <span class="doccomment">/// Stage instance was created in a stage channel.</span>
-        <span class="kw">const</span> <span class="ident">STAGE_INSTANCE_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">57</span>;
-        <span class="doccomment">/// Stage instance was deleted in a stage channel.</span>
-        <span class="kw">const</span> <span class="ident">STAGE_INSTANCE_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">58</span>;
-        <span class="doccomment">/// Stage instance was updated in a stage channel.</span>
-        <span class="kw">const</span> <span class="ident">STAGE_INSTANCE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">59</span>;
-        <span class="doccomment">/// A thread has been created, relevant to the current user,</span>
-        <span class="doccomment">/// or the current user has been added to a thread.</span>
-        <span class="kw">const</span> <span class="ident">THREAD_CREATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">50</span>;
-        <span class="doccomment">/// A thread, relevant to the current user, has been deleted.</span>
-        <span class="kw">const</span> <span class="ident">THREAD_DELETE</span> = <span class="number">1</span> &lt;&lt; <span class="number">52</span>;
-        <span class="doccomment">/// The current user has gained access to a thread.</span>
-        <span class="kw">const</span> <span class="ident">THREAD_LIST_SYNC</span> = <span class="number">1</span> &lt;&lt; <span class="number">53</span>;
-        <span class="doccomment">/// A user has been added to or removed from a thread.</span>
-        <span class="kw">const</span> <span class="ident">THREAD_MEMBERS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">55</span>;
-        <span class="doccomment">/// The thread member object for the current user has been updated.</span>
-        <span class="kw">const</span> <span class="ident">THREAD_MEMBER_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">54</span>;
-        <span class="doccomment">/// A thread has been updated.</span>
-        <span class="kw">const</span> <span class="ident">THREAD_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">51</span>;
-        <span class="doccomment">/// User has begun typing in a channel.</span>
-        <span class="kw">const</span> <span class="ident">TYPING_START</span> = <span class="number">1</span> &lt;&lt; <span class="number">39</span>;
-        <span class="doccomment">/// Guild is unavailable, potentially due to an outage.</span>
-        <span class="kw">const</span> <span class="ident">UNAVAILABLE_GUILD</span> = <span class="number">1</span> &lt;&lt; <span class="number">40</span>;
-        <span class="doccomment">/// Current user&#39;s profile has been updated.</span>
-        <span class="kw">const</span> <span class="ident">USER_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">41</span>;
-        <span class="doccomment">/// Voice server has provided an update with voice session details.</span>
-        <span class="kw">const</span> <span class="ident">VOICE_SERVER_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">42</span>;
-        <span class="doccomment">/// User&#39;s state in a voice channel has been updated.</span>
-        <span class="kw">const</span> <span class="ident">VOICE_STATE_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">43</span>;
-        <span class="doccomment">/// Webhook in a guild has been updated.</span>
-        <span class="kw">const</span> <span class="ident">WEBHOOKS_UPDATE</span> = <span class="number">1</span> &lt;&lt; <span class="number">44</span>;
+<span class="macro">bitflags! </span>{
+    <span class="doccomment">/// Bitflags representing all of the possible types of events.
+    </span><span class="kw">pub struct </span>EventTypeFlags: u128 {
+        <span class="doccomment">/// Message has been blocked by AutoMod according to a rule.
+        </span><span class="kw">const </span>AUTO_MODERATION_ACTION_EXECUTION = <span class="number">1 </span>&lt;&lt; <span class="number">71</span>;
+        <span class="doccomment">/// [`AutoModerationRule`] has been created.
+        ///
+        /// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule
+        </span><span class="kw">const </span>AUTO_MODERATION_RULE_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">72</span>;
+        <span class="doccomment">/// [`AutoModerationRule`] has been deleted.
+        ///
+        /// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule
+        </span><span class="kw">const </span>AUTO_MODERATION_RULE_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">73</span>;
+        <span class="doccomment">/// [`AutoModerationRule`] has been updated.
+        ///
+        /// [`AutoModerationRule`]: crate::guild::auto_moderation::AutoModerationRule
+        </span><span class="kw">const </span>AUTO_MODERATION_RULE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">74</span>;
+        <span class="doccomment">/// User has been banned from a guild.
+        </span><span class="kw">const </span>BAN_ADD = <span class="number">1</span>;
+        <span class="doccomment">/// User has been unbanned from a guild.
+        </span><span class="kw">const </span>BAN_REMOVE = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
+        <span class="doccomment">/// Channel has been created.
+        </span><span class="kw">const </span>CHANNEL_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
+        <span class="doccomment">/// Channel has been deleted.
+        </span><span class="kw">const </span>CHANNEL_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">3</span>;
+        <span class="doccomment">/// Channel&#39;s pins have been updated.
+        </span><span class="kw">const </span>CHANNEL_PINS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
+        <span class="doccomment">/// Channel has been updated.
+        </span><span class="kw">const </span>CHANNEL_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
+        <span class="doccomment">/// A command&#39;s permissions has been updated.
+        </span><span class="kw">const </span>COMMAND_PERMISSIONS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">70</span>;
+        <span class="doccomment">/// Heartbeat has been created.
+        </span><span class="kw">const </span>GATEWAY_HEARTBEAT = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
+        <span class="doccomment">/// Heartbeat has been acknowledged.
+        </span><span class="kw">const </span>GATEWAY_HEARTBEAT_ACK = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
+        <span class="doccomment">/// A &quot;hello&quot; packet has been received from the gateway.
+        </span><span class="kw">const </span>GATEWAY_HELLO = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
+        <span class="doccomment">/// Shard&#39;s session has been invalidated.
+        ///
+        /// A payload containing a boolean is included. If `true` the session is
+        /// resumable. If not, then the shard must initialize a new session.
+        </span><span class="kw">const </span>GATEWAY_INVALIDATE_SESSION = <span class="number">1 </span>&lt;&lt; <span class="number">69</span>;
+        <span class="doccomment">/// Gateway is indicating that a shard should perform a reconnect.
+        </span><span class="kw">const </span>GATEWAY_RECONNECT = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
+        <span class="doccomment">/// Gift code sent in a channel has been updated.
+        </span><span class="kw">const </span>GIFT_CODE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">49</span>;
+        <span class="doccomment">/// A guild has been created.
+        </span><span class="kw">const </span>GUILD_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">10</span>;
+        <span class="doccomment">/// A guild has been deleted or the current user has been removed from a guild.
+        </span><span class="kw">const </span>GUILD_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">11</span>;
+        <span class="doccomment">/// A guild&#39;s emojis have been updated.
+        </span><span class="kw">const </span>GUILD_EMOJIS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">12</span>;
+        <span class="doccomment">/// A guild&#39;s integrations have been updated.
+        </span><span class="kw">const </span>GUILD_INTEGRATIONS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">13</span>;
+        <span class="doccomment">/// A guild&#39;s integrations have been updated.
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENT_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">64</span>;
+        <span class="doccomment">/// A guild&#39;s integrations have been updated.
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENT_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">65</span>;
+        <span class="doccomment">/// A guild&#39;s integrations have been updated.
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENT_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">66</span>;
+        <span class="doccomment">/// A guild&#39;s integrations have been updated.
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENT_USER_ADD = <span class="number">1 </span>&lt;&lt; <span class="number">67</span>;
+        <span class="doccomment">/// A guild&#39;s integrations have been updated.
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENT_USER_REMOVE = <span class="number">1 </span>&lt;&lt; <span class="number">68</span>;
+        <span class="doccomment">/// A guild&#39;s stickers have been updated.
+        </span><span class="kw">const </span>GUILD_STICKERS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">63</span>;
+        <span class="doccomment">/// A guild has been updated.
+        </span><span class="kw">const </span>GUILD_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">14</span>;
+        <span class="doccomment">/// A guild integration was created.
+        </span><span class="kw">const </span>INTEGRATION_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">60</span>;
+        <span class="doccomment">/// A guild integration was deleted.
+        </span><span class="kw">const </span>INTEGRATION_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">61</span>;
+        <span class="doccomment">/// A guild integration was updated.
+        </span><span class="kw">const </span>INTEGRATION_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">62</span>;
+        <span class="doccomment">/// An interaction was invoked by a user.
+        </span><span class="kw">const </span>INTERACTION_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">56</span>;
+        <span class="doccomment">/// Invite for a channel has been created.
+        </span><span class="kw">const </span>INVITE_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">46</span>;
+        <span class="doccomment">/// Invite for a channel has been deleted.
+        </span><span class="kw">const </span>INVITE_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">47</span>;
+        <span class="doccomment">/// Member has been added to a guild.
+        </span><span class="kw">const </span>MEMBER_ADD = <span class="number">1 </span>&lt;&lt; <span class="number">15</span>;
+        <span class="doccomment">/// Member has been removed from a guild.
+        </span><span class="kw">const </span>MEMBER_REMOVE = <span class="number">1 </span>&lt;&lt; <span class="number">16</span>;
+        <span class="doccomment">/// Member in a guild has been updated.
+        </span><span class="kw">const </span>MEMBER_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">17</span>;
+        <span class="doccomment">/// Group of members from a guild.
+        ///
+        /// This may be all of the remaining members or not; the chunk index in
+        /// the event payload needs to be confirmed.
+        </span><span class="kw">const </span>MEMBER_CHUNK = <span class="number">1 </span>&lt;&lt; <span class="number">18</span>;
+        <span class="doccomment">/// Message created in a channel.
+        </span><span class="kw">const </span>MESSAGE_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">19</span>;
+        <span class="doccomment">/// Message deleted in a channel.
+        </span><span class="kw">const </span>MESSAGE_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">20</span>;
+        <span class="doccomment">/// Multiple messages have been deleted in a channel.
+        </span><span class="kw">const </span>MESSAGE_DELETE_BULK = <span class="number">1 </span>&lt;&lt; <span class="number">21</span>;
+        <span class="doccomment">/// Message in a channel has been updated.
+        </span><span class="kw">const </span>MESSAGE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">22</span>;
+        <span class="doccomment">/// User&#39;s presence details are updated.
+        </span><span class="kw">const </span>PRESENCE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">23</span>;
+        <span class="doccomment">/// Group of presences are replaced.
+        ///
+        /// This is a placeholder as it *can* happen for bots but has no real
+        /// meaning.
+        </span><span class="kw">const </span>PRESENCES_REPLACE = <span class="number">1 </span>&lt;&lt; <span class="number">24</span>;
+        <span class="doccomment">/// Reaction has been added to a message.
+        </span><span class="kw">const </span>REACTION_ADD = <span class="number">1 </span>&lt;&lt; <span class="number">25</span>;
+        <span class="doccomment">/// Reaction has been removed from a message.
+        </span><span class="kw">const </span>REACTION_REMOVE = <span class="number">1 </span>&lt;&lt; <span class="number">26</span>;
+        <span class="doccomment">/// All of the reactions for a message have been removed.
+        </span><span class="kw">const </span>REACTION_REMOVE_ALL = <span class="number">1 </span>&lt;&lt; <span class="number">27</span>;
+        <span class="doccomment">/// All of a given emoji&#39;s reactions for a message have been removed.
+        </span><span class="kw">const </span>REACTION_REMOVE_EMOJI = <span class="number">1 </span>&lt;&lt; <span class="number">48</span>;
+        <span class="doccomment">/// Session is initialized.
+        </span><span class="kw">const </span>READY = <span class="number">1 </span>&lt;&lt; <span class="number">28</span>;
+        <span class="doccomment">/// Session is resumed.
+        </span><span class="kw">const </span>RESUMED = <span class="number">1 </span>&lt;&lt; <span class="number">29</span>;
+        <span class="doccomment">/// Role has been created in a guild.
+        </span><span class="kw">const </span>ROLE_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">30</span>;
+        <span class="doccomment">/// Role has been deleted in a guild.
+        </span><span class="kw">const </span>ROLE_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">31</span>;
+        <span class="doccomment">/// Role has been updated in a guild.
+        </span><span class="kw">const </span>ROLE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">32</span>;
+        <span class="doccomment">/// Shard has finalized a session with the gateway.
+        </span><span class="kw">const </span>SHARD_CONNECTED = <span class="number">1 </span>&lt;&lt; <span class="number">33</span>;
+        <span class="doccomment">/// Shard has begun connecting to the gateway.
+        </span><span class="kw">const </span>SHARD_CONNECTING = <span class="number">1 </span>&lt;&lt; <span class="number">34</span>;
+        <span class="doccomment">/// Shard has disconnected from the gateway.
+        </span><span class="kw">const </span>SHARD_DISCONNECTED = <span class="number">1 </span>&lt;&lt; <span class="number">35</span>;
+        <span class="doccomment">/// Shard is identifying to create a session with the gateway.
+        </span><span class="kw">const </span>SHARD_IDENTIFYING = <span class="number">1 </span>&lt;&lt; <span class="number">36</span>;
+        <span class="doccomment">/// Incoming message has been received from the gateway.
+        </span><span class="kw">const </span>SHARD_PAYLOAD = <span class="number">1 </span>&lt;&lt; <span class="number">45</span>;
+        <span class="doccomment">/// Shard is reconnecting to the gateway.
+        </span><span class="kw">const </span>SHARD_RECONNECTING = <span class="number">1 </span>&lt;&lt; <span class="number">37</span>;
+        <span class="doccomment">/// Shard is resuming a session with the gateway.
+        </span><span class="kw">const </span>SHARD_RESUMING = <span class="number">1 </span>&lt;&lt; <span class="number">38</span>;
+        <span class="doccomment">/// Stage instance was created in a stage channel.
+        </span><span class="kw">const </span>STAGE_INSTANCE_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">57</span>;
+        <span class="doccomment">/// Stage instance was deleted in a stage channel.
+        </span><span class="kw">const </span>STAGE_INSTANCE_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">58</span>;
+        <span class="doccomment">/// Stage instance was updated in a stage channel.
+        </span><span class="kw">const </span>STAGE_INSTANCE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">59</span>;
+        <span class="doccomment">/// A thread has been created, relevant to the current user,
+        /// or the current user has been added to a thread.
+        </span><span class="kw">const </span>THREAD_CREATE = <span class="number">1 </span>&lt;&lt; <span class="number">50</span>;
+        <span class="doccomment">/// A thread, relevant to the current user, has been deleted.
+        </span><span class="kw">const </span>THREAD_DELETE = <span class="number">1 </span>&lt;&lt; <span class="number">52</span>;
+        <span class="doccomment">/// The current user has gained access to a thread.
+        </span><span class="kw">const </span>THREAD_LIST_SYNC = <span class="number">1 </span>&lt;&lt; <span class="number">53</span>;
+        <span class="doccomment">/// A user has been added to or removed from a thread.
+        </span><span class="kw">const </span>THREAD_MEMBERS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">55</span>;
+        <span class="doccomment">/// The thread member object for the current user has been updated.
+        </span><span class="kw">const </span>THREAD_MEMBER_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">54</span>;
+        <span class="doccomment">/// A thread has been updated.
+        </span><span class="kw">const </span>THREAD_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">51</span>;
+        <span class="doccomment">/// User has begun typing in a channel.
+        </span><span class="kw">const </span>TYPING_START = <span class="number">1 </span>&lt;&lt; <span class="number">39</span>;
+        <span class="doccomment">/// Guild is unavailable, potentially due to an outage.
+        </span><span class="kw">const </span>UNAVAILABLE_GUILD = <span class="number">1 </span>&lt;&lt; <span class="number">40</span>;
+        <span class="doccomment">/// Current user&#39;s profile has been updated.
+        </span><span class="kw">const </span>USER_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">41</span>;
+        <span class="doccomment">/// Voice server has provided an update with voice session details.
+        </span><span class="kw">const </span>VOICE_SERVER_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">42</span>;
+        <span class="doccomment">/// User&#39;s state in a voice channel has been updated.
+        </span><span class="kw">const </span>VOICE_STATE_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">43</span>;
+        <span class="doccomment">/// Webhook in a guild has been updated.
+        </span><span class="kw">const </span>WEBHOOKS_UPDATE = <span class="number">1 </span>&lt;&lt; <span class="number">44</span>;
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::AUTO_MODERATION_CONFIGURATION`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::AUTO_MODERATION_CONFIGURATION`]: crate::Intents::AUTO_MODERATION_CONFIGURATION</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_CONFIGURATION</span> = <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_RULE_CREATE</span>.<span class="ident">bits</span>()
-                | <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_RULE_DELETE</span>.<span class="ident">bits</span>()
-                | <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_RULE_UPDATE</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::AUTO_MODERATION_EXECUTION`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::AUTO_MODERATION_EXECUTION`]: crate::Intents::AUTO_MODERATION_EXECUTION</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_EXECUTION</span> = <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_ACTION_EXECUTION</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::DIRECT_MESSAGES`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::DIRECT_MESSAGES`]: crate::Intents::DIRECT_MESSAGES</span>
-        <span class="kw">const</span> <span class="ident">DIRECT_MESSAGES</span> = <span class="ident"><span class="self">Self</span>::MESSAGE_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE_BULK</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MESSAGE_UPDATE</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::DIRECT_MESSAGE_REACTIONS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::DIRECT_MESSAGE_REACTIONS`]: crate::Intents::DIRECT_MESSAGE_REACTIONS</span>
-        <span class="kw">const</span> <span class="ident">DIRECT_MESSAGE_REACTIONS</span> = <span class="ident"><span class="self">Self</span>::REACTION_ADD</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::REACTION_REMOVE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::REACTION_REMOVE_ALL</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::REACTION_REMOVE_EMOJI</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::DIRECT_MESSAGE_TYPING`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::DIRECT_MESSAGE_TYPING`]: crate::Intents::DIRECT_MESSAGE_TYPING</span>
-        <span class="kw">const</span> <span class="ident">DIRECT_MESSAGE_TYPING</span> = <span class="ident"><span class="self">Self</span>::TYPING_START</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILDS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILDS`]: crate::Intents::GUILDS</span>
-        <span class="kw">const</span> <span class="ident">GUILDS</span> = <span class="ident"><span class="self">Self</span>::CHANNEL_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::CHANNEL_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::CHANNEL_PINS_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::CHANNEL_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::ROLE_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::ROLE_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::ROLE_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::STAGE_INSTANCE_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::STAGE_INSTANCE_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::STAGE_INSTANCE_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_LIST_SYNC</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_MEMBER_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_MEMBERS_UPDATE</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_BANS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_BANS`]: crate::Intents::GUILD_BANS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_BANS</span> = <span class="ident"><span class="self">Self</span>::BAN_ADD</span>.<span class="ident">bits</span>() | <span class="ident"><span class="self">Self</span>::BAN_REMOVE</span>.<span class="ident">bits</span>();
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_EMOJIS_AND_STICKERS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_EMOJIS_AND_STICKERS`]: crate::Intents::GUILD_EMOJIS_AND_STICKERS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_EMOJIS_AND_STICKERS</span> = <span class="ident"><span class="self">Self</span>::GUILD_EMOJIS_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_STICKERS_UPDATE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::AUTO_MODERATION_CONFIGURATION`].
+        ///
+        /// [`Intents::AUTO_MODERATION_CONFIGURATION`]: crate::Intents::AUTO_MODERATION_CONFIGURATION
+        </span><span class="kw">const </span>AUTO_MODERATION_CONFIGURATION = <span class="self">Self</span>::AUTO_MODERATION_RULE_CREATE.bits()
+                | <span class="self">Self</span>::AUTO_MODERATION_RULE_DELETE.bits()
+                | <span class="self">Self</span>::AUTO_MODERATION_RULE_UPDATE.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::AUTO_MODERATION_EXECUTION`].
+        ///
+        /// [`Intents::AUTO_MODERATION_EXECUTION`]: crate::Intents::AUTO_MODERATION_EXECUTION
+        </span><span class="kw">const </span>AUTO_MODERATION_EXECUTION = <span class="self">Self</span>::AUTO_MODERATION_ACTION_EXECUTION.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::DIRECT_MESSAGES`].
+        ///
+        /// [`Intents::DIRECT_MESSAGES`]: crate::Intents::DIRECT_MESSAGES
+        </span><span class="kw">const </span>DIRECT_MESSAGES = <span class="self">Self</span>::MESSAGE_CREATE.bits()
+            | <span class="self">Self</span>::MESSAGE_DELETE.bits()
+            | <span class="self">Self</span>::MESSAGE_DELETE_BULK.bits()
+            | <span class="self">Self</span>::MESSAGE_UPDATE.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::DIRECT_MESSAGE_REACTIONS`].
+        ///
+        /// [`Intents::DIRECT_MESSAGE_REACTIONS`]: crate::Intents::DIRECT_MESSAGE_REACTIONS
+        </span><span class="kw">const </span>DIRECT_MESSAGE_REACTIONS = <span class="self">Self</span>::REACTION_ADD.bits()
+            | <span class="self">Self</span>::REACTION_REMOVE.bits()
+            | <span class="self">Self</span>::REACTION_REMOVE_ALL.bits()
+            | <span class="self">Self</span>::REACTION_REMOVE_EMOJI.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::DIRECT_MESSAGE_TYPING`].
+        ///
+        /// [`Intents::DIRECT_MESSAGE_TYPING`]: crate::Intents::DIRECT_MESSAGE_TYPING
+        </span><span class="kw">const </span>DIRECT_MESSAGE_TYPING = <span class="self">Self</span>::TYPING_START.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILDS`].
+        ///
+        /// [`Intents::GUILDS`]: crate::Intents::GUILDS
+        </span><span class="kw">const </span>GUILDS = <span class="self">Self</span>::CHANNEL_CREATE.bits()
+            | <span class="self">Self</span>::CHANNEL_DELETE.bits()
+            | <span class="self">Self</span>::CHANNEL_PINS_UPDATE.bits()
+            | <span class="self">Self</span>::CHANNEL_UPDATE.bits()
+            | <span class="self">Self</span>::GUILD_CREATE.bits()
+            | <span class="self">Self</span>::GUILD_DELETE.bits()
+            | <span class="self">Self</span>::GUILD_UPDATE.bits()
+            | <span class="self">Self</span>::ROLE_CREATE.bits()
+            | <span class="self">Self</span>::ROLE_DELETE.bits()
+            | <span class="self">Self</span>::ROLE_UPDATE.bits()
+            | <span class="self">Self</span>::STAGE_INSTANCE_CREATE.bits()
+            | <span class="self">Self</span>::STAGE_INSTANCE_UPDATE.bits()
+            | <span class="self">Self</span>::STAGE_INSTANCE_DELETE.bits()
+            | <span class="self">Self</span>::THREAD_CREATE.bits()
+            | <span class="self">Self</span>::THREAD_UPDATE.bits()
+            | <span class="self">Self</span>::THREAD_DELETE.bits()
+            | <span class="self">Self</span>::THREAD_LIST_SYNC.bits()
+            | <span class="self">Self</span>::THREAD_MEMBER_UPDATE.bits()
+            | <span class="self">Self</span>::THREAD_MEMBERS_UPDATE.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_BANS`].
+        ///
+        /// [`Intents::GUILD_BANS`]: crate::Intents::GUILD_BANS
+        </span><span class="kw">const </span>GUILD_BANS = <span class="self">Self</span>::BAN_ADD.bits() | <span class="self">Self</span>::BAN_REMOVE.bits();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_EMOJIS_AND_STICKERS`].
+        ///
+        /// [`Intents::GUILD_EMOJIS_AND_STICKERS`]: crate::Intents::GUILD_EMOJIS_AND_STICKERS
+        </span><span class="kw">const </span>GUILD_EMOJIS_AND_STICKERS = <span class="self">Self</span>::GUILD_EMOJIS_UPDATE.bits()
+            | <span class="self">Self</span>::GUILD_STICKERS_UPDATE.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_INTEGRATIONS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_INTEGRATIONS`]: crate::Intents::GUILD_INTEGRATIONS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_INTEGRATIONS</span> = <span class="ident"><span class="self">Self</span>::GUILD_INTEGRATIONS_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::INTEGRATION_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::INTEGRATION_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::INTEGRATION_DELETE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_INTEGRATIONS`].
+        ///
+        /// [`Intents::GUILD_INTEGRATIONS`]: crate::Intents::GUILD_INTEGRATIONS
+        </span><span class="kw">const </span>GUILD_INTEGRATIONS = <span class="self">Self</span>::GUILD_INTEGRATIONS_UPDATE.bits()
+            | <span class="self">Self</span>::INTEGRATION_CREATE.bits()
+            | <span class="self">Self</span>::INTEGRATION_UPDATE.bits()
+            | <span class="self">Self</span>::INTEGRATION_DELETE.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_INVITES`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_INVITES`]: crate::Intents::GUILD_INVITES</span>
-        <span class="kw">const</span> <span class="ident">GUILD_INVITES</span> = <span class="ident"><span class="self">Self</span>::INVITE_CREATE</span>.<span class="ident">bits</span>() | <span class="ident"><span class="self">Self</span>::INVITE_DELETE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_INVITES`].
+        ///
+        /// [`Intents::GUILD_INVITES`]: crate::Intents::GUILD_INVITES
+        </span><span class="kw">const </span>GUILD_INVITES = <span class="self">Self</span>::INVITE_CREATE.bits() | <span class="self">Self</span>::INVITE_DELETE.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MEMBERS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_MEMBERS`]: crate::Intents::GUILD_MEMBERS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MEMBERS</span> = <span class="ident"><span class="self">Self</span>::MEMBER_ADD</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MEMBER_REMOVE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MEMBER_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::THREAD_MEMBERS_UPDATE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MEMBERS`].
+        ///
+        /// [`Intents::GUILD_MEMBERS`]: crate::Intents::GUILD_MEMBERS
+        </span><span class="kw">const </span>GUILD_MEMBERS = <span class="self">Self</span>::MEMBER_ADD.bits()
+            | <span class="self">Self</span>::MEMBER_REMOVE.bits()
+            | <span class="self">Self</span>::MEMBER_UPDATE.bits()
+            | <span class="self">Self</span>::THREAD_MEMBERS_UPDATE.bits();
 
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MESSAGES`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_MESSAGES`]: crate::Intents::GUILD_MESSAGES</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MESSAGES</span> = <span class="ident"><span class="self">Self</span>::MESSAGE_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE_BULK</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MESSAGES`].
+        ///
+        /// [`Intents::GUILD_MESSAGES`]: crate::Intents::GUILD_MESSAGES
+        </span><span class="kw">const </span>GUILD_MESSAGES = <span class="self">Self</span>::MESSAGE_CREATE.bits()
+            | <span class="self">Self</span>::MESSAGE_DELETE.bits()
+            | <span class="self">Self</span>::MESSAGE_DELETE.bits()
+            | <span class="self">Self</span>::MESSAGE_DELETE_BULK.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MESSAGE_REACTIONS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_MESSAGE_REACTIONS`]: crate::Intents::GUILD_MESSAGE_REACTIONS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MESSAGE_REACTIONS</span> = <span class="ident"><span class="self">Self</span>::REACTION_ADD</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::REACTION_REMOVE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::REACTION_REMOVE_ALL</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::REACTION_REMOVE_EMOJI</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MESSAGE_REACTIONS`].
+        ///
+        /// [`Intents::GUILD_MESSAGE_REACTIONS`]: crate::Intents::GUILD_MESSAGE_REACTIONS
+        </span><span class="kw">const </span>GUILD_MESSAGE_REACTIONS = <span class="self">Self</span>::REACTION_ADD.bits()
+            | <span class="self">Self</span>::REACTION_REMOVE.bits()
+            | <span class="self">Self</span>::REACTION_REMOVE_ALL.bits()
+            | <span class="self">Self</span>::REACTION_REMOVE_EMOJI.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MESSAGE_TYPING`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_MESSAGE_TYPING`]: crate::Intents::GUILD_MESSAGE_TYPING</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MESSAGE_TYPING</span> = <span class="ident"><span class="self">Self</span>::TYPING_START</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_MESSAGE_TYPING`].
+        ///
+        /// [`Intents::GUILD_MESSAGE_TYPING`]: crate::Intents::GUILD_MESSAGE_TYPING
+        </span><span class="kw">const </span>GUILD_MESSAGE_TYPING = <span class="self">Self</span>::TYPING_START.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_PRESENCES`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_PRESENCES`]: crate::Intents::GUILD_PRESENCES</span>
-        <span class="kw">const</span> <span class="ident">GUILD_PRESENCES</span> = <span class="ident"><span class="self">Self</span>::PRESENCE_UPDATE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_PRESENCES`].
+        ///
+        /// [`Intents::GUILD_PRESENCES`]: crate::Intents::GUILD_PRESENCES
+        </span><span class="kw">const </span>GUILD_PRESENCES = <span class="self">Self</span>::PRESENCE_UPDATE.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_SCHEDULED_EVENTS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_SCHEDULED_EVENTS`]: crate::Intents::GUILD_SCHEDULED_EVENTS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENTS</span> = <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_CREATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_DELETE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_UPDATE</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_ADD</span>.<span class="ident">bits</span>()
-            | <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_REMOVE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_SCHEDULED_EVENTS`].
+        ///
+        /// [`Intents::GUILD_SCHEDULED_EVENTS`]: crate::Intents::GUILD_SCHEDULED_EVENTS
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENTS = <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_CREATE.bits()
+            | <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_DELETE.bits()
+            | <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_UPDATE.bits()
+            | <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_ADD.bits()
+            | <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_REMOVE.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_VOICE_STATES`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_VOICE_STATES`]: crate::Intents::GUILD_VOICE_STATES</span>
-        <span class="kw">const</span> <span class="ident">GUILD_VOICE_STATES</span> = <span class="ident"><span class="self">Self</span>::VOICE_STATE_UPDATE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_VOICE_STATES`].
+        ///
+        /// [`Intents::GUILD_VOICE_STATES`]: crate::Intents::GUILD_VOICE_STATES
+        </span><span class="kw">const </span>GUILD_VOICE_STATES = <span class="self">Self</span>::VOICE_STATE_UPDATE.bits();
 
-        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_WEBHOOKS`].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`Intents::GUILD_WEBHOOKS`]: crate::Intents::GUILD_WEBHOOKS</span>
-        <span class="kw">const</span> <span class="ident">GUILD_WEBHOOKS</span> = <span class="ident"><span class="self">Self</span>::WEBHOOKS_UPDATE</span>.<span class="ident">bits</span>();
+        <span class="doccomment">/// All [`EventTypeFlags`] in [`Intents::GUILD_WEBHOOKS`].
+        ///
+        /// [`Intents::GUILD_WEBHOOKS`]: crate::Intents::GUILD_WEBHOOKS
+        </span><span class="kw">const </span>GUILD_WEBHOOKS = <span class="self">Self</span>::WEBHOOKS_UPDATE.bits();
 
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span>&lt;<span class="ident">EventType</span>&gt; <span class="kw">for</span> <span class="ident">EventTypeFlags</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">event_type</span>: <span class="ident">EventType</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="ident">event_type</span> {
-            <span class="ident">EventType::AutoModerationActionExecution</span> =&gt; <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_ACTION_EXECUTION</span>,
-            <span class="ident">EventType::AutoModerationRuleCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_RULE_CREATE</span>,
-            <span class="ident">EventType::AutoModerationRuleDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_RULE_DELETE</span>,
-            <span class="ident">EventType::AutoModerationRuleUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::AUTO_MODERATION_RULE_UPDATE</span>,
-            <span class="ident">EventType::BanAdd</span> =&gt; <span class="ident"><span class="self">Self</span>::BAN_ADD</span>,
-            <span class="ident">EventType::BanRemove</span> =&gt; <span class="ident"><span class="self">Self</span>::BAN_REMOVE</span>,
-            <span class="ident">EventType::ChannelCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::CHANNEL_CREATE</span>,
-            <span class="ident">EventType::ChannelDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::CHANNEL_DELETE</span>,
-            <span class="ident">EventType::ChannelPinsUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::CHANNEL_PINS_UPDATE</span>,
-            <span class="ident">EventType::ChannelUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::CHANNEL_UPDATE</span>,
-            <span class="ident">EventType::CommandPermissionsUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::COMMAND_PERMISSIONS_UPDATE</span>,
-            <span class="ident">EventType::GatewayHeartbeat</span> =&gt; <span class="ident"><span class="self">Self</span>::GATEWAY_HEARTBEAT</span>,
-            <span class="ident">EventType::GatewayHeartbeatAck</span> =&gt; <span class="ident"><span class="self">Self</span>::GATEWAY_HEARTBEAT_ACK</span>,
-            <span class="ident">EventType::GatewayHello</span> =&gt; <span class="ident"><span class="self">Self</span>::GATEWAY_HELLO</span>,
-            <span class="ident">EventType::GatewayInvalidateSession</span> =&gt; <span class="ident"><span class="self">Self</span>::GATEWAY_INVALIDATE_SESSION</span>,
-            <span class="ident">EventType::GatewayReconnect</span> =&gt; <span class="ident"><span class="self">Self</span>::GATEWAY_RECONNECT</span>,
-            <span class="ident">EventType::GiftCodeUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GIFT_CODE_UPDATE</span>,
-            <span class="ident">EventType::GuildCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_CREATE</span>,
-            <span class="ident">EventType::GuildDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_DELETE</span>,
-            <span class="ident">EventType::GuildEmojisUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_EMOJIS_UPDATE</span>,
-            <span class="ident">EventType::GuildIntegrationsUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_INTEGRATIONS_UPDATE</span>,
-            <span class="ident">EventType::GuildScheduledEventCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_CREATE</span>,
-            <span class="ident">EventType::GuildScheduledEventDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_DELETE</span>,
-            <span class="ident">EventType::GuildScheduledEventUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_UPDATE</span>,
-            <span class="ident">EventType::GuildScheduledEventUserAdd</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_ADD</span>,
-            <span class="ident">EventType::GuildScheduledEventUserRemove</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_REMOVE</span>,
-            <span class="ident">EventType::GuildStickersUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_STICKERS_UPDATE</span>,
-            <span class="ident">EventType::GuildUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::GUILD_UPDATE</span>,
-            <span class="ident">EventType::IntegrationCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::INTEGRATION_CREATE</span>,
-            <span class="ident">EventType::IntegrationDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::INTEGRATION_DELETE</span>,
-            <span class="ident">EventType::IntegrationUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::INTEGRATION_UPDATE</span>,
-            <span class="ident">EventType::InteractionCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::INTERACTION_CREATE</span>,
-            <span class="ident">EventType::InviteCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::INVITE_CREATE</span>,
-            <span class="ident">EventType::InviteDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::INVITE_DELETE</span>,
-            <span class="ident">EventType::MemberAdd</span> =&gt; <span class="ident"><span class="self">Self</span>::MEMBER_ADD</span>,
-            <span class="ident">EventType::MemberRemove</span> =&gt; <span class="ident"><span class="self">Self</span>::MEMBER_REMOVE</span>,
-            <span class="ident">EventType::MemberUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::MEMBER_UPDATE</span>,
-            <span class="ident">EventType::MemberChunk</span> =&gt; <span class="ident"><span class="self">Self</span>::MEMBER_CHUNK</span>,
-            <span class="ident">EventType::MessageCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::MESSAGE_CREATE</span>,
-            <span class="ident">EventType::MessageDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE</span>,
-            <span class="ident">EventType::MessageDeleteBulk</span> =&gt; <span class="ident"><span class="self">Self</span>::MESSAGE_DELETE_BULK</span>,
-            <span class="ident">EventType::MessageUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::MESSAGE_UPDATE</span>,
-            <span class="ident">EventType::PresenceUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::PRESENCE_UPDATE</span>,
-            <span class="ident">EventType::PresencesReplace</span> =&gt; <span class="ident"><span class="self">Self</span>::PRESENCES_REPLACE</span>,
-            <span class="ident">EventType::ReactionAdd</span> =&gt; <span class="ident"><span class="self">Self</span>::REACTION_ADD</span>,
-            <span class="ident">EventType::ReactionRemove</span> =&gt; <span class="ident"><span class="self">Self</span>::REACTION_REMOVE</span>,
-            <span class="ident">EventType::ReactionRemoveAll</span> =&gt; <span class="ident"><span class="self">Self</span>::REACTION_REMOVE_ALL</span>,
-            <span class="ident">EventType::ReactionRemoveEmoji</span> =&gt; <span class="ident"><span class="self">Self</span>::REACTION_REMOVE_EMOJI</span>,
-            <span class="ident">EventType::Ready</span> =&gt; <span class="ident"><span class="self">Self</span>::READY</span>,
-            <span class="ident">EventType::Resumed</span> =&gt; <span class="ident"><span class="self">Self</span>::RESUMED</span>,
-            <span class="ident">EventType::RoleCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::ROLE_CREATE</span>,
-            <span class="ident">EventType::RoleDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::ROLE_DELETE</span>,
-            <span class="ident">EventType::RoleUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::ROLE_UPDATE</span>,
-            <span class="ident">EventType::ShardConnected</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_CONNECTED</span>,
-            <span class="ident">EventType::ShardConnecting</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_CONNECTING</span>,
-            <span class="ident">EventType::ShardDisconnected</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_DISCONNECTED</span>,
-            <span class="ident">EventType::ShardIdentifying</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_IDENTIFYING</span>,
-            <span class="ident">EventType::ShardReconnecting</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_RECONNECTING</span>,
-            <span class="ident">EventType::ShardPayload</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_PAYLOAD</span>,
-            <span class="ident">EventType::ShardResuming</span> =&gt; <span class="ident"><span class="self">Self</span>::SHARD_RESUMING</span>,
-            <span class="ident">EventType::StageInstanceCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::STAGE_INSTANCE_CREATE</span>,
-            <span class="ident">EventType::StageInstanceDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::STAGE_INSTANCE_DELETE</span>,
-            <span class="ident">EventType::StageInstanceUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::STAGE_INSTANCE_UPDATE</span>,
-            <span class="ident">EventType::ThreadCreate</span> =&gt; <span class="ident"><span class="self">Self</span>::THREAD_CREATE</span>,
-            <span class="ident">EventType::ThreadDelete</span> =&gt; <span class="ident"><span class="self">Self</span>::THREAD_DELETE</span>,
-            <span class="ident">EventType::ThreadListSync</span> =&gt; <span class="ident"><span class="self">Self</span>::THREAD_LIST_SYNC</span>,
-            <span class="ident">EventType::ThreadMembersUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::THREAD_MEMBERS_UPDATE</span>,
-            <span class="ident">EventType::ThreadMemberUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::THREAD_MEMBER_UPDATE</span>,
-            <span class="ident">EventType::ThreadUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::THREAD_UPDATE</span>,
-            <span class="ident">EventType::TypingStart</span> =&gt; <span class="ident"><span class="self">Self</span>::TYPING_START</span>,
-            <span class="ident">EventType::UnavailableGuild</span> =&gt; <span class="ident"><span class="self">Self</span>::UNAVAILABLE_GUILD</span>,
-            <span class="ident">EventType::UserUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::USER_UPDATE</span>,
-            <span class="ident">EventType::VoiceServerUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::VOICE_SERVER_UPDATE</span>,
-            <span class="ident">EventType::VoiceStateUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::VOICE_STATE_UPDATE</span>,
-            <span class="ident">EventType::WebhooksUpdate</span> =&gt; <span class="ident"><span class="self">Self</span>::WEBHOOKS_UPDATE</span>,
+<span class="kw">impl </span>From&lt;EventType&gt; <span class="kw">for </span>EventTypeFlags {
+    <span class="kw">fn </span>from(event_type: EventType) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>event_type {
+            EventType::AutoModerationActionExecution =&gt; <span class="self">Self</span>::AUTO_MODERATION_ACTION_EXECUTION,
+            EventType::AutoModerationRuleCreate =&gt; <span class="self">Self</span>::AUTO_MODERATION_RULE_CREATE,
+            EventType::AutoModerationRuleDelete =&gt; <span class="self">Self</span>::AUTO_MODERATION_RULE_DELETE,
+            EventType::AutoModerationRuleUpdate =&gt; <span class="self">Self</span>::AUTO_MODERATION_RULE_UPDATE,
+            EventType::BanAdd =&gt; <span class="self">Self</span>::BAN_ADD,
+            EventType::BanRemove =&gt; <span class="self">Self</span>::BAN_REMOVE,
+            EventType::ChannelCreate =&gt; <span class="self">Self</span>::CHANNEL_CREATE,
+            EventType::ChannelDelete =&gt; <span class="self">Self</span>::CHANNEL_DELETE,
+            EventType::ChannelPinsUpdate =&gt; <span class="self">Self</span>::CHANNEL_PINS_UPDATE,
+            EventType::ChannelUpdate =&gt; <span class="self">Self</span>::CHANNEL_UPDATE,
+            EventType::CommandPermissionsUpdate =&gt; <span class="self">Self</span>::COMMAND_PERMISSIONS_UPDATE,
+            EventType::GatewayHeartbeat =&gt; <span class="self">Self</span>::GATEWAY_HEARTBEAT,
+            EventType::GatewayHeartbeatAck =&gt; <span class="self">Self</span>::GATEWAY_HEARTBEAT_ACK,
+            EventType::GatewayHello =&gt; <span class="self">Self</span>::GATEWAY_HELLO,
+            EventType::GatewayInvalidateSession =&gt; <span class="self">Self</span>::GATEWAY_INVALIDATE_SESSION,
+            EventType::GatewayReconnect =&gt; <span class="self">Self</span>::GATEWAY_RECONNECT,
+            EventType::GiftCodeUpdate =&gt; <span class="self">Self</span>::GIFT_CODE_UPDATE,
+            EventType::GuildCreate =&gt; <span class="self">Self</span>::GUILD_CREATE,
+            EventType::GuildDelete =&gt; <span class="self">Self</span>::GUILD_DELETE,
+            EventType::GuildEmojisUpdate =&gt; <span class="self">Self</span>::GUILD_EMOJIS_UPDATE,
+            EventType::GuildIntegrationsUpdate =&gt; <span class="self">Self</span>::GUILD_INTEGRATIONS_UPDATE,
+            EventType::GuildScheduledEventCreate =&gt; <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_CREATE,
+            EventType::GuildScheduledEventDelete =&gt; <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_DELETE,
+            EventType::GuildScheduledEventUpdate =&gt; <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_UPDATE,
+            EventType::GuildScheduledEventUserAdd =&gt; <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_ADD,
+            EventType::GuildScheduledEventUserRemove =&gt; <span class="self">Self</span>::GUILD_SCHEDULED_EVENT_USER_REMOVE,
+            EventType::GuildStickersUpdate =&gt; <span class="self">Self</span>::GUILD_STICKERS_UPDATE,
+            EventType::GuildUpdate =&gt; <span class="self">Self</span>::GUILD_UPDATE,
+            EventType::IntegrationCreate =&gt; <span class="self">Self</span>::INTEGRATION_CREATE,
+            EventType::IntegrationDelete =&gt; <span class="self">Self</span>::INTEGRATION_DELETE,
+            EventType::IntegrationUpdate =&gt; <span class="self">Self</span>::INTEGRATION_UPDATE,
+            EventType::InteractionCreate =&gt; <span class="self">Self</span>::INTERACTION_CREATE,
+            EventType::InviteCreate =&gt; <span class="self">Self</span>::INVITE_CREATE,
+            EventType::InviteDelete =&gt; <span class="self">Self</span>::INVITE_DELETE,
+            EventType::MemberAdd =&gt; <span class="self">Self</span>::MEMBER_ADD,
+            EventType::MemberRemove =&gt; <span class="self">Self</span>::MEMBER_REMOVE,
+            EventType::MemberUpdate =&gt; <span class="self">Self</span>::MEMBER_UPDATE,
+            EventType::MemberChunk =&gt; <span class="self">Self</span>::MEMBER_CHUNK,
+            EventType::MessageCreate =&gt; <span class="self">Self</span>::MESSAGE_CREATE,
+            EventType::MessageDelete =&gt; <span class="self">Self</span>::MESSAGE_DELETE,
+            EventType::MessageDeleteBulk =&gt; <span class="self">Self</span>::MESSAGE_DELETE_BULK,
+            EventType::MessageUpdate =&gt; <span class="self">Self</span>::MESSAGE_UPDATE,
+            EventType::PresenceUpdate =&gt; <span class="self">Self</span>::PRESENCE_UPDATE,
+            EventType::PresencesReplace =&gt; <span class="self">Self</span>::PRESENCES_REPLACE,
+            EventType::ReactionAdd =&gt; <span class="self">Self</span>::REACTION_ADD,
+            EventType::ReactionRemove =&gt; <span class="self">Self</span>::REACTION_REMOVE,
+            EventType::ReactionRemoveAll =&gt; <span class="self">Self</span>::REACTION_REMOVE_ALL,
+            EventType::ReactionRemoveEmoji =&gt; <span class="self">Self</span>::REACTION_REMOVE_EMOJI,
+            EventType::Ready =&gt; <span class="self">Self</span>::READY,
+            EventType::Resumed =&gt; <span class="self">Self</span>::RESUMED,
+            EventType::RoleCreate =&gt; <span class="self">Self</span>::ROLE_CREATE,
+            EventType::RoleDelete =&gt; <span class="self">Self</span>::ROLE_DELETE,
+            EventType::RoleUpdate =&gt; <span class="self">Self</span>::ROLE_UPDATE,
+            EventType::ShardConnected =&gt; <span class="self">Self</span>::SHARD_CONNECTED,
+            EventType::ShardConnecting =&gt; <span class="self">Self</span>::SHARD_CONNECTING,
+            EventType::ShardDisconnected =&gt; <span class="self">Self</span>::SHARD_DISCONNECTED,
+            EventType::ShardIdentifying =&gt; <span class="self">Self</span>::SHARD_IDENTIFYING,
+            EventType::ShardReconnecting =&gt; <span class="self">Self</span>::SHARD_RECONNECTING,
+            EventType::ShardPayload =&gt; <span class="self">Self</span>::SHARD_PAYLOAD,
+            EventType::ShardResuming =&gt; <span class="self">Self</span>::SHARD_RESUMING,
+            EventType::StageInstanceCreate =&gt; <span class="self">Self</span>::STAGE_INSTANCE_CREATE,
+            EventType::StageInstanceDelete =&gt; <span class="self">Self</span>::STAGE_INSTANCE_DELETE,
+            EventType::StageInstanceUpdate =&gt; <span class="self">Self</span>::STAGE_INSTANCE_UPDATE,
+            EventType::ThreadCreate =&gt; <span class="self">Self</span>::THREAD_CREATE,
+            EventType::ThreadDelete =&gt; <span class="self">Self</span>::THREAD_DELETE,
+            EventType::ThreadListSync =&gt; <span class="self">Self</span>::THREAD_LIST_SYNC,
+            EventType::ThreadMembersUpdate =&gt; <span class="self">Self</span>::THREAD_MEMBERS_UPDATE,
+            EventType::ThreadMemberUpdate =&gt; <span class="self">Self</span>::THREAD_MEMBER_UPDATE,
+            EventType::ThreadUpdate =&gt; <span class="self">Self</span>::THREAD_UPDATE,
+            EventType::TypingStart =&gt; <span class="self">Self</span>::TYPING_START,
+            EventType::UnavailableGuild =&gt; <span class="self">Self</span>::UNAVAILABLE_GUILD,
+            EventType::UserUpdate =&gt; <span class="self">Self</span>::USER_UPDATE,
+            EventType::VoiceServerUpdate =&gt; <span class="self">Self</span>::VOICE_SERVER_UPDATE,
+            EventType::VoiceStateUpdate =&gt; <span class="self">Self</span>::VOICE_STATE_UPDATE,
+            EventType::WebhooksUpdate =&gt; <span class="self">Self</span>::WEBHOOKS_UPDATE,
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">TryFrom</span>&lt;(<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;)&gt; <span class="kw">for</span> <span class="ident">EventTypeFlags</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> = (<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TryFrom&lt;(u8, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;)&gt; <span class="kw">for </span>EventTypeFlags {
+    <span class="kw">type </span>Error = (u8, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;);
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">op</span>, <span class="ident">event_type</span>): (<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;)) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="kw">match</span> (<span class="ident">op</span>, <span class="ident">event_type</span>) {
-            (<span class="number">1</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::GATEWAY_HEARTBEAT</span>),
-            (<span class="number">7</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::GATEWAY_RECONNECT</span>),
-            (<span class="number">9</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::GATEWAY_INVALIDATE_SESSION</span>),
-            (<span class="number">10</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::GATEWAY_HELLO</span>),
-            (<span class="number">11</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::GATEWAY_HEARTBEAT_ACK</span>),
-            (<span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">event_type</span>)) =&gt; {
-                <span class="kw">let</span> <span class="ident">flag</span> = <span class="ident">EventType::try_from</span>(<span class="ident">event_type</span>).<span class="ident">map_err</span>(|<span class="ident">kind</span>| (<span class="ident">op</span>, <span class="prelude-val">Some</span>(<span class="ident">kind</span>)))<span class="question-mark">?</span>;
+    <span class="kw">fn </span>try_from((op, event_type): (u8, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;)) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span>(op, event_type) {
+            (<span class="number">1</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::GATEWAY_HEARTBEAT),
+            (<span class="number">7</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::GATEWAY_RECONNECT),
+            (<span class="number">9</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::GATEWAY_INVALIDATE_SESSION),
+            (<span class="number">10</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::GATEWAY_HELLO),
+            (<span class="number">11</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::GATEWAY_HEARTBEAT_ACK),
+            (<span class="kw">_</span>, <span class="prelude-val">Some</span>(event_type)) =&gt; {
+                <span class="kw">let </span>flag = EventType::try_from(event_type).map_err(|kind| (op, <span class="prelude-val">Some</span>(kind)))<span class="question-mark">?</span>;
 
-                <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">flag</span>))
+                <span class="prelude-val">Ok</span>(<span class="self">Self</span>::from(flag))
             }
-            (<span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Err</span>((<span class="ident">op</span>, <span class="ident">event_type</span>)),
+            (<span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; <span class="prelude-val">Err</span>((op, event_type)),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">EventTypeFlags</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> = <span class="ident"><span class="self">Self</span>::all</span>();
-        <span class="ident">flags</span>.<span class="ident">remove</span>(<span class="ident"><span class="self">Self</span>::SHARD_PAYLOAD</span>);
+<span class="kw">impl </span>Default <span class="kw">for </span>EventTypeFlags {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>flags = <span class="self">Self</span>::all();
+        flags.remove(<span class="self">Self</span>::SHARD_PAYLOAD);
 
-        <span class="ident">flags</span>
+        flags
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">EventType</span>, <span class="ident">EventTypeFlags</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{EventType, EventTypeFlags};
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::{fmt::Debug, hash::Hash};
 
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">EventTypeFlags</span>: <span class="ident">Copy</span>,
-        <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Eq</span>,
-        <span class="ident">From</span>&lt;<span class="ident">EventType</span>&gt;,
-        <span class="ident">Hash</span>,
-        <span class="ident">PartialEq</span>,
-        <span class="ident">Send</span>,
-        <span class="ident">Sync</span>,
-        <span class="ident">TryFrom</span>&lt;(<span class="ident">u8</span>, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>&gt;)&gt;
+        EventTypeFlags: Copy,
+        Clone,
+        Debug,
+        Eq,
+        From&lt;EventType&gt;,
+        Hash,
+        PartialEq,
+        Send,
+        Sync,
+        TryFrom&lt;(u8, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;)&gt;
     );
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

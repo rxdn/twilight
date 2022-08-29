@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http-ratelimiting/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_http_ratelimiting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http-ratelimiting/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_http_ratelimiting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -159,166 +159,166 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
-</pre><pre class="rust"><code><span class="attribute">#![<span class="ident">deny</span>(
-    <span class="ident">clippy::all</span>,
-    <span class="ident">clippy::missing_const_for_fn</span>,
-    <span class="ident">clippy::missing_docs_in_private_items</span>,
-    <span class="ident">clippy::pedantic</span>,
-    <span class="ident">future_incompatible</span>,
-    <span class="ident">missing_docs</span>,
-    <span class="ident">nonstandard_style</span>,
-    <span class="ident">rust_2018_idioms</span>,
-    <span class="ident">rustdoc::broken_intra_doc_links</span>,
-    <span class="ident">unsafe_code</span>,
-    <span class="ident">unused</span>
-)]</span>
-<span class="attribute">#![<span class="ident">allow</span>(
-    <span class="ident">clippy::module_name_repetitions</span>,
-    <span class="ident">clippy::must_use_candidate</span>,
-    <span class="ident">clippy::unnecessary_wraps</span>,
-    <span class="ident">clippy::used_underscore_binding</span>
-)]</span>
-<span class="attribute">#![<span class="ident">doc</span> = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]</span>
+</pre><pre class="rust"><code><span class="attribute">#![deny(
+    clippy::all,
+    clippy::missing_const_for_fn,
+    clippy::missing_docs_in_private_items,
+    clippy::pedantic,
+    future_incompatible,
+    missing_docs,
+    nonstandard_style,
+    rust_2018_idioms,
+    rustdoc::broken_intra_doc_links,
+    unsafe_code,
+    unused
+)]
+#![allow(
+    clippy::module_name_repetitions,
+    clippy::must_use_candidate,
+    clippy::unnecessary_wraps,
+    clippy::used_underscore_binding
+)]
+#![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">headers</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">in_memory</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">request</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ticket</span>;
+</span><span class="kw">pub mod </span>headers;
+<span class="kw">pub mod </span>in_memory;
+<span class="kw">pub mod </span>request;
+<span class="kw">pub mod </span>ticket;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
-    <span class="ident">headers::RatelimitHeaders</span>,
-    <span class="ident">in_memory::InMemoryRatelimiter</span>,
-    <span class="ident">request</span>::{<span class="ident">Method</span>, <span class="ident">Path</span>},
+<span class="kw">pub use </span><span class="self">self</span>::{
+    headers::RatelimitHeaders,
+    in_memory::InMemoryRatelimiter,
+    request::{Method, Path},
 };
 
-<span class="kw">use</span> <span class="ident"><span class="self">self</span>::ticket</span>::{<span class="ident">TicketReceiver</span>, <span class="ident">TicketSender</span>};
-<span class="kw">use</span> <span class="ident">futures_util::FutureExt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt::Debug</span>,
-    <span class="ident">future::Future</span>,
-    <span class="ident">pin::Pin</span>,
-    <span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>},
+<span class="kw">use </span><span class="self">self</span>::ticket::{TicketReceiver, TicketSender};
+<span class="kw">use </span>futures_util::FutureExt;
+<span class="kw">use </span>std::{
+    error::Error,
+    fmt::Debug,
+    future::Future,
+    pin::Pin,
+    time::{Duration, Instant},
 };
 
-<span class="doccomment">/// A bucket containing ratelimiting information for a [`Path`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Bucket</span> {
-    <span class="doccomment">/// Total number of tickets allotted in a cycle.</span>
-    <span class="ident">limit</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// Number of tickets remaining.</span>
-    <span class="ident">remaining</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// Duration after [`Self::started_at`] time the bucket will refresh.</span>
-    <span class="ident">reset_after</span>: <span class="ident">Duration</span>,
-    <span class="doccomment">/// When the bucket&#39;s ratelimit refresh countdown started.</span>
-    <span class="ident">started_at</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt;,
+<span class="doccomment">/// A bucket containing ratelimiting information for a [`Path`].
+</span><span class="kw">pub struct </span>Bucket {
+    <span class="doccomment">/// Total number of tickets allotted in a cycle.
+    </span>limit: u64,
+    <span class="doccomment">/// Number of tickets remaining.
+    </span>remaining: u64,
+    <span class="doccomment">/// Duration after [`Self::started_at`] time the bucket will refresh.
+    </span>reset_after: Duration,
+    <span class="doccomment">/// When the bucket&#39;s ratelimit refresh countdown started.
+    </span>started_at: <span class="prelude-ty">Option</span>&lt;Instant&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Bucket</span> {
-    <span class="doccomment">/// Total number of tickets allotted in a cycle.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">limit</span>
+<span class="kw">impl </span>Bucket {
+    <span class="doccomment">/// Total number of tickets allotted in a cycle.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub const fn </span>limit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.limit
     }
 
-    <span class="doccomment">/// Number of tickets remaining.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">remaining</span>
+    <span class="doccomment">/// Number of tickets remaining.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub const fn </span>remaining(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.remaining
     }
 
-    <span class="doccomment">/// Duration after the [`Self::started_at`] time the bucket will</span>
-    <span class="doccomment">/// refresh.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">reset_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span> {
-        <span class="self">self</span>.<span class="ident">reset_after</span>
+    <span class="doccomment">/// Duration after the [`Self::started_at`] time the bucket will
+    /// refresh.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub const fn </span>reset_after(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Duration {
+        <span class="self">self</span>.reset_after
     }
 
-    <span class="doccomment">/// When the bucket&#39;s ratelimit refresh countdown started.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">started_at</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt; {
-        <span class="self">self</span>.<span class="ident">started_at</span>
+    <span class="doccomment">/// When the bucket&#39;s ratelimit refresh countdown started.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub const fn </span>started_at(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Instant&gt; {
+        <span class="self">self</span>.started_at
     }
 
-    <span class="doccomment">/// How long until the bucket will refresh.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// May return `None` if the refresh timer has not been started yet or</span>
-    <span class="doccomment">/// the bucket has already refreshed.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">time_remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Duration</span>&gt; {
-        <span class="kw">let</span> <span class="ident">reset_at</span> = <span class="self">self</span>.<span class="ident">started_at</span><span class="question-mark">?</span> + <span class="self">self</span>.<span class="ident">reset_after</span>;
+    <span class="doccomment">/// How long until the bucket will refresh.
+    ///
+    /// May return `None` if the refresh timer has not been started yet or
+    /// the bucket has already refreshed.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub fn </span>time_remaining(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&gt; {
+        <span class="kw">let </span>reset_at = <span class="self">self</span>.started_at<span class="question-mark">? </span>+ <span class="self">self</span>.reset_after;
 
-        <span class="ident">reset_at</span>.<span class="ident">checked_duration_since</span>(<span class="ident">Instant::now</span>())
+        reset_at.checked_duration_since(Instant::now())
     }
 }
 
-<span class="doccomment">/// A generic error type that implements [`Error`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">GenericError</span> = <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;;
+<span class="doccomment">/// A generic error type that implements [`Error`].
+</span><span class="kw">pub type </span>GenericError = Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;;
 
-<span class="doccomment">/// Future returned by [`Ratelimiter::bucket`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">GetBucketFuture</span> =
-    <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">Bucket</span>&gt;, <span class="ident">GenericError</span>&gt;&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;;
+<span class="doccomment">/// Future returned by [`Ratelimiter::bucket`].
+</span><span class="kw">pub type </span>GetBucketFuture =
+    Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Bucket&gt;, GenericError&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
 
-<span class="doccomment">/// Future returned by [`Ratelimiter::is_globally_locked`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">IsGloballyLockedFuture</span> =
-    <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">bool</span>, <span class="ident">GenericError</span>&gt;&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;;
+<span class="doccomment">/// Future returned by [`Ratelimiter::is_globally_locked`].
+</span><span class="kw">pub type </span>IsGloballyLockedFuture =
+    Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;bool, GenericError&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
 
-<span class="doccomment">/// Future returned by [`Ratelimiter::has`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">HasBucketFuture</span> =
-    <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">bool</span>, <span class="ident">GenericError</span>&gt;&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;;
+<span class="doccomment">/// Future returned by [`Ratelimiter::has`].
+</span><span class="kw">pub type </span>HasBucketFuture =
+    Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;bool, GenericError&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
 
-<span class="doccomment">/// Future returned by [`Ratelimiter::ticket`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">GetTicketFuture</span> =
-    <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">TicketReceiver</span>, <span class="ident">GenericError</span>&gt;&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;;
+<span class="doccomment">/// Future returned by [`Ratelimiter::ticket`].
+</span><span class="kw">pub type </span>GetTicketFuture =
+    Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;TicketReceiver, GenericError&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
 
-<span class="doccomment">/// Future returned by [`Ratelimiter::wait_for_ticket`].</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">WaitForTicketFuture</span> =
-    <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">TicketSender</span>, <span class="ident">GenericError</span>&gt;&gt; + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;;
+<span class="doccomment">/// Future returned by [`Ratelimiter::wait_for_ticket`].
+</span><span class="kw">pub type </span>WaitForTicketFuture =
+    Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;TicketSender, GenericError&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
 
-<span class="doccomment">/// An implementation of a ratelimiter for the Discord REST API.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A default implementation can be found in [`InMemoryRatelimiter`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// All operations are asynchronous to allow for custom implementations to</span>
-<span class="doccomment">/// use different storage backends, for example databases.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Ratelimiters should keep track of two kids of ratelimits:</span>
-<span class="doccomment">/// * The global ratelimit status</span>
-<span class="doccomment">/// * [`Path`]-specific ratelimits</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// To do this, clients utilizing a ratelimiter will send back response</span>
-<span class="doccomment">/// ratelimit headers via a [`TicketSender`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The ratelimiter itself will hand a [`TicketReceiver`] to the caller</span>
-<span class="doccomment">/// when a ticket is being requested.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Ratelimiter</span>: <span class="ident">Debug</span> + <span class="ident">Send</span> + <span class="ident">Sync</span> {
-    <span class="doccomment">/// Retrieve the basic information of the bucket for a given path.</span>
-    <span class="kw">fn</span> <span class="ident">bucket</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">GetBucketFuture</span>;
+<span class="doccomment">/// An implementation of a ratelimiter for the Discord REST API.
+///
+/// A default implementation can be found in [`InMemoryRatelimiter`].
+///
+/// All operations are asynchronous to allow for custom implementations to
+/// use different storage backends, for example databases.
+///
+/// Ratelimiters should keep track of two kids of ratelimits:
+/// * The global ratelimit status
+/// * [`Path`]-specific ratelimits
+///
+/// To do this, clients utilizing a ratelimiter will send back response
+/// ratelimit headers via a [`TicketSender`].
+///
+/// The ratelimiter itself will hand a [`TicketReceiver`] to the caller
+/// when a ticket is being requested.
+</span><span class="kw">pub trait </span>Ratelimiter: Debug + Send + Sync {
+    <span class="doccomment">/// Retrieve the basic information of the bucket for a given path.
+    </span><span class="kw">fn </span>bucket(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; GetBucketFuture;
 
-    <span class="doccomment">/// Whether the ratelimiter is currently globally locked.</span>
-    <span class="kw">fn</span> <span class="ident">is_globally_locked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">IsGloballyLockedFuture</span>;
+    <span class="doccomment">/// Whether the ratelimiter is currently globally locked.
+    </span><span class="kw">fn </span>is_globally_locked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IsGloballyLockedFuture;
 
-    <span class="doccomment">/// Determine if the ratelimiter has a bucket for the given path.</span>
-    <span class="kw">fn</span> <span class="ident">has</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="ident">HasBucketFuture</span>;
+    <span class="doccomment">/// Determine if the ratelimiter has a bucket for the given path.
+    </span><span class="kw">fn </span>has(<span class="kw-2">&amp;</span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>Path) -&gt; HasBucketFuture;
 
-    <span class="doccomment">/// Retrieve a ticket to know when to send a request.</span>
-    <span class="doccomment">/// The provided future will be ready when a ticket in the bucket is</span>
-    <span class="doccomment">/// available. Tickets are ready in order of retrieval.</span>
-    <span class="kw">fn</span> <span class="ident">ticket</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="ident">Path</span>) -&gt; <span class="ident">GetTicketFuture</span>;
+    <span class="doccomment">/// Retrieve a ticket to know when to send a request.
+    /// The provided future will be ready when a ticket in the bucket is
+    /// available. Tickets are ready in order of retrieval.
+    </span><span class="kw">fn </span>ticket(<span class="kw-2">&amp;</span><span class="self">self</span>, path: Path) -&gt; GetTicketFuture;
 
-    <span class="doccomment">/// Retrieve a ticket to send a request.</span>
-    <span class="doccomment">/// Other than [`Self::ticket`], this method will return</span>
-    <span class="doccomment">/// a [`TicketSender`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is identical to calling [`Self::ticket`] and then</span>
-    <span class="doccomment">/// awaiting the [`TicketReceiver`].</span>
-    <span class="kw">fn</span> <span class="ident">wait_for_ticket</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">path</span>: <span class="ident">Path</span>) -&gt; <span class="ident">WaitForTicketFuture</span> {
-        <span class="ident">Box::pin</span>(<span class="self">self</span>.<span class="ident">ticket</span>(<span class="ident">path</span>).<span class="ident">then</span>(|<span class="ident">maybe_rx</span>| <span class="kw">async</span> <span class="kw">move</span> {
-            <span class="kw">match</span> <span class="ident">maybe_rx</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">rx</span>) =&gt; <span class="ident">rx</span>.<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="ident">From::from</span>),
-                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">e</span>),
+    <span class="doccomment">/// Retrieve a ticket to send a request.
+    /// Other than [`Self::ticket`], this method will return
+    /// a [`TicketSender`].
+    ///
+    /// This is identical to calling [`Self::ticket`] and then
+    /// awaiting the [`TicketReceiver`].
+    </span><span class="kw">fn </span>wait_for_ticket(<span class="kw-2">&amp;</span><span class="self">self</span>, path: Path) -&gt; WaitForTicketFuture {
+        Box::pin(<span class="self">self</span>.ticket(path).then(|maybe_rx| <span class="kw">async move </span>{
+            <span class="kw">match </span>maybe_rx {
+                <span class="prelude-val">Ok</span>(rx) =&gt; rx.<span class="kw">await</span>.map_err(From::from),
+                <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e),
             }
         }))
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

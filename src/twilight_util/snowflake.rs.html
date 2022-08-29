@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-util/src/snowflake.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>snowflake.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_util/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-util/src/snowflake.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>snowflake.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_util/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -291,298 +291,298 @@
 <span id="291">291</span>
 <span id="292">292</span>
 <span id="293">293</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Provides the Snowflake trait for defining extractable information from a Discord Snowflake.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Provides the Snowflake trait for defining extractable information from a Discord Snowflake.
 
-<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{
-    <span class="ident">marker</span>::{
-        <span class="ident">ApplicationMarker</span>, <span class="ident">AttachmentMarker</span>, <span class="ident">AuditLogEntryMarker</span>, <span class="ident">ChannelMarker</span>, <span class="ident">CommandMarker</span>,
-        <span class="ident">CommandVersionMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">GenericMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">IntegrationMarker</span>,
-        <span class="ident">InteractionMarker</span>, <span class="ident">MessageMarker</span>, <span class="ident">OauthSkuMarker</span>, <span class="ident">OauthTeamMarker</span>, <span class="ident">RoleMarker</span>,
-        <span class="ident">ScheduledEventEntityMarker</span>, <span class="ident">ScheduledEventMarker</span>, <span class="ident">StageMarker</span>, <span class="ident">StickerMarker</span>,
-        <span class="ident">StickerPackMarker</span>, <span class="ident">StickerPackSkuMarker</span>, <span class="ident">UserMarker</span>, <span class="ident">WebhookMarker</span>,
+</span><span class="kw">use </span>twilight_model::id::{
+    marker::{
+        ApplicationMarker, AttachmentMarker, AuditLogEntryMarker, ChannelMarker, CommandMarker,
+        CommandVersionMarker, EmojiMarker, GenericMarker, GuildMarker, IntegrationMarker,
+        InteractionMarker, MessageMarker, OauthSkuMarker, OauthTeamMarker, RoleMarker,
+        ScheduledEventEntityMarker, ScheduledEventMarker, StageMarker, StickerMarker,
+        StickerPackMarker, StickerPackSkuMarker, UserMarker, WebhookMarker,
     },
-    <span class="ident">Id</span>,
+    Id,
 };
 
-<span class="doccomment">/// Snowflake is a trait for defining extractable information from a Snowflake. A Snowflake is a</span>
-<span class="doccomment">/// u64 generated by Discord to uniquely identify a resource.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Snowflake</span> {
-    <span class="doccomment">/// Returns the u64 backing the Snowflake.</span>
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span>;
+<span class="doccomment">/// Snowflake is a trait for defining extractable information from a Snowflake. A Snowflake is a
+/// u64 generated by Discord to uniquely identify a resource.
+</span><span class="kw">pub trait </span>Snowflake {
+    <span class="doccomment">/// Returns the u64 backing the Snowflake.
+    </span><span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64;
 
-    <span class="doccomment">/// The Unix epoch of the Snowflake in milliseconds, indicating when it was generated.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Derived from bits 22..63 of the id.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// See when a user was created using [`chrono`](https://docs.rs/chrono):</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use chrono::{TimeZone, Utc};</span>
-    <span class="doccomment">/// use twilight_model::id::{marker::UserMarker, Id};</span>
-    <span class="doccomment">/// use twilight_util::snowflake::Snowflake;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let id = Id::&lt;UserMarker&gt;::new(105484726235607040);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     &quot;2015-10-19T01:58:38.546+00:00&quot;,</span>
-    <span class="doccomment">///     Utc.timestamp_millis(id.timestamp()).to_rfc3339()</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// See when a user was created using [`time`](https://docs.rs/time):</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use time::{format_description::well_known::Rfc3339, Duration, OffsetDateTime};</span>
-    <span class="doccomment">/// use twilight_model::id::{marker::UserMarker, Id};</span>
-    <span class="doccomment">/// use twilight_util::snowflake::Snowflake;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// let id = Id::&lt;UserMarker&gt;::new(105484726235607040);</span>
-    <span class="doccomment">/// // Convert milliseconds to seconds or nanoseconds.</span>
-    <span class="doccomment">/// let dur = Duration::milliseconds(id.timestamp());</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let ts = OffsetDateTime::from_unix_timestamp(dur.whole_seconds())?;</span>
-    <span class="doccomment">/// let ts_milli = OffsetDateTime::from_unix_timestamp_nanos(dur.whole_nanoseconds())?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(&quot;2015-10-19T01:58:38Z&quot;, ts.format(&amp;Rfc3339)?);</span>
-    <span class="doccomment">/// assert_eq!(&quot;2015-10-19T01:58:38.546Z&quot;, ts_milli.format(&amp;Rfc3339)?);</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_wrap</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">timestamp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">i64</span> {
-        <span class="comment">// Discord&#39;s custom epoch, the unix time in milliseconds for the first second of 2015.</span>
-        <span class="kw">const</span> <span class="ident">DISCORD_EPOCH</span>: <span class="ident">u64</span> = <span class="number">1_420_070_400_000</span>;
+    <span class="doccomment">/// The Unix epoch of the Snowflake in milliseconds, indicating when it was generated.
+    ///
+    /// Derived from bits 22..63 of the id.
+    ///
+    /// # Examples
+    ///
+    /// See when a user was created using [`chrono`](https://docs.rs/chrono):
+    ///
+    /// ```
+    /// use chrono::{TimeZone, Utc};
+    /// use twilight_model::id::{marker::UserMarker, Id};
+    /// use twilight_util::snowflake::Snowflake;
+    ///
+    /// let id = Id::&lt;UserMarker&gt;::new(105484726235607040);
+    ///
+    /// assert_eq!(
+    ///     &quot;2015-10-19T01:58:38.546+00:00&quot;,
+    ///     Utc.timestamp_millis(id.timestamp()).to_rfc3339()
+    /// );
+    /// ```
+    ///
+    /// See when a user was created using [`time`](https://docs.rs/time):
+    ///
+    /// ```
+    /// use time::{format_description::well_known::Rfc3339, Duration, OffsetDateTime};
+    /// use twilight_model::id::{marker::UserMarker, Id};
+    /// use twilight_util::snowflake::Snowflake;
+    ///
+    /// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// let id = Id::&lt;UserMarker&gt;::new(105484726235607040);
+    /// // Convert milliseconds to seconds or nanoseconds.
+    /// let dur = Duration::milliseconds(id.timestamp());
+    ///
+    /// let ts = OffsetDateTime::from_unix_timestamp(dur.whole_seconds())?;
+    /// let ts_milli = OffsetDateTime::from_unix_timestamp_nanos(dur.whole_nanoseconds())?;
+    ///
+    /// assert_eq!(&quot;2015-10-19T01:58:38Z&quot;, ts.format(&amp;Rfc3339)?);
+    /// assert_eq!(&quot;2015-10-19T01:58:38.546Z&quot;, ts_milli.format(&amp;Rfc3339)?);
+    /// # Ok(()) }
+    /// ```
+    </span><span class="attribute">#[allow(clippy::cast_possible_wrap)]
+    </span><span class="kw">fn </span>timestamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i64 {
+        <span class="comment">// Discord&#39;s custom epoch, the unix time in milliseconds for the first second of 2015.
+        </span><span class="kw">const </span>DISCORD_EPOCH: u64 = <span class="number">1_420_070_400_000</span>;
 
-        ((<span class="self">self</span>.<span class="ident">id</span>() &gt;&gt; <span class="number">22</span>) + <span class="ident">DISCORD_EPOCH</span>) <span class="kw">as</span> <span class="ident">i64</span>
+        ((<span class="self">self</span>.id() &gt;&gt; <span class="number">22</span>) + DISCORD_EPOCH) <span class="kw">as </span>i64
     }
 
-    <span class="doccomment">/// The id of the internal worker that generated the Snowflake.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Derived from bits 17..21 of the id.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">worker_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
-        ((<span class="self">self</span>.<span class="ident">id</span>() &amp; <span class="number">0x003E_0000</span>) &gt;&gt; <span class="number">17</span>) <span class="kw">as</span> <span class="ident">u8</span>
+    <span class="doccomment">/// The id of the internal worker that generated the Snowflake.
+    ///
+    /// Derived from bits 17..21 of the id.
+    </span><span class="attribute">#[allow(clippy::cast_possible_truncation)]
+    </span><span class="kw">fn </span>worker_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+        ((<span class="self">self</span>.id() &amp; <span class="number">0x003E_0000</span>) &gt;&gt; <span class="number">17</span>) <span class="kw">as </span>u8
     }
 
-    <span class="doccomment">/// The id of the internal process that generated the Snowflake.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Derived from bits 12..16 of the id.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">process_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u8</span> {
-        ((<span class="self">self</span>.<span class="ident">id</span>() &amp; <span class="number">0x1F000</span>) &gt;&gt; <span class="number">12</span>) <span class="kw">as</span> <span class="ident">u8</span>
+    <span class="doccomment">/// The id of the internal process that generated the Snowflake.
+    ///
+    /// Derived from bits 12..16 of the id.
+    </span><span class="attribute">#[allow(clippy::cast_possible_truncation)]
+    </span><span class="kw">fn </span>process_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+        ((<span class="self">self</span>.id() &amp; <span class="number">0x1F000</span>) &gt;&gt; <span class="number">12</span>) <span class="kw">as </span>u8
     }
 
-    <span class="doccomment">/// The increment of the Snowflake. For every id that is generated on a process, this number is</span>
-    <span class="doccomment">/// incremented.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Derived from bits 0..11 of the id.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_possible_truncation</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">increment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
-        (<span class="self">self</span>.<span class="ident">id</span>() &amp; <span class="number">0xFFF</span>) <span class="kw">as</span> <span class="ident">u16</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+    <span class="doccomment">/// The increment of the Snowflake. For every id that is generated on a process, this number is
+    /// incremented.
+    ///
+    /// Derived from bits 0..11 of the id.
+    </span><span class="attribute">#[allow(clippy::cast_possible_truncation)]
+    </span><span class="kw">fn </span>increment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
+        (<span class="self">self</span>.id() &amp; <span class="number">0xFFF</span>) <span class="kw">as </span>u16
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">AttachmentMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;ApplicationMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">AuditLogEntryMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;AttachmentMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;AuditLogEntryMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;ChannelMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">CommandVersionMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;CommandMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;CommandVersionMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;EmojiMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;GenericMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">IntegrationMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;GuildMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">InteractionMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;IntegrationMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;InteractionMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">OauthSkuMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;MessageMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">OauthTeamMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;OauthSkuMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;OauthTeamMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">ScheduledEventMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;RoleMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">ScheduledEventEntityMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;ScheduledEventMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">StageMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;ScheduledEventEntityMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">StickerMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;StageMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">StickerPackMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;StickerMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">StickerPackSkuMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;StickerPackMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;StickerPackSkuMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Snowflake</span> <span class="kw">for</span> <span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
-        <span class="self">self</span>.<span class="ident">get</span>()
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;UserMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_impl_all</span>, <span class="ident">assert_obj_safe</span>};
+<span class="kw">impl </span>Snowflake <span class="kw">for </span>Id&lt;WebhookMarker&gt; {
+    <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.get()
+    }
+}
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">AttachmentMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">AuditLogEntryMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">CommandVersionMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">GenericMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">IntegrationMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">InteractionMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">OauthSkuMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">OauthTeamMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">ScheduledEventMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">ScheduledEventEntityMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">StageMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">StickerMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">StickerPackMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">StickerPackSkuMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt;: <span class="ident">Snowflake</span>);
-    <span class="macro">assert_obj_safe!</span>(<span class="ident">Snowflake</span>);
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use </span>static_assertions::{assert_impl_all, assert_obj_safe};
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">timestamp</span>() {
-        <span class="kw">let</span> <span class="ident">expected</span>: <span class="ident">i64</span> = <span class="number">1_445_219_918_546</span>;
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">Id</span>::&lt;<span class="ident">GenericMarker</span>&gt;<span class="ident">::new</span>(<span class="number">105_484_726_235_607_040</span>);
+    <span class="macro">assert_impl_all!</span>(Id&lt;ApplicationMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;AttachmentMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;AuditLogEntryMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;ChannelMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;CommandMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;CommandVersionMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;EmojiMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;GenericMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;GuildMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;IntegrationMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;InteractionMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;MessageMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;OauthSkuMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;OauthTeamMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;RoleMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;ScheduledEventMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;ScheduledEventEntityMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;StageMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;StickerMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;StickerPackMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;StickerPackSkuMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;UserMarker&gt;: Snowflake);
+    <span class="macro">assert_impl_all!</span>(Id&lt;WebhookMarker&gt;: Snowflake);
+    <span class="macro">assert_obj_safe!</span>(Snowflake);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">id</span>.<span class="ident">timestamp</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>timestamp() {
+        <span class="kw">let </span>expected: i64 = <span class="number">1_445_219_918_546</span>;
+        <span class="kw">let </span>id = Id::&lt;GenericMarker&gt;::new(<span class="number">105_484_726_235_607_040</span>);
+
+        <span class="macro">assert_eq!</span>(expected, id.timestamp());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">worker_id</span>() {
-        <span class="kw">let</span> <span class="ident">expected</span>: <span class="ident">u8</span> = <span class="number">8</span>;
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">Id</span>::&lt;<span class="ident">GenericMarker</span>&gt;<span class="ident">::new</span>(<span class="number">762_022_344_856_174_632</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>worker_id() {
+        <span class="kw">let </span>expected: u8 = <span class="number">8</span>;
+        <span class="kw">let </span>id = Id::&lt;GenericMarker&gt;::new(<span class="number">762_022_344_856_174_632</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">id</span>.<span class="ident">worker_id</span>());
+        <span class="macro">assert_eq!</span>(expected, id.worker_id());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">process_id</span>() {
-        <span class="kw">let</span> <span class="ident">expected</span>: <span class="ident">u8</span> = <span class="number">1</span>;
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">Id</span>::&lt;<span class="ident">GenericMarker</span>&gt;<span class="ident">::new</span>(<span class="number">61_189_081_970_774_016</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>process_id() {
+        <span class="kw">let </span>expected: u8 = <span class="number">1</span>;
+        <span class="kw">let </span>id = Id::&lt;GenericMarker&gt;::new(<span class="number">61_189_081_970_774_016</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">id</span>.<span class="ident">process_id</span>());
+        <span class="macro">assert_eq!</span>(expected, id.process_id());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">increment</span>() {
-        <span class="kw">let</span> <span class="ident">expected</span>: <span class="ident">u16</span> = <span class="number">40</span>;
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">Id</span>::&lt;<span class="ident">GenericMarker</span>&gt;<span class="ident">::new</span>(<span class="number">762_022_344_856_174_632</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>increment() {
+        <span class="kw">let </span>expected: u16 = <span class="number">40</span>;
+        <span class="kw">let </span>id = Id::&lt;GenericMarker&gt;::new(<span class="number">762_022_344_856_174_632</span>);
 
-        <span class="macro">assert_eq!</span>(<span class="ident">expected</span>, <span class="ident">id</span>.<span class="ident">increment</span>());
+        <span class="macro">assert_eq!</span>(expected, id.increment());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

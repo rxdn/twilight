@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/request/channel/webhook/execute_webhook.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>execute_webhook.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../twilight_http/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/request/channel/webhook/execute_webhook.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>execute_webhook.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../twilight_http/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -416,423 +416,423 @@
 <span id="416">416</span>
 <span id="417">417</span>
 <span id="418">418</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">client::Client</span>,
-    <span class="ident">error::Error</span> <span class="kw">as</span> <span class="ident">HttpError</span>,
-    <span class="ident">request</span>::{
-        <span class="ident">attachment</span>::{<span class="ident">AttachmentManager</span>, <span class="ident">PartialAttachment</span>},
-        <span class="ident">channel::webhook::ExecuteWebhookAndWait</span>,
-        <span class="ident">Nullable</span>, <span class="ident">Request</span>, <span class="ident">TryIntoRequest</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    client::Client,
+    error::Error <span class="kw">as </span>HttpError,
+    request::{
+        attachment::{AttachmentManager, PartialAttachment},
+        channel::webhook::ExecuteWebhookAndWait,
+        Nullable, Request, TryIntoRequest,
     },
-    <span class="ident">response</span>::{<span class="ident">marker::EmptyBody</span>, <span class="ident">ResponseFuture</span>},
-    <span class="ident">routing::Route</span>,
+    response::{marker::EmptyBody, ResponseFuture},
+    routing::Route,
 };
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">application::component::Component</span>,
-    <span class="ident">channel</span>::{
-        <span class="ident">embed::Embed</span>,
-        <span class="ident">message</span>::{<span class="ident">AllowedMentions</span>, <span class="ident">MessageFlags</span>},
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>twilight_model::{
+    application::component::Component,
+    channel::{
+        embed::Embed,
+        message::{AllowedMentions, MessageFlags},
     },
-    <span class="ident">http::attachment::Attachment</span>,
-    <span class="ident">id</span>::{
-        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">WebhookMarker</span>},
-        <span class="ident">Id</span>,
+    http::attachment::Attachment,
+    id::{
+        marker::{ChannelMarker, WebhookMarker},
+        Id,
     },
 };
-<span class="kw">use</span> <span class="ident">twilight_validate</span>::{
-    <span class="ident">message</span>::{
-        <span class="ident">attachment_filename</span> <span class="kw">as</span> <span class="ident">validate_attachment_filename</span>, <span class="ident">components</span> <span class="kw">as</span> <span class="ident">validate_components</span>,
-        <span class="ident">content</span> <span class="kw">as</span> <span class="ident">validate_content</span>, <span class="ident">embeds</span> <span class="kw">as</span> <span class="ident">validate_embeds</span>, <span class="ident">MessageValidationError</span>,
-        <span class="ident">MessageValidationErrorType</span>,
+<span class="kw">use </span>twilight_validate::{
+    message::{
+        attachment_filename <span class="kw">as </span>validate_attachment_filename, components <span class="kw">as </span>validate_components,
+        content <span class="kw">as </span>validate_content, embeds <span class="kw">as </span>validate_embeds, MessageValidationError,
+        MessageValidationErrorType,
     },
-    <span class="ident">request::webhook_username</span> <span class="kw">as</span> <span class="ident">validate_webhook_username</span>,
+    request::webhook_username <span class="kw">as </span>validate_webhook_username,
 };
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ExecuteWebhookFields</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">allowed_mentions</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Nullable</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AllowedMentions</span>&gt;&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">attachments</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">PartialAttachment</span>&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">avatar_url</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">components</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Component</span>]&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">content</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">embeds</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">flags</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">MessageFlags</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">payload_json</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">thread_name</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">tts</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">bool</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> = <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="ident">username</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>&gt;,
+<span class="attribute">#[derive(Serialize)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ExecuteWebhookFields&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>allowed_mentions: <span class="prelude-ty">Option</span>&lt;Nullable&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>AllowedMentions&gt;&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>attachments: <span class="prelude-ty">Option</span>&lt;Vec&lt;PartialAttachment&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>avatar_url: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>components: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Component]&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>content: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>embeds: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Embed]&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>flags: <span class="prelude-ty">Option</span>&lt;MessageFlags&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>payload_json: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>thread_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>tts: <span class="prelude-ty">Option</span>&lt;bool&gt;,
+    <span class="attribute">#[serde(skip_serializing_if = <span class="string">&quot;Option::is_none&quot;</span>)]
+    </span>username: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
 }
 
-<span class="doccomment">/// Execute a webhook, sending a message to its channel.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The message must include at least one of [`attachments`], [`content`], or</span>
-<span class="doccomment">/// [`embeds`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">/// use twilight_http::Client;</span>
-<span class="doccomment">/// use twilight_model::id::Id;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let client = Client::new(&quot;my token&quot;.to_owned());</span>
-<span class="doccomment">/// let id = Id::new(432);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// client</span>
-<span class="doccomment">///     .execute_webhook(id, &quot;webhook token&quot;)</span>
-<span class="doccomment">///     .content(&quot;Pinkie...&quot;)?</span>
-<span class="doccomment">///     .exec()</span>
-<span class="doccomment">///     .await?;</span>
-<span class="doccomment">/// # Ok(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`attachments`]: Self::attachments</span>
-<span class="doccomment">/// [`content`]: Self::content</span>
-<span class="doccomment">/// [`embeds`]: Self::embeds</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;requests must be configured and executed&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExecuteWebhook</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="ident">attachment_manager</span>: <span class="ident">AttachmentManager</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
-    <span class="ident">fields</span>: <span class="ident">ExecuteWebhookFields</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
-    <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-    <span class="ident">thread_id</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
-    <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="ident">wait</span>: <span class="ident">bool</span>,
-    <span class="ident">webhook_id</span>: <span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt;,
+<span class="doccomment">/// Execute a webhook, sending a message to its channel.
+///
+/// The message must include at least one of [`attachments`], [`content`], or
+/// [`embeds`].
+///
+/// # Examples
+///
+/// ```no_run
+/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+/// use twilight_http::Client;
+/// use twilight_model::id::Id;
+///
+/// let client = Client::new(&quot;my token&quot;.to_owned());
+/// let id = Id::new(432);
+///
+/// client
+///     .execute_webhook(id, &quot;webhook token&quot;)
+///     .content(&quot;Pinkie...&quot;)?
+///     .exec()
+///     .await?;
+/// # Ok(()) }
+/// ```
+///
+/// [`attachments`]: Self::attachments
+/// [`content`]: Self::content
+/// [`embeds`]: Self::embeds
+</span><span class="attribute">#[must_use = <span class="string">&quot;requests must be configured and executed&quot;</span>]
+</span><span class="kw">pub struct </span>ExecuteWebhook&lt;<span class="lifetime">&#39;a</span>&gt; {
+    attachment_manager: AttachmentManager&lt;<span class="lifetime">&#39;a</span>&gt;,
+    fields: ExecuteWebhookFields&lt;<span class="lifetime">&#39;a</span>&gt;,
+    http: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Client,
+    thread_id: <span class="prelude-ty">Option</span>&lt;Id&lt;ChannelMarker&gt;&gt;,
+    token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    wait: bool,
+    webhook_id: Id&lt;WebhookMarker&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">ExecuteWebhook</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">http</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
-        <span class="ident">webhook_id</span>: <span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt;,
-        <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">attachment_manager</span>: <span class="ident">AttachmentManager::new</span>(),
-            <span class="ident">fields</span>: <span class="ident">ExecuteWebhookFields</span> {
-                <span class="ident">attachments</span>: <span class="prelude-val">None</span>,
-                <span class="ident">avatar_url</span>: <span class="prelude-val">None</span>,
-                <span class="ident">components</span>: <span class="prelude-val">None</span>,
-                <span class="ident">content</span>: <span class="prelude-val">None</span>,
-                <span class="ident">embeds</span>: <span class="prelude-val">None</span>,
-                <span class="ident">flags</span>: <span class="prelude-val">None</span>,
-                <span class="ident">payload_json</span>: <span class="prelude-val">None</span>,
-                <span class="ident">thread_name</span>: <span class="prelude-val">None</span>,
-                <span class="ident">tts</span>: <span class="prelude-val">None</span>,
-                <span class="ident">username</span>: <span class="prelude-val">None</span>,
-                <span class="ident">allowed_mentions</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ExecuteWebhook&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>new(
+        http: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Client,
+        webhook_id: Id&lt;WebhookMarker&gt;,
+        token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            attachment_manager: AttachmentManager::new(),
+            fields: ExecuteWebhookFields {
+                attachments: <span class="prelude-val">None</span>,
+                avatar_url: <span class="prelude-val">None</span>,
+                components: <span class="prelude-val">None</span>,
+                content: <span class="prelude-val">None</span>,
+                embeds: <span class="prelude-val">None</span>,
+                flags: <span class="prelude-val">None</span>,
+                payload_json: <span class="prelude-val">None</span>,
+                thread_name: <span class="prelude-val">None</span>,
+                tts: <span class="prelude-val">None</span>,
+                username: <span class="prelude-val">None</span>,
+                allowed_mentions: <span class="prelude-val">None</span>,
             },
-            <span class="ident">http</span>,
-            <span class="ident">thread_id</span>: <span class="prelude-val">None</span>,
-            <span class="ident">token</span>,
-            <span class="ident">wait</span>: <span class="bool-val">false</span>,
-            <span class="ident">webhook_id</span>,
+            http,
+            thread_id: <span class="prelude-val">None</span>,
+            token,
+            wait: <span class="bool-val">false</span>,
+            webhook_id,
         }
     }
 
-    <span class="doccomment">/// Specify the [`AllowedMentions`] for the message.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Unless otherwise called, the request will use the client&#39;s default</span>
-    <span class="doccomment">/// allowed mentions. Set to `None` to ignore this default.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">allowed_mentions</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">allowed_mentions</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AllowedMentions</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">allowed_mentions</span> = <span class="prelude-val">Some</span>(<span class="ident">Nullable</span>(<span class="ident">allowed_mentions</span>));
+    <span class="doccomment">/// Specify the [`AllowedMentions`] for the message.
+    ///
+    /// Unless otherwise called, the request will use the client&#39;s default
+    /// allowed mentions. Set to `None` to ignore this default.
+    </span><span class="kw">pub const fn </span>allowed_mentions(<span class="kw-2">mut </span><span class="self">self</span>, allowed_mentions: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>AllowedMentions&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.fields.allowed_mentions = <span class="prelude-val">Some</span>(Nullable(allowed_mentions));
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Attach multiple files to the message.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Calling this method will clear any previous calls.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error of type [`AttachmentFilename`] if any filename is</span>
-    <span class="doccomment">/// invalid.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`AttachmentFilename`]: twilight_validate::message::MessageValidationErrorType::AttachmentFilename</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">attachments</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">attachments</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Attachment</span>],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">MessageValidationError</span>&gt; {
-        <span class="ident">attachments</span>
-            .<span class="ident">iter</span>()
-            .<span class="ident">try_for_each</span>(|<span class="ident">attachment</span>| <span class="ident">validate_attachment_filename</span>(<span class="kw-2">&amp;</span><span class="ident">attachment</span>.<span class="ident">filename</span>))<span class="question-mark">?</span>;
+    <span class="doccomment">/// Attach multiple files to the message.
+    ///
+    /// Calling this method will clear any previous calls.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error of type [`AttachmentFilename`] if any filename is
+    /// invalid.
+    ///
+    /// [`AttachmentFilename`]: twilight_validate::message::MessageValidationErrorType::AttachmentFilename
+    </span><span class="kw">pub fn </span>attachments(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        attachments: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Attachment],
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, MessageValidationError&gt; {
+        attachments
+            .iter()
+            .try_for_each(|attachment| validate_attachment_filename(<span class="kw-2">&amp;</span>attachment.filename))<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">attachment_manager</span> = <span class="self">self</span>
-            .<span class="ident">attachment_manager</span>
-            .<span class="ident">set_files</span>(<span class="ident">attachments</span>.<span class="ident">iter</span>().<span class="ident">collect</span>());
-
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
-    }
-
-    <span class="doccomment">/// The URL of the avatar of the webhook.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">avatar_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">avatar_url</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">avatar_url</span> = <span class="prelude-val">Some</span>(<span class="ident">avatar_url</span>);
-
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Set the message&#39;s list of [`Component`]s.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Calling this method will clear previous calls.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Requires a webhook owned by the application.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Refer to the errors section of</span>
-    <span class="doccomment">/// [`twilight_validate::component::component`] for a list of errors that</span>
-    <span class="doccomment">/// may be returned as a result of validating each provided component.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components</span>(
-        <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">components</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Component</span>],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">MessageValidationError</span>&gt; {
-        <span class="ident">validate_components</span>(<span class="ident">components</span>)<span class="question-mark">?</span>;
-
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">components</span> = <span class="prelude-val">Some</span>(<span class="ident">components</span>);
+        <span class="self">self</span>.attachment_manager = <span class="self">self
+            </span>.attachment_manager
+            .set_files(attachments.iter().collect());
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Set the message&#39;s content.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The maximum length is 2000 UTF-16 characters.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error of type [`ContentInvalid`] if the content length is too</span>
-    <span class="doccomment">/// long.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`ContentInvalid`]: twilight_validate::message::MessageValidationErrorType::ContentInvalid</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">MessageValidationError</span>&gt; {
-        <span class="ident">validate_content</span>(<span class="ident">content</span>)<span class="question-mark">?</span>;
+    <span class="doccomment">/// The URL of the avatar of the webhook.
+    </span><span class="kw">pub const fn </span>avatar_url(<span class="kw-2">mut </span><span class="self">self</span>, avatar_url: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.fields.avatar_url = <span class="prelude-val">Some</span>(avatar_url);
 
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">content</span> = <span class="prelude-val">Some</span>(<span class="ident">content</span>);
+        <span class="self">self
+    </span>}
 
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
-    }
+    <span class="doccomment">/// Set the message&#39;s list of [`Component`]s.
+    ///
+    /// Calling this method will clear previous calls.
+    ///
+    /// Requires a webhook owned by the application.
+    ///
+    /// # Errors
+    ///
+    /// Refer to the errors section of
+    /// [`twilight_validate::component::component`] for a list of errors that
+    /// may be returned as a result of validating each provided component.
+    </span><span class="kw">pub fn </span>components(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        components: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Component],
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, MessageValidationError&gt; {
+        validate_components(components)<span class="question-mark">?</span>;
 
-    <span class="doccomment">/// Set the message&#39;s list of embeds.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Calling this method will clear previous calls.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The amount of embeds must not exceed [`EMBED_COUNT_LIMIT`]. The total</span>
-    <span class="doccomment">/// character length of each embed must not exceed [`EMBED_TOTAL_LENGTH`]</span>
-    <span class="doccomment">/// characters. Additionally, the internal fields also have character</span>
-    <span class="doccomment">/// limits. Refer to [Discord Docs/Embed Limits] for more information.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error of type [`TooManyEmbeds`] if there are too many embeds.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Otherwise, refer to the errors section of</span>
-    <span class="doccomment">/// [`twilight_validate::embed::embed`] for a list of errors that may occur.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [Discord Docs/Embed Limits]: https://discord.com/developers/docs/resources/channel#embed-limits</span>
-    <span class="doccomment">/// [`EMBED_COUNT_LIMIT`]: twilight_validate::message::EMBED_COUNT_LIMIT</span>
-    <span class="doccomment">/// [`EMBED_TOTAL_LENGTH`]: twilight_validate::embed::EMBED_TOTAL_LENGTH</span>
-    <span class="doccomment">/// [`TooManyEmbeds`]: twilight_validate::message::MessageValidationErrorType::TooManyEmbeds</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">embeds</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">embeds</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Embed</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">MessageValidationError</span>&gt; {
-        <span class="ident">validate_embeds</span>(<span class="ident">embeds</span>)<span class="question-mark">?</span>;
-
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">embeds</span> = <span class="prelude-val">Some</span>(<span class="ident">embeds</span>);
+        <span class="self">self</span>.fields.components = <span class="prelude-val">Some</span>(components);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Set the message&#39;s flags.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The only supported flag is [`SUPPRESS_EMBEDS`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`SUPPRESS_EMBEDS`]: MessageFlags::SUPPRESS_EMBEDS</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">flags</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flags</span>: <span class="ident">MessageFlags</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">flags</span> = <span class="prelude-val">Some</span>(<span class="ident">flags</span>);
+    <span class="doccomment">/// Set the message&#39;s content.
+    ///
+    /// The maximum length is 2000 UTF-16 characters.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error of type [`ContentInvalid`] if the content length is too
+    /// long.
+    ///
+    /// [`ContentInvalid`]: twilight_validate::message::MessageValidationErrorType::ContentInvalid
+    </span><span class="kw">pub fn </span>content(<span class="kw-2">mut </span><span class="self">self</span>, content: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, MessageValidationError&gt; {
+        validate_content(content)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>
+        <span class="self">self</span>.fields.content = <span class="prelude-val">Some</span>(content);
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// JSON encoded body of any additional request fields.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If this method is called, all other fields are ignored, except for</span>
-    <span class="doccomment">/// [`attachments`]. See [Discord Docs/Uploading Files].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Without [`payload_json`]:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```no_run</span>
-    <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use twilight_http::Client;</span>
-    <span class="doccomment">/// use twilight_model::id::Id;</span>
-    <span class="doccomment">/// use twilight_util::builder::embed::EmbedBuilder;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let client = Client::new(&quot;token&quot;.to_owned());</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let message = client</span>
-    <span class="doccomment">///     .execute_webhook(Id::new(1), &quot;token here&quot;)</span>
-    <span class="doccomment">///     .content(&quot;some content&quot;)?</span>
-    <span class="doccomment">///     .embeds(&amp;[EmbedBuilder::new().title(&quot;title&quot;).validate()?.build()])?</span>
-    <span class="doccomment">///     .wait()</span>
-    <span class="doccomment">///     .exec()</span>
-    <span class="doccomment">///     .await?</span>
-    <span class="doccomment">///     .model()</span>
-    <span class="doccomment">///     .await?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(message.content, &quot;some content&quot;);</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// With [`payload_json`]:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```no_run</span>
-    <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use twilight_http::Client;</span>
-    <span class="doccomment">/// use twilight_model::id::Id;</span>
-    <span class="doccomment">/// use twilight_util::builder::embed::EmbedBuilder;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let client = Client::new(&quot;token&quot;.to_owned());</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let message = client</span>
-    <span class="doccomment">///     .execute_webhook(Id::new(1), &quot;token here&quot;)</span>
-    <span class="doccomment">///     .content(&quot;some content&quot;)?</span>
-    <span class="doccomment">///     .payload_json(br#&quot;{ &quot;content&quot;: &quot;other content&quot;, &quot;embeds&quot;: [ { &quot;title&quot;: &quot;title&quot; } ] }&quot;#)</span>
-    <span class="doccomment">///     .wait()</span>
-    <span class="doccomment">///     .exec()</span>
-    <span class="doccomment">///     .await?</span>
-    <span class="doccomment">///     .model()</span>
-    <span class="doccomment">///     .await?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(message.content, &quot;other content&quot;);</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [Discord Docs/Uploading Files]: https://discord.com/developers/docs/reference#uploading-files</span>
-    <span class="doccomment">/// [`attachments`]: Self::attachments</span>
-    <span class="doccomment">/// [`payload_json`]: Self::payload_json</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">payload_json</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">payload_json</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> = <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>);
+    <span class="doccomment">/// Set the message&#39;s list of embeds.
+    ///
+    /// Calling this method will clear previous calls.
+    ///
+    /// The amount of embeds must not exceed [`EMBED_COUNT_LIMIT`]. The total
+    /// character length of each embed must not exceed [`EMBED_TOTAL_LENGTH`]
+    /// characters. Additionally, the internal fields also have character
+    /// limits. Refer to [Discord Docs/Embed Limits] for more information.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error of type [`TooManyEmbeds`] if there are too many embeds.
+    ///
+    /// Otherwise, refer to the errors section of
+    /// [`twilight_validate::embed::embed`] for a list of errors that may occur.
+    ///
+    /// [Discord Docs/Embed Limits]: https://discord.com/developers/docs/resources/channel#embed-limits
+    /// [`EMBED_COUNT_LIMIT`]: twilight_validate::message::EMBED_COUNT_LIMIT
+    /// [`EMBED_TOTAL_LENGTH`]: twilight_validate::embed::EMBED_TOTAL_LENGTH
+    /// [`TooManyEmbeds`]: twilight_validate::message::MessageValidationErrorType::TooManyEmbeds
+    </span><span class="kw">pub fn </span>embeds(<span class="kw-2">mut </span><span class="self">self</span>, embeds: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Embed]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, MessageValidationError&gt; {
+        validate_embeds(embeds)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>
+        <span class="self">self</span>.fields.embeds = <span class="prelude-val">Some</span>(embeds);
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Execute in a thread belonging to the channel instead of the channel itself.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thread_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">thread_id</span>.<span class="ident">replace</span>(<span class="ident">thread_id</span>);
+    <span class="doccomment">/// Set the message&#39;s flags.
+    ///
+    /// The only supported flag is [`SUPPRESS_EMBEDS`].
+    ///
+    /// [`SUPPRESS_EMBEDS`]: MessageFlags::SUPPRESS_EMBEDS
+    </span><span class="kw">pub const fn </span>flags(<span class="kw-2">mut </span><span class="self">self</span>, flags: MessageFlags) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.fields.flags = <span class="prelude-val">Some</span>(flags);
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Set the name of the created thread when used in a forum channel.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">thread_name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">thread_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">thread_name</span> = <span class="prelude-val">Some</span>(<span class="ident">thread_name</span>);
+    <span class="doccomment">/// JSON encoded body of any additional request fields.
+    ///
+    /// If this method is called, all other fields are ignored, except for
+    /// [`attachments`]. See [Discord Docs/Uploading Files].
+    ///
+    /// Without [`payload_json`]:
+    ///
+    /// ```no_run
+    /// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// use twilight_http::Client;
+    /// use twilight_model::id::Id;
+    /// use twilight_util::builder::embed::EmbedBuilder;
+    ///
+    /// let client = Client::new(&quot;token&quot;.to_owned());
+    ///
+    /// let message = client
+    ///     .execute_webhook(Id::new(1), &quot;token here&quot;)
+    ///     .content(&quot;some content&quot;)?
+    ///     .embeds(&amp;[EmbedBuilder::new().title(&quot;title&quot;).validate()?.build()])?
+    ///     .wait()
+    ///     .exec()
+    ///     .await?
+    ///     .model()
+    ///     .await?;
+    ///
+    /// assert_eq!(message.content, &quot;some content&quot;);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// With [`payload_json`]:
+    ///
+    /// ```no_run
+    /// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// use twilight_http::Client;
+    /// use twilight_model::id::Id;
+    /// use twilight_util::builder::embed::EmbedBuilder;
+    ///
+    /// let client = Client::new(&quot;token&quot;.to_owned());
+    ///
+    /// let message = client
+    ///     .execute_webhook(Id::new(1), &quot;token here&quot;)
+    ///     .content(&quot;some content&quot;)?
+    ///     .payload_json(br#&quot;{ &quot;content&quot;: &quot;other content&quot;, &quot;embeds&quot;: [ { &quot;title&quot;: &quot;title&quot; } ] }&quot;#)
+    ///     .wait()
+    ///     .exec()
+    ///     .await?
+    ///     .model()
+    ///     .await?;
+    ///
+    /// assert_eq!(message.content, &quot;other content&quot;);
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// [Discord Docs/Uploading Files]: https://discord.com/developers/docs/reference#uploading-files
+    /// [`attachments`]: Self::attachments
+    /// [`payload_json`]: Self::payload_json
+    </span><span class="kw">pub const fn </span>payload_json(<span class="kw-2">mut </span><span class="self">self</span>, payload_json: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.fields.payload_json = <span class="prelude-val">Some</span>(payload_json);
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Specify true if the message is TTS.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">tts</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tts</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">tts</span> = <span class="prelude-val">Some</span>(<span class="ident">tts</span>);
+    <span class="doccomment">/// Execute in a thread belonging to the channel instead of the channel itself.
+    </span><span class="kw">pub fn </span>thread_id(<span class="kw-2">mut </span><span class="self">self</span>, thread_id: Id&lt;ChannelMarker&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.thread_id.replace(thread_id);
 
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 
-    <span class="doccomment">/// Specify the username of the webhook&#39;s message.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error of type [`WebhookUsername`] if the webhook&#39;s name is</span>
-    <span class="doccomment">/// invalid.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`WebhookUsername`]: twilight_validate::request::ValidationErrorType::WebhookUsername</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">username</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">MessageValidationError</span>&gt; {
-        <span class="ident">validate_webhook_username</span>(<span class="ident">username</span>).<span class="ident">map_err</span>(|<span class="ident">source</span>| {
-            <span class="ident">MessageValidationError::from_validation_error</span>(
-                <span class="ident">MessageValidationErrorType::WebhookUsername</span>,
-                <span class="ident">source</span>,
+    <span class="doccomment">/// Set the name of the created thread when used in a forum channel.
+    </span><span class="kw">pub const fn </span>thread_name(<span class="kw-2">mut </span><span class="self">self</span>, thread_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.fields.thread_name = <span class="prelude-val">Some</span>(thread_name);
+
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Specify true if the message is TTS.
+    </span><span class="kw">pub const fn </span>tts(<span class="kw-2">mut </span><span class="self">self</span>, tts: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.fields.tts = <span class="prelude-val">Some</span>(tts);
+
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Specify the username of the webhook&#39;s message.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error of type [`WebhookUsername`] if the webhook&#39;s name is
+    /// invalid.
+    ///
+    /// [`WebhookUsername`]: twilight_validate::request::ValidationErrorType::WebhookUsername
+    </span><span class="kw">pub fn </span>username(<span class="kw-2">mut </span><span class="self">self</span>, username: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, MessageValidationError&gt; {
+        validate_webhook_username(username).map_err(|source| {
+            MessageValidationError::from_validation_error(
+                MessageValidationErrorType::WebhookUsername,
+                source,
             )
         })<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">username</span> = <span class="prelude-val">Some</span>(<span class="ident">username</span>);
+        <span class="self">self</span>.fields.username = <span class="prelude-val">Some</span>(username);
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Wait for the message to send before sending a response. See</span>
-    <span class="doccomment">/// [Discord Docs/Execute Webhook].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Using this will result in receiving the created message.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [Discord Docs/Execute Webhook]: https://discord.com/developers/docs/resources/webhook#execute-webhook-querystring-params</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">wait</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="ident">ExecuteWebhookAndWait</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="self">self</span>.<span class="ident">wait</span> = <span class="bool-val">true</span>;
+    <span class="doccomment">/// Wait for the message to send before sending a response. See
+    /// [Discord Docs/Execute Webhook].
+    ///
+    /// Using this will result in receiving the created message.
+    ///
+    /// [Discord Docs/Execute Webhook]: https://discord.com/developers/docs/resources/webhook#execute-webhook-querystring-params
+    </span><span class="kw">pub const fn </span>wait(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; ExecuteWebhookAndWait&lt;<span class="lifetime">&#39;a</span>&gt; {
+        <span class="self">self</span>.wait = <span class="bool-val">true</span>;
 
-        <span class="ident">ExecuteWebhookAndWait::new</span>(<span class="self">self</span>.<span class="ident">http</span>, <span class="self">self</span>)
+        ExecuteWebhookAndWait::new(<span class="self">self</span>.http, <span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`Response`]: crate::response::Response</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exec</span>(<span class="self">self</span>) -&gt; <span class="ident">ResponseFuture</span>&lt;<span class="ident">EmptyBody</span>&gt; {
-        <span class="kw">let</span> <span class="ident">http</span> = <span class="self">self</span>.<span class="ident">http</span>;
+    <span class="doccomment">/// Execute the request, returning a future resolving to a [`Response`].
+    ///
+    /// [`Response`]: crate::response::Response
+    </span><span class="kw">pub fn </span>exec(<span class="self">self</span>) -&gt; ResponseFuture&lt;EmptyBody&gt; {
+        <span class="kw">let </span>http = <span class="self">self</span>.http;
 
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">try_into_request</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">request</span>) =&gt; <span class="ident">http</span>.<span class="ident">request</span>(<span class="ident">request</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; <span class="ident">ResponseFuture::error</span>(<span class="ident">source</span>),
+        <span class="kw">match </span><span class="self">self</span>.try_into_request() {
+            <span class="prelude-val">Ok</span>(request) =&gt; http.request(request),
+            <span class="prelude-val">Err</span>(source) =&gt; ResponseFuture::error(source),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryIntoRequest</span> <span class="kw">for</span> <span class="ident">ExecuteWebhook</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">try_into_request</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">Request</span>, <span class="ident">HttpError</span>&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">request</span> = <span class="ident">Request::builder</span>(<span class="kw-2">&amp;</span><span class="ident">Route::ExecuteWebhook</span> {
-            <span class="ident">thread_id</span>: <span class="self">self</span>.<span class="ident">thread_id</span>.<span class="ident">map</span>(<span class="ident">Id::get</span>),
-            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">token</span>,
-            <span class="ident">wait</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">wait</span>),
-            <span class="ident">webhook_id</span>: <span class="self">self</span>.<span class="ident">webhook_id</span>.<span class="ident">get</span>(),
+<span class="kw">impl </span>TryIntoRequest <span class="kw">for </span>ExecuteWebhook&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="kw">fn </span>try_into_request(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Request, HttpError&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>request = Request::builder(<span class="kw-2">&amp;</span>Route::ExecuteWebhook {
+            thread_id: <span class="self">self</span>.thread_id.map(Id::get),
+            token: <span class="self">self</span>.token,
+            wait: <span class="prelude-val">Some</span>(<span class="self">self</span>.wait),
+            webhook_id: <span class="self">self</span>.webhook_id.get(),
         });
 
-        <span class="comment">// Webhook executions don&#39;t need the authorization token, only the</span>
-        <span class="comment">// webhook token.</span>
-        <span class="ident">request</span> = <span class="ident">request</span>.<span class="ident">use_authorization_token</span>(<span class="bool-val">false</span>);
+        <span class="comment">// Webhook executions don&#39;t need the authorization token, only the
+        // webhook token.
+        </span>request = request.use_authorization_token(<span class="bool-val">false</span>);
 
-        <span class="comment">// Set the default allowed mentions if required.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">allowed_mentions</span>.<span class="ident">is_none</span>() {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">allowed_mentions</span>) = <span class="self">self</span>.<span class="ident">http</span>.<span class="ident">default_allowed_mentions</span>() {
-                <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">allowed_mentions</span> = <span class="prelude-val">Some</span>(<span class="ident">Nullable</span>(<span class="prelude-val">Some</span>(<span class="ident">allowed_mentions</span>)));
+        <span class="comment">// Set the default allowed mentions if required.
+        </span><span class="kw">if </span><span class="self">self</span>.fields.allowed_mentions.is_none() {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(allowed_mentions) = <span class="self">self</span>.http.default_allowed_mentions() {
+                <span class="self">self</span>.fields.allowed_mentions = <span class="prelude-val">Some</span>(Nullable(<span class="prelude-val">Some</span>(allowed_mentions)));
             }
         }
 
-        <span class="comment">// Determine whether we need to use a multipart/form-data body or a JSON</span>
-        <span class="comment">// body.</span>
-        <span class="kw">if</span> !<span class="self">self</span>.<span class="ident">attachment_manager</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">let</span> <span class="ident">form</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>) = <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> {
-                <span class="self">self</span>.<span class="ident">attachment_manager</span>.<span class="ident">build_form</span>(<span class="ident">payload_json</span>)
-            } <span class="kw">else</span> {
-                <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">attachments</span> = <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">attachment_manager</span>.<span class="ident">get_partial_attachments</span>());
+        <span class="comment">// Determine whether we need to use a multipart/form-data body or a JSON
+        // body.
+        </span><span class="kw">if </span>!<span class="self">self</span>.attachment_manager.is_empty() {
+            <span class="kw">let </span>form = <span class="kw">if let </span><span class="prelude-val">Some</span>(payload_json) = <span class="self">self</span>.fields.payload_json {
+                <span class="self">self</span>.attachment_manager.build_form(payload_json)
+            } <span class="kw">else </span>{
+                <span class="self">self</span>.fields.attachments = <span class="prelude-val">Some</span>(<span class="self">self</span>.attachment_manager.get_partial_attachments());
 
-                <span class="kw">let</span> <span class="ident">fields</span> = <span class="ident"><span class="kw">crate</span>::json::to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>).<span class="ident">map_err</span>(<span class="ident">HttpError::json</span>)<span class="question-mark">?</span>;
+                <span class="kw">let </span>fields = <span class="kw">crate</span>::json::to_vec(<span class="kw-2">&amp;</span><span class="self">self</span>.fields).map_err(HttpError::json)<span class="question-mark">?</span>;
 
-                <span class="self">self</span>.<span class="ident">attachment_manager</span>.<span class="ident">build_form</span>(<span class="ident">fields</span>.<span class="ident">as_ref</span>())
+                <span class="self">self</span>.attachment_manager.build_form(fields.as_ref())
             };
 
-            <span class="ident">request</span> = <span class="ident">request</span>.<span class="ident">form</span>(<span class="ident">form</span>);
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload_json</span>) = <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">payload_json</span> {
-            <span class="ident">request</span> = <span class="ident">request</span>.<span class="ident">body</span>(<span class="ident">payload_json</span>.<span class="ident">to_vec</span>());
-        } <span class="kw">else</span> {
-            <span class="ident">request</span> = <span class="ident">request</span>.<span class="ident">json</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)<span class="question-mark">?</span>;
+            request = request.form(form);
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(payload_json) = <span class="self">self</span>.fields.payload_json {
+            request = request.body(payload_json.to_vec());
+        } <span class="kw">else </span>{
+            request = request.json(<span class="kw-2">&amp;</span><span class="self">self</span>.fields)<span class="question-mark">?</span>;
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">request</span>.<span class="ident">build</span>())
+        <span class="prelude-val">Ok</span>(request.build())
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

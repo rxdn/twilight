@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http-ratelimiting/src/request.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>request.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_http_ratelimiting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http-ratelimiting/src/request.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>request.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_http_ratelimiting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -514,521 +514,521 @@
 <span id="514">514</span>
 <span id="515">515</span>
 <span id="516">516</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Request parameters for ratelimiting.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This module contains the type definitions for parameters</span>
-<span class="doccomment">//! relevant for ratelimiting.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The [`super::Ratelimiter`] uses [`Path`]s and [`Method`]s to store</span>
-<span class="doccomment">//! and associate buckets with routes.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Request parameters for ratelimiting.
+//!
+//! This module contains the type definitions for parameters
+//! relevant for ratelimiting.
+//!
+//! The [`super::Ratelimiter`] uses [`Path`]s and [`Method`]s to store
+//! and associate buckets with routes.
 
-<span class="kw">use</span> <span class="ident">http::Method</span> <span class="kw">as</span> <span class="ident">HttpMethod</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">str::FromStr</span>,
+</span><span class="kw">use </span>http::Method <span class="kw">as </span>HttpMethod;
+<span class="kw">use </span>std::{
+    error::Error,
+    fmt::{Display, Formatter, <span class="prelude-ty">Result </span><span class="kw">as </span>FmtResult},
+    str::FromStr,
 };
 
-<span class="doccomment">/// Request method.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Method</span> {
-    <span class="doccomment">/// DELETE method.</span>
-    <span class="ident">Delete</span>,
-    <span class="doccomment">/// GET method.</span>
-    <span class="ident">Get</span>,
-    <span class="doccomment">/// PATCH method.</span>
-    <span class="ident">Patch</span>,
-    <span class="doccomment">/// POST method.</span>
-    <span class="ident">Post</span>,
-    <span class="doccomment">/// PUT method.</span>
-    <span class="ident">Put</span>,
+<span class="doccomment">/// Request method.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>Method {
+    <span class="doccomment">/// DELETE method.
+    </span>Delete,
+    <span class="doccomment">/// GET method.
+    </span>Get,
+    <span class="doccomment">/// PATCH method.
+    </span>Patch,
+    <span class="doccomment">/// POST method.
+    </span>Post,
+    <span class="doccomment">/// PUT method.
+    </span>Put,
 }
 
-<span class="kw">impl</span> <span class="ident">Method</span> {
-    <span class="doccomment">/// Convert the method into the equivalent [`http::Method`].</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">to_http</span>(<span class="self">self</span>) -&gt; <span class="ident">HttpMethod</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Delete</span> =&gt; <span class="ident">HttpMethod::DELETE</span>,
-            <span class="ident"><span class="self">Self</span>::Get</span> =&gt; <span class="ident">HttpMethod::GET</span>,
-            <span class="ident"><span class="self">Self</span>::Patch</span> =&gt; <span class="ident">HttpMethod::PATCH</span>,
-            <span class="ident"><span class="self">Self</span>::Post</span> =&gt; <span class="ident">HttpMethod::POST</span>,
-            <span class="ident"><span class="self">Self</span>::Put</span> =&gt; <span class="ident">HttpMethod::PUT</span>,
+<span class="kw">impl </span>Method {
+    <span class="doccomment">/// Convert the method into the equivalent [`http::Method`].
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub const fn </span>to_http(<span class="self">self</span>) -&gt; HttpMethod {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Delete =&gt; HttpMethod::DELETE,
+            <span class="self">Self</span>::Get =&gt; HttpMethod::GET,
+            <span class="self">Self</span>::Patch =&gt; HttpMethod::PATCH,
+            <span class="self">Self</span>::Post =&gt; HttpMethod::POST,
+            <span class="self">Self</span>::Put =&gt; HttpMethod::PUT,
         }
     }
 }
 
-<span class="doccomment">/// Error returned when a [`Path`] could not be parsed from a string.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PathParseError</span> {
-    <span class="doccomment">/// Detailed reason why this could not be parsed.</span>
-    <span class="ident">kind</span>: <span class="ident">PathParseErrorType</span>,
-    <span class="doccomment">/// Original error leading up to this one.</span>
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
+<span class="doccomment">/// Error returned when a [`Path`] could not be parsed from a string.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>PathParseError {
+    <span class="doccomment">/// Detailed reason why this could not be parsed.
+    </span>kind: PathParseErrorType,
+    <span class="doccomment">/// Original error leading up to this one.
+    </span>source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">PathParseError</span> {
-    <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">PathParseErrorType</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
+<span class="kw">impl </span>PathParseError {
+    <span class="doccomment">/// Immutable reference to the type of error that occurred.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub const fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>PathParseErrorType {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.kind
     }
 
-    <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
+    <span class="doccomment">/// Consume the error, returning the source error if there is any.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub fn </span>into_source(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt; {
+        <span class="self">self</span>.source
     }
 
-    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">PathParseErrorType</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;) {
-        (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
+    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub fn </span>into_parts(<span class="self">self</span>) -&gt; (PathParseErrorType, <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;) {
+        (<span class="self">self</span>.kind, <span class="self">self</span>.source)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">PathParseError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">PathParseErrorType::IntegerParsing</span> { .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;An ID in a segment was invalid&quot;</span>)
+<span class="kw">impl </span>Display <span class="kw">for </span>PathParseError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            PathParseErrorType::IntegerParsing { .. } =&gt; {
+                f.write_str(<span class="string">&quot;An ID in a segment was invalid&quot;</span>)
             }
-            <span class="ident">PathParseErrorType::MessageIdWithoutMethod</span> { .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;A message path was detected but the method wasn&#39;t given&quot;</span>)
+            PathParseErrorType::MessageIdWithoutMethod { .. } =&gt; {
+                f.write_str(<span class="string">&quot;A message path was detected but the method wasn&#39;t given&quot;</span>)
             }
-            <span class="ident">PathParseErrorType::NoMatch</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;There was no matched path&quot;</span>),
+            PathParseErrorType::NoMatch =&gt; f.write_str(<span class="string">&quot;There was no matched path&quot;</span>),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">PathParseError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
+<span class="kw">impl </span>Error <span class="kw">for </span>PathParseError {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+        <span class="self">self</span>.source
+            .as_ref()
+            .map(|source| <span class="kw-2">&amp;**</span>source <span class="kw">as </span><span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>))
     }
 }
 
-<span class="doccomment">/// Type of [`PathParseError`] specifying what failed to parse.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PathParseErrorType</span> {
-    <span class="doccomment">/// The ID couldn&#39;t be parsed as an integer.</span>
-    <span class="ident">IntegerParsing</span>,
-    <span class="doccomment">/// When parsing into a [`Path::ChannelsIdMessagesId`] variant, the method</span>
-    <span class="doccomment">/// must also be specified via its `TryFrom` impl.</span>
-    <span class="ident">MessageIdWithoutMethod</span> {
-        <span class="doccomment">/// The ID of the channel.</span>
-        <span class="ident">channel_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Type of [`PathParseError`] specifying what failed to parse.
+</span><span class="attribute">#[derive(Debug)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>PathParseErrorType {
+    <span class="doccomment">/// The ID couldn&#39;t be parsed as an integer.
+    </span>IntegerParsing,
+    <span class="doccomment">/// When parsing into a [`Path::ChannelsIdMessagesId`] variant, the method
+    /// must also be specified via its `TryFrom` impl.
+    </span>MessageIdWithoutMethod {
+        <span class="doccomment">/// The ID of the channel.
+        </span>channel_id: u64,
     },
-    <span class="doccomment">/// A static path for the provided path string wasn&#39;t found.</span>
-    <span class="ident">NoMatch</span>,
+    <span class="doccomment">/// A static path for the provided path string wasn&#39;t found.
+    </span>NoMatch,
 }
 
-<span class="doccomment">/// An enum representing a path, most useful for ratelimiting implementations.</span>
-<span class="comment">// If adding to this enum, be sure to add to the `TryFrom` impl.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Path</span> {
-    <span class="doccomment">/// Operating on global commands.</span>
-    <span class="ident">ApplicationCommand</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a specific command.</span>
-    <span class="ident">ApplicationCommandId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on commands in a guild.</span>
-    <span class="ident">ApplicationGuildCommand</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a specific command in a guild.</span>
-    <span class="ident">ApplicationGuildCommandId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel.</span>
-    <span class="ident">ChannelsId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s invites.</span>
-    <span class="ident">ChannelsIdInvites</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s messages.</span>
-    <span class="ident">ChannelsIdMessages</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s messages by bulk deleting.</span>
-    <span class="ident">ChannelsIdMessagesBulkDelete</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an individual channel&#39;s message.</span>
-    <span class="ident">ChannelsIdMessagesId</span>(<span class="ident">Method</span>, <span class="ident">u64</span>),
-    <span class="doccomment">/// Crossposting an individual channel&#39;s message.</span>
-    <span class="ident">ChannelsIdMessagesIdCrosspost</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an individual channel&#39;s message&#39;s reactions.</span>
-    <span class="ident">ChannelsIdMessagesIdReactions</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an individual channel&#39;s message&#39;s reactions while</span>
-    <span class="doccomment">/// specifying the user ID and emoji type.</span>
-    <span class="ident">ChannelsIdMessagesIdReactionsUserIdType</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an individual channel&#39;s message&#39;s threads.</span>
-    <span class="ident">ChannelsIdMessagesIdThreads</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s permission overwrites by ID.</span>
-    <span class="ident">ChannelsIdPermissionsOverwriteId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s pins.</span>
-    <span class="ident">ChannelsIdPins</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s individual pinned message.</span>
-    <span class="ident">ChannelsIdPinsMessageId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a group DM&#39;s recipients.</span>
-    <span class="ident">ChannelsIdRecipients</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a thread&#39;s members.</span>
-    <span class="ident">ChannelsIdThreadMembers</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s threads.</span>
-    <span class="ident">ChannelsIdThreads</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s typing indicator.</span>
-    <span class="ident">ChannelsIdTyping</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s webhooks.</span>
-    <span class="ident">ChannelsIdWebhooks</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a channel&#39;s followers.</span>
-    <span class="ident">ChannelsIdFollowers</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating with the gateway information.</span>
-    <span class="ident">Gateway</span>,
-    <span class="doccomment">/// Operating with the gateway information tailored to the current user.</span>
-    <span class="ident">GatewayBot</span>,
-    <span class="doccomment">/// Operating on the guild resource.</span>
-    <span class="ident">Guilds</span>,
-    <span class="doccomment">/// Operating on one of user&#39;s guilds.</span>
-    <span class="ident">GuildsId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; bans.</span>
-    <span class="ident">GuildsIdBans</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a ban from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdBansId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a ban from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdAuditLogs</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on specific member&#39;s ban from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdBansUserId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; channels.</span>
-    <span class="ident">GuildsIdChannels</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; widget.</span>
-    <span class="ident">GuildsIdWidget</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; emojis.</span>
-    <span class="ident">GuildsIdEmojis</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an emoji from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdEmojisId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; integrations.</span>
-    <span class="ident">GuildsIdIntegrations</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an integration from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdIntegrationsId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an integration from one of the user&#39;s guilds by synchronizing it.</span>
-    <span class="ident">GuildsIdIntegrationsIdSync</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; invites.</span>
-    <span class="ident">GuildsIdInvites</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; members.</span>
-    <span class="ident">GuildsIdMembers</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a member from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdMembersId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a role of a member from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdMembersIdRolesId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on the user&#39;s nickname in one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdMembersMeNick</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; members by searching.</span>
-    <span class="ident">GuildsIdMembersSearch</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; MFA level.</span>
-    <span class="ident">GuildsIdMfa</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; by previewing it.</span>
-    <span class="ident">GuildsIdPreview</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; by pruning members.</span>
-    <span class="ident">GuildsIdPrune</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on the voice regions of one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdRegions</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on the roles of one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdRoles</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a role of one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdRolesId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on the guild&#39;s scheduled events.</span>
-    <span class="ident">GuildsIdScheduledEvents</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a particular guild&#39;s scheduled events.</span>
-    <span class="ident">GuildsIdScheduledEventsId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a particular guild&#39;s scheduled event users.</span>
-    <span class="ident">GuildsIdScheduledEventsIdUsers</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; stickers.</span>
-    <span class="ident">GuildsIdStickers</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; templates.</span>
-    <span class="ident">GuildsIdTemplates</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a guild template.</span>
-    <span class="ident">GuildsTemplatesCode</span>(<span class="ident">String</span>),
-    <span class="doccomment">/// Operating on a template from one of the user&#39;s guilds.</span>
-    <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">u64</span>, <span class="ident">String</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; threads.</span>
-    <span class="ident">GuildsIdThreads</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; vanity URL.</span>
-    <span class="ident">GuildsIdVanityUrl</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; voice states.</span>
-    <span class="ident">GuildsIdVoiceStates</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; welcome screen.</span>
-    <span class="ident">GuildsIdWelcomeScreen</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; webhooks.</span>
-    <span class="ident">GuildsIdWebhooks</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on an invite.</span>
-    <span class="ident">InvitesCode</span>,
-    <span class="doccomment">/// Operating on an interaction&#39;s callback.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This path is not bound to the application&#39;s global rate limit.</span>
-    <span class="ident">InteractionCallback</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on stage instances.</span>
-    <span class="ident">StageInstances</span>,
-    <span class="doccomment">/// Operating on sticker packs.</span>
-    <span class="ident">StickerPacks</span>,
-    <span class="doccomment">/// Operating on a sticker.</span>
-    <span class="ident">Stickers</span>,
-    <span class="doccomment">/// Operating on a sticker.</span>
-    <span class="ident">UsersId</span>,
-    <span class="doccomment">/// Operating on the user&#39;s application information.</span>
-    <span class="ident">OauthApplicationsMe</span>,
-    <span class="doccomment">/// Operating on the user&#39;s connections.</span>
-    <span class="ident">UsersIdConnections</span>,
-    <span class="doccomment">/// Operating on the user&#39;s private channels.</span>
-    <span class="ident">UsersIdChannels</span>,
-    <span class="doccomment">/// Operating on the state of a guild that the user is in.</span>
-    <span class="ident">UsersIdGuilds</span>,
-    <span class="doccomment">/// Operating on the state of a guild that the user is in.</span>
-    <span class="ident">UsersIdGuildsId</span>,
-    <span class="doccomment">/// Operating on the state of a guild that the user, as a member, is in.</span>
-    <span class="ident">UsersIdGuildsIdMember</span>,
-    <span class="doccomment">/// Operating on the voice regions available to the current user.</span>
-    <span class="ident">VoiceRegions</span>,
-    <span class="doccomment">/// Operating on a webhook as a bot.</span>
-    <span class="ident">WebhooksId</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// Operating on a webhook as a webhook.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// When used with interactions, this path is not bound to the application&#39;s</span>
-    <span class="doccomment">/// global rate limit.</span>
-    <span class="ident">WebhooksIdToken</span>(<span class="ident">u64</span>, <span class="ident">String</span>),
-    <span class="doccomment">/// Operating on a message created by a webhook.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// When used with interactions, this path is not bound to the application&#39;s</span>
-    <span class="doccomment">/// global rate limit.</span>
-    <span class="ident">WebhooksIdTokenMessagesId</span>(<span class="ident">u64</span>, <span class="ident">String</span>),
+<span class="doccomment">/// An enum representing a path, most useful for ratelimiting implementations.
+</span><span class="comment">// If adding to this enum, be sure to add to the `TryFrom` impl.
+</span><span class="attribute">#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>Path {
+    <span class="doccomment">/// Operating on global commands.
+    </span>ApplicationCommand(u64),
+    <span class="doccomment">/// Operating on a specific command.
+    </span>ApplicationCommandId(u64),
+    <span class="doccomment">/// Operating on commands in a guild.
+    </span>ApplicationGuildCommand(u64),
+    <span class="doccomment">/// Operating on a specific command in a guild.
+    </span>ApplicationGuildCommandId(u64),
+    <span class="doccomment">/// Operating on a channel.
+    </span>ChannelsId(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s invites.
+    </span>ChannelsIdInvites(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s messages.
+    </span>ChannelsIdMessages(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s messages by bulk deleting.
+    </span>ChannelsIdMessagesBulkDelete(u64),
+    <span class="doccomment">/// Operating on an individual channel&#39;s message.
+    </span>ChannelsIdMessagesId(Method, u64),
+    <span class="doccomment">/// Crossposting an individual channel&#39;s message.
+    </span>ChannelsIdMessagesIdCrosspost(u64),
+    <span class="doccomment">/// Operating on an individual channel&#39;s message&#39;s reactions.
+    </span>ChannelsIdMessagesIdReactions(u64),
+    <span class="doccomment">/// Operating on an individual channel&#39;s message&#39;s reactions while
+    /// specifying the user ID and emoji type.
+    </span>ChannelsIdMessagesIdReactionsUserIdType(u64),
+    <span class="doccomment">/// Operating on an individual channel&#39;s message&#39;s threads.
+    </span>ChannelsIdMessagesIdThreads(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s permission overwrites by ID.
+    </span>ChannelsIdPermissionsOverwriteId(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s pins.
+    </span>ChannelsIdPins(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s individual pinned message.
+    </span>ChannelsIdPinsMessageId(u64),
+    <span class="doccomment">/// Operating on a group DM&#39;s recipients.
+    </span>ChannelsIdRecipients(u64),
+    <span class="doccomment">/// Operating on a thread&#39;s members.
+    </span>ChannelsIdThreadMembers(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s threads.
+    </span>ChannelsIdThreads(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s typing indicator.
+    </span>ChannelsIdTyping(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s webhooks.
+    </span>ChannelsIdWebhooks(u64),
+    <span class="doccomment">/// Operating on a channel&#39;s followers.
+    </span>ChannelsIdFollowers(u64),
+    <span class="doccomment">/// Operating with the gateway information.
+    </span>Gateway,
+    <span class="doccomment">/// Operating with the gateway information tailored to the current user.
+    </span>GatewayBot,
+    <span class="doccomment">/// Operating on the guild resource.
+    </span>Guilds,
+    <span class="doccomment">/// Operating on one of user&#39;s guilds.
+    </span>GuildsId(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; bans.
+    </span>GuildsIdBans(u64),
+    <span class="doccomment">/// Operating on a ban from one of the user&#39;s guilds.
+    </span>GuildsIdBansId(u64),
+    <span class="doccomment">/// Operating on a ban from one of the user&#39;s guilds.
+    </span>GuildsIdAuditLogs(u64),
+    <span class="doccomment">/// Operating on specific member&#39;s ban from one of the user&#39;s guilds.
+    </span>GuildsIdBansUserId(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; channels.
+    </span>GuildsIdChannels(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; widget.
+    </span>GuildsIdWidget(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; emojis.
+    </span>GuildsIdEmojis(u64),
+    <span class="doccomment">/// Operating on an emoji from one of the user&#39;s guilds.
+    </span>GuildsIdEmojisId(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; integrations.
+    </span>GuildsIdIntegrations(u64),
+    <span class="doccomment">/// Operating on an integration from one of the user&#39;s guilds.
+    </span>GuildsIdIntegrationsId(u64),
+    <span class="doccomment">/// Operating on an integration from one of the user&#39;s guilds by synchronizing it.
+    </span>GuildsIdIntegrationsIdSync(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; invites.
+    </span>GuildsIdInvites(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; members.
+    </span>GuildsIdMembers(u64),
+    <span class="doccomment">/// Operating on a member from one of the user&#39;s guilds.
+    </span>GuildsIdMembersId(u64),
+    <span class="doccomment">/// Operating on a role of a member from one of the user&#39;s guilds.
+    </span>GuildsIdMembersIdRolesId(u64),
+    <span class="doccomment">/// Operating on the user&#39;s nickname in one of the user&#39;s guilds.
+    </span>GuildsIdMembersMeNick(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; members by searching.
+    </span>GuildsIdMembersSearch(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; MFA level.
+    </span>GuildsIdMfa(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; by previewing it.
+    </span>GuildsIdPreview(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; by pruning members.
+    </span>GuildsIdPrune(u64),
+    <span class="doccomment">/// Operating on the voice regions of one of the user&#39;s guilds.
+    </span>GuildsIdRegions(u64),
+    <span class="doccomment">/// Operating on the roles of one of the user&#39;s guilds.
+    </span>GuildsIdRoles(u64),
+    <span class="doccomment">/// Operating on a role of one of the user&#39;s guilds.
+    </span>GuildsIdRolesId(u64),
+    <span class="doccomment">/// Operating on the guild&#39;s scheduled events.
+    </span>GuildsIdScheduledEvents(u64),
+    <span class="doccomment">/// Operating on a particular guild&#39;s scheduled events.
+    </span>GuildsIdScheduledEventsId(u64),
+    <span class="doccomment">/// Operating on a particular guild&#39;s scheduled event users.
+    </span>GuildsIdScheduledEventsIdUsers(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; stickers.
+    </span>GuildsIdStickers(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; templates.
+    </span>GuildsIdTemplates(u64),
+    <span class="doccomment">/// Operating on a guild template.
+    </span>GuildsTemplatesCode(String),
+    <span class="doccomment">/// Operating on a template from one of the user&#39;s guilds.
+    </span>GuildsIdTemplatesCode(u64, String),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; threads.
+    </span>GuildsIdThreads(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; vanity URL.
+    </span>GuildsIdVanityUrl(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; voice states.
+    </span>GuildsIdVoiceStates(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; welcome screen.
+    </span>GuildsIdWelcomeScreen(u64),
+    <span class="doccomment">/// Operating on one of the user&#39;s guilds&#39; webhooks.
+    </span>GuildsIdWebhooks(u64),
+    <span class="doccomment">/// Operating on an invite.
+    </span>InvitesCode,
+    <span class="doccomment">/// Operating on an interaction&#39;s callback.
+    ///
+    /// This path is not bound to the application&#39;s global rate limit.
+    </span>InteractionCallback(u64),
+    <span class="doccomment">/// Operating on stage instances.
+    </span>StageInstances,
+    <span class="doccomment">/// Operating on sticker packs.
+    </span>StickerPacks,
+    <span class="doccomment">/// Operating on a sticker.
+    </span>Stickers,
+    <span class="doccomment">/// Operating on a sticker.
+    </span>UsersId,
+    <span class="doccomment">/// Operating on the user&#39;s application information.
+    </span>OauthApplicationsMe,
+    <span class="doccomment">/// Operating on the user&#39;s connections.
+    </span>UsersIdConnections,
+    <span class="doccomment">/// Operating on the user&#39;s private channels.
+    </span>UsersIdChannels,
+    <span class="doccomment">/// Operating on the state of a guild that the user is in.
+    </span>UsersIdGuilds,
+    <span class="doccomment">/// Operating on the state of a guild that the user is in.
+    </span>UsersIdGuildsId,
+    <span class="doccomment">/// Operating on the state of a guild that the user, as a member, is in.
+    </span>UsersIdGuildsIdMember,
+    <span class="doccomment">/// Operating on the voice regions available to the current user.
+    </span>VoiceRegions,
+    <span class="doccomment">/// Operating on a webhook as a bot.
+    </span>WebhooksId(u64),
+    <span class="doccomment">/// Operating on a webhook as a webhook.
+    ///
+    /// When used with interactions, this path is not bound to the application&#39;s
+    /// global rate limit.
+    </span>WebhooksIdToken(u64, String),
+    <span class="doccomment">/// Operating on a message created by a webhook.
+    ///
+    /// When used with interactions, this path is not bound to the application&#39;s
+    /// global rate limit.
+    </span>WebhooksIdTokenMessagesId(u64, String),
 }
 
-<span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">Path</span> {
-    <span class="kw">type</span> <span class="prelude-val">Err</span> = <span class="ident">PathParseError</span>;
+<span class="kw">impl </span>FromStr <span class="kw">for </span>Path {
+    <span class="kw">type </span><span class="prelude-val">Err </span>= PathParseError;
 
-    <span class="doccomment">/// Parses a string into a path.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The string *may* start with a slash (`/`), which will be ignored.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use std::str::FromStr;</span>
-    <span class="doccomment">/// use twilight_http_ratelimiting::Path;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// assert_eq!(Path::VoiceRegions, Path::from_str(&quot;/voice/regions&quot;)?);</span>
-    <span class="doccomment">/// assert_eq!(</span>
-    <span class="doccomment">///     Path::ChannelsIdMessages(123),</span>
-    <span class="doccomment">///     Path::from_str(&quot;channels/123/messages&quot;)?,</span>
-    <span class="doccomment">/// );</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::enum_glob_use</span>, <span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Err</span>&gt; {
-        <span class="kw">use</span> <span class="ident">Path</span>::<span class="kw-2">*</span>;
+    <span class="doccomment">/// Parses a string into a path.
+    ///
+    /// The string *may* start with a slash (`/`), which will be ignored.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::str::FromStr;
+    /// use twilight_http_ratelimiting::Path;
+    ///
+    /// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// assert_eq!(Path::VoiceRegions, Path::from_str(&quot;/voice/regions&quot;)?);
+    /// assert_eq!(
+    ///     Path::ChannelsIdMessages(123),
+    ///     Path::from_str(&quot;channels/123/messages&quot;)?,
+    /// );
+    /// # Ok(()) }
+    /// ```
+    </span><span class="attribute">#[allow(clippy::enum_glob_use, clippy::too_many_lines)]
+    </span><span class="kw">fn </span>from_str(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
+        <span class="kw">use </span>Path::<span class="kw-2">*</span>;
 
-        <span class="doccomment">/// Parse a string into a Discord ID.</span>
-        <span class="kw">fn</span> <span class="ident">parse_id</span>(<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">u64</span>, <span class="ident">PathParseError</span>&gt; {
-            <span class="ident">id</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">PathParseError</span> {
-                <span class="ident">kind</span>: <span class="ident">PathParseErrorType::IntegerParsing</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        <span class="doccomment">/// Parse a string into a Discord ID.
+        </span><span class="kw">fn </span>parse_id(id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;u64, PathParseError&gt; {
+            id.parse().map_err(|source| PathParseError {
+                kind: PathParseErrorType::IntegerParsing,
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
             })
         }
 
-        <span class="kw">let</span> <span class="ident">skip</span> = <span class="ident">usize::from</span>(<span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&#39;/&#39;</span>));
+        <span class="kw">let </span>skip = usize::from(s.starts_with(<span class="string">&#39;/&#39;</span>));
 
-        <span class="kw">let</span> <span class="ident">parts</span> = <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;/&#39;</span>).<span class="ident">skip</span>(<span class="ident">skip</span>).<span class="ident">collect</span>::&lt;<span class="ident">Vec</span>&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>&gt;&gt;();
+        <span class="kw">let </span>parts = s.split(<span class="string">&#39;/&#39;</span>).skip(skip).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;();
 
-        <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">parts</span>[..] {
-            [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;commands&quot;</span>] =&gt; <span class="ident">ApplicationCommand</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">ApplicationCommandId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>]
-            | [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>, <span class="string">&quot;permissions&quot;</span>] =&gt; {
-                <span class="ident">ApplicationGuildCommand</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="kw">match </span>parts[..] {
+            [<span class="string">&quot;applications&quot;</span>, id, <span class="string">&quot;commands&quot;</span>] =&gt; ApplicationCommand(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;applications&quot;</span>, id, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>] =&gt; ApplicationCommandId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;applications&quot;</span>, id, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>]
+            | [<span class="string">&quot;applications&quot;</span>, id, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>, <span class="string">&quot;permissions&quot;</span>] =&gt; {
+                ApplicationGuildCommand(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>]
-            | [<span class="string">&quot;applications&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;permissions&quot;</span>] =&gt; {
-                <span class="ident">ApplicationGuildCommandId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;applications&quot;</span>, id, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>]
+            | [<span class="string">&quot;applications&quot;</span>, id, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;commands&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;permissions&quot;</span>] =&gt; {
+                ApplicationGuildCommandId(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>] =&gt; <span class="ident">ChannelsId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;followers&quot;</span>] =&gt; <span class="ident">ChannelsIdFollowers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;invites&quot;</span>] =&gt; <span class="ident">ChannelsIdInvites</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>] =&gt; <span class="ident">ChannelsIdMessages</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="string">&quot;bulk-delete&quot;</span>] =&gt; {
-                <span class="ident">ChannelsIdMessagesBulkDelete</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id] =&gt; ChannelsId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;followers&quot;</span>] =&gt; ChannelsIdFollowers(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;invites&quot;</span>] =&gt; ChannelsIdInvites(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>] =&gt; ChannelsIdMessages(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="string">&quot;bulk-delete&quot;</span>] =&gt; {
+                ChannelsIdMessagesBulkDelete(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="comment">// can not map to path without method since they have different ratelimits</span>
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PathParseError</span> {
-                    <span class="ident">kind</span>: <span class="ident">PathParseErrorType::MessageIdWithoutMethod</span> {
-                        <span class="ident">channel_id</span>: <span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>,
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>] =&gt; {
+                <span class="comment">// can not map to path without method since they have different ratelimits
+                </span><span class="kw">return </span><span class="prelude-val">Err</span>(PathParseError {
+                    kind: PathParseErrorType::MessageIdWithoutMethod {
+                        channel_id: parse_id(id)<span class="question-mark">?</span>,
                     },
-                    <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                    source: <span class="prelude-val">None</span>,
                 });
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;crosspost&quot;</span>] =&gt; {
-                <span class="ident">ChannelsIdMessagesIdCrosspost</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;crosspost&quot;</span>] =&gt; {
+                ChannelsIdMessagesIdCrosspost(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;reactions&quot;</span>]
-            | [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;reactions&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">ChannelsIdMessagesIdReactions</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;reactions&quot;</span>]
+            | [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;reactions&quot;</span>, <span class="kw">_</span>] =&gt; {
+                ChannelsIdMessagesIdReactions(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;reactions&quot;</span>, <span class="kw">_</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">ChannelsIdMessagesIdReactionsUserIdType</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;reactions&quot;</span>, <span class="kw">_</span>, <span class="kw">_</span>] =&gt; {
+                ChannelsIdMessagesIdReactionsUserIdType(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;threads&quot;</span>] =&gt; {
-                <span class="ident">ChannelsIdMessagesIdThreads</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;threads&quot;</span>] =&gt; {
+                ChannelsIdMessagesIdThreads(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;permissions&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">ChannelsIdPermissionsOverwriteId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;pins&quot;</span>] =&gt; <span class="ident">ChannelsIdPins</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;pins&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">ChannelsIdPinsMessageId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;recipients&quot;</span>] | [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;recipients&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">ChannelsIdRecipients</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;permissions&quot;</span>, <span class="kw">_</span>] =&gt; ChannelsIdPermissionsOverwriteId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;pins&quot;</span>] =&gt; ChannelsIdPins(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;pins&quot;</span>, <span class="kw">_</span>] =&gt; ChannelsIdPinsMessageId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;recipients&quot;</span>] | [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;recipients&quot;</span>, <span class="kw">_</span>] =&gt; {
+                ChannelsIdRecipients(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;thread-members&quot;</span>] =&gt; <span class="ident">ChannelsIdThreadMembers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;threads&quot;</span>] =&gt; <span class="ident">ChannelsIdThreads</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;typing&quot;</span>] =&gt; <span class="ident">ChannelsIdTyping</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;webhooks&quot;</span>] | [<span class="string">&quot;channels&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;webhooks&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">ChannelsIdWebhooks</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;thread-members&quot;</span>] =&gt; ChannelsIdThreadMembers(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;threads&quot;</span>] =&gt; ChannelsIdThreads(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;typing&quot;</span>] =&gt; ChannelsIdTyping(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;webhooks&quot;</span>] | [<span class="string">&quot;channels&quot;</span>, id, <span class="string">&quot;webhooks&quot;</span>, <span class="kw">_</span>] =&gt; {
+                ChannelsIdWebhooks(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;gateway&quot;</span>] =&gt; <span class="ident">Gateway</span>,
-            [<span class="string">&quot;gateway&quot;</span>, <span class="string">&quot;bot&quot;</span>] =&gt; <span class="ident">GatewayBot</span>,
-            [<span class="string">&quot;guilds&quot;</span>] =&gt; <span class="ident">Guilds</span>,
-            [<span class="string">&quot;guilds&quot;</span>, <span class="string">&quot;templates&quot;</span>, <span class="ident">code</span>] =&gt; <span class="ident">GuildsTemplatesCode</span>(<span class="ident">code</span>.<span class="ident">to_string</span>()),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>] =&gt; <span class="ident">GuildsId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;audit-logs&quot;</span>] =&gt; <span class="ident">GuildsIdAuditLogs</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;bans&quot;</span>] =&gt; <span class="ident">GuildsIdBans</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;bans&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdBansUserId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;channels&quot;</span>] =&gt; <span class="ident">GuildsIdChannels</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;widget&quot;</span> | <span class="string">&quot;widget.json&quot;</span>] =&gt; <span class="ident">GuildsIdWidget</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;emojis&quot;</span>] =&gt; <span class="ident">GuildsIdEmojis</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;emojis&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdEmojisId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;integrations&quot;</span>] =&gt; <span class="ident">GuildsIdIntegrations</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;integrations&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdIntegrationsId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;integrations&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;sync&quot;</span>] =&gt; <span class="ident">GuildsIdIntegrationsIdSync</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;invites&quot;</span>] =&gt; <span class="ident">GuildsIdInvites</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;members&quot;</span>] =&gt; <span class="ident">GuildsIdMembers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;members&quot;</span>, <span class="string">&quot;search&quot;</span>] =&gt; <span class="ident">GuildsIdMembersSearch</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;members&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdMembersId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;members&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;roles&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdMembersIdRolesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;members&quot;</span>, <span class="string">&quot;@me&quot;</span>, <span class="string">&quot;nick&quot;</span>] =&gt; <span class="ident">GuildsIdMembersMeNick</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;preview&quot;</span>] =&gt; <span class="ident">GuildsIdPreview</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;prune&quot;</span>] =&gt; <span class="ident">GuildsIdPrune</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;regions&quot;</span>] =&gt; <span class="ident">GuildsIdRegions</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;roles&quot;</span>] =&gt; <span class="ident">GuildsIdRoles</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;roles&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdRolesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;scheduled-events&quot;</span>] =&gt; <span class="ident">GuildsIdScheduledEvents</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;scheduled-events&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdScheduledEventsId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;scheduled-events&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;users&quot;</span>] =&gt; {
-                <span class="ident">GuildsIdScheduledEventsIdUsers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;gateway&quot;</span>] =&gt; Gateway,
+            [<span class="string">&quot;gateway&quot;</span>, <span class="string">&quot;bot&quot;</span>] =&gt; GatewayBot,
+            [<span class="string">&quot;guilds&quot;</span>] =&gt; Guilds,
+            [<span class="string">&quot;guilds&quot;</span>, <span class="string">&quot;templates&quot;</span>, code] =&gt; GuildsTemplatesCode(code.to_string()),
+            [<span class="string">&quot;guilds&quot;</span>, id] =&gt; GuildsId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;audit-logs&quot;</span>] =&gt; GuildsIdAuditLogs(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;bans&quot;</span>] =&gt; GuildsIdBans(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;bans&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdBansUserId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;channels&quot;</span>] =&gt; GuildsIdChannels(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;widget&quot; </span>| <span class="string">&quot;widget.json&quot;</span>] =&gt; GuildsIdWidget(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;emojis&quot;</span>] =&gt; GuildsIdEmojis(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;emojis&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdEmojisId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;integrations&quot;</span>] =&gt; GuildsIdIntegrations(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;integrations&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdIntegrationsId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;integrations&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;sync&quot;</span>] =&gt; GuildsIdIntegrationsIdSync(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;invites&quot;</span>] =&gt; GuildsIdInvites(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;members&quot;</span>] =&gt; GuildsIdMembers(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;members&quot;</span>, <span class="string">&quot;search&quot;</span>] =&gt; GuildsIdMembersSearch(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;members&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdMembersId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;members&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;roles&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdMembersIdRolesId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;members&quot;</span>, <span class="string">&quot;@me&quot;</span>, <span class="string">&quot;nick&quot;</span>] =&gt; GuildsIdMembersMeNick(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;preview&quot;</span>] =&gt; GuildsIdPreview(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;prune&quot;</span>] =&gt; GuildsIdPrune(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;regions&quot;</span>] =&gt; GuildsIdRegions(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;roles&quot;</span>] =&gt; GuildsIdRoles(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;roles&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdRolesId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;scheduled-events&quot;</span>] =&gt; GuildsIdScheduledEvents(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;scheduled-events&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdScheduledEventsId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;scheduled-events&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;users&quot;</span>] =&gt; {
+                GuildsIdScheduledEventsIdUsers(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;stickers&quot;</span>] | [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">GuildsIdStickers</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>)
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;stickers&quot;</span>] | [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] =&gt; {
+                GuildsIdStickers(parse_id(id)<span class="question-mark">?</span>)
             }
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;templates&quot;</span>] =&gt; <span class="ident">GuildsIdTemplates</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;templates&quot;</span>, <span class="ident">code</span>] =&gt; {
-                <span class="ident">GuildsIdTemplatesCode</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, <span class="ident">code</span>.<span class="ident">to_string</span>())
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;templates&quot;</span>] =&gt; GuildsIdTemplates(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;templates&quot;</span>, code] =&gt; {
+                GuildsIdTemplatesCode(parse_id(id)<span class="question-mark">?</span>, code.to_string())
             }
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;threads&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdThreads</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;vanity-url&quot;</span>] =&gt; <span class="ident">GuildsIdVanityUrl</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;voice-states&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">GuildsIdVoiceStates</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;welcome-screen&quot;</span>] =&gt; <span class="ident">GuildsIdWelcomeScreen</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;guilds&quot;</span>, <span class="ident">id</span>, <span class="string">&quot;webhooks&quot;</span>] =&gt; <span class="ident">GuildsIdWebhooks</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;invites&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">InvitesCode</span>,
-            [<span class="string">&quot;interactions&quot;</span>, <span class="ident">id</span>, <span class="kw">_</span>, <span class="string">&quot;callback&quot;</span>] =&gt; <span class="ident">InteractionCallback</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;stage-instances&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">StageInstances</span>,
-            [<span class="string">&quot;sticker-packs&quot;</span>] =&gt; <span class="ident">StickerPacks</span>,
-            [<span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">Stickers</span>,
-            [<span class="string">&quot;oauth2&quot;</span>, <span class="string">&quot;applications&quot;</span>, <span class="string">&quot;@me&quot;</span>] =&gt; <span class="ident">OauthApplicationsMe</span>,
-            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">UsersId</span>,
-            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;connections&quot;</span>] =&gt; <span class="ident">UsersIdConnections</span>,
-            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;channels&quot;</span>] =&gt; <span class="ident">UsersIdChannels</span>,
-            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>] =&gt; <span class="ident">UsersIdGuilds</span>,
-            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>] =&gt; <span class="ident">UsersIdGuildsId</span>,
-            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;member&quot;</span>] =&gt; <span class="ident">UsersIdGuildsIdMember</span>,
-            [<span class="string">&quot;voice&quot;</span>, <span class="string">&quot;regions&quot;</span>] =&gt; <span class="ident">VoiceRegions</span>,
-            [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>] =&gt; <span class="ident">WebhooksId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>),
-            [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>, <span class="ident">token</span>] =&gt; <span class="ident">WebhooksIdToken</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, <span class="ident">token</span>.<span class="ident">to_string</span>()),
-            [<span class="string">&quot;webhooks&quot;</span>, <span class="ident">id</span>, <span class="ident">token</span>, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>] =&gt; {
-                <span class="ident">WebhooksIdTokenMessagesId</span>(<span class="ident">parse_id</span>(<span class="ident">id</span>)<span class="question-mark">?</span>, <span class="ident">token</span>.<span class="ident">to_string</span>())
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;threads&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdThreads(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;vanity-url&quot;</span>] =&gt; GuildsIdVanityUrl(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;voice-states&quot;</span>, <span class="kw">_</span>] =&gt; GuildsIdVoiceStates(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;welcome-screen&quot;</span>] =&gt; GuildsIdWelcomeScreen(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;guilds&quot;</span>, id, <span class="string">&quot;webhooks&quot;</span>] =&gt; GuildsIdWebhooks(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;invites&quot;</span>, <span class="kw">_</span>] =&gt; InvitesCode,
+            [<span class="string">&quot;interactions&quot;</span>, id, <span class="kw">_</span>, <span class="string">&quot;callback&quot;</span>] =&gt; InteractionCallback(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;stage-instances&quot;</span>, <span class="kw">_</span>] =&gt; StageInstances,
+            [<span class="string">&quot;sticker-packs&quot;</span>] =&gt; StickerPacks,
+            [<span class="string">&quot;stickers&quot;</span>, <span class="kw">_</span>] =&gt; Stickers,
+            [<span class="string">&quot;oauth2&quot;</span>, <span class="string">&quot;applications&quot;</span>, <span class="string">&quot;@me&quot;</span>] =&gt; OauthApplicationsMe,
+            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>] =&gt; UsersId,
+            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;connections&quot;</span>] =&gt; UsersIdConnections,
+            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;channels&quot;</span>] =&gt; UsersIdChannels,
+            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>] =&gt; UsersIdGuilds,
+            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>] =&gt; UsersIdGuildsId,
+            [<span class="string">&quot;users&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;guilds&quot;</span>, <span class="kw">_</span>, <span class="string">&quot;member&quot;</span>] =&gt; UsersIdGuildsIdMember,
+            [<span class="string">&quot;voice&quot;</span>, <span class="string">&quot;regions&quot;</span>] =&gt; VoiceRegions,
+            [<span class="string">&quot;webhooks&quot;</span>, id] =&gt; WebhooksId(parse_id(id)<span class="question-mark">?</span>),
+            [<span class="string">&quot;webhooks&quot;</span>, id, token] =&gt; WebhooksIdToken(parse_id(id)<span class="question-mark">?</span>, token.to_string()),
+            [<span class="string">&quot;webhooks&quot;</span>, id, token, <span class="string">&quot;messages&quot;</span>, <span class="kw">_</span>] =&gt; {
+                WebhooksIdTokenMessagesId(parse_id(id)<span class="question-mark">?</span>, token.to_string())
             }
-            <span class="kw">_</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PathParseError</span> {
-                    <span class="ident">kind</span>: <span class="ident">PathParseErrorType::NoMatch</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="kw">_ </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(PathParseError {
+                    kind: PathParseErrorType::NoMatch,
+                    source: <span class="prelude-val">None</span>,
                 })
             }
         })
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TryFrom</span>&lt;(<span class="ident">Method</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>)&gt; <span class="kw">for</span> <span class="ident">Path</span> {
-    <span class="kw">type</span> <span class="ident">Error</span> = <span class="ident">PathParseError</span>;
+<span class="kw">impl </span>TryFrom&lt;(Method, <span class="kw-2">&amp;</span>str)&gt; <span class="kw">for </span>Path {
+    <span class="kw">type </span>Error = PathParseError;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>((<span class="ident">method</span>, <span class="ident">s</span>): (<span class="ident">Method</span>, <span class="kw-2">&amp;</span><span class="ident">str</span>)) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span>&gt; {
-        <span class="kw">match</span> <span class="ident"><span class="self">Self</span>::from_str</span>(<span class="ident">s</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">v</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">v</span>),
-            <span class="prelude-val">Err</span>(<span class="ident">why</span>) =&gt; {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">PathParseErrorType::MessageIdWithoutMethod</span> { <span class="ident">channel_id</span> } = <span class="ident">why</span>.<span class="ident">kind</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::ChannelsIdMessagesId</span>(<span class="ident">method</span>, <span class="kw-2">*</span><span class="ident">channel_id</span>))
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">Err</span>(<span class="ident">why</span>)
+    <span class="kw">fn </span>try_from((method, s): (Method, <span class="kw-2">&amp;</span>str)) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+        <span class="kw">match </span><span class="self">Self</span>::from_str(s) {
+            <span class="prelude-val">Ok</span>(v) =&gt; <span class="prelude-val">Ok</span>(v),
+            <span class="prelude-val">Err</span>(why) =&gt; {
+                <span class="kw">if let </span>PathParseErrorType::MessageIdWithoutMethod { channel_id } = why.kind() {
+                    <span class="prelude-val">Ok</span>(<span class="self">Self</span>::ChannelsIdMessagesId(method, <span class="kw-2">*</span>channel_id))
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">Err</span>(why)
                 }
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Path</span>, <span class="ident">PathParseError</span>, <span class="ident">PathParseErrorType</span>};
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request::Method</span>;
-    <span class="kw">use</span> <span class="ident">http::Method</span> <span class="kw">as</span> <span class="ident">HttpMethod</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error::Error</span>, <span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">str::FromStr</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{Path, PathParseError, PathParseErrorType};
+    <span class="kw">use </span><span class="kw">crate</span>::request::Method;
+    <span class="kw">use </span>http::Method <span class="kw">as </span>HttpMethod;
+    <span class="kw">use </span>static_assertions::{assert_fields, assert_impl_all};
+    <span class="kw">use </span>std::{error::Error, fmt::Debug, hash::Hash, str::FromStr};
 
-    <span class="macro">assert_fields!</span>(<span class="ident">PathParseErrorType::MessageIdWithoutMethod</span>: <span class="ident">channel_id</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">PathParseErrorType</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">PathParseError</span>: <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Path</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_fields!</span>(PathParseErrorType::MessageIdWithoutMethod: channel_id);
+    <span class="macro">assert_impl_all!</span>(PathParseErrorType: Debug, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(PathParseError: Error, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(Path: Clone, Debug, Eq, Hash, PartialEq, Send, Sync);
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">prefix_unimportant</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
-        <span class="macro">assert_eq!</span>(<span class="ident">Path::Guilds</span>, <span class="ident">Path::from_str</span>(<span class="string">&quot;guilds&quot;</span>)<span class="question-mark">?</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Path::Guilds</span>, <span class="ident">Path::from_str</span>(<span class="string">&quot;/guilds&quot;</span>)<span class="question-mark">?</span>);
-
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from_str</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
-        <span class="macro">assert_eq!</span>(<span class="ident">Path::ChannelsId</span>(<span class="number">123</span>), <span class="ident">Path::from_str</span>(<span class="string">&quot;/channels/123&quot;</span>)<span class="question-mark">?</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Path::WebhooksId</span>(<span class="number">123</span>), <span class="ident">Path::from_str</span>(<span class="string">&quot;/webhooks/123&quot;</span>)<span class="question-mark">?</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Path::InvitesCode</span>, <span class="ident">Path::from_str</span>(<span class="string">&quot;/invites/abc&quot;</span>)<span class="question-mark">?</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>prefix_unimportant() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+        <span class="macro">assert_eq!</span>(Path::Guilds, Path::from_str(<span class="string">&quot;guilds&quot;</span>)<span class="question-mark">?</span>);
+        <span class="macro">assert_eq!</span>(Path::Guilds, Path::from_str(<span class="string">&quot;/guilds&quot;</span>)<span class="question-mark">?</span>);
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">message_id</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>from_str() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+        <span class="macro">assert_eq!</span>(Path::ChannelsId(<span class="number">123</span>), Path::from_str(<span class="string">&quot;/channels/123&quot;</span>)<span class="question-mark">?</span>);
+        <span class="macro">assert_eq!</span>(Path::WebhooksId(<span class="number">123</span>), Path::from_str(<span class="string">&quot;/webhooks/123&quot;</span>)<span class="question-mark">?</span>);
+        <span class="macro">assert_eq!</span>(Path::InvitesCode, Path::from_str(<span class="string">&quot;/invites/abc&quot;</span>)<span class="question-mark">?</span>);
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>message_id() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
         <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident">Path::from_str</span>(<span class="string">&quot;channels/123/messages/456&quot;</span>)
-                .<span class="ident">unwrap_err</span>()
-                .<span class="ident">kind</span>(),
-            <span class="ident">PathParseErrorType::MessageIdWithoutMethod</span> { <span class="ident">channel_id</span>: <span class="number">123</span> },
+            Path::from_str(<span class="string">&quot;channels/123/messages/456&quot;</span>)
+                .unwrap_err()
+                .kind(),
+            PathParseErrorType::MessageIdWithoutMethod { channel_id: <span class="number">123 </span>},
         ));
         <span class="macro">assert_eq!</span>(
-            <span class="ident">Path::ChannelsIdMessagesId</span>(<span class="ident">Method::Get</span>, <span class="number">123</span>),
-            <span class="ident">Path::try_from</span>((<span class="ident">Method::Get</span>, <span class="string">&quot;/channels/123/messages/456&quot;</span>))<span class="question-mark">?</span>,
+            Path::ChannelsIdMessagesId(Method::Get, <span class="number">123</span>),
+            Path::try_from((Method::Get, <span class="string">&quot;/channels/123/messages/456&quot;</span>))<span class="question-mark">?</span>,
         );
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Method</span>: <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>);
+    <span class="macro">assert_impl_all!</span>(Method: Clone, Copy, Debug, Eq, PartialEq);
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">method_conversions</span>() {
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::DELETE</span>, <span class="ident">Method::Delete</span>.<span class="ident">to_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::GET</span>, <span class="ident">Method::Get</span>.<span class="ident">to_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::PATCH</span>, <span class="ident">Method::Patch</span>.<span class="ident">to_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::POST</span>, <span class="ident">Method::Post</span>.<span class="ident">to_http</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">HttpMethod::PUT</span>, <span class="ident">Method::Put</span>.<span class="ident">to_http</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>method_conversions() {
+        <span class="macro">assert_eq!</span>(HttpMethod::DELETE, Method::Delete.to_http());
+        <span class="macro">assert_eq!</span>(HttpMethod::GET, Method::Get.to_http());
+        <span class="macro">assert_eq!</span>(HttpMethod::PATCH, Method::Patch.to_http());
+        <span class="macro">assert_eq!</span>(HttpMethod::POST, Method::Post.to_http());
+        <span class="macro">assert_eq!</span>(HttpMethod::PUT, Method::Put.to_http());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

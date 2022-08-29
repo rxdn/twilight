@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http-ratelimiting/src/ticket.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ticket.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_http_ratelimiting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http-ratelimiting/src/ticket.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>ticket.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_http_ratelimiting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_http_ratelimiting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -173,180 +173,180 @@
 <span id="173">173</span>
 <span id="174">174</span>
 <span id="175">175</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Flow for managing ratelimit tickets.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Tickets are the [`Ratelimiter`]&#39;s method of managing approval for a consumer</span>
-<span class="doccomment">//! to be able to send a request.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Ratelimit Consumer</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 1. Requesting a ticket</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Consumers of a ratelimiter will call [`Ratelimiter::ticket`].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 2. Waiting for approval</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! In return consumers will receive a [`TicketReceiver`]. This must be polled</span>
-<span class="doccomment">//! in order to know when the ratelimiter has approved a ticket.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 3. Receiving approval</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! When a ticket is approved and the future resolves, a [`TicketSender`] is</span>
-<span class="doccomment">//! provided. This must be used to provide the ratelimiter with the response&#39;s</span>
-<span class="doccomment">//! ratelimit headers.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 4. Performing the request</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Consumers may now execute the HTTP request associated with the ticket. Once</span>
-<span class="doccomment">//! a response (or lack of one) is received, the headers [must be parsed] and</span>
-<span class="doccomment">//! sent to the ratelimiter via [`TicketSender::headers`]. This completes the</span>
-<span class="doccomment">//! cycle.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Ratelimiter</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 1. Initializing a ticket&#39;s channels</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Ratelimiters will accept a request for a ticket when [`Ratelimiter::ticket`]</span>
-<span class="doccomment">//! is called. You must call [`channel`] to create a channel between the</span>
-<span class="doccomment">//! ratelimiter and the consumer.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 2. Keeping the consumer waiting</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [`channel`] will return two halves: [`TicketNotifier`] and</span>
-<span class="doccomment">//! [`TicketReceiver`]. Ratelimiters must keep the notifier and give the user</span>
-<span class="doccomment">//! the receiver in return.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 3. Notifying the consumer of ticket approval</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! When any ratelimits have passed and a user is free to perform their request,</span>
-<span class="doccomment">//! call [`TicketNotifier::available`]. If the user hasn&#39;t canceled their</span>
-<span class="doccomment">//! request for a ticket, you will receive a [`TicketHeaders`].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## 4. Receiving the response&#39;s headers</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The consumer will perform their HTTP request and parse the response&#39;s</span>
-<span class="doccomment">//! headers. Once the headers (or lack of headers) are available the user will</span>
-<span class="doccomment">//! send them along the channel. Poll the provided [`TicketHeaders`] for those</span>
-<span class="doccomment">//! headers to complete the cycle.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [`Ratelimiter::ticket`]: super::Ratelimiter::ticket</span>
-<span class="doccomment">//! [`Ratelimiter`]: super::Ratelimiter</span>
-<span class="doccomment">//! [must be parsed]: super::headers</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Flow for managing ratelimit tickets.
+//!
+//! Tickets are the [`Ratelimiter`]&#39;s method of managing approval for a consumer
+//! to be able to send a request.
+//!
+//! # Ratelimit Consumer
+//!
+//! ## 1. Requesting a ticket
+//!
+//! Consumers of a ratelimiter will call [`Ratelimiter::ticket`].
+//!
+//! ## 2. Waiting for approval
+//!
+//! In return consumers will receive a [`TicketReceiver`]. This must be polled
+//! in order to know when the ratelimiter has approved a ticket.
+//!
+//! ## 3. Receiving approval
+//!
+//! When a ticket is approved and the future resolves, a [`TicketSender`] is
+//! provided. This must be used to provide the ratelimiter with the response&#39;s
+//! ratelimit headers.
+//!
+//! ## 4. Performing the request
+//!
+//! Consumers may now execute the HTTP request associated with the ticket. Once
+//! a response (or lack of one) is received, the headers [must be parsed] and
+//! sent to the ratelimiter via [`TicketSender::headers`]. This completes the
+//! cycle.
+//!
+//! # Ratelimiter
+//!
+//! ## 1. Initializing a ticket&#39;s channels
+//!
+//! Ratelimiters will accept a request for a ticket when [`Ratelimiter::ticket`]
+//! is called. You must call [`channel`] to create a channel between the
+//! ratelimiter and the consumer.
+//!
+//! ## 2. Keeping the consumer waiting
+//!
+//! [`channel`] will return two halves: [`TicketNotifier`] and
+//! [`TicketReceiver`]. Ratelimiters must keep the notifier and give the user
+//! the receiver in return.
+//!
+//! ## 3. Notifying the consumer of ticket approval
+//!
+//! When any ratelimits have passed and a user is free to perform their request,
+//! call [`TicketNotifier::available`]. If the user hasn&#39;t canceled their
+//! request for a ticket, you will receive a [`TicketHeaders`].
+//!
+//! ## 4. Receiving the response&#39;s headers
+//!
+//! The consumer will perform their HTTP request and parse the response&#39;s
+//! headers. Once the headers (or lack of headers) are available the user will
+//! send them along the channel. Poll the provided [`TicketHeaders`] for those
+//! headers to complete the cycle.
+//!
+//! [`Ratelimiter::ticket`]: super::Ratelimiter::ticket
+//! [`Ratelimiter`]: super::Ratelimiter
+//! [must be parsed]: super::headers
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::headers::RatelimitHeaders</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">future::Future</span>,
-    <span class="ident">pin::Pin</span>,
-    <span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
+</span><span class="kw">use </span><span class="kw">crate</span>::headers::RatelimitHeaders;
+<span class="kw">use </span>std::{
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
 };
-<span class="kw">use</span> <span class="ident">tokio::sync::oneshot</span>::{<span class="self">self</span>, <span class="ident">error::RecvError</span>, <span class="ident">Receiver</span>, <span class="ident">Sender</span>};
+<span class="kw">use </span>tokio::sync::oneshot::{<span class="self">self</span>, error::RecvError, Receiver, Sender};
 
-<span class="doccomment">/// Receiver to wait for the headers sent by the API consumer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// You must poll the future in order to process the headers. If the future</span>
-<span class="doccomment">/// results to an error, then the API consumer dropped the sernding half of the</span>
-<span class="doccomment">/// channel. You should treat this as if the request happened.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketHeaders</span>(<span class="ident">Receiver</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;);
+<span class="doccomment">/// Receiver to wait for the headers sent by the API consumer.
+///
+/// You must poll the future in order to process the headers. If the future
+/// results to an error, then the API consumer dropped the sernding half of the
+/// channel. You should treat this as if the request happened.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TicketHeaders(Receiver&lt;<span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;&gt;);
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">TicketHeaders</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;, <span class="ident">RecvError</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>TicketHeaders {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;, RecvError&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).poll(cx)
     }
 }
 
-<span class="doccomment">/// Indicate to the ratelimit consumer that their ticket has been granted and</span>
-<span class="doccomment">/// they may now send a request.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketNotifier</span>(<span class="ident">Sender</span>&lt;<span class="ident">Sender</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;&gt;);
+<span class="doccomment">/// Indicate to the ratelimit consumer that their ticket has been granted and
+/// they may now send a request.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TicketNotifier(Sender&lt;Sender&lt;<span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;&gt;&gt;);
 
-<span class="kw">impl</span> <span class="ident">TicketNotifier</span> {
-    <span class="doccomment">/// Signal to the ratelimiter consumer (an HTTP client) that a request may</span>
-    <span class="doccomment">/// now be performed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A receiver is returned. This must be stored and awaited so that</span>
-    <span class="doccomment">/// ratelimiting backends can handle the headers that the API consumer will</span>
-    <span class="doccomment">/// send back, thus completing the cycle.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a `None` if the consumer has dropped their</span>
-    <span class="doccomment">/// [`TicketReceiver`] half. The ticket is considered canceled.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">available</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">TicketHeaders</span>&gt; {
-        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
+<span class="kw">impl </span>TicketNotifier {
+    <span class="doccomment">/// Signal to the ratelimiter consumer (an HTTP client) that a request may
+    /// now be performed.
+    ///
+    /// A receiver is returned. This must be stored and awaited so that
+    /// ratelimiting backends can handle the headers that the API consumer will
+    /// send back, thus completing the cycle.
+    ///
+    /// Returns a `None` if the consumer has dropped their
+    /// [`TicketReceiver`] half. The ticket is considered canceled.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub fn </span>available(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TicketHeaders&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
 
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">tx</span>).<span class="ident">ok</span>()<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="number">0</span>.send(tx).ok()<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(<span class="ident">TicketHeaders</span>(<span class="ident">rx</span>))
+        <span class="prelude-val">Some</span>(TicketHeaders(rx))
     }
 }
 
-<span class="doccomment">/// Channel receiver to wait for availability of a ratelimit ticket.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is used by the ratelimiter consumer (such as an API client) to wait for</span>
-<span class="doccomment">/// an available ratelimit ticket.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Once one is available, a [`TicketSender`] will be produced which can be used to</span>
-<span class="doccomment">/// send the associated HTTP response&#39;s ratelimit headers.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketReceiver</span>(<span class="ident">Receiver</span>&lt;<span class="ident">Sender</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;&gt;);
+<span class="doccomment">/// Channel receiver to wait for availability of a ratelimit ticket.
+///
+/// This is used by the ratelimiter consumer (such as an API client) to wait for
+/// an available ratelimit ticket.
+///
+/// Once one is available, a [`TicketSender`] will be produced which can be used to
+/// send the associated HTTP response&#39;s ratelimit headers.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TicketReceiver(Receiver&lt;Sender&lt;<span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;&gt;&gt;);
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">TicketReceiver</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">TicketSender</span>, <span class="ident">RecvError</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>TicketReceiver {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;TicketSender, RecvError&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="number">0</span>).<span class="ident">poll</span>(<span class="ident">cx</span>).<span class="ident">map_ok</span>(<span class="ident">TicketSender</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).poll(cx).map_ok(TicketSender)
     }
 }
 
-<span class="doccomment">/// Channel sender to send response ratelimit information to the ratelimiter.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is used by the ratelimiter consumer (such as an API client) once a</span>
-<span class="doccomment">/// request has been granted via [`TicketReceiver`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If a response results in available ratelimit headers, send them via</span>
-<span class="doccomment">/// [`headers`] to the ratelimiter backend. If a response results in an</span>
-<span class="doccomment">/// error - such as a server error or request cancellation - send `None`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`headers`]: Self::headers</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TicketSender</span>(<span class="ident">Sender</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt;);
+<span class="doccomment">/// Channel sender to send response ratelimit information to the ratelimiter.
+///
+/// This is used by the ratelimiter consumer (such as an API client) once a
+/// request has been granted via [`TicketReceiver`].
+///
+/// If a response results in available ratelimit headers, send them via
+/// [`headers`] to the ratelimiter backend. If a response results in an
+/// error - such as a server error or request cancellation - send `None`.
+///
+/// [`headers`]: Self::headers
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>TicketSender(Sender&lt;<span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;&gt;);
 
-<span class="kw">impl</span> <span class="ident">TicketSender</span> {
-    <span class="doccomment">/// Send the response&#39;s ratelimit headers to the ratelimiter.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This will allow the ratelimiter to complete the cycle and acknowledge</span>
-    <span class="doccomment">/// that the request has been completed. This must be done so that the</span>
-    <span class="doccomment">/// ratelimiter can process information such as whether there&#39;s a global</span>
-    <span class="doccomment">/// ratelimit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns the input headers if the ratelimiter has dropped the receiver</span>
-    <span class="doccomment">/// half. This may happen if the ratelimiter is dropped or if a timeout has</span>
-    <span class="doccomment">/// occurred.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(
+<span class="kw">impl </span>TicketSender {
+    <span class="doccomment">/// Send the response&#39;s ratelimit headers to the ratelimiter.
+    ///
+    /// This will allow the ratelimiter to complete the cycle and acknowledge
+    /// that the request has been completed. This must be done so that the
+    /// ratelimiter can process information such as whether there&#39;s a global
+    /// ratelimit.
+    ///
+    /// # Errors
+    ///
+    /// Returns the input headers if the ratelimiter has dropped the receiver
+    /// half. This may happen if the ratelimiter is dropped or if a timeout has
+    /// occurred.
+    </span><span class="kw">pub fn </span>headers(
         <span class="self">self</span>,
-        <span class="ident">headers</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="prelude-ty">Option</span>&lt;<span class="ident">RatelimitHeaders</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">send</span>(<span class="ident">headers</span>)
+        headers: <span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="prelude-ty">Option</span>&lt;RatelimitHeaders&gt;&gt; {
+        <span class="self">self</span>.<span class="number">0</span>.send(headers)
     }
 }
 
-<span class="doccomment">/// Produce a new channel consisting of a sender and receiver.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The notifier is to be used by the ratelimiter while the receiver is to be</span>
-<span class="doccomment">/// provided to the consumer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Refer to the [module-level] documentation for more information.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [module-level]: self</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span>() -&gt; (<span class="ident">TicketNotifier</span>, <span class="ident">TicketReceiver</span>) {
-    <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) = <span class="ident">oneshot::channel</span>();
+<span class="doccomment">/// Produce a new channel consisting of a sender and receiver.
+///
+/// The notifier is to be used by the ratelimiter while the receiver is to be
+/// provided to the consumer.
+///
+/// Refer to the [module-level] documentation for more information.
+///
+/// [module-level]: self
+</span><span class="attribute">#[must_use]
+</span><span class="kw">pub fn </span>channel() -&gt; (TicketNotifier, TicketReceiver) {
+    <span class="kw">let </span>(tx, rx) = oneshot::channel();
 
-    (<span class="ident">TicketNotifier</span>(<span class="ident">tx</span>), <span class="ident">TicketReceiver</span>(<span class="ident">rx</span>))
+    (TicketNotifier(tx), TicketReceiver(rx))
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_http_ratelimiting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

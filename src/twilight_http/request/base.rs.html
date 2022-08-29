@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/request/base.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>base.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/request/base.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>base.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -240,247 +240,247 @@
 <span id="240">240</span>
 <span id="241">241</span>
 <span id="242">242</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Form</span>, <span class="ident">Method</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">error::Error</span>,
-    <span class="ident">routing</span>::{<span class="ident">Path</span>, <span class="ident">Route</span>},
+</pre><pre class="rust"><code><span class="kw">use super</span>::{Form, Method};
+<span class="kw">use crate</span>::{
+    error::Error,
+    routing::{Path, Route},
 };
-<span class="kw">use</span> <span class="ident">hyper::header</span>::{<span class="ident">HeaderMap</span>, <span class="ident">HeaderName</span>, <span class="ident">HeaderValue</span>};
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
+<span class="kw">use </span>hyper::header::{HeaderMap, HeaderName, HeaderValue};
+<span class="kw">use </span>serde::Serialize;
 
-<span class="doccomment">/// Builder to create a customized request.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Create a request to create a message with a content of &quot;test&quot; in a</span>
-<span class="doccomment">/// channel with an ID of 1:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_http::{request::Request, routing::Route};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let body = br#&quot;{</span>
-<span class="doccomment">///     &quot;content&quot;: &quot;test&quot;</span>
-<span class="doccomment">/// }&quot;#</span>
-<span class="doccomment">/// .to_vec();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let request = Request::builder(&amp;Route::CreateMessage { channel_id: 1 })</span>
-<span class="doccomment">///     .body(body)</span>
-<span class="doccomment">///     .build();</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;request has not been fully built&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RequestBuilder</span>(<span class="ident">Request</span>);
+<span class="doccomment">/// Builder to create a customized request.
+///
+/// # Examples
+///
+/// Create a request to create a message with a content of &quot;test&quot; in a
+/// channel with an ID of 1:
+///
+/// ```
+/// use twilight_http::{request::Request, routing::Route};
+///
+/// let body = br#&quot;{
+///     &quot;content&quot;: &quot;test&quot;
+/// }&quot;#
+/// .to_vec();
+///
+/// let request = Request::builder(&amp;Route::CreateMessage { channel_id: 1 })
+///     .body(body)
+///     .build();
+/// ```
+</span><span class="attribute">#[derive(Debug)]
+#[must_use = <span class="string">&quot;request has not been fully built&quot;</span>]
+</span><span class="kw">pub struct </span>RequestBuilder(Request);
 
-<span class="kw">impl</span> <span class="ident">RequestBuilder</span> {
-    <span class="doccomment">/// Create a new request builder.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">route</span>: <span class="kw-2">&amp;</span><span class="ident">Route</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">Request::from_route</span>(<span class="ident">route</span>))
+<span class="kw">impl </span>RequestBuilder {
+    <span class="doccomment">/// Create a new request builder.
+    </span><span class="kw">pub fn </span>new(route: <span class="kw-2">&amp;</span>Route&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(Request::from_route(route))
     }
 
-    <span class="doccomment">/// Create a request with raw information about the method, ratelimiting</span>
-    <span class="doccomment">/// path, and URL path and query.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The path and query should not include the leading slash as that is</span>
-    <span class="doccomment">/// prefixed by the client. In the URL</span>
-    <span class="doccomment">/// `https://discord.com/api/vX/channels/123/pins` the &quot;path and query&quot;</span>
-    <span class="doccomment">/// is considered to be `channels/123/pins`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Create a request from a method and the URL path and query</span>
-    <span class="doccomment">/// `channels/123/pins`:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use std::str::FromStr;</span>
-    <span class="doccomment">/// use twilight_http::{</span>
-    <span class="doccomment">///     request::{Method, RequestBuilder},</span>
-    <span class="doccomment">///     routing::Path,</span>
-    <span class="doccomment">/// };</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let method = Method::Post;</span>
-    <span class="doccomment">/// let path_and_query = &quot;channels/123/pins&quot;.to_owned();</span>
-    <span class="doccomment">/// let ratelimit_path = Path::from_str(&amp;path_and_query)?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let _request = RequestBuilder::raw(method, ratelimit_path, path_and_query).build();</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">raw</span>(<span class="ident">method</span>: <span class="ident">Method</span>, <span class="ident">ratelimit_path</span>: <span class="ident">Path</span>, <span class="ident">path_and_query</span>: <span class="ident">String</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">Request</span> {
-            <span class="ident">body</span>: <span class="prelude-val">None</span>,
-            <span class="ident">form</span>: <span class="prelude-val">None</span>,
-            <span class="ident">headers</span>: <span class="prelude-val">None</span>,
-            <span class="ident">method</span>,
-            <span class="ident">path</span>: <span class="ident">path_and_query</span>,
-            <span class="ident">ratelimit_path</span>,
-            <span class="ident">use_authorization_token</span>: <span class="bool-val">true</span>,
+    <span class="doccomment">/// Create a request with raw information about the method, ratelimiting
+    /// path, and URL path and query.
+    ///
+    /// The path and query should not include the leading slash as that is
+    /// prefixed by the client. In the URL
+    /// `https://discord.com/api/vX/channels/123/pins` the &quot;path and query&quot;
+    /// is considered to be `channels/123/pins`.
+    ///
+    /// # Examples
+    ///
+    /// Create a request from a method and the URL path and query
+    /// `channels/123/pins`:
+    ///
+    /// ```
+    /// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// use std::str::FromStr;
+    /// use twilight_http::{
+    ///     request::{Method, RequestBuilder},
+    ///     routing::Path,
+    /// };
+    ///
+    /// let method = Method::Post;
+    /// let path_and_query = &quot;channels/123/pins&quot;.to_owned();
+    /// let ratelimit_path = Path::from_str(&amp;path_and_query)?;
+    ///
+    /// let _request = RequestBuilder::raw(method, ratelimit_path, path_and_query).build();
+    /// # Ok(()) }
+    /// ```
+    </span><span class="kw">pub const fn </span>raw(method: Method, ratelimit_path: Path, path_and_query: String) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(Request {
+            body: <span class="prelude-val">None</span>,
+            form: <span class="prelude-val">None</span>,
+            headers: <span class="prelude-val">None</span>,
+            method,
+            path: path_and_query,
+            ratelimit_path,
+            use_authorization_token: <span class="bool-val">true</span>,
         })
     }
 
-    <span class="doccomment">/// Consume the builder, returning the built request.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;request information is not useful on its own and must be acted on&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) -&gt; <span class="ident">Request</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+    <span class="doccomment">/// Consume the builder, returning the built request.
+    </span><span class="attribute">#[allow(clippy::missing_const_for_fn)]
+    #[must_use = <span class="string">&quot;request information is not useful on its own and must be acted on&quot;</span>]
+    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; Request {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
+
+    <span class="doccomment">/// Set the contents of the body.
+    </span><span class="kw">pub fn </span>body(<span class="kw-2">mut </span><span class="self">self</span>, body: Vec&lt;u8&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.<span class="number">0</span>.body = <span class="prelude-val">Some</span>(body);
+
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Set the multipart form.
+    </span><span class="attribute">#[allow(clippy::missing_const_for_fn)]
+    </span><span class="kw">pub fn </span>form(<span class="kw-2">mut </span><span class="self">self</span>, form: Form) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.<span class="number">0</span>.form = <span class="prelude-val">Some</span>(form);
+
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Set the headers to add.
+    </span><span class="kw">pub fn </span>headers(<span class="kw-2">mut </span><span class="self">self</span>, iter: <span class="kw">impl </span>Iterator&lt;Item = (HeaderName, HeaderValue)&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.<span class="number">0</span>.headers.replace(iter.collect());
+
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Set the body, to be serialized as JSON.
+    ///
+    /// # Errors
+    ///
+    /// Returns an [`ErrorType::Json`] error type if the value could not be
+    /// serialized as JSON.
+    ///
+    /// [`ErrorType::Json`]: crate::error::ErrorType::Json
+    </span><span class="kw">pub fn </span>json(<span class="self">self</span>, to: <span class="kw-2">&amp;</span><span class="kw">impl </span>Serialize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt; {
+        <span class="kw">let </span>bytes = <span class="kw">crate</span>::json::to_vec(to).map_err(Error::json)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.body(bytes))
     }
 
-    <span class="doccomment">/// Set the contents of the body.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">body</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">body</span> = <span class="prelude-val">Some</span>(<span class="ident">body</span>);
+    <span class="doccomment">/// Whether to use the client&#39;s authorization token in the request, if one
+    /// is set.
+    ///
+    /// This is primarily useful for executing webhooks.
+    </span><span class="kw">pub const fn </span>use_authorization_token(<span class="kw-2">mut </span><span class="self">self</span>, use_authorization_token: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.<span class="number">0</span>.use_authorization_token = use_authorization_token;
 
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Set the multipart form.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_const_for_fn</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">form</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">form</span>: <span class="ident">Form</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">form</span> = <span class="prelude-val">Some</span>(<span class="ident">form</span>);
-
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Set the headers to add.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">iter</span>: <span class="kw">impl</span> <span class="ident">Iterator</span>&lt;<span class="ident">Item</span> = (<span class="ident">HeaderName</span>, <span class="ident">HeaderValue</span>)&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">headers</span>.<span class="ident">replace</span>(<span class="ident">iter</span>.<span class="ident">collect</span>());
-
-        <span class="self">self</span>
-    }
-
-    <span class="doccomment">/// Set the body, to be serialized as JSON.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an [`ErrorType::Json`] error type if the value could not be</span>
-    <span class="doccomment">/// serialized as JSON.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`ErrorType::Json`]: crate::error::ErrorType::Json</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">json</span>(<span class="self">self</span>, <span class="ident">to</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Serialize</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">Error</span>&gt; {
-        <span class="kw">let</span> <span class="ident">bytes</span> = <span class="ident"><span class="kw">crate</span>::json::to_vec</span>(<span class="ident">to</span>).<span class="ident">map_err</span>(<span class="ident">Error::json</span>)<span class="question-mark">?</span>;
-
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">body</span>(<span class="ident">bytes</span>))
-    }
-
-    <span class="doccomment">/// Whether to use the client&#39;s authorization token in the request, if one</span>
-    <span class="doccomment">/// is set.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is primarily useful for executing webhooks.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">use_authorization_token</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">use_authorization_token</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">use_authorization_token</span> = <span class="ident">use_authorization_token</span>;
-
-        <span class="self">self</span>
-    }
+        <span class="self">self
+    </span>}
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Request</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">body</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">form</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Form</span>&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">headers</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">HeaderMap</span>&lt;<span class="ident">HeaderValue</span>&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">method</span>: <span class="ident">Method</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">path</span>: <span class="ident">String</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">ratelimit_path</span>: <span class="ident">Path</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">use_authorization_token</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub struct </span>Request {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) body: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) form: <span class="prelude-ty">Option</span>&lt;Form&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) headers: <span class="prelude-ty">Option</span>&lt;HeaderMap&lt;HeaderValue&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) method: Method,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) path: String,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) ratelimit_path: Path,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) use_authorization_token: bool,
 }
 
-<span class="kw">impl</span> <span class="ident">Request</span> {
-    <span class="doccomment">/// Create a new request builder.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Create a request to create a message with a content of &quot;test&quot; in a</span>
-    <span class="doccomment">/// channel with an ID of 1:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use twilight_http::{request::Request, routing::Route};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let body = br#&quot;{</span>
-    <span class="doccomment">///     &quot;content&quot;: &quot;test&quot;</span>
-    <span class="doccomment">/// }&quot;#</span>
-    <span class="doccomment">/// .to_vec();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let request = Request::builder(&amp;Route::CreateMessage { channel_id: 1 })</span>
-    <span class="doccomment">///     .body(body)</span>
-    <span class="doccomment">///     .build();</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>(<span class="ident">route</span>: <span class="kw-2">&amp;</span><span class="ident">Route</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">RequestBuilder</span> {
-        <span class="ident">RequestBuilder::new</span>(<span class="ident">route</span>)
+<span class="kw">impl </span>Request {
+    <span class="doccomment">/// Create a new request builder.
+    ///
+    /// # Examples
+    ///
+    /// Create a request to create a message with a content of &quot;test&quot; in a
+    /// channel with an ID of 1:
+    ///
+    /// ```
+    /// use twilight_http::{request::Request, routing::Route};
+    ///
+    /// let body = br#&quot;{
+    ///     &quot;content&quot;: &quot;test&quot;
+    /// }&quot;#
+    /// .to_vec();
+    ///
+    /// let request = Request::builder(&amp;Route::CreateMessage { channel_id: 1 })
+    ///     .body(body)
+    ///     .build();
+    /// ```
+    </span><span class="kw">pub fn </span>builder(route: <span class="kw-2">&amp;</span>Route&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; RequestBuilder {
+        RequestBuilder::new(route)
     }
 
-    <span class="doccomment">/// Create a request from only its route information.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If you need to set additional configurations like the body then use</span>
-    <span class="doccomment">/// [`builder`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Create a request to get a message with an ID of 2 in a channel with an</span>
-    <span class="doccomment">/// ID of 1:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use twilight_http::{request::Request, routing::Route};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let request = Request::from_route(&amp;Route::GetMessage {</span>
-    <span class="doccomment">///     channel_id: 1,</span>
-    <span class="doccomment">///     message_id: 2,</span>
-    <span class="doccomment">/// });</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`builder`]: Self::builder</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_route</span>(<span class="ident">route</span>: <span class="kw-2">&amp;</span><span class="ident">Route</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">body</span>: <span class="prelude-val">None</span>,
-            <span class="ident">form</span>: <span class="prelude-val">None</span>,
-            <span class="ident">headers</span>: <span class="prelude-val">None</span>,
-            <span class="ident">method</span>: <span class="ident">route</span>.<span class="ident">method</span>(),
-            <span class="ident">path</span>: <span class="ident">route</span>.<span class="ident">to_string</span>(),
-            <span class="ident">ratelimit_path</span>: <span class="ident">route</span>.<span class="ident">to_path</span>(),
-            <span class="ident">use_authorization_token</span>: <span class="bool-val">true</span>,
+    <span class="doccomment">/// Create a request from only its route information.
+    ///
+    /// If you need to set additional configurations like the body then use
+    /// [`builder`].
+    ///
+    /// # Examples
+    ///
+    /// Create a request to get a message with an ID of 2 in a channel with an
+    /// ID of 1:
+    ///
+    /// ```
+    /// use twilight_http::{request::Request, routing::Route};
+    ///
+    /// let request = Request::from_route(&amp;Route::GetMessage {
+    ///     channel_id: 1,
+    ///     message_id: 2,
+    /// });
+    /// ```
+    ///
+    /// [`builder`]: Self::builder
+    </span><span class="kw">pub fn </span>from_route(route: <span class="kw-2">&amp;</span>Route&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            body: <span class="prelude-val">None</span>,
+            form: <span class="prelude-val">None</span>,
+            headers: <span class="prelude-val">None</span>,
+            method: route.method(),
+            path: route.to_string(),
+            ratelimit_path: route.to_path(),
+            use_authorization_token: <span class="bool-val">true</span>,
         }
     }
 
-    <span class="doccomment">/// Body of the request, if any.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]&gt; {
-        <span class="self">self</span>.<span class="ident">body</span>.<span class="ident">as_deref</span>()
+    <span class="doccomment">/// Body of the request, if any.
+    </span><span class="kw">pub fn </span>body(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
+        <span class="self">self</span>.body.as_deref()
     }
 
-    <span class="doccomment">/// Multipart form of the request, if any.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">form</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">Form</span>&gt; {
-        <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">as_ref</span>()
+    <span class="doccomment">/// Multipart form of the request, if any.
+    </span><span class="kw">pub const fn </span>form(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Form&gt; {
+        <span class="self">self</span>.form.as_ref()
     }
 
-    <span class="doccomment">/// Headers to set in the request, if any.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">HeaderMap</span>&lt;<span class="ident">HeaderValue</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">as_ref</span>()
+    <span class="doccomment">/// Headers to set in the request, if any.
+    </span><span class="kw">pub const fn </span>headers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HeaderMap&lt;HeaderValue&gt;&gt; {
+        <span class="self">self</span>.headers.as_ref()
     }
 
-    <span class="doccomment">/// Method when sending the request.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">method</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Method</span> {
-        <span class="self">self</span>.<span class="ident">method</span>
+    <span class="doccomment">/// Method when sending the request.
+    </span><span class="kw">pub const fn </span>method(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Method {
+        <span class="self">self</span>.method
     }
 
-    <span class="doccomment">/// String path of the full URL.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">path</span>
+    <span class="doccomment">/// String path of the full URL.
+    </span><span class="kw">pub fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.path
     }
 
-    <span class="doccomment">/// Path used for ratelimiting.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">ratelimit_path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Path</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ratelimit_path</span>
+    <span class="doccomment">/// Path used for ratelimiting.
+    </span><span class="kw">pub const fn </span>ratelimit_path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Path {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.ratelimit_path
     }
 
-    <span class="doccomment">/// Whether to use the client&#39;s authorization token in the request.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">use_authorization_token</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">use_authorization_token</span>
+    <span class="doccomment">/// Whether to use the client&#39;s authorization token in the request.
+    </span><span class="kw">pub const fn </span>use_authorization_token(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.use_authorization_token
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::RequestBuilder</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::RequestBuilder;
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::fmt::Debug;
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">RequestBuilder</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(RequestBuilder: Debug, Send, Sync);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

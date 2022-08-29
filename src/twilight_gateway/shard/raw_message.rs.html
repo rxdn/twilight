@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/raw_message.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>raw_message.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/raw_message.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>raw_message.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -101,108 +101,108 @@
 <span id="101">101</span>
 <span id="102">102</span>
 <span id="103">103</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Send raw websocket messages over the websocket.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This is mostly equivalent to the underlying websocket library&#39;s message, but</span>
-<span class="doccomment">//! this intermediary exists to prevent exposing it in the public API. Messages</span>
-<span class="doccomment">//! constructed are equivalent to what the underlying library will receive. The</span>
-<span class="doccomment">//! input will not be checked and will be passed directly to the underlying</span>
-<span class="doccomment">//! websocket library.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Send raw websocket messages over the websocket.
+//!
+//! This is mostly equivalent to the underlying websocket library&#39;s message, but
+//! this intermediary exists to prevent exposing it in the public API. Messages
+//! constructed are equivalent to what the underlying library will receive. The
+//! input will not be checked and will be passed directly to the underlying
+//! websocket library.
 
-<span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
-<span class="kw">use</span> <span class="ident">tokio_tungstenite::tungstenite</span>::{
-    <span class="ident">protocol</span>::{<span class="ident">frame::coding::CloseCode</span>, <span class="ident">CloseFrame</span> <span class="kw">as</span> <span class="ident">TungsteniteCloseFrame</span>},
-    <span class="ident">Message</span> <span class="kw">as</span> <span class="ident">TungsteniteMessage</span>,
+</span><span class="kw">use </span>std::borrow::Cow;
+<span class="kw">use </span>tokio_tungstenite::tungstenite::{
+    protocol::{frame::coding::CloseCode, CloseFrame <span class="kw">as </span>TungsteniteCloseFrame},
+    Message <span class="kw">as </span>TungsteniteMessage,
 };
 
-<span class="doccomment">/// Information about a close message, if any.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// A close frame can be constructed via its `From` implementations.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CloseFrame</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="doccomment">/// Reason for the close.</span>
-    <span class="kw">pub</span> <span class="ident">code</span>: <span class="ident">u16</span>,
-    <span class="doccomment">/// Textual representation of the reason the connection is being closed.</span>
-    <span class="kw">pub</span> <span class="ident">reason</span>: <span class="ident">Cow</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">str</span>&gt;,
+<span class="doccomment">/// Information about a close message, if any.
+///
+/// A close frame can be constructed via its `From` implementations.
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
+</span><span class="kw">pub struct </span>CloseFrame&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Reason for the close.
+    </span><span class="kw">pub </span>code: u16,
+    <span class="doccomment">/// Textual representation of the reason the connection is being closed.
+    </span><span class="kw">pub </span>reason: Cow&lt;<span class="lifetime">&#39;a</span>, str&gt;,
 }
 
-<span class="doccomment">/// Construct a close frame from a code and a reason why.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_gateway::shard::raw_message::CloseFrame;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let frame = CloseFrame::from((1000, &quot;reason here&quot;));</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(1000, frame.code);</span>
-<span class="doccomment">/// assert_eq!(&quot;reason here&quot;, frame.reason);</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Into</span>&lt;<span class="ident">Cow</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">str</span>&gt;&gt;&gt; <span class="ident">From</span>&lt;(<span class="ident">u16</span>, <span class="ident">T</span>)&gt; <span class="kw">for</span> <span class="ident">CloseFrame</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn</span> <span class="ident">from</span>((<span class="ident">code</span>, <span class="ident">reason</span>): (<span class="ident">u16</span>, <span class="ident">T</span>)) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">code</span>,
-            <span class="ident">reason</span>: <span class="ident">reason</span>.<span class="ident">into</span>(),
+<span class="doccomment">/// Construct a close frame from a code and a reason why.
+///
+/// # Examples
+///
+/// ```
+/// use twilight_gateway::shard::raw_message::CloseFrame;
+///
+/// let frame = CloseFrame::from((1000, &quot;reason here&quot;));
+///
+/// assert_eq!(1000, frame.code);
+/// assert_eq!(&quot;reason here&quot;, frame.reason);
+/// ```
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Into&lt;Cow&lt;<span class="lifetime">&#39;a</span>, str&gt;&gt;&gt; From&lt;(u16, T)&gt; <span class="kw">for </span>CloseFrame&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from((code, reason): (u16, T)) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            code,
+            reason: reason.into(),
         }
     }
 }
 
-<span class="doccomment">/// Message to send over the connection to the remote.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Message</span> {
-    <span class="doccomment">/// Binary websocket message.</span>
-    <span class="ident">Binary</span>(<span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;),
-    <span class="doccomment">/// Close message with an optional frame including information about the</span>
-    <span class="doccomment">/// reason for the close.</span>
-    <span class="ident">Close</span>(<span class="prelude-ty">Option</span>&lt;<span class="ident">CloseFrame</span>&lt;<span class="lifetime">&#39;static</span>&gt;&gt;),
-    <span class="doccomment">/// Ping message with a payload.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The payload must have a length less than 125 bytes.</span>
-    <span class="ident">Ping</span>(<span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;),
-    <span class="doccomment">/// Pong message with a payload.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The payload must have a length less than 125 bytes.</span>
-    <span class="ident">Pong</span>(<span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;),
-    <span class="doccomment">/// Text websocket message.</span>
-    <span class="ident">Text</span>(<span class="ident">String</span>),
+<span class="doccomment">/// Message to send over the connection to the remote.
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>Message {
+    <span class="doccomment">/// Binary websocket message.
+    </span>Binary(Vec&lt;u8&gt;),
+    <span class="doccomment">/// Close message with an optional frame including information about the
+    /// reason for the close.
+    </span>Close(<span class="prelude-ty">Option</span>&lt;CloseFrame&lt;<span class="lifetime">&#39;static</span>&gt;&gt;),
+    <span class="doccomment">/// Ping message with a payload.
+    ///
+    /// The payload must have a length less than 125 bytes.
+    </span>Ping(Vec&lt;u8&gt;),
+    <span class="doccomment">/// Pong message with a payload.
+    ///
+    /// The payload must have a length less than 125 bytes.
+    </span>Pong(Vec&lt;u8&gt;),
+    <span class="doccomment">/// Text websocket message.
+    </span>Text(String),
 }
 
-<span class="kw">impl</span> <span class="ident">Message</span> {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">into_tungstenite</span>(<span class="self">self</span>) -&gt; <span class="ident">TungsteniteMessage</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident"><span class="self">Self</span>::Binary</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">TungsteniteMessage::Binary</span>(<span class="ident">bytes</span>),
-            <span class="ident"><span class="self">Self</span>::Close</span>(<span class="ident">close</span>) =&gt; {
-                <span class="ident">TungsteniteMessage::Close</span>(<span class="ident">close</span>.<span class="ident">map</span>(|<span class="ident">close</span>| <span class="ident">TungsteniteCloseFrame</span> {
-                    <span class="ident">code</span>: <span class="ident">CloseCode::from</span>(<span class="ident">close</span>.<span class="ident">code</span>),
-                    <span class="ident">reason</span>: <span class="ident">close</span>.<span class="ident">reason</span>,
+<span class="kw">impl </span>Message {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>into_tungstenite(<span class="self">self</span>) -&gt; TungsteniteMessage {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Binary(bytes) =&gt; TungsteniteMessage::Binary(bytes),
+            <span class="self">Self</span>::Close(close) =&gt; {
+                TungsteniteMessage::Close(close.map(|close| TungsteniteCloseFrame {
+                    code: CloseCode::from(close.code),
+                    reason: close.reason,
                 }))
             }
-            <span class="ident"><span class="self">Self</span>::Ping</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">TungsteniteMessage::Ping</span>(<span class="ident">bytes</span>),
-            <span class="ident"><span class="self">Self</span>::Pong</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">TungsteniteMessage::Pong</span>(<span class="ident">bytes</span>),
-            <span class="ident"><span class="self">Self</span>::Text</span>(<span class="ident">string</span>) =&gt; <span class="ident">TungsteniteMessage::Text</span>(<span class="ident">string</span>),
+            <span class="self">Self</span>::Ping(bytes) =&gt; TungsteniteMessage::Ping(bytes),
+            <span class="self">Self</span>::Pong(bytes) =&gt; TungsteniteMessage::Pong(bytes),
+            <span class="self">Self</span>::Text(string) =&gt; TungsteniteMessage::Text(string),
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CloseFrame</span>, <span class="ident">Message</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_fields</span>, <span class="ident">assert_impl_all</span>};
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{CloseFrame, Message};
+    <span class="kw">use </span>static_assertions::{assert_fields, assert_impl_all};
+    <span class="kw">use </span>std::fmt::Debug;
 
-    <span class="macro">assert_fields!</span>(<span class="ident">CloseFrame</span>&lt;<span class="lifetime">&#39;_</span>&gt;: <span class="ident">code</span>, <span class="ident">reason</span>);
+    <span class="macro">assert_fields!</span>(CloseFrame&lt;<span class="lifetime">&#39;_</span>&gt;: code, reason);
     <span class="macro">assert_impl_all!</span>(
-        <span class="ident">CloseFrame</span>&lt;<span class="lifetime">&#39;_</span>&gt;:
-        <span class="ident">Clone</span>,
-        <span class="ident">Debug</span>,
-        <span class="ident">Eq</span>,
-        <span class="ident">From</span>&lt;(<span class="ident">u16</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>)&gt;,
-        <span class="ident">From</span>&lt;(<span class="ident">u16</span>, <span class="ident">String</span>)&gt;,
-        <span class="ident">PartialEq</span>,
+        CloseFrame&lt;<span class="lifetime">&#39;_</span>&gt;:
+        Clone,
+        Debug,
+        Eq,
+        From&lt;(u16, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str)&gt;,
+        From&lt;(u16, String)&gt;,
+        PartialEq,
     );
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Message</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>);
+    <span class="macro">assert_impl_all!</span>(Message: Clone, Debug, Eq, PartialEq);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-cache-inmemory/src/iter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>iter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_cache_inmemory/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_cache_inmemory/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_cache_inmemory/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-cache-inmemory/src/iter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>iter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_cache_inmemory/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_cache_inmemory/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_cache_inmemory/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -290,297 +290,297 @@
 <span id="290">290</span>
 <span id="291">291</span>
 <span id="292">292</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Iterators over the various resources stored in the cache.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The entry point to the module is [`InMemoryCacheIter`]. It exposes methods</span>
-<span class="doccomment">//! for creating iterators over various resource types, such as</span>
-<span class="doccomment">//! [`InMemoryCacheIter::integrations`] and [`InMemoryCacheIter::voice_states`].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Creating an iterator returns a [`ResourceIter`]. The iterator implements the</span>
-<span class="doccomment">//! [`std::iter::Iterator`] trait and returns [`IterReference`]s.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [`IterReference`] exposes two methods: [`IterReference::key`] and</span>
-<span class="doccomment">//! [`IterReference::value`], both returning immutable references to the</span>
-<span class="doccomment">//! underlying key and value. It also implements [`std::ops::Deref`] and</span>
-<span class="doccomment">//! dereferences to the value.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Iterators over the various resources stored in the cache.
+//!
+//! The entry point to the module is [`InMemoryCacheIter`]. It exposes methods
+//! for creating iterators over various resource types, such as
+//! [`InMemoryCacheIter::integrations`] and [`InMemoryCacheIter::voice_states`].
+//!
+//! Creating an iterator returns a [`ResourceIter`]. The iterator implements the
+//! [`std::iter::Iterator`] trait and returns [`IterReference`]s.
+//!
+//! [`IterReference`] exposes two methods: [`IterReference::key`] and
+//! [`IterReference::value`], both returning immutable references to the
+//! underlying key and value. It also implements [`std::ops::Deref`] and
+//! dereferences to the value.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">model</span>::{
-        <span class="ident">CachedEmoji</span>, <span class="ident">CachedGuild</span>, <span class="ident">CachedMember</span>, <span class="ident">CachedMessage</span>, <span class="ident">CachedPresence</span>, <span class="ident">CachedSticker</span>,
-        <span class="ident">CachedVoiceState</span>,
+</span><span class="kw">use crate</span>::{
+    model::{
+        CachedEmoji, CachedGuild, CachedMember, CachedMessage, CachedPresence, CachedSticker,
+        CachedVoiceState,
     },
-    <span class="ident">GuildResource</span>, <span class="ident">InMemoryCache</span>,
+    GuildResource, InMemoryCache,
 };
-<span class="kw">use</span> <span class="ident">dashmap</span>::{<span class="ident">iter::Iter</span>, <span class="ident">mapref::multiple::RefMulti</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">hash::Hash</span>, <span class="ident">ops::Deref</span>};
-<span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">channel</span>::{<span class="ident">Channel</span>, <span class="ident">StageInstance</span>},
-    <span class="ident">guild</span>::{<span class="ident">GuildIntegration</span>, <span class="ident">Role</span>},
-    <span class="ident">id</span>::{
-        <span class="ident">marker</span>::{
-            <span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">IntegrationMarker</span>, <span class="ident">MessageMarker</span>, <span class="ident">RoleMarker</span>,
-            <span class="ident">StageMarker</span>, <span class="ident">StickerMarker</span>, <span class="ident">UserMarker</span>,
+<span class="kw">use </span>dashmap::{iter::Iter, mapref::multiple::RefMulti};
+<span class="kw">use </span>std::{hash::Hash, ops::Deref};
+<span class="kw">use </span>twilight_model::{
+    channel::{Channel, StageInstance},
+    guild::{GuildIntegration, Role},
+    id::{
+        marker::{
+            ChannelMarker, EmojiMarker, GuildMarker, IntegrationMarker, MessageMarker, RoleMarker,
+            StageMarker, StickerMarker, UserMarker,
         },
-        <span class="ident">Id</span>,
+        Id,
     },
-    <span class="ident">user::User</span>,
+    user::User,
 };
 
-<span class="doccomment">/// Reference to a resource value being iterated over in the cache.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`std::ops::Deref`] is implemented on this type and derefs to an immutable</span>
-<span class="doccomment">/// reference of the underlying value.</span>
-<span class="comment">// We need a separate type from [`Reference`] due to DashMap&#39;s iterators</span>
-<span class="comment">// returning a different reference type from that of retrieval methods.</span>
-<span class="comment">//</span>
-<span class="comment">// [`Reference`]: super::Reference</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IterReference</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="ident">inner</span>: <span class="ident">RefMulti</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt;,
+<span class="doccomment">/// Reference to a resource value being iterated over in the cache.
+///
+/// [`std::ops::Deref`] is implemented on this type and derefs to an immutable
+/// reference of the underlying value.
+</span><span class="comment">// We need a separate type from [`Reference`] due to DashMap&#39;s iterators
+// returning a different reference type from that of retrieval methods.
+//
+// [`Reference`]: super::Reference
+</span><span class="kw">pub struct </span>IterReference&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    inner: RefMulti&lt;<span class="lifetime">&#39;a</span>, K, V&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; <span class="ident">IterReference</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="doccomment">/// Create a new iterator element reference.</span>
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="ident">RefMulti</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">inner</span> }
-    }
-}
-
-<span class="kw">impl</span>&lt;<span class="ident">K</span>: <span class="ident">Eq</span> + <span class="ident">Hash</span>, <span class="ident">V</span>&gt; <span class="ident">IterReference</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="doccomment">/// Immutable reference to the resource&#39;s key.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">K</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">key</span>()
-    }
-
-    <span class="doccomment">/// Immutable reference to the resource&#39;s value.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">V</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">value</span>()
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; IterReference&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    <span class="doccomment">/// Create a new iterator element reference.
+    </span><span class="kw">const fn </span>new(inner: RefMulti&lt;<span class="lifetime">&#39;a</span>, K, V&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ inner }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">K</span>: <span class="ident">Eq</span> + <span class="ident">Hash</span>, <span class="ident">V</span>&gt; <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">IterReference</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Target</span> = <span class="ident">V</span>;
+<span class="kw">impl</span>&lt;K: Eq + Hash, V&gt; IterReference&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    <span class="doccomment">/// Immutable reference to the resource&#39;s key.
+    </span><span class="kw">pub fn </span>key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>K {
+        <span class="self">self</span>.inner.key()
+    }
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-        <span class="self">self</span>.<span class="ident">value</span>()
+    <span class="doccomment">/// Immutable reference to the resource&#39;s value.
+    </span><span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>V {
+        <span class="self">self</span>.inner.value()
     }
 }
 
-<span class="doccomment">/// Interface to create iterators over various resources.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The created iterators will iterate over *all* entities of a resource across</span>
-<span class="doccomment">/// all channels and guilds.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The iteration order of all iterators are arbitrary.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Count the number of users in the cache whose username begins with &quot;twi&quot;:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let cache = InMemoryCache::new();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // later in the application...</span>
-<span class="doccomment">/// let count = cache</span>
-<span class="doccomment">///     .iter()</span>
-<span class="doccomment">///     .users()</span>
-<span class="doccomment">///     .filter(|user| user.name.starts_with(&quot;twi&quot;))</span>
-<span class="doccomment">///     .count();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// println!(&quot;&#39;twi&#39; users: {count}&quot;);</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Potential inefficiency</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Resource iterators over the entire cache are inefficient when the goal is to</span>
-<span class="doccomment">/// iterate over a resource in a specific guild. For example, when performing a</span>
-<span class="doccomment">/// task such as iterating over the members of a specific guild, retrieving the</span>
-<span class="doccomment">/// list of members via [`InMemoryCache::guild_members`] and then calling</span>
-<span class="doccomment">/// [`InMemoryCache::member`] for each item is more efficient. That might look</span>
-<span class="doccomment">/// like:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-<span class="doccomment">/// use twilight_model::id::Id;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let cache = InMemoryCache::new();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // later in the application...</span>
-<span class="doccomment">/// let guild_id = Id::new(1);</span>
-<span class="doccomment">/// let maybe_guild_members = cache.guild_members(guild_id);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// if let Some(guild_members) = maybe_guild_members {</span>
-<span class="doccomment">///     for user_id in guild_members.iter() {</span>
-<span class="doccomment">///         if let Some(member) = cache.member(guild_id, *user_id) {</span>
-<span class="doccomment">///             println!(</span>
-<span class="doccomment">///                 &quot;member id {}&#39;s nickname: {:?}&quot;,</span>
-<span class="doccomment">///                 member.user_id(),</span>
-<span class="doccomment">///                 member.nick(),</span>
-<span class="doccomment">///             );</span>
-<span class="doccomment">///         }</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InMemoryCacheIter</span>&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">InMemoryCache</span>);
+<span class="kw">impl</span>&lt;K: Eq + Hash, V&gt; Deref <span class="kw">for </span>IterReference&lt;<span class="lifetime">&#39;_</span>, K, V&gt; {
+    <span class="kw">type </span>Target = V;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">InMemoryCacheIter</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="doccomment">/// Create a new interface to create iterators over various resource types.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cache</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">InMemoryCache</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span>(<span class="ident">cache</span>)
+    <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+        <span class="self">self</span>.value()
+    }
+}
+
+<span class="doccomment">/// Interface to create iterators over various resources.
+///
+/// The created iterators will iterate over *all* entities of a resource across
+/// all channels and guilds.
+///
+/// The iteration order of all iterators are arbitrary.
+///
+/// # Examples
+///
+/// Count the number of users in the cache whose username begins with &quot;twi&quot;:
+///
+/// ```no_run
+/// use twilight_cache_inmemory::InMemoryCache;
+///
+/// let cache = InMemoryCache::new();
+///
+/// // later in the application...
+/// let count = cache
+///     .iter()
+///     .users()
+///     .filter(|user| user.name.starts_with(&quot;twi&quot;))
+///     .count();
+///
+/// println!(&quot;&#39;twi&#39; users: {count}&quot;);
+/// ```
+///
+/// # Potential inefficiency
+///
+/// Resource iterators over the entire cache are inefficient when the goal is to
+/// iterate over a resource in a specific guild. For example, when performing a
+/// task such as iterating over the members of a specific guild, retrieving the
+/// list of members via [`InMemoryCache::guild_members`] and then calling
+/// [`InMemoryCache::member`] for each item is more efficient. That might look
+/// like:
+///
+/// ```no_run
+/// use twilight_cache_inmemory::InMemoryCache;
+/// use twilight_model::id::Id;
+///
+/// let cache = InMemoryCache::new();
+///
+/// // later in the application...
+/// let guild_id = Id::new(1);
+/// let maybe_guild_members = cache.guild_members(guild_id);
+///
+/// if let Some(guild_members) = maybe_guild_members {
+///     for user_id in guild_members.iter() {
+///         if let Some(member) = cache.member(guild_id, *user_id) {
+///             println!(
+///                 &quot;member id {}&#39;s nickname: {:?}&quot;,
+///                 member.user_id(),
+///                 member.nick(),
+///             );
+///         }
+///     }
+/// }
+/// ```
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>InMemoryCacheIter&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>InMemoryCache);
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; InMemoryCacheIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Create a new interface to create iterators over various resource types.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const fn </span>new(cache: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>InMemoryCache) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(cache)
     }
 
-    <span class="doccomment">/// Immutable reference to the underlying cache.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">cache_ref</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">InMemoryCache</span> {
-        <span class="self">self</span>.<span class="number">0</span>
+    <span class="doccomment">/// Immutable reference to the underlying cache.
+    </span><span class="kw">pub const fn </span>cache_ref(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>InMemoryCache {
+        <span class="self">self</span>.<span class="number">0
+    </span>}
+
+    <span class="doccomment">/// Create an iterator over the channels in the cache.
+    </span><span class="kw">pub fn </span>channels(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;ChannelMarker&gt;, Channel&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.channels.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the channels in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channels</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;, <span class="ident">Channel</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">channels</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the emojis in the cache.
+    </span><span class="kw">pub fn </span>emojis(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;EmojiMarker&gt;, GuildResource&lt;CachedEmoji&gt;&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.emojis.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the emojis in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emojis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;, <span class="ident">GuildResource</span>&lt;<span class="ident">CachedEmoji</span>&gt;&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">emojis</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the guilds in the cache.
+    </span><span class="kw">pub fn </span>guilds(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;GuildMarker&gt;, CachedGuild&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.guilds.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the guilds in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guilds</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">CachedGuild</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">guilds</span>.<span class="ident">iter</span>())
-    }
-
-    <span class="doccomment">/// Create an iterator over the integrations in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">integrations</span>(
+    <span class="doccomment">/// Create an iterator over the integrations in the cache.
+    </span><span class="kw">pub fn </span>integrations(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, (<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">Id</span>&lt;<span class="ident">IntegrationMarker</span>&gt;), <span class="ident">GuildResource</span>&lt;<span class="ident">GuildIntegration</span>&gt;&gt;
+    ) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, (Id&lt;GuildMarker&gt;, Id&lt;IntegrationMarker&gt;), GuildResource&lt;GuildIntegration&gt;&gt;
     {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">integrations</span>.<span class="ident">iter</span>())
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.integrations.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the members across all guilds in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">members</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, (<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;), <span class="ident">CachedMember</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">members</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the members across all guilds in the cache.
+    </span><span class="kw">pub fn </span>members(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, (Id&lt;GuildMarker&gt;, Id&lt;UserMarker&gt;), CachedMember&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.members.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the messages in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">messages</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;, <span class="ident">CachedMessage</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">messages</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the messages in the cache.
+    </span><span class="kw">pub fn </span>messages(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;MessageMarker&gt;, CachedMessage&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.messages.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the presences in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">presences</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, (<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;), <span class="ident">CachedPresence</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">presences</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the presences in the cache.
+    </span><span class="kw">pub fn </span>presences(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, (Id&lt;GuildMarker&gt;, Id&lt;UserMarker&gt;), CachedPresence&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.presences.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the roles in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roles</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;, <span class="ident">GuildResource</span>&lt;<span class="ident">Role</span>&gt;&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">roles</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the roles in the cache.
+    </span><span class="kw">pub fn </span>roles(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;RoleMarker&gt;, GuildResource&lt;Role&gt;&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.roles.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the stage instances in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stage_instances</span>(
+    <span class="doccomment">/// Create an iterator over the stage instances in the cache.
+    </span><span class="kw">pub fn </span>stage_instances(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">StageMarker</span>&gt;, <span class="ident">GuildResource</span>&lt;<span class="ident">StageInstance</span>&gt;&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">stage_instances</span>.<span class="ident">iter</span>())
+    ) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;StageMarker&gt;, GuildResource&lt;StageInstance&gt;&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.stage_instances.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the stickers in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stickers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">StickerMarker</span>&gt;, <span class="ident">GuildResource</span>&lt;<span class="ident">CachedSticker</span>&gt;&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">stickers</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the stickers in the cache.
+    </span><span class="kw">pub fn </span>stickers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;StickerMarker&gt;, GuildResource&lt;CachedSticker&gt;&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.stickers.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the users in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">users</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;, <span class="ident">User</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">users</span>.<span class="ident">iter</span>())
+    <span class="doccomment">/// Create an iterator over the users in the cache.
+    </span><span class="kw">pub fn </span>users(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, Id&lt;UserMarker&gt;, User&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.users.iter())
     }
 
-    <span class="doccomment">/// Create an iterator over the voice states in the cache.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">voice_states</span>(
+    <span class="doccomment">/// Create an iterator over the voice states in the cache.
+    </span><span class="kw">pub fn </span>voice_states(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, (<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;), <span class="ident">CachedVoiceState</span>&gt; {
-        <span class="ident">ResourceIter::new</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">voice_states</span>.<span class="ident">iter</span>())
+    ) -&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, (Id&lt;GuildMarker&gt;, Id&lt;UserMarker&gt;), CachedVoiceState&gt; {
+        ResourceIter::new(<span class="self">self</span>.<span class="number">0</span>.voice_states.iter())
     }
 }
 
-<span class="doccomment">/// Generic iterator over key-value pairs of a resource.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The iteration order is arbitrary.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Count how many users across all guilds are pending:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// use twilight_cache_inmemory::InMemoryCache;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let cache = InMemoryCache::new();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// // later in the application...</span>
-<span class="doccomment">/// let count = cache</span>
-<span class="doccomment">///     .iter()</span>
-<span class="doccomment">///     .members()</span>
-<span class="doccomment">///     .filter(|member| member.pending())</span>
-<span class="doccomment">///     .count();</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// println!(&quot;pending users: {count}&quot;);</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="ident">iter</span>: <span class="ident">Iter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt;,
+<span class="doccomment">/// Generic iterator over key-value pairs of a resource.
+///
+/// The iteration order is arbitrary.
+///
+/// # Examples
+///
+/// Count how many users across all guilds are pending:
+///
+/// ```no_run
+/// use twilight_cache_inmemory::InMemoryCache;
+///
+/// let cache = InMemoryCache::new();
+///
+/// // later in the application...
+/// let count = cache
+///     .iter()
+///     .members()
+///     .filter(|member| member.pending())
+///     .count();
+///
+/// println!(&quot;pending users: {count}&quot;);
+/// ```
+</span><span class="kw">pub struct </span>ResourceIter&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    iter: Iter&lt;<span class="lifetime">&#39;a</span>, K, V&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="doccomment">/// Create a new iterator over a resource.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">iter</span>: <span class="ident">Iter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> { <span class="ident">iter</span> }
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K, V&gt; ResourceIter&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    <span class="doccomment">/// Create a new iterator over a resource.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const fn </span>new(iter: Iter&lt;<span class="lifetime">&#39;a</span>, K, V&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{ iter }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>: <span class="ident">Eq</span> + <span class="ident">Hash</span>, <span class="ident">V</span>&gt; <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">IterReference</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, K: Eq + Hash, V&gt; Iterator <span class="kw">for </span>ResourceIter&lt;<span class="lifetime">&#39;a</span>, K, V&gt; {
+    <span class="kw">type </span>Item = IterReference&lt;<span class="lifetime">&#39;a</span>, K, V&gt;;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt; {
-        <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="ident">IterReference::new</span>)
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="self">self</span>.iter.next().map(IterReference::new)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">InMemoryCacheIter</span>, <span class="ident">IterReference</span>, <span class="ident">ResourceIter</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">test</span>, <span class="ident">InMemoryCache</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">fmt::Debug</span>};
-    <span class="kw">use</span> <span class="ident">twilight_model</span>::{
-        <span class="ident">id</span>::{<span class="ident">marker::UserMarker</span>, <span class="ident">Id</span>},
-        <span class="ident">user::User</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{InMemoryCacheIter, IterReference, ResourceIter};
+    <span class="kw">use crate</span>::{test, InMemoryCache};
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::{borrow::Cow, fmt::Debug};
+    <span class="kw">use </span>twilight_model::{
+        id::{marker::UserMarker, Id},
+        user::User,
     };
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">InMemoryCacheIter</span>&lt;<span class="lifetime">&#39;_</span>&gt;: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">IterReference</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;, <span class="ident">User</span>&gt;: <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">ResourceIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;, <span class="ident">User</span>&gt;: <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(InMemoryCacheIter&lt;<span class="lifetime">&#39;_</span>&gt;: Debug, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(IterReference&lt;<span class="lifetime">&#39;_</span>, Id&lt;UserMarker&gt;, User&gt;: Send, Sync);
+    <span class="macro">assert_impl_all!</span>(ResourceIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;UserMarker&gt;, User&gt;: Iterator, Send, Sync);
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter</span>() {
-        <span class="kw">let</span> <span class="ident">guild_id</span> = <span class="ident">Id::new</span>(<span class="number">1</span>);
-        <span class="kw">let</span> <span class="ident">users</span> = <span class="kw-2">&amp;</span>[
-            (<span class="ident">Id::new</span>(<span class="number">2</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>)),
-            (<span class="ident">Id::new</span>(<span class="number">3</span>), <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>)),
-            (<span class="ident">Id::new</span>(<span class="number">4</span>), <span class="prelude-val">None</span>),
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter() {
+        <span class="kw">let </span>guild_id = Id::new(<span class="number">1</span>);
+        <span class="kw">let </span>users = <span class="kw-2">&amp;</span>[
+            (Id::new(<span class="number">2</span>), <span class="prelude-val">Some</span>(guild_id)),
+            (Id::new(<span class="number">3</span>), <span class="prelude-val">Some</span>(guild_id)),
+            (Id::new(<span class="number">4</span>), <span class="prelude-val">None</span>),
         ];
-        <span class="kw">let</span> <span class="ident">cache</span> = <span class="ident">InMemoryCache::new</span>();
+        <span class="kw">let </span>cache = InMemoryCache::new();
 
-        <span class="kw">for</span> (<span class="ident">user_id</span>, <span class="ident">maybe_guild_id</span>) <span class="kw">in</span> <span class="ident">users</span> {
-            <span class="ident">cache</span>.<span class="ident">cache_user</span>(<span class="ident">Cow::Owned</span>(<span class="ident">test::user</span>(<span class="kw-2">*</span><span class="ident">user_id</span>)), <span class="kw-2">*</span><span class="ident">maybe_guild_id</span>);
+        <span class="kw">for </span>(user_id, maybe_guild_id) <span class="kw">in </span>users {
+            cache.cache_user(Cow::Owned(test::user(<span class="kw-2">*</span>user_id)), <span class="kw-2">*</span>maybe_guild_id);
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual</span> = <span class="ident">cache</span>.<span class="ident">iter</span>().<span class="ident">users</span>().<span class="ident">map</span>(|<span class="ident">user</span>| <span class="ident">user</span>.<span class="ident">id</span>).<span class="ident">collect</span>::&lt;<span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;&gt;();
-        <span class="ident">actual</span>.<span class="ident">sort_unstable</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>actual = cache.iter().users().map(|user| user.id).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        actual.sort_unstable();
 
-        <span class="kw">let</span> <span class="ident">expected</span> = <span class="ident">users</span>.<span class="ident">iter</span>().<span class="ident">map</span>(|(<span class="ident">id</span>, <span class="kw">_</span>)| <span class="kw-2">*</span><span class="ident">id</span>).<span class="ident">collect</span>::&lt;<span class="ident">Vec</span>&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>expected = users.iter().map(|(id, <span class="kw">_</span>)| <span class="kw-2">*</span>id).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-        <span class="macro">assert_eq!</span>(<span class="ident">actual</span>, <span class="ident">expected</span>);
+        <span class="macro">assert_eq!</span>(actual, expected);
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_cache_inmemory" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

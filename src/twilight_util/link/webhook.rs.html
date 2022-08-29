@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-util/src/link/webhook.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>webhook.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_util/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-util/src/link/webhook.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>webhook.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_util/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_util/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -236,243 +236,243 @@
 <span id="236">236</span>
 <span id="237">237</span>
 <span id="238">238</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Utilities for parsing webhook URLs.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The URL is typically provided by the desktop client GUI when configuring a</span>
-<span class="doccomment">//! webhook integration.</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Utilities for parsing webhook URLs.
+//!
+//! The URL is typically provided by the desktop client GUI when configuring a
+//! webhook integration.
 
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">num::NonZeroU64</span>,
+</span><span class="kw">use </span>std::{
+    error::Error,
+    fmt::{Display, Formatter, <span class="prelude-ty">Result </span><span class="kw">as </span>FmtResult},
+    num::NonZeroU64,
 };
-<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::WebhookMarker</span>, <span class="ident">Id</span>};
+<span class="kw">use </span>twilight_model::id::{marker::WebhookMarker, Id};
 
-<span class="doccomment">/// Error when [parsing] a webhook URL.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [parsing]: parse</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WebhookParseError</span> {
-    <span class="ident">kind</span>: <span class="ident">WebhookParseErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
+<span class="doccomment">/// Error when [parsing] a webhook URL.
+///
+/// [parsing]: parse
+</span><span class="attribute">#[allow(clippy::module_name_repetitions)]
+#[derive(Debug)]
+</span><span class="kw">pub struct </span>WebhookParseError {
+    kind: WebhookParseErrorType,
+    source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">WebhookParseError</span> {
-    <span class="doccomment">/// Immutable reference to the type of error that occurred.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">WebhookParseErrorType</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span>
+<span class="kw">impl </span>WebhookParseError {
+    <span class="doccomment">/// Immutable reference to the type of error that occurred.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;retrieving the type has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub const fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WebhookParseErrorType {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.kind
     }
 
-    <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
+    <span class="doccomment">/// Consume the error, returning the source error if there is any.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;consuming the error and retrieving the source has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub fn </span>into_source(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt; {
+        <span class="self">self</span>.source
     }
 
-    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">WebhookParseErrorType</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;) {
-        (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
+    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub fn </span>into_parts(<span class="self">self</span>) -&gt; (WebhookParseErrorType, <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;) {
+        (<span class="self">self</span>.kind, <span class="self">self</span>.source)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">WebhookParseError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">WebhookParseErrorType::IdInvalid</span> { .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;url path segment isn&#39;t a valid ID&quot;</span>)
+<span class="kw">impl </span>Display <span class="kw">for </span>WebhookParseError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        <span class="kw">match </span><span class="self">self</span>.kind {
+            WebhookParseErrorType::IdInvalid { .. } =&gt; {
+                f.write_str(<span class="string">&quot;url path segment isn&#39;t a valid ID&quot;</span>)
             }
-            <span class="ident">WebhookParseErrorType::SegmentMissing</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;url is missing a required path segment&quot;</span>)
+            WebhookParseErrorType::SegmentMissing =&gt; {
+                f.write_str(<span class="string">&quot;url is missing a required path segment&quot;</span>)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">WebhookParseError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
+<span class="kw">impl </span>Error <span class="kw">for </span>WebhookParseError {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+        <span class="self">self</span>.source
+            .as_ref()
+            .map(|source| <span class="kw-2">&amp;**</span>source <span class="kw">as </span><span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>))
     }
 }
 
-<span class="doccomment">/// Type of [`WebhookParseError`] that occurred.</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">WebhookParseErrorType</span> {
-    <span class="doccomment">/// ID segment in the URL path is not an integer.</span>
-    <span class="ident">IdInvalid</span>,
-    <span class="doccomment">/// Required segment of the URL path is missing.</span>
-    <span class="ident">SegmentMissing</span>,
+<span class="doccomment">/// Type of [`WebhookParseError`] that occurred.
+</span><span class="attribute">#[allow(clippy::module_name_repetitions)]
+#[derive(Debug)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>WebhookParseErrorType {
+    <span class="doccomment">/// ID segment in the URL path is not an integer.
+    </span>IdInvalid,
+    <span class="doccomment">/// Required segment of the URL path is missing.
+    </span>SegmentMissing,
 }
 
-<span class="doccomment">/// Parse the webhook ID and token from a webhook URL, if it exists in the</span>
-<span class="doccomment">/// string.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Parse a webhook URL with a token:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_model::id::Id;</span>
-<span class="doccomment">/// use twilight_util::link::webhook;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">/// let url = &quot;https://canary.discord.com/api/webhooks/794590023369752587/tjxHaPHLKp9aEdSwJuLeHhHHGEqIxt1aay4I67FOP9uzsYEWmj0eJmDn-2ZvCYLyOb_K&quot;;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let (id, token) = webhook::parse(url)?;</span>
-<span class="doccomment">/// assert_eq!(Id::new(794590023369752587), id);</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     Some(&quot;tjxHaPHLKp9aEdSwJuLeHhHHGEqIxt1aay4I67FOP9uzsYEWmj0eJmDn-2ZvCYLyOb_K&quot;),</span>
-<span class="doccomment">///     token,</span>
-<span class="doccomment">/// );</span>
-<span class="doccomment">/// # Ok(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Parse a webhook URL without a token:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_model::id::Id;</span>
-<span class="doccomment">/// use twilight_util::link::webhook;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">/// let url = &quot;https://canary.discord.com/api/webhooks/794590023369752587&quot;;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let (id, token) = webhook::parse(url)?;</span>
-<span class="doccomment">/// assert_eq!(Id::new(794590023369752587), id);</span>
-<span class="doccomment">/// assert!(token.is_none());</span>
-<span class="doccomment">/// # Ok(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Errors</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns [`WebhookParseErrorType::IdInvalid`] error type if the ID segment of</span>
-<span class="doccomment">/// the URL is not a valid integer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns [`WebhookParseErrorType::SegmentMissing`] error type if one of the</span>
-<span class="doccomment">/// required segments is missing. This can be the &quot;api&quot; or &quot;webhooks&quot; standard</span>
-<span class="doccomment">/// segment of the URL or the segment containing the webhook ID.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="ident">Id</span>&lt;<span class="ident">WebhookMarker</span>&gt;, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">str</span>&gt;), <span class="ident">WebhookParseError</span>&gt; {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">segments</span> = {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> = <span class="ident">url</span>.<span class="ident">split</span>(<span class="string">&quot;discord.com/api/webhooks/&quot;</span>);
-        <span class="kw">let</span> <span class="ident">path</span> = <span class="ident">start</span>.<span class="ident">nth</span>(<span class="number">1</span>).<span class="ident">ok_or</span>(<span class="ident">WebhookParseError</span> {
-            <span class="ident">kind</span>: <span class="ident">WebhookParseErrorType::SegmentMissing</span>,
-            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+<span class="doccomment">/// Parse the webhook ID and token from a webhook URL, if it exists in the
+/// string.
+///
+/// # Examples
+///
+/// Parse a webhook URL with a token:
+///
+/// ```
+/// use twilight_model::id::Id;
+/// use twilight_util::link::webhook;
+///
+/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+/// let url = &quot;https://canary.discord.com/api/webhooks/794590023369752587/tjxHaPHLKp9aEdSwJuLeHhHHGEqIxt1aay4I67FOP9uzsYEWmj0eJmDn-2ZvCYLyOb_K&quot;;
+///
+/// let (id, token) = webhook::parse(url)?;
+/// assert_eq!(Id::new(794590023369752587), id);
+/// assert_eq!(
+///     Some(&quot;tjxHaPHLKp9aEdSwJuLeHhHHGEqIxt1aay4I67FOP9uzsYEWmj0eJmDn-2ZvCYLyOb_K&quot;),
+///     token,
+/// );
+/// # Ok(()) }
+/// ```
+///
+/// Parse a webhook URL without a token:
+///
+/// ```
+/// use twilight_model::id::Id;
+/// use twilight_util::link::webhook;
+///
+/// # fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+/// let url = &quot;https://canary.discord.com/api/webhooks/794590023369752587&quot;;
+///
+/// let (id, token) = webhook::parse(url)?;
+/// assert_eq!(Id::new(794590023369752587), id);
+/// assert!(token.is_none());
+/// # Ok(()) }
+/// ```
+///
+/// # Errors
+///
+/// Returns [`WebhookParseErrorType::IdInvalid`] error type if the ID segment of
+/// the URL is not a valid integer.
+///
+/// Returns [`WebhookParseErrorType::SegmentMissing`] error type if one of the
+/// required segments is missing. This can be the &quot;api&quot; or &quot;webhooks&quot; standard
+/// segment of the URL or the segment containing the webhook ID.
+</span><span class="kw">pub fn </span>parse(url: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;(Id&lt;WebhookMarker&gt;, <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;), WebhookParseError&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>segments = {
+        <span class="kw">let </span><span class="kw-2">mut </span>start = url.split(<span class="string">&quot;discord.com/api/webhooks/&quot;</span>);
+        <span class="kw">let </span>path = start.nth(<span class="number">1</span>).ok_or(WebhookParseError {
+            kind: WebhookParseErrorType::SegmentMissing,
+            source: <span class="prelude-val">None</span>,
         })<span class="question-mark">?</span>;
 
-        <span class="ident">path</span>.<span class="ident">split</span>(<span class="string">&#39;/&#39;</span>)
+        path.split(<span class="string">&#39;/&#39;</span>)
     };
 
-    <span class="kw">let</span> <span class="ident">id_segment</span> = <span class="ident">segments</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(<span class="ident">WebhookParseError</span> {
-        <span class="ident">kind</span>: <span class="ident">WebhookParseErrorType::SegmentMissing</span>,
-        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+    <span class="kw">let </span>id_segment = segments.next().ok_or(WebhookParseError {
+        kind: WebhookParseErrorType::SegmentMissing,
+        source: <span class="prelude-val">None</span>,
     })<span class="question-mark">?</span>;
 
-    <span class="comment">// If we don&#39;t have this check it&#39;ll return `IdInvalid`, which isn&#39;t right.</span>
-    <span class="kw">if</span> <span class="ident">id_segment</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">WebhookParseError</span> {
-            <span class="ident">kind</span>: <span class="ident">WebhookParseErrorType::SegmentMissing</span>,
-            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+    <span class="comment">// If we don&#39;t have this check it&#39;ll return `IdInvalid`, which isn&#39;t right.
+    </span><span class="kw">if </span>id_segment.is_empty() {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(WebhookParseError {
+            kind: WebhookParseErrorType::SegmentMissing,
+            source: <span class="prelude-val">None</span>,
         });
     }
 
-    <span class="kw">let</span> <span class="ident">id</span> = <span class="ident">id_segment</span>
-        .<span class="ident">parse</span>::&lt;<span class="ident">NonZeroU64</span>&gt;()
-        .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">WebhookParseError</span> {
-            <span class="ident">kind</span>: <span class="ident">WebhookParseErrorType::IdInvalid</span>,
-            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+    <span class="kw">let </span>id = id_segment
+        .parse::&lt;NonZeroU64&gt;()
+        .map_err(|source| WebhookParseError {
+            kind: WebhookParseErrorType::IdInvalid,
+            source: <span class="prelude-val">Some</span>(Box::new(source)),
         })<span class="question-mark">?</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">token</span> = <span class="ident">segments</span>.<span class="ident">next</span>();
+    <span class="kw">let </span><span class="kw-2">mut </span>token = segments.next();
 
-    <span class="comment">// Don&#39;t return an empty token if the segment is empty.</span>
-    <span class="kw">if</span> <span class="ident">token</span>.<span class="ident">map</span>(<span class="ident">str::is_empty</span>).<span class="ident">unwrap_or_default</span>() {
-        <span class="ident">token</span> = <span class="prelude-val">None</span>;
+    <span class="comment">// Don&#39;t return an empty token if the segment is empty.
+    </span><span class="kw">if </span>token.map(str::is_empty).unwrap_or_default() {
+        token = <span class="prelude-val">None</span>;
     }
 
-    <span class="prelude-val">Ok</span>((<span class="ident">Id::from</span>(<span class="ident">id</span>), <span class="ident">token</span>))
+    <span class="prelude-val">Ok</span>((Id::from(id), token))
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">WebhookParseError</span>, <span class="ident">WebhookParseErrorType</span>};
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">error::Error</span>, <span class="ident">fmt::Debug</span>};
-    <span class="kw">use</span> <span class="ident">twilight_model::id::Id</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{WebhookParseError, WebhookParseErrorType};
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::{error::Error, fmt::Debug};
+    <span class="kw">use </span>twilight_model::id::Id;
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WebhookParseErrorType</span>: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WebhookParseError</span>: <span class="ident">Debug</span>, <span class="ident">Error</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(WebhookParseErrorType: Debug, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WebhookParseError: Debug, Error, Send, Sync);
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_no_token</span>() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>parse_no_token() {
         <span class="macro">assert_eq!</span>(
-            (<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="prelude-val">None</span>),
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/123&quot;</span>).<span class="ident">unwrap</span>(),
+            (Id::new(<span class="number">123</span>), <span class="prelude-val">None</span>),
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/123&quot;</span>).unwrap(),
         );
-        <span class="comment">// There&#39;s a / after the ID signifying another segment, but the token</span>
-        <span class="comment">// ends up being None.</span>
-        <span class="macro">assert_eq!</span>(
-            (<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="prelude-val">None</span>),
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/123&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="comment">// There&#39;s a / after the ID signifying another segment, but the token
+        // ends up being None.
+        </span><span class="macro">assert_eq!</span>(
+            (Id::new(<span class="number">123</span>), <span class="prelude-val">None</span>),
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/123&quot;</span>).unwrap(),
         );
-        <span class="macro">assert!</span>(<span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/123/&quot;</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="number">1</span>
-            .<span class="ident">is_none</span>());
+        <span class="macro">assert!</span>(<span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/123/&quot;</span>)
+            .unwrap()
+            .<span class="number">1
+            </span>.is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_with_token</span>() {
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>parse_with_token() {
         <span class="macro">assert_eq!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/456/token&quot;</span>).<span class="ident">unwrap</span>(),
-            (<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/456/token&quot;</span>).unwrap(),
+            (Id::new(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
         );
-        <span class="comment">// The value of the segment(s) after the token are ignored.</span>
-        <span class="macro">assert_eq!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/456/token/github&quot;</span>).<span class="ident">unwrap</span>(),
-            (<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
-        );
-        <span class="macro">assert_eq!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/456/token/slack&quot;</span>).<span class="ident">unwrap</span>(),
-            (<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
+        <span class="comment">// The value of the segment(s) after the token are ignored.
+        </span><span class="macro">assert_eq!</span>(
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/456/token/github&quot;</span>).unwrap(),
+            (Id::new(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/456/token/randomsegment&quot;</span>).<span class="ident">unwrap</span>(),
-            (<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/456/token/slack&quot;</span>).unwrap(),
+            (Id::new(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
         );
         <span class="macro">assert_eq!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/456/token/one/two/three&quot;</span>).<span class="ident">unwrap</span>(),
-            (<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/456/token/randomsegment&quot;</span>).unwrap(),
+            (Id::new(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
+        );
+        <span class="macro">assert_eq!</span>(
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/456/token/one/two/three&quot;</span>).unwrap(),
+            (Id::new(<span class="number">456</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;token&quot;</span>)),
         );
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">parse_invalid</span>() {
-        <span class="comment">// Base URL is improper.</span>
-        <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/foo/bar/456&quot;</span>)
-                .<span class="ident">unwrap_err</span>()
-                .<span class="ident">kind</span>(),
-            <span class="kw-2">&amp;</span><span class="ident">WebhookParseErrorType::SegmentMissing</span>,
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>parse_invalid() {
+        <span class="comment">// Base URL is improper.
+        </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/foo/bar/456&quot;</span>)
+                .unwrap_err()
+                .kind(),
+            <span class="kw-2">&amp;</span>WebhookParseErrorType::SegmentMissing,
         ));
-        <span class="comment">// No ID is present.</span>
-        <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/&quot;</span>)
-                .<span class="ident">unwrap_err</span>()
-                .<span class="ident">kind</span>(),
-            <span class="kw-2">&amp;</span><span class="ident">WebhookParseErrorType::SegmentMissing</span>,
+        <span class="comment">// No ID is present.
+        </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/&quot;</span>)
+                .unwrap_err()
+                .kind(),
+            <span class="kw-2">&amp;</span>WebhookParseErrorType::SegmentMissing,
         ));
-        <span class="comment">// ID segment isn&#39;t an integer.</span>
-        <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-            <span class="ident"><span class="kw">super</span>::parse</span>(<span class="string">&quot;https://discord.com/api/webhooks/notaninteger&quot;</span>)
-                .<span class="ident">unwrap_err</span>()
-                .<span class="ident">kind</span>(),
-            <span class="kw-2">&amp;</span><span class="ident">WebhookParseErrorType::IdInvalid</span> { .. },
+        <span class="comment">// ID segment isn&#39;t an integer.
+        </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(
+            <span class="kw">super</span>::parse(<span class="string">&quot;https://discord.com/api/webhooks/notaninteger&quot;</span>)
+                .unwrap_err()
+                .kind(),
+            <span class="kw-2">&amp;</span>WebhookParseErrorType::IdInvalid { .. },
         ));
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_util" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

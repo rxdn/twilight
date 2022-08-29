@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-mention/src/parse/iter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>iter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_mention/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-mention/src/parse/iter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>iter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_mention/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_mention/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -232,239 +232,239 @@
 <span id="232">232</span>
 <span id="233">233</span>
 <span id="234">234</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ParseMention</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">iter::Iterator</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">str::CharIndices</span>};
+</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">super</span>::ParseMention;
+<span class="kw">use </span>std::{iter::Iterator, marker::PhantomData, str::CharIndices};
 
-<span class="doccomment">/// Iterator of mentions within a buffer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Unlike when parsing a mention directly via [`ParseMention::parse`],</span>
-<span class="doccomment">/// incomplete mentions - such as when a &quot;&lt;&quot; is found but not valid trailing</span>
-<span class="doccomment">/// mention syntax - will not result in errors.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The iterator returns items consisting of 3 items: the mention itself</span>
-<span class="doccomment">/// followed by the starting index and ending index of the mention&#39;s source in</span>
-<span class="doccomment">/// the buffer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Iterate over all of the mentioned users:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use twilight_mention::ParseMention;</span>
-<span class="doccomment">/// use twilight_model::id::{marker::UserMarker, Id};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let buf = &quot;&lt;@123&gt; some &lt;@456&gt; users &lt;@789&gt;!&quot;;</span>
-<span class="doccomment">/// let mut iter = Id::&lt;UserMarker&gt;::iter(buf);</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 123));</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 456));</span>
-<span class="doccomment">/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 789));</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt; {
-    <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-    <span class="ident">chars</span>: <span class="ident">CharIndices</span>&lt;<span class="lifetime">&#39;a</span>&gt;,
-    <span class="ident">phantom</span>: <span class="ident">PhantomData</span>&lt;<span class="ident">T</span>&gt;,
+<span class="doccomment">/// Iterator of mentions within a buffer.
+///
+/// Unlike when parsing a mention directly via [`ParseMention::parse`],
+/// incomplete mentions - such as when a &quot;&lt;&quot; is found but not valid trailing
+/// mention syntax - will not result in errors.
+///
+/// The iterator returns items consisting of 3 items: the mention itself
+/// followed by the starting index and ending index of the mention&#39;s source in
+/// the buffer.
+///
+/// # Examples
+///
+/// Iterate over all of the mentioned users:
+///
+/// ```
+/// use twilight_mention::ParseMention;
+/// use twilight_model::id::{marker::UserMarker, Id};
+///
+/// let buf = &quot;&lt;@123&gt; some &lt;@456&gt; users &lt;@789&gt;!&quot;;
+/// let mut iter = Id::&lt;UserMarker&gt;::iter(buf);
+/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 123));
+/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 456));
+/// assert!(matches!(iter.next(), Some((user, _, _)) if user.get() == 789));
+/// ```
+</span><span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub struct </span>MentionIter&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    chars: CharIndices&lt;<span class="lifetime">&#39;a</span>&gt;,
+    phantom: PhantomData&lt;T&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt; <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt; {
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span>(<span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::parse</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">chars</span> = <span class="ident">buf</span>.<span class="ident">char_indices</span>();
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T&gt; MentionIter&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="attribute">#[must_use]
+    </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::parse) <span class="kw">fn </span>new(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>chars = buf.char_indices();
 
-        <span class="self">Self</span> {
-            <span class="ident">buf</span>,
-            <span class="ident">chars</span>,
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+        <span class="self">Self </span>{
+            buf,
+            chars,
+            phantom: PhantomData,
         }
     }
 
-    <span class="doccomment">/// Return an immutable reference to the underlying buffer of the iterator.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">as_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span> {
-        <span class="self">self</span>.<span class="ident">buf</span>
+    <span class="doccomment">/// Return an immutable reference to the underlying buffer of the iterator.
+    </span><span class="attribute">#[must_use]
+    </span><span class="kw">pub const fn </span>as_str(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {
+        <span class="self">self</span>.buf
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">ParseMention</span>&gt; <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;a</span>, <span class="ident">T</span>&gt; {
-    <span class="doccomment">/// Found mention followed by the start and ending indexes in the source</span>
-    <span class="doccomment">/// string returned by [`as_str`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`as_str`]: Self::as_str</span>
-    <span class="kw">type</span> <span class="ident">Item</span> = (<span class="ident">T</span>, <span class="ident">usize</span>, <span class="ident">usize</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: ParseMention&gt; Iterator <span class="kw">for </span>MentionIter&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+    <span class="doccomment">/// Found mention followed by the start and ending indexes in the source
+    /// string returned by [`as_str`].
+    ///
+    /// [`as_str`]: Self::as_str
+    </span><span class="kw">type </span>Item = (T, usize, usize);
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt; {
-        <span class="comment">// We want to take care of our input and make sure we&#39;re working with</span>
-        <span class="comment">// chars here and not just individual bytes. We also want to not use</span>
-        <span class="comment">// consuming methods of the iterator, so this will get a little weird.</span>
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">start</span> = <span class="kw">match</span> <span class="self">self</span>.<span class="ident">chars</span>.<span class="ident">next</span>()<span class="question-mark">?</span> {
-                (<span class="ident">idx</span>, <span class="string">&#39;&lt;&#39;</span>) =&gt; <span class="ident">idx</span>,
-                <span class="kw">_</span> =&gt; <span class="kw">continue</span>,
+    <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+        <span class="comment">// We want to take care of our input and make sure we&#39;re working with
+        // chars here and not just individual bytes. We also want to not use
+        // consuming methods of the iterator, so this will get a little weird.
+        </span><span class="kw">loop </span>{
+            <span class="kw">let </span>start = <span class="kw">match </span><span class="self">self</span>.chars.next()<span class="question-mark">? </span>{
+                (idx, <span class="string">&#39;&lt;&#39;</span>) =&gt; idx,
+                <span class="kw">_ </span>=&gt; <span class="kw">continue</span>,
             };
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">found</span> = <span class="bool-val">false</span>;
+            <span class="kw">let </span><span class="kw-2">mut </span>found = <span class="bool-val">false</span>;
 
-            <span class="kw">for</span> <span class="ident">sigil</span> <span class="kw">in</span> <span class="ident">T::SIGILS</span> {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">chars</span>.<span class="ident">as_str</span>().<span class="ident">starts_with</span>(<span class="ident">sigil</span>) {
-                    <span class="ident">found</span> = <span class="bool-val">true</span>;
+            <span class="kw">for </span>sigil <span class="kw">in </span>T::SIGILS {
+                <span class="kw">if </span><span class="self">self</span>.chars.as_str().starts_with(sigil) {
+                    found = <span class="bool-val">true</span>;
 
-                    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">sigil</span>.<span class="ident">chars</span>().<span class="ident">count</span>() {
-                        <span class="self">self</span>.<span class="ident">chars</span>.<span class="ident">next</span>();
+                    <span class="kw">for _ in </span><span class="number">0</span>..sigil.chars().count() {
+                        <span class="self">self</span>.chars.next();
                     }
                 }
             }
 
-            <span class="kw">if</span> !<span class="ident">found</span> {
+            <span class="kw">if </span>!found {
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">let</span> <span class="ident">end</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">idx</span>, <span class="kw">_</span>)) = <span class="self">self</span>.<span class="ident">chars</span>.<span class="ident">find</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="number">1</span> == <span class="string">&#39;&gt;&#39;</span>) {
-                <span class="ident">idx</span>
-            } <span class="kw">else</span> {
+            <span class="kw">let </span>end = <span class="kw">if let </span><span class="prelude-val">Some</span>((idx, <span class="kw">_</span>)) = <span class="self">self</span>.chars.find(|c| c.<span class="number">1 </span>== <span class="string">&#39;&gt;&#39;</span>) {
+                idx
+            } <span class="kw">else </span>{
                 <span class="kw">continue</span>;
             };
 
-            <span class="kw">let</span> <span class="ident">buf</span> = <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">get</span>(<span class="ident">start</span>..=<span class="ident">end</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span>buf = <span class="self">self</span>.buf.get(start..=end)<span class="question-mark">?</span>;
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">id</span>) = <span class="ident">T::parse</span>(<span class="ident">buf</span>) {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">id</span>, <span class="ident">start</span>, <span class="ident">end</span>));
+            <span class="kw">if let </span><span class="prelude-val">Ok</span>(id) = T::parse(buf) {
+                <span class="kw">return </span><span class="prelude-val">Some</span>((id, start, end));
             }
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::timestamp</span>::{<span class="ident">Timestamp</span>, <span class="ident">TimestampStyle</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">crate</span>::timestamp::{Timestamp, TimestampStyle};
 
-    <span class="kw">use</span> <span class="kw">super</span>::{
-        <span class="kw">super</span>::{<span class="ident">MentionType</span>, <span class="ident">ParseMention</span>},
-        <span class="ident">MentionIter</span>,
+    <span class="kw">use super</span>::{
+        <span class="kw">super</span>::{MentionType, ParseMention},
+        MentionIter,
     };
-    <span class="kw">use</span> <span class="ident">static_assertions</span>::{<span class="ident">assert_impl_all</span>, <span class="ident">assert_obj_safe</span>};
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
-    <span class="kw">use</span> <span class="ident">twilight_model::id</span>::{
-        <span class="ident">marker</span>::{<span class="ident">ChannelMarker</span>, <span class="ident">EmojiMarker</span>, <span class="ident">RoleMarker</span>, <span class="ident">UserMarker</span>},
-        <span class="ident">Id</span>,
+    <span class="kw">use </span>static_assertions::{assert_impl_all, assert_obj_safe};
+    <span class="kw">use </span>std::fmt::Debug;
+    <span class="kw">use </span>twilight_model::id::{
+        marker::{ChannelMarker, EmojiMarker, RoleMarker, UserMarker},
+        Id,
     };
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">MentionType</span>&gt;: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Iterator</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;ChannelMarker&gt;&gt;: Clone, Debug, Iterator, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;EmojiMarker&gt;&gt;: Clone, Debug, Iterator, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionIter&lt;<span class="lifetime">&#39;_</span>, MentionType&gt;: Clone, Debug, Iterator, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;RoleMarker&gt;&gt;: Clone, Debug, Iterator, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;UserMarker&gt;&gt;: Clone, Debug, Iterator, Send, Sync);
     <span class="macro">assert_obj_safe!</span>(
-        <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">ChannelMarker</span>&gt;&gt;,
-        <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">EmojiMarker</span>&gt;&gt;,
-        <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">MentionType</span>&gt;,
-        <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">RoleMarker</span>&gt;&gt;,
-        <span class="ident">MentionIter</span>&lt;<span class="lifetime">&#39;_</span>, <span class="ident">Id</span>&lt;<span class="ident">UserMarker</span>&gt;&gt;,
+        MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;ChannelMarker&gt;&gt;,
+        MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;EmojiMarker&gt;&gt;,
+        MentionIter&lt;<span class="lifetime">&#39;_</span>, MentionType&gt;,
+        MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;RoleMarker&gt;&gt;,
+        MentionIter&lt;<span class="lifetime">&#39;_</span>, Id&lt;UserMarker&gt;&gt;,
     );
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_channel_id</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">ChannelMarker</span>&gt;<span class="ident">::iter</span>(<span class="string">&quot;&lt;#123&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_channel_id() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;ChannelMarker&gt;::iter(<span class="string">&quot;&lt;#123&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">123</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_multiple_ids</span>() {
-        <span class="kw">let</span> <span class="ident">buf</span> = <span class="string">&quot;one &lt;@123&gt;two&lt;#456&gt;&lt;@789&gt; ----&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">UserMarker</span>&gt;<span class="ident">::iter</span>(<span class="ident">buf</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="kw">let</span> (<span class="ident">mention</span>, <span class="ident">start</span>, <span class="ident">end</span>) = <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">789</span>), <span class="ident">mention</span>);
-        <span class="macro">assert_eq!</span>(<span class="number">19</span>, <span class="ident">start</span>);
-        <span class="macro">assert_eq!</span>(<span class="number">24</span>, <span class="ident">end</span>);
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_multiple_ids() {
+        <span class="kw">let </span>buf = <span class="string">&quot;one &lt;@123&gt;two&lt;#456&gt;&lt;@789&gt; ----&quot;</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;UserMarker&gt;::iter(buf);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">123</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="kw">let </span>(mention, start, end) = iter.next().unwrap();
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">789</span>), mention);
+        <span class="macro">assert_eq!</span>(<span class="number">19</span>, start);
+        <span class="macro">assert_eq!</span>(<span class="number">24</span>, end);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_emoji_ids</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">EmojiMarker</span>&gt;<span class="ident">::iter</span>(<span class="string">&quot;some &lt;:name:123&gt; emojis &lt;:emoji:456&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_emoji_ids() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;EmojiMarker&gt;::iter(<span class="string">&quot;some &lt;:name:123&gt; emojis &lt;:emoji:456&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">123</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">456</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_mention_type</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">MentionType::iter</span>(<span class="string">&quot;&lt;#12&gt;&lt;:name:34&gt;&lt;@&amp;56&gt;&lt;@78&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Channel</span>(<span class="ident">Id::new</span>(<span class="number">12</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Emoji</span>(<span class="ident">Id::new</span>(<span class="number">34</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Role</span>(<span class="ident">Id::new</span>(<span class="number">56</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::User</span>(<span class="ident">Id::new</span>(<span class="number">78</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_mention_type() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = MentionType::iter(<span class="string">&quot;&lt;#12&gt;&lt;:name:34&gt;&lt;@&amp;56&gt;&lt;@78&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(MentionType::Channel(Id::new(<span class="number">12</span>)), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(MentionType::Emoji(Id::new(<span class="number">34</span>)), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(MentionType::Role(Id::new(<span class="number">56</span>)), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(MentionType::User(Id::new(<span class="number">78</span>)), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_mention_type_with_timestamp</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">MentionType::iter</span>(<span class="string">&quot;&lt;#12&gt; &lt;t:34&gt; &lt;t:56:d&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">MentionType::Channel</span>(<span class="ident">Id::new</span>(<span class="number">12</span>)), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_mention_type_with_timestamp() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = MentionType::iter(<span class="string">&quot;&lt;#12&gt; &lt;t:34&gt; &lt;t:56:d&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(MentionType::Channel(Id::new(<span class="number">12</span>)), iter.next().unwrap().<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::Timestamp</span>(<span class="ident">Timestamp::new</span>(<span class="number">34</span>, <span class="prelude-val">None</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
+            MentionType::Timestamp(Timestamp::new(<span class="number">34</span>, <span class="prelude-val">None</span>)),
+            iter.next().unwrap().<span class="number">0
+        </span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">MentionType::Timestamp</span>(<span class="ident">Timestamp::new</span>(<span class="number">56</span>, <span class="prelude-val">Some</span>(<span class="ident">TimestampStyle::ShortDate</span>))),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+            MentionType::Timestamp(Timestamp::new(<span class="number">56</span>, <span class="prelude-val">Some</span>(TimestampStyle::ShortDate))),
+            iter.next().unwrap().<span class="number">0
+        </span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_role_ids</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">RoleMarker</span>&gt;<span class="ident">::iter</span>(<span class="string">&quot;some &lt;@&amp;123&gt; roles &lt;@&amp;456&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_role_ids() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;RoleMarker&gt;::iter(<span class="string">&quot;some &lt;@&amp;123&gt; roles &lt;@&amp;456&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">123</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">456</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_timestamps</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Timestamp::iter</span>(<span class="string">&quot;some &lt;t:123&gt; roles &lt;t:456:t&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Timestamp::new</span>(<span class="number">123</span>, <span class="prelude-val">None</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_timestamps() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Timestamp::iter(<span class="string">&quot;some &lt;t:123&gt; roles &lt;t:456:t&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(Timestamp::new(<span class="number">123</span>, <span class="prelude-val">None</span>), iter.next().unwrap().<span class="number">0</span>);
         <span class="macro">assert_eq!</span>(
-            <span class="ident">Timestamp::new</span>(<span class="number">456</span>, <span class="prelude-val">Some</span>(<span class="ident">TimestampStyle::ShortTime</span>)),
-            <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>
-        );
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+            Timestamp::new(<span class="number">456</span>, <span class="prelude-val">Some</span>(TimestampStyle::ShortTime)),
+            iter.next().unwrap().<span class="number">0
+        </span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_user_ids</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">UserMarker</span>&gt;<span class="ident">::iter</span>(<span class="string">&quot;some &lt;@123&gt;users&lt;@456&gt;&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">123</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">Id::new</span>(<span class="number">456</span>), <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">0</span>);
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_user_ids() {
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;UserMarker&gt;::iter(<span class="string">&quot;some &lt;@123&gt;users&lt;@456&gt;&quot;</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">123</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(Id::new(<span class="number">456</span>), iter.next().unwrap().<span class="number">0</span>);
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_no_id</span>() {
-        <span class="kw">let</span> <span class="ident">mention</span> = <span class="string">&quot;this is not &lt;# actually a mention&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">ChannelMarker</span>&gt;<span class="ident">::iter</span>(<span class="ident">mention</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_no_id() {
+        <span class="kw">let </span>mention = <span class="string">&quot;this is not &lt;# actually a mention&quot;</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;ChannelMarker&gt;::iter(mention);
 
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_ignores_other_types</span>() {
-        <span class="kw">let</span> <span class="ident">mention</span> = <span class="string">&quot;&lt;#123&gt; &lt;:name:456&gt; &lt;@&amp;789&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">UserMarker</span>&gt;<span class="ident">::iter</span>(<span class="ident">mention</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_ignores_other_types() {
+        <span class="kw">let </span>mention = <span class="string">&quot;&lt;#123&gt; &lt;:name:456&gt; &lt;@&amp;789&gt;&quot;</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;UserMarker&gt;::iter(mention);
 
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+        <span class="macro">assert!</span>(iter.next().is_none());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">iter_as_str</span>() {
-        <span class="kw">let</span> <span class="ident">buf</span> = <span class="string">&quot;a buf&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> = <span class="ident">Id</span>::&lt;<span class="ident">RoleMarker</span>&gt;<span class="ident">::iter</span>(<span class="ident">buf</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">buf</span>, <span class="ident">iter</span>.<span class="ident">as_str</span>());
-        <span class="comment">// Advancing still returns the complete buffer.</span>
-        <span class="macro">assert!</span>(<span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
-        <span class="macro">assert_eq!</span>(<span class="ident">buf</span>, <span class="ident">iter</span>.<span class="ident">as_str</span>());
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>iter_as_str() {
+        <span class="kw">let </span>buf = <span class="string">&quot;a buf&quot;</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>iter = Id::&lt;RoleMarker&gt;::iter(buf);
+        <span class="macro">assert_eq!</span>(buf, iter.as_str());
+        <span class="comment">// Advancing still returns the complete buffer.
+        </span><span class="macro">assert!</span>(iter.next().is_none());
+        <span class="macro">assert_eq!</span>(buf, iter.as_str());
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_mention" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_mention" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

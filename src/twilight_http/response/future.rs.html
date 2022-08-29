@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/response/future.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>future.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/response/future.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>future.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -424,431 +424,431 @@
 <span id="424">424</span>
 <span id="425">425</span>
 <span id="426">426</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Response</span>, <span class="ident">StatusCode</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">api_error::ApiError</span>,
-    <span class="ident">error</span>::{<span class="ident">Error</span>, <span class="ident">ErrorType</span>},
+</pre><pre class="rust"><code><span class="kw">use super</span>::{Response, StatusCode};
+<span class="kw">use crate</span>::{
+    api_error::ApiError,
+    error::{Error, ErrorType},
 };
-<span class="kw">use</span> <span class="ident">hyper</span>::{<span class="ident">client::ResponseFuture</span> <span class="kw">as</span> <span class="ident">HyperResponseFuture</span>, <span class="ident">StatusCode</span> <span class="kw">as</span> <span class="ident">HyperStatusCode</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">future::Future</span>,
-    <span class="ident">marker::PhantomData</span>,
-    <span class="ident">mem</span>,
-    <span class="ident">pin::Pin</span>,
-    <span class="ident">sync</span>::{
-        <span class="ident">atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>},
-        <span class="ident">Arc</span>,
+<span class="kw">use </span>hyper::{client::ResponseFuture <span class="kw">as </span>HyperResponseFuture, StatusCode <span class="kw">as </span>HyperStatusCode};
+<span class="kw">use </span>std::{
+    future::Future,
+    marker::PhantomData,
+    mem,
+    pin::Pin,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
     },
-    <span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
-    <span class="ident">time::Duration</span>,
+    task::{Context, Poll},
+    time::Duration,
 };
-<span class="kw">use</span> <span class="ident">tokio::time</span>::{<span class="self">self</span>, <span class="ident">Timeout</span>};
-<span class="kw">use</span> <span class="ident">twilight_http_ratelimiting</span>::{<span class="ident">ticket::TicketSender</span>, <span class="ident">RatelimitHeaders</span>, <span class="ident">WaitForTicketFuture</span>};
-<span class="kw">use</span> <span class="ident">twilight_model::id</span>::{<span class="ident">marker::GuildMarker</span>, <span class="ident">Id</span>};
+<span class="kw">use </span>tokio::time::{<span class="self">self</span>, Timeout};
+<span class="kw">use </span>twilight_http_ratelimiting::{ticket::TicketSender, RatelimitHeaders, WaitForTicketFuture};
+<span class="kw">use </span>twilight_model::id::{marker::GuildMarker, Id};
 
-<span class="kw">type</span> <span class="ident">Output</span>&lt;<span class="ident">T</span>&gt; = <span class="prelude-ty">Result</span>&lt;<span class="ident">Response</span>&lt;<span class="ident">T</span>&gt;, <span class="ident">Error</span>&gt;;
+<span class="kw">type </span>Output&lt;T&gt; = <span class="prelude-ty">Result</span>&lt;Response&lt;T&gt;, Error&gt;;
 
-<span class="kw">enum</span> <span class="ident">InnerPoll</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="ident">Advance</span>(<span class="ident">ResponseFutureStage</span>),
-    <span class="ident">Pending</span>(<span class="ident">ResponseFutureStage</span>),
-    <span class="ident">Ready</span>(<span class="ident">Output</span>&lt;<span class="ident">T</span>&gt;),
+<span class="kw">enum </span>InnerPoll&lt;T&gt; {
+    Advance(ResponseFutureStage),
+    Pending(ResponseFutureStage),
+    Ready(Output&lt;T&gt;),
 }
 
-<span class="kw">struct</span> <span class="ident">Chunking</span> {
-    <span class="ident">future</span>: <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Future</span>&lt;<span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;, <span class="ident">Error</span>&gt;&gt; + <span class="ident">Send</span> + <span class="ident">Sync</span> + <span class="lifetime">&#39;static</span>&gt;&gt;,
-    <span class="ident">status</span>: <span class="ident">HyperStatusCode</span>,
+<span class="kw">struct </span>Chunking {
+    future: Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, Error&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>&gt;&gt;,
+    status: HyperStatusCode,
 }
 
-<span class="kw">impl</span> <span class="ident">Chunking</span> {
-    <span class="kw">fn</span> <span class="ident">poll</span>&lt;<span class="ident">T</span>&gt;(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">InnerPoll</span>&lt;<span class="ident">T</span>&gt; {
-        <span class="kw">let</span> <span class="ident">bytes</span> = <span class="kw">match</span> <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">future</span>).<span class="ident">poll</span>(<span class="ident">cx</span>) {
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">bytes</span>)) =&gt; <span class="ident">bytes</span>,
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">source</span>)) =&gt; <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">source</span>)),
-            <span class="ident">Poll::Pending</span> =&gt; <span class="kw">return</span> <span class="ident">InnerPoll::Pending</span>(<span class="ident">ResponseFutureStage::Chunking</span>(<span class="self">self</span>)),
+<span class="kw">impl </span>Chunking {
+    <span class="kw">fn </span>poll&lt;T&gt;(<span class="kw-2">mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; InnerPoll&lt;T&gt; {
+        <span class="kw">let </span>bytes = <span class="kw">match </span>Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.future).poll(cx) {
+            Poll::Ready(<span class="prelude-val">Ok</span>(bytes)) =&gt; bytes,
+            Poll::Ready(<span class="prelude-val">Err</span>(source)) =&gt; <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(source)),
+            Poll::Pending =&gt; <span class="kw">return </span>InnerPoll::Pending(ResponseFutureStage::Chunking(<span class="self">self</span>)),
         };
 
-        <span class="kw">let</span> <span class="ident">error</span> = <span class="kw">match</span> <span class="ident"><span class="kw">crate</span>::json::from_bytes</span>::&lt;<span class="ident">ApiError</span>&gt;(<span class="kw-2">&amp;</span><span class="ident">bytes</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">error</span>) =&gt; <span class="ident">error</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; {
-                <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::Parsing</span> { <span class="ident">body</span>: <span class="ident">bytes</span> },
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        <span class="kw">let </span>error = <span class="kw">match </span><span class="kw">crate</span>::json::from_bytes::&lt;ApiError&gt;(<span class="kw-2">&amp;</span>bytes) {
+            <span class="prelude-val">Ok</span>(error) =&gt; error,
+            <span class="prelude-val">Err</span>(source) =&gt; {
+                <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+                    kind: ErrorType::Parsing { body: bytes },
+                    source: <span class="prelude-val">Some</span>(Box::new(source)),
                 }));
             }
         };
 
-        <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-            <span class="ident">kind</span>: <span class="ident">ErrorType::Response</span> {
-                <span class="ident">body</span>: <span class="ident">bytes</span>,
-                <span class="ident">error</span>,
-                <span class="ident">status</span>: <span class="ident">StatusCode::new</span>(<span class="self">self</span>.<span class="ident">status</span>.<span class="ident">as_u16</span>()),
+        InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+            kind: ErrorType::Response {
+                body: bytes,
+                error,
+                status: StatusCode::new(<span class="self">self</span>.status.as_u16()),
             },
-            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            source: <span class="prelude-val">None</span>,
         }))
     }
 }
 
-<span class="kw">struct</span> <span class="ident">Failed</span> {
-    <span class="ident">source</span>: <span class="ident">Error</span>,
+<span class="kw">struct </span>Failed {
+    source: Error,
 }
 
-<span class="kw">impl</span> <span class="ident">Failed</span> {
-    <span class="kw">fn</span> <span class="ident">poll</span>&lt;<span class="ident">T</span>&gt;(<span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">InnerPoll</span>&lt;<span class="ident">T</span>&gt; {
-        <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">source</span>))
+<span class="kw">impl </span>Failed {
+    <span class="kw">fn </span>poll&lt;T&gt;(<span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; InnerPoll&lt;T&gt; {
+        InnerPoll::Ready(<span class="prelude-val">Err</span>(<span class="self">self</span>.source))
     }
 }
 
-<span class="kw">struct</span> <span class="ident">InFlight</span> {
-    <span class="ident">future</span>: <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">Timeout</span>&lt;<span class="ident">HyperResponseFuture</span>&gt;&gt;&gt;,
-    <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;&gt;,
-    <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Arc</span>&lt;<span class="ident">AtomicBool</span>&gt;&gt;,
-    <span class="ident">tx</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">TicketSender</span>&gt;,
+<span class="kw">struct </span>InFlight {
+    future: Pin&lt;Box&lt;Timeout&lt;HyperResponseFuture&gt;&gt;&gt;,
+    guild_id: <span class="prelude-ty">Option</span>&lt;Id&lt;GuildMarker&gt;&gt;,
+    invalid_token: <span class="prelude-ty">Option</span>&lt;Arc&lt;AtomicBool&gt;&gt;,
+    tx: <span class="prelude-ty">Option</span>&lt;TicketSender&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">InFlight</span> {
-    <span class="kw">fn</span> <span class="ident">poll</span>&lt;<span class="ident">T</span>&gt;(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">InnerPoll</span>&lt;<span class="ident">T</span>&gt; {
-        <span class="kw">let</span> <span class="ident">resp</span> = <span class="kw">match</span> <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">future</span>).<span class="ident">poll</span>(<span class="ident">cx</span>) {
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">resp</span>))) =&gt; <span class="ident">resp</span>,
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">source</span>))) =&gt; {
-                <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::RequestError</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+<span class="kw">impl </span>InFlight {
+    <span class="kw">fn </span>poll&lt;T&gt;(<span class="kw-2">mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; InnerPoll&lt;T&gt; {
+        <span class="kw">let </span>resp = <span class="kw">match </span>Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.future).poll(cx) {
+            Poll::Ready(<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(resp))) =&gt; resp,
+            Poll::Ready(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(source))) =&gt; {
+                <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+                    kind: ErrorType::RequestError,
+                    source: <span class="prelude-val">Some</span>(Box::new(source)),
                 }))
             }
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">source</span>)) =&gt; {
-                <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::RequestTimedOut</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            Poll::Ready(<span class="prelude-val">Err</span>(source)) =&gt; {
+                <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+                    kind: ErrorType::RequestTimedOut,
+                    source: <span class="prelude-val">Some</span>(Box::new(source)),
                 }))
             }
-            <span class="ident">Poll::Pending</span> =&gt; <span class="kw">return</span> <span class="ident">InnerPoll::Pending</span>(<span class="ident">ResponseFutureStage::InFlight</span>(<span class="self">self</span>)),
+            Poll::Pending =&gt; <span class="kw">return </span>InnerPoll::Pending(ResponseFutureStage::InFlight(<span class="self">self</span>)),
         };
 
-        <span class="comment">// If the API sent back an Unauthorized response, then the client&#39;s</span>
-        <span class="comment">// configured token is permanently invalid and future requests must be</span>
-        <span class="comment">// ignored to avoid API bans.</span>
-        <span class="kw">if</span> <span class="ident">resp</span>.<span class="ident">status</span>() == <span class="ident">HyperStatusCode::UNAUTHORIZED</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">invalid_token</span>) = <span class="self">self</span>.<span class="ident">invalid_token</span> {
-                <span class="ident">invalid_token</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">Ordering::Relaxed</span>);
+        <span class="comment">// If the API sent back an Unauthorized response, then the client&#39;s
+        // configured token is permanently invalid and future requests must be
+        // ignored to avoid API bans.
+        </span><span class="kw">if </span>resp.status() == HyperStatusCode::UNAUTHORIZED {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(invalid_token) = <span class="self">self</span>.invalid_token {
+                invalid_token.store(<span class="bool-val">true</span>, Ordering::Relaxed);
             }
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tx</span>) = <span class="self">self</span>.<span class="ident">tx</span> {
-            <span class="kw">let</span> <span class="ident">headers</span> = <span class="ident">resp</span>
-                .<span class="ident">headers</span>()
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(|(<span class="ident">key</span>, <span class="ident">value</span>)| (<span class="ident">key</span>.<span class="ident">as_str</span>(), <span class="ident">value</span>.<span class="ident">as_bytes</span>()));
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(tx) = <span class="self">self</span>.tx {
+            <span class="kw">let </span>headers = resp
+                .headers()
+                .iter()
+                .map(|(key, value)| (key.as_str(), value.as_bytes()));
 
-            <span class="kw">match</span> <span class="ident">RatelimitHeaders::from_pairs</span>(<span class="ident">headers</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">v</span>) =&gt; {
-                    <span class="kw">let</span> <span class="ident">_res</span> = <span class="ident">tx</span>.<span class="ident">headers</span>(<span class="prelude-val">Some</span>(<span class="ident">v</span>));
+            <span class="kw">match </span>RatelimitHeaders::from_pairs(headers) {
+                <span class="prelude-val">Ok</span>(v) =&gt; {
+                    <span class="kw">let </span>_res = tx.headers(<span class="prelude-val">Some</span>(v));
                 }
-                <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; {
+                <span class="prelude-val">Err</span>(source) =&gt; {
                     <span class="macro">tracing::warn!</span>(<span class="string">&quot;header parsing failed: {source:?}; {resp:?}&quot;</span>);
 
-                    <span class="kw">let</span> <span class="ident">_res</span> = <span class="ident">tx</span>.<span class="ident">headers</span>(<span class="prelude-val">None</span>);
+                    <span class="kw">let </span>_res = tx.headers(<span class="prelude-val">None</span>);
                 }
             }
         }
 
-        <span class="kw">let</span> <span class="ident">status</span> = <span class="ident">resp</span>.<span class="ident">status</span>();
+        <span class="kw">let </span>status = resp.status();
 
-        <span class="kw">if</span> <span class="ident">status</span>.<span class="ident">is_success</span>() {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;decompression&quot;</span>)]</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> = <span class="ident">resp</span>;
-            <span class="comment">// Inaccurate since end-users can only access the decompressed body.</span>
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;decompression&quot;</span>)]</span>
-            <span class="ident">resp</span>.<span class="ident">headers_mut</span>().<span class="ident">remove</span>(<span class="ident">hyper::header::CONTENT_LENGTH</span>);
+        <span class="kw">if </span>status.is_success() {
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;decompression&quot;</span>)]
+            </span><span class="kw">let </span><span class="kw-2">mut </span>resp = resp;
+            <span class="comment">// Inaccurate since end-users can only access the decompressed body.
+            </span><span class="attribute">#[cfg(feature = <span class="string">&quot;decompression&quot;</span>)]
+            </span>resp.headers_mut().remove(hyper::header::CONTENT_LENGTH);
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">response</span> = <span class="ident">Response::new</span>(<span class="ident">resp</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>response = Response::new(resp);
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">guild_id</span>) = <span class="self">self</span>.<span class="ident">guild_id</span> {
-                <span class="ident">response</span>.<span class="ident">set_guild_id</span>(<span class="ident">guild_id</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(guild_id) = <span class="self">self</span>.guild_id {
+                response.set_guild_id(guild_id);
             }
 
-            <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">response</span>));
+            <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Ok</span>(response));
         }
 
-        <span class="kw">match</span> <span class="ident">status</span> {
-            <span class="ident">HyperStatusCode::TOO_MANY_REQUESTS</span> =&gt; {
+        <span class="kw">match </span>status {
+            HyperStatusCode::TOO_MANY_REQUESTS =&gt; {
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;429 response: {resp:?}&quot;</span>);
             }
-            <span class="ident">HyperStatusCode::SERVICE_UNAVAILABLE</span> =&gt; {
-                <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::ServiceUnavailable</span> { <span class="ident">response</span>: <span class="ident">resp</span> },
-                    <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            HyperStatusCode::SERVICE_UNAVAILABLE =&gt; {
+                <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+                    kind: ErrorType::ServiceUnavailable { response: resp },
+                    source: <span class="prelude-val">None</span>,
                 }));
             }
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         }
 
-        <span class="kw">let</span> <span class="ident">fut</span> = <span class="kw">async</span> {
-            <span class="ident">Response</span>::&lt;()&gt;<span class="ident">::new</span>(<span class="ident">resp</span>)
-                .<span class="ident">bytes</span>()
-                .<span class="kw">await</span>
-                .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::ChunkingResponse</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        <span class="kw">let </span>fut = <span class="kw">async </span>{
+            Response::&lt;()&gt;::new(resp)
+                .bytes()
+                .<span class="kw">await
+                </span>.map_err(|source| Error {
+                    kind: ErrorType::ChunkingResponse,
+                    source: <span class="prelude-val">Some</span>(Box::new(source)),
                 })
         };
 
-        <span class="ident">InnerPoll::Advance</span>(<span class="ident">ResponseFutureStage::Chunking</span>(<span class="ident">Chunking</span> {
-            <span class="ident">future</span>: <span class="ident">Box::pin</span>(<span class="ident">fut</span>),
-            <span class="ident">status</span>,
+        InnerPoll::Advance(ResponseFutureStage::Chunking(Chunking {
+            future: Box::pin(fut),
+            status,
         }))
     }
 }
 
-<span class="kw">struct</span> <span class="ident">RatelimitQueue</span> {
-    <span class="ident">guild_id</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;&gt;,
-    <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Arc</span>&lt;<span class="ident">AtomicBool</span>&gt;&gt;,
-    <span class="ident">response_future</span>: <span class="ident">HyperResponseFuture</span>,
-    <span class="ident">timeout</span>: <span class="ident">Duration</span>,
-    <span class="ident">pre_flight_check</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;&gt;,
-    <span class="ident">wait_for_sender</span>: <span class="ident">WaitForTicketFuture</span>,
+<span class="kw">struct </span>RatelimitQueue {
+    guild_id: <span class="prelude-ty">Option</span>&lt;Id&lt;GuildMarker&gt;&gt;,
+    invalid_token: <span class="prelude-ty">Option</span>&lt;Arc&lt;AtomicBool&gt;&gt;,
+    response_future: HyperResponseFuture,
+    timeout: Duration,
+    pre_flight_check: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce() -&gt; bool + Send + <span class="lifetime">&#39;static</span>&gt;&gt;,
+    wait_for_sender: WaitForTicketFuture,
 }
 
-<span class="kw">impl</span> <span class="ident">RatelimitQueue</span> {
-    <span class="kw">fn</span> <span class="ident">poll</span>&lt;<span class="ident">T</span>&gt;(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">InnerPoll</span>&lt;<span class="ident">T</span>&gt; {
-        <span class="kw">let</span> <span class="ident">tx</span> = <span class="kw">match</span> <span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">wait_for_sender</span>).<span class="ident">poll</span>(<span class="ident">cx</span>) {
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">tx</span>)) =&gt; <span class="ident">tx</span>,
-            <span class="ident">Poll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">source</span>)) =&gt; {
-                <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::RatelimiterTicket</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">source</span>),
+<span class="kw">impl </span>RatelimitQueue {
+    <span class="kw">fn </span>poll&lt;T&gt;(<span class="kw-2">mut </span><span class="self">self</span>, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; InnerPoll&lt;T&gt; {
+        <span class="kw">let </span>tx = <span class="kw">match </span>Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.wait_for_sender).poll(cx) {
+            Poll::Ready(<span class="prelude-val">Ok</span>(tx)) =&gt; tx,
+            Poll::Ready(<span class="prelude-val">Err</span>(source)) =&gt; {
+                <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+                    kind: ErrorType::RatelimiterTicket,
+                    source: <span class="prelude-val">Some</span>(source),
                 }))
             }
-            <span class="ident">Poll::Pending</span> =&gt; <span class="kw">return</span> <span class="ident">InnerPoll::Pending</span>(<span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="self">self</span>)),
+            Poll::Pending =&gt; <span class="kw">return </span>InnerPoll::Pending(ResponseFutureStage::RatelimitQueue(<span class="self">self</span>)),
         };
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pre_flight_check</span>) = <span class="self">self</span>.<span class="ident">pre_flight_check</span> {
-            <span class="kw">if</span> !<span class="ident">pre_flight_check</span>() {
-                <span class="kw">return</span> <span class="ident">InnerPoll::Ready</span>(<span class="prelude-val">Err</span>(<span class="ident">Error</span> {
-                    <span class="ident">kind</span>: <span class="ident">ErrorType::RequestCanceled</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">None</span>,
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(pre_flight_check) = <span class="self">self</span>.pre_flight_check {
+            <span class="kw">if </span>!pre_flight_check() {
+                <span class="kw">return </span>InnerPoll::Ready(<span class="prelude-val">Err</span>(Error {
+                    kind: ErrorType::RequestCanceled,
+                    source: <span class="prelude-val">None</span>,
                 }));
             }
         }
 
-        <span class="ident">InnerPoll::Advance</span>(<span class="ident">ResponseFutureStage::InFlight</span>(<span class="ident">InFlight</span> {
-            <span class="ident">future</span>: <span class="ident">Box::pin</span>(<span class="ident">time::timeout</span>(<span class="self">self</span>.<span class="ident">timeout</span>, <span class="self">self</span>.<span class="ident">response_future</span>)),
-            <span class="ident">guild_id</span>: <span class="self">self</span>.<span class="ident">guild_id</span>,
-            <span class="ident">invalid_token</span>: <span class="self">self</span>.<span class="ident">invalid_token</span>,
-            <span class="ident">tx</span>: <span class="prelude-val">Some</span>(<span class="ident">tx</span>),
+        InnerPoll::Advance(ResponseFutureStage::InFlight(InFlight {
+            future: Box::pin(time::timeout(<span class="self">self</span>.timeout, <span class="self">self</span>.response_future)),
+            guild_id: <span class="self">self</span>.guild_id,
+            invalid_token: <span class="self">self</span>.invalid_token,
+            tx: <span class="prelude-val">Some</span>(tx),
         }))
     }
 }
 
-<span class="kw">enum</span> <span class="ident">ResponseFutureStage</span> {
-    <span class="ident">Chunking</span>(<span class="ident">Chunking</span>),
-    <span class="ident">Completed</span>,
-    <span class="ident">Failed</span>(<span class="ident">Failed</span>),
-    <span class="ident">InFlight</span>(<span class="ident">InFlight</span>),
-    <span class="ident">RatelimitQueue</span>(<span class="ident">RatelimitQueue</span>),
+<span class="kw">enum </span>ResponseFutureStage {
+    Chunking(Chunking),
+    Completed,
+    Failed(Failed),
+    InFlight(InFlight),
+    RatelimitQueue(RatelimitQueue),
 }
 
-<span class="doccomment">/// Future that will resolve to a [`Response`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Canceling a response future pre-flight</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Response futures can be canceled pre-flight via</span>
-<span class="doccomment">/// [`ResponseFuture::set_pre_flight`]. This allows you to cancel requests that</span>
-<span class="doccomment">/// are no longer necessary once they have been cleared by the ratelimit queue,</span>
-<span class="doccomment">/// which may be necessary in scenarios where requests are being spammed. Refer</span>
-<span class="doccomment">/// to its documentation for more information.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Errors</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::Json`] error type if serializing the response body</span>
-<span class="doccomment">/// of the request failed.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::Parsing`] error type if the request failed and the</span>
-<span class="doccomment">/// error in the response body could not be deserialized.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::RequestCanceled`] error type if the request was</span>
-<span class="doccomment">/// canceled by the user.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::RequestError`] error type if creating the request</span>
-<span class="doccomment">/// failed.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::RequestTimedOut`] error type if the request timed</span>
-<span class="doccomment">/// out. The timeout value is configured via [`ClientBuilder::timeout`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::Response`] error type if the request failed.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns an [`ErrorType::ServiceUnavailable`] error type if the Discord API</span>
-<span class="doccomment">/// is unavailable.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`ClientBuilder::timeout`]: crate::client::ClientBuilder::timeout</span>
-<span class="doccomment">/// [`ErrorType::Json`]: crate::error::ErrorType::Json</span>
-<span class="doccomment">/// [`ErrorType::Parsing`]: crate::error::ErrorType::Parsing</span>
-<span class="doccomment">/// [`ErrorType::RequestCanceled`]: crate::error::ErrorType::RequestCanceled</span>
-<span class="doccomment">/// [`ErrorType::RequestError`]: crate::error::ErrorType::RequestError</span>
-<span class="doccomment">/// [`ErrorType::RequestTimedOut`]: crate::error::ErrorType::RequestTimedOut</span>
-<span class="doccomment">/// [`ErrorType::Response`]: crate::error::ErrorType::Response</span>
-<span class="doccomment">/// [`ErrorType::ServiceUnavailable`]: crate::error::ErrorType::ServiceUnavailable</span>
-<span class="doccomment">/// [`Response`]: super::Response</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ResponseFuture</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="ident">phantom</span>: <span class="ident">PhantomData</span>&lt;<span class="ident">T</span>&gt;,
-    <span class="ident">stage</span>: <span class="ident">ResponseFutureStage</span>,
+<span class="doccomment">/// Future that will resolve to a [`Response`].
+///
+/// # Canceling a response future pre-flight
+///
+/// Response futures can be canceled pre-flight via
+/// [`ResponseFuture::set_pre_flight`]. This allows you to cancel requests that
+/// are no longer necessary once they have been cleared by the ratelimit queue,
+/// which may be necessary in scenarios where requests are being spammed. Refer
+/// to its documentation for more information.
+///
+/// # Errors
+///
+/// Returns an [`ErrorType::Json`] error type if serializing the response body
+/// of the request failed.
+///
+/// Returns an [`ErrorType::Parsing`] error type if the request failed and the
+/// error in the response body could not be deserialized.
+///
+/// Returns an [`ErrorType::RequestCanceled`] error type if the request was
+/// canceled by the user.
+///
+/// Returns an [`ErrorType::RequestError`] error type if creating the request
+/// failed.
+///
+/// Returns an [`ErrorType::RequestTimedOut`] error type if the request timed
+/// out. The timeout value is configured via [`ClientBuilder::timeout`].
+///
+/// Returns an [`ErrorType::Response`] error type if the request failed.
+///
+/// Returns an [`ErrorType::ServiceUnavailable`] error type if the Discord API
+/// is unavailable.
+///
+/// [`ClientBuilder::timeout`]: crate::client::ClientBuilder::timeout
+/// [`ErrorType::Json`]: crate::error::ErrorType::Json
+/// [`ErrorType::Parsing`]: crate::error::ErrorType::Parsing
+/// [`ErrorType::RequestCanceled`]: crate::error::ErrorType::RequestCanceled
+/// [`ErrorType::RequestError`]: crate::error::ErrorType::RequestError
+/// [`ErrorType::RequestTimedOut`]: crate::error::ErrorType::RequestTimedOut
+/// [`ErrorType::Response`]: crate::error::ErrorType::Response
+/// [`ErrorType::ServiceUnavailable`]: crate::error::ErrorType::ServiceUnavailable
+/// [`Response`]: super::Response
+</span><span class="attribute">#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>ResponseFuture&lt;T&gt; {
+    phantom: PhantomData&lt;T&gt;,
+    stage: ResponseFutureStage,
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>&gt; <span class="ident">ResponseFuture</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">future</span>: <span class="ident">Pin</span>&lt;<span class="ident">Box</span>&lt;<span class="ident">Timeout</span>&lt;<span class="ident">HyperResponseFuture</span>&gt;&gt;&gt;,
-        <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Arc</span>&lt;<span class="ident">AtomicBool</span>&gt;&gt;,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
-            <span class="ident">stage</span>: <span class="ident">ResponseFutureStage::InFlight</span>(<span class="ident">InFlight</span> {
-                <span class="ident">future</span>,
-                <span class="ident">guild_id</span>: <span class="prelude-val">None</span>,
-                <span class="ident">invalid_token</span>,
-                <span class="ident">tx</span>: <span class="prelude-val">None</span>,
+<span class="kw">impl</span>&lt;T&gt; ResponseFuture&lt;T&gt; {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>new(
+        future: Pin&lt;Box&lt;Timeout&lt;HyperResponseFuture&gt;&gt;&gt;,
+        invalid_token: <span class="prelude-ty">Option</span>&lt;Arc&lt;AtomicBool&gt;&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            phantom: PhantomData,
+            stage: ResponseFutureStage::InFlight(InFlight {
+                future,
+                guild_id: <span class="prelude-val">None</span>,
+                invalid_token,
+                tx: <span class="prelude-val">None</span>,
             }),
         }
     }
 
-    <span class="doccomment">/// Set a function to call after clearing the ratelimiter but prior to</span>
-    <span class="doccomment">/// sending the request to determine if the request is still valid.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This function will be a no-op if the request has failed, has already</span>
-    <span class="doccomment">/// passed the ratelimiter, or if there is no ratelimiter configured.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns whether the pre flight function was set.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Delete a message, but immediately before sending the request check if</span>
-    <span class="doccomment">/// the request should still be sent:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```no_run</span>
-    <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use std::{</span>
-    <span class="doccomment">///     collections::HashSet,</span>
-    <span class="doccomment">///     env,</span>
-    <span class="doccomment">///     sync::{Arc, Mutex},</span>
-    <span class="doccomment">/// };</span>
-    <span class="doccomment">/// use twilight_http::{error::ErrorType, Client};</span>
-    <span class="doccomment">/// use twilight_model::id::{ChannelId, MessageId};</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let channel_id = ChannelId::new(1);</span>
-    <span class="doccomment">/// let message_id = MessageId::new(2);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let channels_ignored = {</span>
-    <span class="doccomment">///     let mut map = HashSet::new();</span>
-    <span class="doccomment">///     map.insert(channel_id);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     Arc::new(Mutex::new(map))</span>
-    <span class="doccomment">/// };</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// let mut req = client.delete_message(channel_id, message_id).exec();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let channels_ignored_clone = channels_ignored.clone();</span>
-    <span class="doccomment">/// req.set_pre_flight(Box::new(move || {</span>
-    <span class="doccomment">///     // imagine you have some logic here to external state that checks</span>
-    <span class="doccomment">///     // whether the request should still be performed</span>
-    <span class="doccomment">///     let channels_ignored = channels_ignored_clone.lock().expect(&quot;channels poisoned&quot;);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     !channels_ignored.contains(&amp;channel_id)</span>
-    <span class="doccomment">/// }));</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // the pre-flight check will cancel the request</span>
-    <span class="doccomment">/// assert!(matches!(</span>
-    <span class="doccomment">///     req.await.unwrap_err().kind(),</span>
-    <span class="doccomment">///     ErrorType::RequestCanceled,</span>
-    <span class="doccomment">/// ));</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_pre_flight</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">pre_flight</span>: <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">bool</span> + <span class="ident">Send</span> + <span class="lifetime">&#39;static</span>&gt;,
-    ) -&gt; <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">queue</span>) = <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span> {
-            <span class="ident">queue</span>.<span class="ident">pre_flight_check</span> = <span class="prelude-val">Some</span>(<span class="ident">pre_flight</span>);
+    <span class="doccomment">/// Set a function to call after clearing the ratelimiter but prior to
+    /// sending the request to determine if the request is still valid.
+    ///
+    /// This function will be a no-op if the request has failed, has already
+    /// passed the ratelimiter, or if there is no ratelimiter configured.
+    ///
+    /// Returns whether the pre flight function was set.
+    ///
+    /// # Examples
+    ///
+    /// Delete a message, but immediately before sending the request check if
+    /// the request should still be sent:
+    ///
+    /// ```no_run
+    /// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// use std::{
+    ///     collections::HashSet,
+    ///     env,
+    ///     sync::{Arc, Mutex},
+    /// };
+    /// use twilight_http::{error::ErrorType, Client};
+    /// use twilight_model::id::{ChannelId, MessageId};
+    ///
+    /// let channel_id = ChannelId::new(1);
+    /// let message_id = MessageId::new(2);
+    ///
+    /// let channels_ignored = {
+    ///     let mut map = HashSet::new();
+    ///     map.insert(channel_id);
+    ///
+    ///     Arc::new(Mutex::new(map))
+    /// };
+    ///
+    /// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);
+    /// let mut req = client.delete_message(channel_id, message_id).exec();
+    ///
+    /// let channels_ignored_clone = channels_ignored.clone();
+    /// req.set_pre_flight(Box::new(move || {
+    ///     // imagine you have some logic here to external state that checks
+    ///     // whether the request should still be performed
+    ///     let channels_ignored = channels_ignored_clone.lock().expect(&quot;channels poisoned&quot;);
+    ///
+    ///     !channels_ignored.contains(&amp;channel_id)
+    /// }));
+    ///
+    /// // the pre-flight check will cancel the request
+    /// assert!(matches!(
+    ///     req.await.unwrap_err().kind(),
+    ///     ErrorType::RequestCanceled,
+    /// ));
+    /// # Ok(()) }
+    /// ```
+    </span><span class="kw">pub fn </span>set_pre_flight(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        pre_flight: Box&lt;<span class="kw">dyn </span>FnOnce() -&gt; bool + Send + <span class="lifetime">&#39;static</span>&gt;,
+    ) -&gt; bool {
+        <span class="kw">if let </span>ResponseFutureStage::RatelimitQueue(queue) = <span class="kw-2">&amp;mut </span><span class="self">self</span>.stage {
+            queue.pre_flight_check = <span class="prelude-val">Some</span>(pre_flight);
 
-            <span class="bool-val">true</span>
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
+            <span class="bool-val">true
+        </span>} <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>}
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>error(source: Error) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            phantom: PhantomData,
+            stage: ResponseFutureStage::Failed(Failed { source }),
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">error</span>(<span class="ident">source</span>: <span class="ident">Error</span>) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
-            <span class="ident">stage</span>: <span class="ident">ResponseFutureStage::Failed</span>(<span class="ident">Failed</span> { <span class="ident">source</span> }),
-        }
-    }
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ratelimit</span>(
-        <span class="ident">invalid_token</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Arc</span>&lt;<span class="ident">AtomicBool</span>&gt;&gt;,
-        <span class="ident">response_future</span>: <span class="ident">HyperResponseFuture</span>,
-        <span class="ident">timeout</span>: <span class="ident">Duration</span>,
-        <span class="ident">wait_for_sender</span>: <span class="ident">WaitForTicketFuture</span>,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
-            <span class="ident">stage</span>: <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">RatelimitQueue</span> {
-                <span class="ident">guild_id</span>: <span class="prelude-val">None</span>,
-                <span class="ident">invalid_token</span>,
-                <span class="ident">response_future</span>,
-                <span class="ident">timeout</span>,
-                <span class="ident">pre_flight_check</span>: <span class="prelude-val">None</span>,
-                <span class="ident">wait_for_sender</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ratelimit(
+        invalid_token: <span class="prelude-ty">Option</span>&lt;Arc&lt;AtomicBool&gt;&gt;,
+        response_future: HyperResponseFuture,
+        timeout: Duration,
+        wait_for_sender: WaitForTicketFuture,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            phantom: PhantomData,
+            stage: ResponseFutureStage::RatelimitQueue(RatelimitQueue {
+                guild_id: <span class="prelude-val">None</span>,
+                invalid_token,
+                response_future,
+                timeout,
+                pre_flight_check: <span class="prelude-val">None</span>,
+                wait_for_sender,
             }),
         }
     }
 
-    <span class="doccomment">/// Set the ID of the relevant guild.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Necessary for [`MemberBody`] and [`MemberListBody`] deserialization.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">set_guild_id</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;) {
-        <span class="kw">match</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span> {
-            <span class="ident">ResponseFutureStage::InFlight</span>(<span class="ident">stage</span>) =&gt; {
-                <span class="ident">stage</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">guild_id</span>);
+    <span class="doccomment">/// Set the ID of the relevant guild.
+    ///
+    /// Necessary for [`MemberBody`] and [`MemberListBody`] deserialization.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_guild_id(<span class="kw-2">&amp;mut </span><span class="self">self</span>, guild_id: Id&lt;GuildMarker&gt;) {
+        <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.stage {
+            ResponseFutureStage::InFlight(stage) =&gt; {
+                stage.guild_id.replace(guild_id);
             }
-            <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">stage</span>) =&gt; {
-                <span class="ident">stage</span>.<span class="ident">guild_id</span>.<span class="ident">replace</span>(<span class="ident">guild_id</span>);
+            ResponseFutureStage::RatelimitQueue(stage) =&gt; {
+                stage.guild_id.replace(guild_id);
             }
-            <span class="kw">_</span> =&gt; {}
+            <span class="kw">_ </span>=&gt; {}
         }
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="ident">T</span>: <span class="ident">Unpin</span>&gt; <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">ResponseFuture</span>&lt;<span class="ident">T</span>&gt; {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="ident">Output</span>&lt;<span class="ident">T</span>&gt;;
+<span class="kw">impl</span>&lt;T: Unpin&gt; Future <span class="kw">for </span>ResponseFuture&lt;T&gt; {
+    <span class="kw">type </span>Output = Output&lt;T&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">stage</span> = <span class="ident">mem::replace</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">stage</span>, <span class="ident">ResponseFutureStage::Completed</span>);
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="kw">loop </span>{
+            <span class="kw">let </span>stage = mem::replace(<span class="kw-2">&amp;mut </span><span class="self">self</span>.stage, ResponseFutureStage::Completed);
 
-            <span class="kw">let</span> <span class="ident">result</span> = <span class="kw">match</span> <span class="ident">stage</span> {
-                <span class="ident">ResponseFutureStage::Chunking</span>(<span class="ident">chunking</span>) =&gt; <span class="ident">chunking</span>.<span class="ident">poll</span>(<span class="ident">cx</span>),
-                <span class="ident">ResponseFutureStage::Completed</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;future already completed&quot;</span>),
-                <span class="ident">ResponseFutureStage::Failed</span>(<span class="ident">failed</span>) =&gt; <span class="ident">failed</span>.<span class="ident">poll</span>(<span class="ident">cx</span>),
-                <span class="ident">ResponseFutureStage::InFlight</span>(<span class="ident">in_flight</span>) =&gt; <span class="ident">in_flight</span>.<span class="ident">poll</span>(<span class="ident">cx</span>),
-                <span class="ident">ResponseFutureStage::RatelimitQueue</span>(<span class="ident">queue</span>) =&gt; <span class="ident">queue</span>.<span class="ident">poll</span>(<span class="ident">cx</span>),
+            <span class="kw">let </span>result = <span class="kw">match </span>stage {
+                ResponseFutureStage::Chunking(chunking) =&gt; chunking.poll(cx),
+                ResponseFutureStage::Completed =&gt; <span class="macro">panic!</span>(<span class="string">&quot;future already completed&quot;</span>),
+                ResponseFutureStage::Failed(failed) =&gt; failed.poll(cx),
+                ResponseFutureStage::InFlight(in_flight) =&gt; in_flight.poll(cx),
+                ResponseFutureStage::RatelimitQueue(queue) =&gt; queue.poll(cx),
             };
 
-            <span class="kw">match</span> <span class="ident">result</span> {
-                <span class="ident">InnerPoll::Advance</span>(<span class="ident">stage</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">stage</span> = <span class="ident">stage</span>;
+            <span class="kw">match </span>result {
+                InnerPoll::Advance(stage) =&gt; {
+                    <span class="self">self</span>.stage = stage;
                 }
-                <span class="ident">InnerPoll::Pending</span>(<span class="ident">stage</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">stage</span> = <span class="ident">stage</span>;
+                InnerPoll::Pending(stage) =&gt; {
+                    <span class="self">self</span>.stage = stage;
 
-                    <span class="kw">return</span> <span class="ident">Poll::Pending</span>;
+                    <span class="kw">return </span>Poll::Pending;
                 }
-                <span class="ident">InnerPoll::Ready</span>(<span class="ident">output</span>) =&gt; {
-                    <span class="self">self</span>.<span class="ident">stage</span> = <span class="ident">ResponseFutureStage::Completed</span>;
+                InnerPoll::Ready(output) =&gt; {
+                    <span class="self">self</span>.stage = ResponseFutureStage::Completed;
 
-                    <span class="kw">return</span> <span class="ident">Poll::Ready</span>(<span class="ident">output</span>);
+                    <span class="kw">return </span>Poll::Ready(output);
                 }
             }
         }
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

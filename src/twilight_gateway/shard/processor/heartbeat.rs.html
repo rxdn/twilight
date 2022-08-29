@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/processor/heartbeat.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>heartbeat.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/processor/heartbeat.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>heartbeat.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -259,266 +259,266 @@
 <span id="259">259</span>
 <span id="260">260</span>
 <span id="261">261</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident"><span class="kw">super</span>::json</span>,
-    <span class="ident">session</span>::{<span class="ident">SessionSendError</span>, <span class="ident">SessionSendErrorType</span>},
+</pre><pre class="rust"><code><span class="kw">use super</span>::{
+    <span class="kw">super</span>::json,
+    session::{SessionSendError, SessionSendErrorType},
 };
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections::VecDeque</span>,
-    <span class="ident">sync</span>::{
-        <span class="ident">atomic</span>::{<span class="ident">AtomicU32</span>, <span class="ident">AtomicU64</span>, <span class="ident">Ordering</span>},
-        <span class="ident">Arc</span>, <span class="ident">Mutex</span>,
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::{
+    collections::VecDeque,
+    sync::{
+        atomic::{AtomicU32, AtomicU64, Ordering},
+        Arc, Mutex,
     },
-    <span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>},
+    time::{Duration, Instant},
 };
-<span class="kw">use</span> <span class="ident">tokio::sync::mpsc::UnboundedSender</span>;
-<span class="kw">use</span> <span class="ident">tokio_tungstenite::tungstenite::Message</span> <span class="kw">as</span> <span class="ident">TungsteniteMessage</span>;
-<span class="kw">use</span> <span class="ident">twilight_model::gateway::payload::outgoing::Heartbeat</span>;
+<span class="kw">use </span>tokio::sync::mpsc::UnboundedSender;
+<span class="kw">use </span>tokio_tungstenite::tungstenite::Message <span class="kw">as </span>TungsteniteMessage;
+<span class="kw">use </span>twilight_model::gateway::payload::outgoing::Heartbeat;
 
-<span class="doccomment">/// Information about the latency of a [`Shard`]&#39;s websocket connection.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is obtained through [`Shard::info`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Shard`]: crate::shard::Shard</span>
-<span class="doccomment">/// [`Shard::info`]: crate::shard::Shard::info</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Latency</span> {
-    <span class="ident">average</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Duration</span>&gt;,
-    <span class="ident">heartbeats</span>: <span class="ident">u32</span>,
-    <span class="ident">recent</span>: <span class="ident">VecDeque</span>&lt;<span class="ident">Duration</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip</span>)]</span>
-    <span class="ident">received</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt;,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip</span>)]</span>
-    <span class="ident">sent</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt;,
+<span class="doccomment">/// Information about the latency of a [`Shard`]&#39;s websocket connection.
+///
+/// This is obtained through [`Shard::info`].
+///
+/// [`Shard`]: crate::shard::Shard
+/// [`Shard::info`]: crate::shard::Shard::info
+</span><span class="attribute">#[derive(Clone, Debug, Deserialize, Serialize)]
+</span><span class="kw">pub struct </span>Latency {
+    average: <span class="prelude-ty">Option</span>&lt;Duration&gt;,
+    heartbeats: u32,
+    recent: VecDeque&lt;Duration&gt;,
+    <span class="attribute">#[serde(skip)]
+    </span>received: <span class="prelude-ty">Option</span>&lt;Instant&gt;,
+    <span class="attribute">#[serde(skip)]
+    </span>sent: <span class="prelude-ty">Option</span>&lt;Instant&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Latency</span> {
-    <span class="doccomment">/// The average time it took to receive an acknowledgement for every</span>
-    <span class="doccomment">/// heartbeat sent over the duration of the session.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For example, a reasonable value for this may be between 10 to 100</span>
-    <span class="doccomment">/// milliseconds depending on the network connection and physical location.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Note</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If this is None, the shard has not received a heartbeat yet.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">average</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Duration</span>&gt; {
-        <span class="self">self</span>.<span class="ident">average</span>
+<span class="kw">impl </span>Latency {
+    <span class="doccomment">/// The average time it took to receive an acknowledgement for every
+    /// heartbeat sent over the duration of the session.
+    ///
+    /// For example, a reasonable value for this may be between 10 to 100
+    /// milliseconds depending on the network connection and physical location.
+    ///
+    /// # Note
+    ///
+    /// If this is None, the shard has not received a heartbeat yet.
+    </span><span class="kw">pub const fn </span>average(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&gt; {
+        <span class="self">self</span>.average
     }
 
-    <span class="doccomment">/// The total number of heartbeats that have been sent during this session.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">heartbeats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">heartbeats</span>
+    <span class="doccomment">/// The total number of heartbeats that have been sent during this session.
+    </span><span class="kw">pub const fn </span>heartbeats(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.heartbeats
     }
 
-    <span class="doccomment">/// The 5 most recent latency times.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Index 0 is the oldest, 4 is the most recent.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">recent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">VecDeque</span>&lt;<span class="ident">Duration</span>&gt; {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">recent</span>
+    <span class="doccomment">/// The 5 most recent latency times.
+    ///
+    /// Index 0 is the oldest, 4 is the most recent.
+    </span><span class="kw">pub const fn </span>recent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>VecDeque&lt;Duration&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.recent
     }
 
-    <span class="doccomment">/// When the last heartbeat acknowledgement was received.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt; {
-        <span class="self">self</span>.<span class="ident">received</span>
+    <span class="doccomment">/// When the last heartbeat acknowledgement was received.
+    </span><span class="kw">pub const fn </span>received(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Instant&gt; {
+        <span class="self">self</span>.received
     }
 
-    <span class="doccomment">/// When the last heartbeat was sent.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">sent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt; {
-        <span class="self">self</span>.<span class="ident">sent</span>
+    <span class="doccomment">/// When the last heartbeat was sent.
+    </span><span class="kw">pub const fn </span>sent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Instant&gt; {
+        <span class="self">self</span>.sent
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Heartbeats</span> {
-    <span class="ident">received</span>: <span class="ident">Mutex</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt;&gt;,
-    <span class="ident">recent</span>: <span class="ident">Mutex</span>&lt;<span class="ident">VecDeque</span>&lt;<span class="ident">u64</span>&gt;&gt;,
-    <span class="ident">sent</span>: <span class="ident">Mutex</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt;&gt;,
-    <span class="ident">total_iterations</span>: <span class="ident">AtomicU32</span>,
-    <span class="ident">total_time</span>: <span class="ident">AtomicU64</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Heartbeats {
+    received: Mutex&lt;<span class="prelude-ty">Option</span>&lt;Instant&gt;&gt;,
+    recent: Mutex&lt;VecDeque&lt;u64&gt;&gt;,
+    sent: Mutex&lt;<span class="prelude-ty">Option</span>&lt;Instant&gt;&gt;,
+    total_iterations: AtomicU32,
+    total_time: AtomicU64,
 }
 
-<span class="kw">impl</span> <span class="ident">Heartbeats</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">latency</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Latency</span> {
-        <span class="kw">let</span> <span class="ident">iterations</span> = <span class="self">self</span>.<span class="ident">total_iterations</span>();
-        <span class="kw">let</span> <span class="ident">recent</span> = <span class="self">self</span>
-            .<span class="ident">recent</span>
-            .<span class="ident">lock</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;recent poisoned&quot;</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">copied</span>()
-            .<span class="ident">map</span>(<span class="ident">Duration::from_millis</span>)
-            .<span class="ident">collect</span>();
+<span class="kw">impl </span>Heartbeats {
+    <span class="kw">pub fn </span>latency(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Latency {
+        <span class="kw">let </span>iterations = <span class="self">self</span>.total_iterations();
+        <span class="kw">let </span>recent = <span class="self">self
+            </span>.recent
+            .lock()
+            .expect(<span class="string">&quot;recent poisoned&quot;</span>)
+            .iter()
+            .copied()
+            .map(Duration::from_millis)
+            .collect();
 
-        <span class="ident">Latency</span> {
-            <span class="ident">average</span>: <span class="self">self</span>.<span class="ident">total_time</span>().<span class="ident">checked_div</span>(<span class="ident">iterations</span>),
-            <span class="ident">heartbeats</span>: <span class="ident">iterations</span>,
-            <span class="ident">recent</span>,
-            <span class="ident">received</span>: <span class="self">self</span>.<span class="ident">received</span>(),
-            <span class="ident">sent</span>: <span class="self">self</span>.<span class="ident">sent</span>(),
+        Latency {
+            average: <span class="self">self</span>.total_time().checked_div(iterations),
+            heartbeats: iterations,
+            recent,
+            received: <span class="self">self</span>.received(),
+            sent: <span class="self">self</span>.sent(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_acked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">received</span>().<span class="ident">is_some</span>()
+    <span class="kw">pub fn </span>last_acked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.received().is_some()
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">set_received</span>(<span class="ident">Instant::now</span>());
+    <span class="kw">pub fn </span>receive(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.set_received(Instant::now());
 
-        <span class="self">self</span>.<span class="ident">total_iterations</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>);
+        <span class="self">self</span>.total_iterations.fetch_add(<span class="number">1</span>, Ordering::SeqCst);
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dur</span>) = <span class="self">self</span>.<span class="ident">sent</span>().<span class="ident">map</span>(|<span class="ident">s</span>| <span class="ident">s</span>.<span class="ident">elapsed</span>()) {
-            <span class="kw">let</span> <span class="ident">millis</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">millis</span>) = <span class="ident">dur</span>.<span class="ident">as_millis</span>().<span class="ident">try_into</span>() {
-                <span class="ident">millis</span>
-            } <span class="kw">else</span> {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(dur) = <span class="self">self</span>.sent().map(|s| s.elapsed()) {
+            <span class="kw">let </span>millis = <span class="kw">if let </span><span class="prelude-val">Ok</span>(millis) = dur.as_millis().try_into() {
+                millis
+            } <span class="kw">else </span>{
                 <span class="macro">tracing::error!</span>(<span class="string">&quot;duration millis is more than u64: {dur:?}&quot;</span>);
 
                 <span class="kw">return</span>;
             };
 
-            <span class="self">self</span>.<span class="ident">total_time</span>.<span class="ident">fetch_add</span>(<span class="ident">millis</span>, <span class="ident">Ordering::SeqCst</span>);
+            <span class="self">self</span>.total_time.fetch_add(millis, Ordering::SeqCst);
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">recent</span> = <span class="self">self</span>.<span class="ident">recent</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;recent poisoned&quot;</span>);
+            <span class="kw">let </span><span class="kw-2">mut </span>recent = <span class="self">self</span>.recent.lock().expect(<span class="string">&quot;recent poisoned&quot;</span>);
 
-            <span class="kw">if</span> <span class="ident">recent</span>.<span class="ident">len</span>() == <span class="number">5</span> {
-                <span class="ident">recent</span>.<span class="ident">pop_front</span>();
+            <span class="kw">if </span>recent.len() == <span class="number">5 </span>{
+                recent.pop_front();
             }
 
-            <span class="ident">recent</span>.<span class="ident">push_back</span>(<span class="ident">millis</span>);
+            recent.push_back(millis);
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">received</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;received poisoned&quot;</span>).<span class="ident">take</span>();
-        <span class="self">self</span>.<span class="ident">sent</span>
-            .<span class="ident">lock</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;sent poisoned&quot;</span>)
-            .<span class="ident">replace</span>(<span class="ident">Instant::now</span>());
+    <span class="kw">pub fn </span>send(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="self">self</span>.received.lock().expect(<span class="string">&quot;received poisoned&quot;</span>).take();
+        <span class="self">self</span>.sent
+            .lock()
+            .expect(<span class="string">&quot;sent poisoned&quot;</span>)
+            .replace(Instant::now());
     }
 
-    <span class="kw">fn</span> <span class="ident">received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt; {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">received</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;received poisoned&quot;</span>)
+    <span class="kw">fn </span>received(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Instant&gt; {
+        <span class="kw-2">*</span><span class="self">self</span>.received.lock().expect(<span class="string">&quot;received poisoned&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">set_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">received</span>: <span class="ident">Instant</span>) {
-        <span class="self">self</span>.<span class="ident">received</span>
-            .<span class="ident">lock</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;received poisoned&quot;</span>)
-            .<span class="ident">replace</span>(<span class="ident">received</span>);
+    <span class="kw">fn </span>set_received(<span class="kw-2">&amp;</span><span class="self">self</span>, received: Instant) {
+        <span class="self">self</span>.received
+            .lock()
+            .expect(<span class="string">&quot;received poisoned&quot;</span>)
+            .replace(received);
     }
 
-    <span class="kw">fn</span> <span class="ident">sent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Instant</span>&gt; {
-        <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">sent</span>.<span class="ident">lock</span>().<span class="ident">expect</span>(<span class="string">&quot;sent poisoned&quot;</span>)
+    <span class="kw">fn </span>sent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Instant&gt; {
+        <span class="kw-2">*</span><span class="self">self</span>.sent.lock().expect(<span class="string">&quot;sent poisoned&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">total_iterations</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-        <span class="self">self</span>.<span class="ident">total_iterations</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>)
+    <span class="kw">fn </span>total_iterations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.total_iterations.load(Ordering::Relaxed)
     }
 
-    <span class="kw">fn</span> <span class="ident">total_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span> {
-        <span class="ident">Duration::from_millis</span>(<span class="self">self</span>.<span class="ident">total_time</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>))
+    <span class="kw">fn </span>total_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Duration {
+        Duration::from_millis(<span class="self">self</span>.total_time.load(Ordering::Relaxed))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Heartbeats</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">received</span>: <span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>),
-            <span class="ident">recent</span>: <span class="ident">Mutex::new</span>(<span class="ident">VecDeque::with_capacity</span>(<span class="number">5</span>)),
-            <span class="ident">sent</span>: <span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>),
-            <span class="ident">total_iterations</span>: <span class="ident">AtomicU32::new</span>(<span class="number">0</span>),
-            <span class="ident">total_time</span>: <span class="ident">AtomicU64::new</span>(<span class="number">0</span>),
+<span class="kw">impl </span>Default <span class="kw">for </span>Heartbeats {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            received: Mutex::new(<span class="prelude-val">None</span>),
+            recent: Mutex::new(VecDeque::with_capacity(<span class="number">5</span>)),
+            sent: Mutex::new(<span class="prelude-val">None</span>),
+            total_iterations: AtomicU32::new(<span class="number">0</span>),
+            total_time: AtomicU64::new(<span class="number">0</span>),
         }
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Heartbeater</span> {
-    <span class="ident">heartbeats</span>: <span class="ident">Arc</span>&lt;<span class="ident">Heartbeats</span>&gt;,
-    <span class="ident">interval</span>: <span class="ident">u64</span>,
-    <span class="ident">seq</span>: <span class="ident">Arc</span>&lt;<span class="ident">AtomicU64</span>&gt;,
-    <span class="ident">tx</span>: <span class="ident">UnboundedSender</span>&lt;<span class="ident">TungsteniteMessage</span>&gt;,
+<span class="kw">pub struct </span>Heartbeater {
+    heartbeats: Arc&lt;Heartbeats&gt;,
+    interval: u64,
+    seq: Arc&lt;AtomicU64&gt;,
+    tx: UnboundedSender&lt;TungsteniteMessage&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Heartbeater</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">heartbeats</span>: <span class="ident">Arc</span>&lt;<span class="ident">Heartbeats</span>&gt;,
-        <span class="ident">interval</span>: <span class="ident">u64</span>,
-        <span class="ident">seq</span>: <span class="ident">Arc</span>&lt;<span class="ident">AtomicU64</span>&gt;,
-        <span class="ident">tx</span>: <span class="ident">UnboundedSender</span>&lt;<span class="ident">TungsteniteMessage</span>&gt;,
-    ) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">heartbeats</span>,
-            <span class="ident">interval</span>,
-            <span class="ident">seq</span>,
-            <span class="ident">tx</span>,
+<span class="kw">impl </span>Heartbeater {
+    <span class="kw">pub fn </span>new(
+        heartbeats: Arc&lt;Heartbeats&gt;,
+        interval: u64,
+        seq: Arc&lt;AtomicU64&gt;,
+        tx: UnboundedSender&lt;TungsteniteMessage&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            heartbeats,
+            interval,
+            seq,
+            tx,
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">try_run</span>().<span class="kw">await</span> {
+    <span class="kw">pub async fn </span>run(<span class="self">self</span>) {
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.try_run().<span class="kw">await </span>{
             <span class="macro">tracing::warn!</span>(<span class="string">&quot;Error sending heartbeat: {source:?}&quot;</span>);
         }
     }
 
-    <span class="comment">// If there&#39;s an issue sending over the channel, then odds are it</span>
-    <span class="comment">// got disconnected due to the session ending. This task should have</span>
-    <span class="comment">// *also* become aborted. Log if that&#39;s the case, because that&#39;s a</span>
-    <span class="comment">// programmatic error.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">try_run</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">SessionSendError</span>&gt; {
-        <span class="kw">let</span> <span class="ident">duration</span> = <span class="ident">Duration::from_millis</span>(<span class="self">self</span>.<span class="ident">interval</span>);
+    <span class="comment">// If there&#39;s an issue sending over the channel, then odds are it
+    // got disconnected due to the session ending. This task should have
+    // *also* become aborted. Log if that&#39;s the case, because that&#39;s a
+    // programmatic error.
+    </span><span class="kw">async fn </span>try_run(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), SessionSendError&gt; {
+        <span class="kw">let </span>duration = Duration::from_millis(<span class="self">self</span>.interval);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last</span> = <span class="bool-val">true</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>last = <span class="bool-val">true</span>;
 
-        <span class="kw">loop</span> {
-            <span class="ident">tokio::time::sleep</span>(<span class="ident">duration</span>).<span class="kw">await</span>;
+        <span class="kw">loop </span>{
+            tokio::time::sleep(duration).<span class="kw">await</span>;
 
-            <span class="comment">// Check if a heartbeat acknowledgement was received.</span>
-            <span class="comment">//</span>
-            <span class="comment">// If so, then check if one was received last time.</span>
-            <span class="comment">//</span>
-            <span class="comment">// - if so, then mark that we didn&#39;t get one this time</span>
-            <span class="comment">// - if not, then end the heartbeater because something is off</span>
-            <span class="comment">// (connecting closed?)</span>
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">heartbeats</span>.<span class="ident">last_acked</span>() {
-                <span class="ident">last</span> = <span class="bool-val">true</span>;
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">last</span> {
-                <span class="ident">last</span> = <span class="bool-val">false</span>;
-            } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+            <span class="comment">// Check if a heartbeat acknowledgement was received.
+            //
+            // If so, then check if one was received last time.
+            //
+            // - if so, then mark that we didn&#39;t get one this time
+            // - if not, then end the heartbeater because something is off
+            // (connecting closed?)
+            </span><span class="kw">if </span><span class="self">self</span>.heartbeats.last_acked() {
+                last = <span class="bool-val">true</span>;
+            } <span class="kw">else if </span>last {
+                last = <span class="bool-val">false</span>;
+            } <span class="kw">else </span>{
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
             }
 
-            <span class="kw">let</span> <span class="ident">seq</span> = <span class="self">self</span>.<span class="ident">seq</span>.<span class="ident">load</span>(<span class="ident">Ordering::Acquire</span>);
-            <span class="kw">let</span> <span class="ident">heartbeat</span> = <span class="ident">Heartbeat::new</span>(<span class="ident">seq</span>);
-            <span class="kw">let</span> <span class="ident">bytes</span> = <span class="ident">json::to_vec</span>(<span class="kw-2">&amp;</span><span class="ident">heartbeat</span>).<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">SessionSendError</span> {
-                <span class="ident">kind</span>: <span class="ident">SessionSendErrorType::Serializing</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            <span class="kw">let </span>seq = <span class="self">self</span>.seq.load(Ordering::Acquire);
+            <span class="kw">let </span>heartbeat = Heartbeat::new(seq);
+            <span class="kw">let </span>bytes = json::to_vec(<span class="kw-2">&amp;</span>heartbeat).map_err(|source| SessionSendError {
+                kind: SessionSendErrorType::Serializing,
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
             })<span class="question-mark">?</span>;
 
-            <span class="macro">tracing::debug!</span>(<span class="ident">seq</span>, <span class="string">&quot;sending heartbeat&quot;</span>);
+            <span class="macro">tracing::debug!</span>(seq, <span class="string">&quot;sending heartbeat&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">tx</span>
-                .<span class="ident">send</span>(<span class="ident">TungsteniteMessage::Binary</span>(<span class="ident">bytes</span>))
-                .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">SessionSendError</span> {
-                    <span class="ident">kind</span>: <span class="ident">SessionSendErrorType::Sending</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            <span class="self">self</span>.tx
+                .send(TungsteniteMessage::Binary(bytes))
+                .map_err(|source| SessionSendError {
+                    kind: SessionSendErrorType::Sending,
+                    source: <span class="prelude-val">Some</span>(Box::new(source)),
                 })<span class="question-mark">?</span>;
 
-            <span class="macro">tracing::debug!</span>(<span class="ident">seq</span>, <span class="string">&quot;sent heartbeat&quot;</span>);
+            <span class="macro">tracing::debug!</span>(seq, <span class="string">&quot;sent heartbeat&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">heartbeats</span>.<span class="ident">send</span>();
+            <span class="self">self</span>.heartbeats.send();
         }
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Latency</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::Latency;
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::fmt::Debug;
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">Latency</span>: <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(Latency: Clone, Debug, Send, Sync);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

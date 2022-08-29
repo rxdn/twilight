@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-standby/src/future.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>future.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_standby/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_standby/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_standby/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-standby/src/future.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>future.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../twilight_standby/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../twilight_standby/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../twilight_standby/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -249,256 +249,256 @@
 <span id="249">249</span>
 <span id="250">250</span>
 <span id="251">251</span>
-</pre><pre class="rust"><code><span class="doccomment">//! Futures and streams returned by [`Standby`].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [`Standby`]: super::Standby</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Futures and streams returned by [`Standby`].
+//!
+//! [`Standby`]: super::Standby
 
-<span class="kw">use</span> <span class="ident">futures_util</span>::{<span class="ident">future::FutureExt</span>, <span class="ident">stream::Stream</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt</span>::{<span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">future::Future</span>,
-    <span class="ident">pin::Pin</span>,
-    <span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
+</span><span class="kw">use </span>futures_util::{future::FutureExt, stream::Stream};
+<span class="kw">use </span>std::{
+    error::Error,
+    fmt::{Display, Formatter, <span class="prelude-ty">Result </span><span class="kw">as </span>FmtResult},
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
 };
-<span class="kw">use</span> <span class="ident">tokio::sync</span>::{
-    <span class="ident">mpsc::UnboundedReceiver</span> <span class="kw">as</span> <span class="ident">MpscReceiver</span>,
-    <span class="ident">oneshot</span>::{<span class="ident">error::RecvError</span>, <span class="ident">Receiver</span>},
+<span class="kw">use </span>tokio::sync::{
+    mpsc::UnboundedReceiver <span class="kw">as </span>MpscReceiver,
+    oneshot::{error::RecvError, Receiver},
 };
-<span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">application::interaction::Interaction</span>,
-    <span class="ident">gateway</span>::{
-        <span class="ident">event::Event</span>,
-        <span class="ident">payload::incoming</span>::{<span class="ident">MessageCreate</span>, <span class="ident">ReactionAdd</span>},
+<span class="kw">use </span>twilight_model::{
+    application::interaction::Interaction,
+    gateway::{
+        event::Event,
+        payload::incoming::{MessageCreate, ReactionAdd},
     },
 };
 
-<span class="doccomment">/// Future canceled due to Standby being dropped.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Canceled</span>(<span class="ident">RecvError</span>);
+<span class="doccomment">/// Future canceled due to Standby being dropped.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Canceled(RecvError);
 
-<span class="kw">impl</span> <span class="ident">Canceled</span> {
-    <span class="doccomment">/// Consume the error, returning the source error if there is any.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::must_use_candidate</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_source</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt; {
-        <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="self">self</span>.<span class="number">0</span>))
+<span class="kw">impl </span>Canceled {
+    <span class="doccomment">/// Consume the error, returning the source error if there is any.
+    </span><span class="attribute">#[allow(clippy::must_use_candidate)]
+    </span><span class="kw">pub fn </span>into_source(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt; {
+        <span class="prelude-val">Some</span>(Box::new(<span class="self">self</span>.<span class="number">0</span>))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Canceled</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="ident">Display::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)
+<span class="kw">impl </span>Display <span class="kw">for </span>Canceled {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, f)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">Canceled</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
+<span class="kw">impl </span>Error <span class="kw">for </span>Canceled {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
         <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
     }
 }
 
-<span class="doccomment">/// The future returned from [`Standby::wait_for_event`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_event`]: crate::Standby::wait_for_event</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForEventFuture</span> {
-    <span class="doccomment">/// Receiver half of the oneshot channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">Receiver</span>&lt;<span class="ident">Event</span>&gt;,
+<span class="doccomment">/// The future returned from [`Standby::wait_for_event`].
+///
+/// [`Standby::wait_for_event`]: crate::Standby::wait_for_event
+</span><span class="attribute">#[allow(clippy::module_name_repetitions)]
+#[derive(Debug)]
+#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForEventFuture {
+    <span class="doccomment">/// Receiver half of the oneshot channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: Receiver&lt;Event&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">WaitForEventFuture</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">Event</span>, <span class="ident">Canceled</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>WaitForEventFuture {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;Event, Canceled&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_unpin</span>(<span class="ident">cx</span>).<span class="ident">map_err</span>(<span class="ident">Canceled</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="self">self</span>.rx.poll_unpin(cx).map_err(Canceled)
     }
 }
 
-<span class="doccomment">/// The stream returned from [`Standby::wait_for_event_stream`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_event_stream`]: crate::Standby::wait_for_event_stream</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForEventStream</span> {
-    <span class="doccomment">/// Receiver half of the MPSC channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">MpscReceiver</span>&lt;<span class="ident">Event</span>&gt;,
+<span class="doccomment">/// The stream returned from [`Standby::wait_for_event_stream`].
+///
+/// [`Standby::wait_for_event_stream`]: crate::Standby::wait_for_event_stream
+</span><span class="attribute">#[derive(Debug)]
+#[must_use = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForEventStream {
+    <span class="doccomment">/// Receiver half of the MPSC channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: MpscReceiver&lt;Event&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">WaitForEventStream</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">Event</span>;
+<span class="kw">impl </span>Stream <span class="kw">for </span>WaitForEventStream {
+    <span class="kw">type </span>Item = Event;
 
-    <span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_recv</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="self">self</span>.rx.poll_recv(cx)
     }
 }
 
-<span class="doccomment">/// The future returned from [`Standby::wait_for`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for`]: crate::Standby::wait_for</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForGuildEventFuture</span> {
-    <span class="doccomment">/// Receiver half of the oneshot channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">Receiver</span>&lt;<span class="ident">Event</span>&gt;,
+<span class="doccomment">/// The future returned from [`Standby::wait_for`].
+///
+/// [`Standby::wait_for`]: crate::Standby::wait_for
+</span><span class="attribute">#[allow(clippy::module_name_repetitions)]
+#[derive(Debug)]
+#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForGuildEventFuture {
+    <span class="doccomment">/// Receiver half of the oneshot channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: Receiver&lt;Event&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">WaitForGuildEventFuture</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">Event</span>, <span class="ident">Canceled</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>WaitForGuildEventFuture {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;Event, Canceled&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_unpin</span>(<span class="ident">cx</span>).<span class="ident">map_err</span>(<span class="ident">Canceled</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="self">self</span>.rx.poll_unpin(cx).map_err(Canceled)
     }
 }
 
-<span class="doccomment">/// The stream returned from [`Standby::wait_for_stream`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_stream`]: crate::Standby::wait_for_stream</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForGuildEventStream</span> {
-    <span class="doccomment">/// Receiver half of the MPSC channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">MpscReceiver</span>&lt;<span class="ident">Event</span>&gt;,
+<span class="doccomment">/// The stream returned from [`Standby::wait_for_stream`].
+///
+/// [`Standby::wait_for_stream`]: crate::Standby::wait_for_stream
+</span><span class="attribute">#[derive(Debug)]
+#[must_use = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForGuildEventStream {
+    <span class="doccomment">/// Receiver half of the MPSC channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: MpscReceiver&lt;Event&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">WaitForGuildEventStream</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">Event</span>;
+<span class="kw">impl </span>Stream <span class="kw">for </span>WaitForGuildEventStream {
+    <span class="kw">type </span>Item = Event;
 
-    <span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_recv</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="self">self</span>.rx.poll_recv(cx)
     }
 }
 
-<span class="doccomment">/// The future returned from [`Standby::wait_for_message`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_message`]: crate::Standby::wait_for_message</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForMessageFuture</span> {
-    <span class="doccomment">/// Receiver half of the oneshot channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">Receiver</span>&lt;<span class="ident">MessageCreate</span>&gt;,
+<span class="doccomment">/// The future returned from [`Standby::wait_for_message`].
+///
+/// [`Standby::wait_for_message`]: crate::Standby::wait_for_message
+</span><span class="attribute">#[allow(clippy::module_name_repetitions)]
+#[derive(Debug)]
+#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForMessageFuture {
+    <span class="doccomment">/// Receiver half of the oneshot channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: Receiver&lt;MessageCreate&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">WaitForMessageFuture</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">MessageCreate</span>, <span class="ident">Canceled</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>WaitForMessageFuture {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;MessageCreate, Canceled&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_unpin</span>(<span class="ident">cx</span>).<span class="ident">map_err</span>(<span class="ident">Canceled</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="self">self</span>.rx.poll_unpin(cx).map_err(Canceled)
     }
 }
 
-<span class="doccomment">/// The stream returned from [`Standby::wait_for_message_stream`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_message_stream`]: crate::Standby::wait_for_message_stream</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForMessageStream</span> {
-    <span class="doccomment">/// Receiver half of the MPSC channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">MpscReceiver</span>&lt;<span class="ident">MessageCreate</span>&gt;,
+<span class="doccomment">/// The stream returned from [`Standby::wait_for_message_stream`].
+///
+/// [`Standby::wait_for_message_stream`]: crate::Standby::wait_for_message_stream
+</span><span class="attribute">#[derive(Debug)]
+#[must_use = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForMessageStream {
+    <span class="doccomment">/// Receiver half of the MPSC channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: MpscReceiver&lt;MessageCreate&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">WaitForMessageStream</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">MessageCreate</span>;
+<span class="kw">impl </span>Stream <span class="kw">for </span>WaitForMessageStream {
+    <span class="kw">type </span>Item = MessageCreate;
 
-    <span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_recv</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="self">self</span>.rx.poll_recv(cx)
     }
 }
 
-<span class="doccomment">/// The future returned from [`Standby::wait_for_reaction`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_reaction`]: crate::Standby::wait_for_reaction</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::module_name_repetitions</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForReactionFuture</span> {
-    <span class="doccomment">/// Receiver half of the oneshot channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">Receiver</span>&lt;<span class="ident">ReactionAdd</span>&gt;,
+<span class="doccomment">/// The future returned from [`Standby::wait_for_reaction`].
+///
+/// [`Standby::wait_for_reaction`]: crate::Standby::wait_for_reaction
+</span><span class="attribute">#[allow(clippy::module_name_repetitions)]
+#[derive(Debug)]
+#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForReactionFuture {
+    <span class="doccomment">/// Receiver half of the oneshot channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: Receiver&lt;ReactionAdd&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">WaitForReactionFuture</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">ReactionAdd</span>, <span class="ident">Canceled</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>WaitForReactionFuture {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;ReactionAdd, Canceled&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_unpin</span>(<span class="ident">cx</span>).<span class="ident">map_err</span>(<span class="ident">Canceled</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="self">self</span>.rx.poll_unpin(cx).map_err(Canceled)
     }
 }
 
-<span class="doccomment">/// The stream returned from [`Standby::wait_for_reaction_stream`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_reaction_stream`]: crate::Standby::wait_for_reaction_stream</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForReactionStream</span> {
-    <span class="doccomment">/// Receiver half of the MPSC channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">MpscReceiver</span>&lt;<span class="ident">ReactionAdd</span>&gt;,
+<span class="doccomment">/// The stream returned from [`Standby::wait_for_reaction_stream`].
+///
+/// [`Standby::wait_for_reaction_stream`]: crate::Standby::wait_for_reaction_stream
+</span><span class="attribute">#[derive(Debug)]
+#[must_use = <span class="string">&quot;streams do nothing unless you poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForReactionStream {
+    <span class="doccomment">/// Receiver half of the MPSC channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: MpscReceiver&lt;ReactionAdd&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">WaitForReactionStream</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">ReactionAdd</span>;
+<span class="kw">impl </span>Stream <span class="kw">for </span>WaitForReactionStream {
+    <span class="kw">type </span>Item = ReactionAdd;
 
-    <span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_recv</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="self">self</span>.rx.poll_recv(cx)
     }
 }
 
-<span class="doccomment">/// The future returned from [`Standby::wait_for_component`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_component`]: crate::Standby::wait_for_component</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForComponentFuture</span> {
-    <span class="doccomment">/// Receiver half of the oneshot channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">Receiver</span>&lt;<span class="ident">Interaction</span>&gt;,
+<span class="doccomment">/// The future returned from [`Standby::wait_for_component`].
+///
+/// [`Standby::wait_for_component`]: crate::Standby::wait_for_component
+</span><span class="attribute">#[derive(Debug)]
+#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="kw">pub struct </span>WaitForComponentFuture {
+    <span class="doccomment">/// Receiver half of the oneshot channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: Receiver&lt;Interaction&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">WaitForComponentFuture</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> = <span class="prelude-ty">Result</span>&lt;<span class="ident">Interaction</span>, <span class="ident">Canceled</span>&gt;;
+<span class="kw">impl </span>Future <span class="kw">for </span>WaitForComponentFuture {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;Interaction, Canceled&gt;;
 
-    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="ident"><span class="self">Self</span>::Output</span>&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_unpin</span>(<span class="ident">cx</span>).<span class="ident">map_err</span>(<span class="ident">Canceled</span>)
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+        <span class="self">self</span>.rx.poll_unpin(cx).map_err(Canceled)
     }
 }
 
-<span class="doccomment">/// The stream returned from [`Standby::wait_for_component_stream`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`Standby::wait_for_component_stream`]: crate::Standby::wait_for_component_stream</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WaitForComponentStream</span> {
-    <span class="doccomment">/// Receiver half of the MPSC channel.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">rx</span>: <span class="ident">MpscReceiver</span>&lt;<span class="ident">Interaction</span>&gt;,
+<span class="doccomment">/// The stream returned from [`Standby::wait_for_component_stream`].
+///
+/// [`Standby::wait_for_component_stream`]: crate::Standby::wait_for_component_stream
+</span><span class="attribute">#[derive(Debug)]
+#[must_use]
+</span><span class="kw">pub struct </span>WaitForComponentStream {
+    <span class="doccomment">/// Receiver half of the MPSC channel.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) rx: MpscReceiver&lt;Interaction&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">WaitForComponentStream</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> = <span class="ident">Interaction</span>;
+<span class="kw">impl </span>Stream <span class="kw">for </span>WaitForComponentStream {
+    <span class="kw">type </span>Item = Interaction;
 
-    <span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span>&lt;<span class="kw-2">&amp;mut</span> <span class="self">Self</span>&gt;, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">Poll</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="ident"><span class="self">Self</span>::Item</span>&gt;&gt; {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll_recv</span>(<span class="ident">cx</span>)
+    <span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt;&gt; {
+        <span class="self">self</span>.rx.poll_recv(cx)
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{
-        <span class="ident">WaitForEventFuture</span>, <span class="ident">WaitForEventStream</span>, <span class="ident">WaitForGuildEventFuture</span>, <span class="ident">WaitForGuildEventStream</span>,
-        <span class="ident">WaitForMessageFuture</span>, <span class="ident">WaitForMessageStream</span>, <span class="ident">WaitForReactionFuture</span>, <span class="ident">WaitForReactionStream</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::{
+        WaitForEventFuture, WaitForEventStream, WaitForGuildEventFuture, WaitForGuildEventStream,
+        WaitForMessageFuture, WaitForMessageStream, WaitForReactionFuture, WaitForReactionStream,
     };
-    <span class="kw">use</span> <span class="ident">futures_util::stream::Stream</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">future::Future</span>};
+    <span class="kw">use </span>futures_util::stream::Stream;
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::{fmt::Debug, future::Future};
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForEventFuture</span>: <span class="ident">Debug</span>, <span class="ident">Future</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForGuildEventFuture</span>: <span class="ident">Debug</span>, <span class="ident">Future</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForMessageFuture</span>: <span class="ident">Debug</span>, <span class="ident">Future</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForReactionFuture</span>: <span class="ident">Debug</span>, <span class="ident">Future</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForEventStream</span>: <span class="ident">Debug</span>, <span class="ident">Stream</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForGuildEventStream</span>: <span class="ident">Debug</span>, <span class="ident">Stream</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForMessageStream</span>: <span class="ident">Debug</span>, <span class="ident">Stream</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
-    <span class="macro">assert_impl_all!</span>(<span class="ident">WaitForReactionStream</span>: <span class="ident">Debug</span>, <span class="ident">Stream</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(WaitForEventFuture: Debug, Future, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForGuildEventFuture: Debug, Future, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForMessageFuture: Debug, Future, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForReactionFuture: Debug, Future, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForEventStream: Debug, Stream, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForGuildEventStream: Debug, Stream, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForMessageStream: Debug, Stream, Send, Sync);
+    <span class="macro">assert_impl_all!</span>(WaitForReactionStream: Debug, Stream, Send, Sync);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_standby" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="twilight_standby" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

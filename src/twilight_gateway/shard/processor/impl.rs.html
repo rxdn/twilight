@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/processor/impl.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>impl.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/processor/impl.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>impl.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1139,1146 +1139,1146 @@
 <span id="1139">1139</span>
 <span id="1140">1140</span>
 <span id="1141">1141</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">super</span>::{
+</pre><pre class="rust"><code><span class="kw">use super</span>::{
     <span class="kw">super</span>::{
-        <span class="ident">emitter</span>::{<span class="ident">EmitJsonErrorType</span>, <span class="ident">Emitter</span>},
-        <span class="ident">json</span>::{<span class="self">self</span>, <span class="ident">GatewayEventParsingError</span>, <span class="ident">GatewayEventParsingErrorType</span>},
-        <span class="ident">Config</span>, <span class="ident">ShardStream</span>, <span class="ident">Stage</span>,
+        emitter::{EmitJsonErrorType, Emitter},
+        json::{<span class="self">self</span>, GatewayEventParsingError, GatewayEventParsingErrorType},
+        Config, ShardStream, Stage,
     },
-    <span class="ident">compression</span>::{<span class="self">self</span>, <span class="ident">Compression</span>},
-    <span class="ident">session</span>::{<span class="ident">Session</span>, <span class="ident">SessionSendError</span>, <span class="ident">SessionSendErrorType</span>},
-    <span class="ident">socket_forwarder::SocketForwarder</span>,
+    compression::{<span class="self">self</span>, Compression},
+    session::{Session, SessionSendError, SessionSendErrorType},
+    socket_forwarder::SocketForwarder,
 };
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">EventTypeFlags</span>, <span class="ident">API_VERSION</span>};
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow::Cow</span>,
-    <span class="ident">env::consts::OS</span>,
-    <span class="ident">error::Error</span>,
-    <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Formatter</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">FmtResult</span>},
-    <span class="ident">str</span>,
-    <span class="ident">sync</span>::{<span class="ident">atomic::Ordering</span>, <span class="ident">Arc</span>},
-    <span class="ident">time::Duration</span>,
+<span class="kw">use crate</span>::{EventTypeFlags, API_VERSION};
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::{
+    borrow::Cow,
+    env::consts::OS,
+    error::Error,
+    fmt::{Debug, Display, Formatter, <span class="prelude-ty">Result </span><span class="kw">as </span>FmtResult},
+    str,
+    sync::{atomic::Ordering, Arc},
+    time::Duration,
 };
-<span class="kw">use</span> <span class="ident">tokio::sync</span>::{
-    <span class="ident">mpsc::UnboundedReceiver</span>,
-    <span class="ident">watch</span>::{<span class="ident">channel</span> <span class="kw">as</span> <span class="ident">watch_channel</span>, <span class="ident">Receiver</span> <span class="kw">as</span> <span class="ident">WatchReceiver</span>, <span class="ident">Sender</span> <span class="kw">as</span> <span class="ident">WatchSender</span>},
+<span class="kw">use </span>tokio::sync::{
+    mpsc::UnboundedReceiver,
+    watch::{channel <span class="kw">as </span>watch_channel, Receiver <span class="kw">as </span>WatchReceiver, Sender <span class="kw">as </span>WatchSender},
 };
-<span class="kw">use</span> <span class="ident">tokio_tungstenite::tungstenite</span>::{
-    <span class="ident">protocol</span>::{<span class="ident">frame::coding::CloseCode</span>, <span class="ident">CloseFrame</span>, <span class="ident">WebSocketConfig</span>},
-    <span class="ident">Message</span>,
+<span class="kw">use </span>tokio_tungstenite::tungstenite::{
+    protocol::{frame::coding::CloseCode, CloseFrame, WebSocketConfig},
+    Message,
 };
-<span class="kw">use</span> <span class="ident">twilight_model::gateway</span>::{
-    <span class="ident">event</span>::{
-        <span class="ident">shard</span>::{<span class="ident">Connected</span>, <span class="ident">Connecting</span>, <span class="ident">Disconnected</span>, <span class="ident">Identifying</span>, <span class="ident">Reconnecting</span>, <span class="ident">Resuming</span>},
-        <span class="ident">DispatchEvent</span>, <span class="ident">Event</span>, <span class="ident">GatewayEvent</span>, <span class="ident">GatewayEventDeserializer</span>,
+<span class="kw">use </span>twilight_model::gateway::{
+    event::{
+        shard::{Connected, Connecting, Disconnected, Identifying, Reconnecting, Resuming},
+        DispatchEvent, Event, GatewayEvent, GatewayEventDeserializer,
     },
-    <span class="ident">payload</span>::{
-        <span class="ident">incoming::Ready</span>,
-        <span class="ident">outgoing</span>::{
-            <span class="ident">identify</span>::{<span class="ident">Identify</span>, <span class="ident">IdentifyInfo</span>, <span class="ident">IdentifyProperties</span>},
-            <span class="ident">resume::Resume</span>,
+    payload::{
+        incoming::Ready,
+        outgoing::{
+            identify::{Identify, IdentifyInfo, IdentifyProperties},
+            resume::Resume,
         },
     },
-    <span class="ident">Intents</span>, <span class="ident">OpCode</span>,
+    Intents, OpCode,
 };
-<span class="kw">use</span> <span class="ident">url::Url</span>;
+<span class="kw">use </span>url::Url;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-))]</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::shard::tls::TlsContainer</span>;
+<span class="attribute">#[cfg(any(
+    feature = <span class="string">&quot;native&quot;</span>,
+    feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+    feature = <span class="string">&quot;rustls-webpki-roots&quot;
+</span>))]
+</span><span class="kw">use </span><span class="kw">crate</span>::shard::tls::TlsContainer;
 
-<span class="doccomment">/// Connecting to the gateway failed.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ConnectingError</span> {
-    <span class="ident">kind</span>: <span class="ident">ConnectingErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
+<span class="doccomment">/// Connecting to the gateway failed.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ConnectingError {
+    kind: ConnectingErrorType,
+    source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ConnectingError</span> {
-    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.</span>
-    <span class="attribute">#[<span class="ident">must_use</span> = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_parts</span>(<span class="self">self</span>) -&gt; (<span class="ident">ConnectingErrorType</span>, <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;) {
-        (<span class="self">self</span>.<span class="ident">kind</span>, <span class="self">self</span>.<span class="ident">source</span>)
+<span class="kw">impl </span>ConnectingError {
+    <span class="doccomment">/// Consume the error, returning the owned error type and the source error.
+    </span><span class="attribute">#[must_use = <span class="string">&quot;consuming the error into its parts has no effect if left unused&quot;</span>]
+    </span><span class="kw">pub fn </span>into_parts(<span class="self">self</span>) -&gt; (ConnectingErrorType, <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;) {
+        (<span class="self">self</span>.kind, <span class="self">self</span>.source)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ConnectingError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ConnectingErrorType::Establishing</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;failed to establish the connection&quot;</span>),
-            <span class="ident">ConnectingErrorType::ParsingUrl</span> { <span class="ident">url</span> } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the gateway url `&quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">url</span>)<span class="question-mark">?</span>;
+<span class="kw">impl </span>Display <span class="kw">for </span>ConnectingError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            ConnectingErrorType::Establishing =&gt; f.write_str(<span class="string">&quot;failed to establish the connection&quot;</span>),
+            ConnectingErrorType::ParsingUrl { url } =&gt; {
+                f.write_str(<span class="string">&quot;the gateway url `&quot;</span>)<span class="question-mark">?</span>;
+                f.write_str(url)<span class="question-mark">?</span>;
 
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;` is invalid&quot;</span>)
+                f.write_str(<span class="string">&quot;` is invalid&quot;</span>)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ConnectingError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
+<span class="kw">impl </span>Error <span class="kw">for </span>ConnectingError {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+        <span class="self">self</span>.source
+            .as_ref()
+            .map(|source| <span class="kw-2">&amp;**</span>source <span class="kw">as </span><span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>))
     }
 }
 
-<span class="doccomment">/// Type of [`ConnectingError`] that occurred.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ConnectingErrorType</span> {
-    <span class="ident">Establishing</span>,
-    <span class="ident">ParsingUrl</span> { <span class="ident">url</span>: <span class="ident">String</span> },
+<span class="doccomment">/// Type of [`ConnectingError`] that occurred.
+</span><span class="attribute">#[derive(Debug)]
+#[non_exhaustive]
+</span><span class="kw">pub enum </span>ConnectingErrorType {
+    Establishing,
+    ParsingUrl { url: String },
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">ProcessError</span> {
-    <span class="ident">kind</span>: <span class="ident">ProcessErrorType</span>,
-    <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">struct </span>ProcessError {
+    kind: ProcessErrorType,
+    source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ProcessError</span> {
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">fatal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+<span class="kw">impl </span>ProcessError {
+    <span class="kw">const fn </span>fatal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">matches!</span>(
-            <span class="self">self</span>.<span class="ident">kind</span>,
-            <span class="ident">ProcessErrorType::SendingClose</span> { .. } | <span class="ident">ProcessErrorType::SessionSend</span> { .. }
+            <span class="self">self</span>.kind,
+            ProcessErrorType::SendingClose { .. } | ProcessErrorType::SessionSend { .. }
         )
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ProcessError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ProcessErrorType::EventTypeUnknown</span> { <span class="ident">event_type</span>, <span class="ident">op</span> } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;provided event type (&quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Debug::fmt</span>(<span class="ident">event_type</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;)/op (&quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Display::fmt</span>(<span class="ident">op</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="kw">impl </span>Display <span class="kw">for </span>ProcessError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            ProcessErrorType::EventTypeUnknown { event_type, op } =&gt; {
+                f.write_str(<span class="string">&quot;provided event type (&quot;</span>)<span class="question-mark">?</span>;
+                Debug::fmt(event_type, f)<span class="question-mark">?</span>;
+                f.write_str(<span class="string">&quot;)/op (&quot;</span>)<span class="question-mark">?</span>;
+                Display::fmt(op, f)<span class="question-mark">?</span>;
 
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;) pair is unknown&quot;</span>)
+                f.write_str(<span class="string">&quot;) pair is unknown&quot;</span>)
             }
-            <span class="ident">ProcessErrorType::ParsingPayload</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;payload could not be parsed as json&quot;</span>),
-            <span class="ident">ProcessErrorType::PayloadNotUtf8</span> { .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the payload from Discord wasn&#39;t UTF-8 valid&quot;</span>)
+            ProcessErrorType::ParsingPayload =&gt; f.write_str(<span class="string">&quot;payload could not be parsed as json&quot;</span>),
+            ProcessErrorType::PayloadNotUtf8 { .. } =&gt; {
+                f.write_str(<span class="string">&quot;the payload from Discord wasn&#39;t UTF-8 valid&quot;</span>)
             }
-            <span class="ident">ProcessErrorType::SendingClose</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;couldn&#39;t send close message&quot;</span>),
-            <span class="ident">ProcessErrorType::SequenceMissing</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;sequence missing from payload&quot;</span>),
-            <span class="ident">ProcessErrorType::SessionSend</span> =&gt; <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;shard hasn&#39;t been started&quot;</span>),
+            ProcessErrorType::SendingClose =&gt; f.write_str(<span class="string">&quot;couldn&#39;t send close message&quot;</span>),
+            ProcessErrorType::SequenceMissing =&gt; f.write_str(<span class="string">&quot;sequence missing from payload&quot;</span>),
+            ProcessErrorType::SessionSend =&gt; f.write_str(<span class="string">&quot;shard hasn&#39;t been started&quot;</span>),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ProcessError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
+<span class="kw">impl </span>Error <span class="kw">for </span>ProcessError {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+        <span class="self">self</span>.source
+            .as_ref()
+            .map(|source| <span class="kw-2">&amp;**</span>source <span class="kw">as </span><span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>))
     }
 }
 
-<span class="doccomment">/// Type of [`ProcessError`] that occurred.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">enum</span> <span class="ident">ProcessErrorType</span> {
-    <span class="doccomment">/// Provided event type and/or opcode combination doesn&#39;t match a known</span>
-    <span class="doccomment">/// event type flag.</span>
-    <span class="ident">EventTypeUnknown</span> {
-        <span class="doccomment">/// Received dispatch event type.</span>
-        <span class="ident">event_type</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;,
-        <span class="doccomment">/// Received opcode.</span>
-        <span class="ident">op</span>: <span class="ident">u8</span>,
+<span class="doccomment">/// Type of [`ProcessError`] that occurred.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">enum </span>ProcessErrorType {
+    <span class="doccomment">/// Provided event type and/or opcode combination doesn&#39;t match a known
+    /// event type flag.
+    </span>EventTypeUnknown {
+        <span class="doccomment">/// Received dispatch event type.
+        </span>event_type: <span class="prelude-ty">Option</span>&lt;String&gt;,
+        <span class="doccomment">/// Received opcode.
+        </span>op: u8,
     },
-    <span class="doccomment">/// There was an error parsing a GatewayEvent payload.</span>
-    <span class="ident">ParsingPayload</span>,
-    <span class="doccomment">/// The binary payload received from Discord wasn&#39;t validly encoded as</span>
-    <span class="doccomment">/// UTF-8.</span>
-    <span class="ident">PayloadNotUtf8</span>,
-    <span class="doccomment">/// A close message tried to be sent but the receiving half was dropped.</span>
-    <span class="doccomment">/// This typically means that the shard is shutdown.</span>
-    <span class="ident">SendingClose</span>,
-    <span class="doccomment">/// The sequence was missing from the payload.</span>
-    <span class="ident">SequenceMissing</span>,
-    <span class="doccomment">/// Sending a message over the session was unsuccessful.</span>
-    <span class="ident">SessionSend</span>,
+    <span class="doccomment">/// There was an error parsing a GatewayEvent payload.
+    </span>ParsingPayload,
+    <span class="doccomment">/// The binary payload received from Discord wasn&#39;t validly encoded as
+    /// UTF-8.
+    </span>PayloadNotUtf8,
+    <span class="doccomment">/// A close message tried to be sent but the receiving half was dropped.
+    /// This typically means that the shard is shutdown.
+    </span>SendingClose,
+    <span class="doccomment">/// The sequence was missing from the payload.
+    </span>SequenceMissing,
+    <span class="doccomment">/// Sending a message over the session was unsuccessful.
+    </span>SessionSend,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ReceivingEventError</span> {
-    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType</span>,
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="ident">Send</span> + <span class="ident">Sync</span>&gt;&gt;,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ReceivingEventError {
+    <span class="kw">pub </span>kind: ReceivingEventErrorType,
+    <span class="kw">pub </span>source: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ReceivingEventError</span> {
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">fatal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
+<span class="kw">impl </span>ReceivingEventError {
+    <span class="kw">const fn </span>fatal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">matches!</span>(
-            <span class="self">self</span>.<span class="ident">kind</span>,
-            <span class="ident">ReceivingEventErrorType::AuthorizationInvalid</span> { .. }
-                | <span class="ident">ReceivingEventErrorType::IntentsDisallowed</span> { .. }
-                | <span class="ident">ReceivingEventErrorType::IntentsInvalid</span> { .. }
-                | <span class="ident">ReceivingEventErrorType::InvalidApiVersion</span>
-                | <span class="ident">ReceivingEventErrorType::InvalidShard</span> { .. }
-                | <span class="ident">ReceivingEventErrorType::ShardingRequired</span>
+            <span class="self">self</span>.kind,
+            ReceivingEventErrorType::AuthorizationInvalid { .. }
+                | ReceivingEventErrorType::IntentsDisallowed { .. }
+                | ReceivingEventErrorType::IntentsInvalid { .. }
+                | ReceivingEventErrorType::InvalidApiVersion
+                | ReceivingEventErrorType::InvalidShard { .. }
+                | ReceivingEventErrorType::ShardingRequired
         )
     }
 
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">reconnectable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">kind</span>, <span class="ident">ReceivingEventErrorType::Decompressing</span>)
+    <span class="kw">const fn </span>reconnectable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.kind, ReceivingEventErrorType::Decompressing)
     }
 
-    <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">resumable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-        <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">kind</span>, <span class="ident">ReceivingEventErrorType::EventStreamEnded</span>)
+    <span class="kw">const fn </span>resumable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.kind, ReceivingEventErrorType::EventStreamEnded)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ReceivingEventError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span>&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="ident">FmtResult</span> {
-        <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">kind</span> {
-            <span class="ident">ReceivingEventErrorType::AuthorizationInvalid</span> { <span class="ident">shard_id</span>, .. } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;the authorization token for shard &quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Display::fmt</span>(<span class="ident">shard_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+<span class="kw">impl </span>Display <span class="kw">for </span>ReceivingEventError {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; FmtResult {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.kind {
+            ReceivingEventErrorType::AuthorizationInvalid { shard_id, .. } =&gt; {
+                f.write_str(<span class="string">&quot;the authorization token for shard &quot;</span>)<span class="question-mark">?</span>;
+                Display::fmt(shard_id, f)<span class="question-mark">?</span>;
 
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; is invalid&quot;</span>)
+                f.write_str(<span class="string">&quot; is invalid&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::Decompressing</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;a frame could not be decompressed&quot;</span>)
+            ReceivingEventErrorType::Decompressing =&gt; {
+                f.write_str(<span class="string">&quot;a frame could not be decompressed&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::IntentsDisallowed</span> { <span class="ident">intents</span>, <span class="ident">shard_id</span> } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;at least one of the intents (&quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Debug::fmt</span>(<span class="ident">intents</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;) for shard &quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Display::fmt</span>(<span class="ident">shard_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+            ReceivingEventErrorType::IntentsDisallowed { intents, shard_id } =&gt; {
+                f.write_str(<span class="string">&quot;at least one of the intents (&quot;</span>)<span class="question-mark">?</span>;
+                Debug::fmt(intents, f)<span class="question-mark">?</span>;
+                f.write_str(<span class="string">&quot;) for shard &quot;</span>)<span class="question-mark">?</span>;
+                Display::fmt(shard_id, f)<span class="question-mark">?</span>;
 
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; are disallowed&quot;</span>)
+                f.write_str(<span class="string">&quot; are disallowed&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::IntentsInvalid</span> { <span class="ident">intents</span>, <span class="ident">shard_id</span> } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;at least one of the intents (&quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Debug::fmt</span>(<span class="ident">intents</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;) for shard &quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Display::fmt</span>(<span class="ident">shard_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+            ReceivingEventErrorType::IntentsInvalid { intents, shard_id } =&gt; {
+                f.write_str(<span class="string">&quot;at least one of the intents (&quot;</span>)<span class="question-mark">?</span>;
+                Debug::fmt(intents, f)<span class="question-mark">?</span>;
+                f.write_str(<span class="string">&quot;) for shard &quot;</span>)<span class="question-mark">?</span>;
+                Display::fmt(shard_id, f)<span class="question-mark">?</span>;
 
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot; are invalid&quot;</span>)
+                f.write_str(<span class="string">&quot; are invalid&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::EventStreamEnded</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;event stream from gateway ended&quot;</span>)
+            ReceivingEventErrorType::EventStreamEnded =&gt; {
+                f.write_str(<span class="string">&quot;event stream from gateway ended&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::InvalidApiVersion</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;invalid api version was used for identifying&quot;</span>)
+            ReceivingEventErrorType::InvalidApiVersion =&gt; {
+                f.write_str(<span class="string">&quot;invalid api version was used for identifying&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::InvalidShard</span> {
-                <span class="ident">shard_count</span>,
-                <span class="ident">shard_id</span>,
+            ReceivingEventErrorType::InvalidShard {
+                shard_count,
+                shard_id,
             } =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;The shard [&quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Debug::fmt</span>(<span class="ident">shard_id</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
-                <span class="ident">Debug::fmt</span>(<span class="ident">shard_count</span>, <span class="ident">f</span>)<span class="question-mark">?</span>;
+                f.write_str(<span class="string">&quot;The shard [&quot;</span>)<span class="question-mark">?</span>;
+                Debug::fmt(shard_id, f)<span class="question-mark">?</span>;
+                f.write_str(<span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
+                Debug::fmt(shard_count, f)<span class="question-mark">?</span>;
 
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;] is invalid&quot;</span>)
+                f.write_str(<span class="string">&quot;] is invalid&quot;</span>)
             }
-            <span class="ident">ReceivingEventErrorType::ShardingRequired</span> =&gt; {
-                <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;session handles too many guilds, sharding required&quot;</span>)
+            ReceivingEventErrorType::ShardingRequired =&gt; {
+                f.write_str(<span class="string">&quot;session handles too many guilds, sharding required&quot;</span>)
             }
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">ReceivingEventError</span> {
-    <span class="kw">fn</span> <span class="ident">source</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>)&gt; {
-        <span class="self">self</span>.<span class="ident">source</span>
-            .<span class="ident">as_ref</span>()
-            .<span class="ident">map</span>(|<span class="ident">source</span>| <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">source</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">Error</span> + <span class="lifetime">&#39;static</span>))
+<span class="kw">impl </span>Error <span class="kw">for </span>ReceivingEventError {
+    <span class="kw">fn </span>source(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>)&gt; {
+        <span class="self">self</span>.source
+            .as_ref()
+            .map(|source| <span class="kw-2">&amp;**</span>source <span class="kw">as </span><span class="kw-2">&amp;</span>(<span class="kw">dyn </span>Error + <span class="lifetime">&#39;static</span>))
     }
 }
 
-<span class="doccomment">/// Type of [`ReceivingEventError`] that occurred.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReceivingEventErrorType</span> {
-    <span class="doccomment">/// Provided authorization token is invalid.</span>
-    <span class="ident">AuthorizationInvalid</span> { <span class="ident">shard_id</span>: <span class="ident">u64</span>, <span class="ident">token</span>: <span class="ident">String</span> },
-    <span class="doccomment">/// Decompressing a frame from Discord failed.</span>
-    <span class="ident">Decompressing</span>,
-    <span class="doccomment">/// The event stream has ended, this is recoverable by resuming.</span>
-    <span class="ident">EventStreamEnded</span>,
-    <span class="doccomment">/// Current user isn&#39;t allowed to use at least one of the configured</span>
-    <span class="doccomment">/// intents.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The intents are provided.</span>
-    <span class="ident">IntentsDisallowed</span> {
-        <span class="doccomment">/// The configured intents for the shard.</span>
-        <span class="ident">intents</span>: <span class="ident">Intents</span>,
-        <span class="doccomment">/// The ID of the shard.</span>
-        <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Type of [`ReceivingEventError`] that occurred.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub enum </span>ReceivingEventErrorType {
+    <span class="doccomment">/// Provided authorization token is invalid.
+    </span>AuthorizationInvalid { shard_id: u64, token: String },
+    <span class="doccomment">/// Decompressing a frame from Discord failed.
+    </span>Decompressing,
+    <span class="doccomment">/// The event stream has ended, this is recoverable by resuming.
+    </span>EventStreamEnded,
+    <span class="doccomment">/// Current user isn&#39;t allowed to use at least one of the configured
+    /// intents.
+    ///
+    /// The intents are provided.
+    </span>IntentsDisallowed {
+        <span class="doccomment">/// The configured intents for the shard.
+        </span>intents: Intents,
+        <span class="doccomment">/// The ID of the shard.
+        </span>shard_id: u64,
     },
-    <span class="doccomment">/// Configured intents aren&#39;t supported by Discord&#39;s gateway.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The intents are provided.</span>
-    <span class="ident">IntentsInvalid</span> {
-        <span class="doccomment">/// Configured intents for the shard.</span>
-        <span class="ident">intents</span>: <span class="ident">Intents</span>,
-        <span class="doccomment">/// ID of the shard.</span>
-        <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// Configured intents aren&#39;t supported by Discord&#39;s gateway.
+    ///
+    /// The intents are provided.
+    </span>IntentsInvalid {
+        <span class="doccomment">/// Configured intents for the shard.
+        </span>intents: Intents,
+        <span class="doccomment">/// ID of the shard.
+        </span>shard_id: u64,
     },
-    <span class="doccomment">/// Invalid API version was used for identify.</span>
-    <span class="ident">InvalidApiVersion</span>,
-    <span class="doccomment">/// Attempting to identify a invalid shard.</span>
-    <span class="ident">InvalidShard</span> {
-        <span class="doccomment">/// Shard count.</span>
-        <span class="ident">shard_count</span>: <span class="ident">u64</span>,
-        <span class="doccomment">/// ID of the shard.</span>
-        <span class="ident">shard_id</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// Invalid API version was used for identify.
+    </span>InvalidApiVersion,
+    <span class="doccomment">/// Attempting to identify a invalid shard.
+    </span>InvalidShard {
+        <span class="doccomment">/// Shard count.
+        </span>shard_count: u64,
+        <span class="doccomment">/// ID of the shard.
+        </span>shard_id: u64,
     },
-    <span class="doccomment">/// Sharding is required for the bot.</span>
-    <span class="ident">ShardingRequired</span>,
+    <span class="doccomment">/// Sharding is required for the bot.
+    </span>ShardingRequired,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>)]</span>
-<span class="kw">struct</span> <span class="ident">ReadyMinimal</span> {
-    <span class="ident">d</span>: <span class="ident">Ready</span>,
+<span class="attribute">#[derive(Deserialize)]
+</span><span class="kw">struct </span>ReadyMinimal {
+    d: Ready,
 }
 
-<span class="doccomment">/// Runs in the background and processes incoming events, and then broadcasts</span>
-<span class="doccomment">/// to all listeners.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ShardProcessor</span> {
-    <span class="kw">pub</span> <span class="ident">config</span>: <span class="ident">Arc</span>&lt;<span class="ident">Config</span>&gt;,
-    <span class="kw">pub</span> <span class="ident">emitter</span>: <span class="ident">Emitter</span>,
-    <span class="kw">pub</span> <span class="ident">rx</span>: <span class="ident">UnboundedReceiver</span>&lt;<span class="ident">Message</span>&gt;,
-    <span class="kw">pub</span> <span class="ident">session</span>: <span class="ident">Arc</span>&lt;<span class="ident">Session</span>&gt;,
-    <span class="ident">compression</span>: <span class="ident">Compression</span>,
-    <span class="ident">url</span>: <span class="ident">Box</span>&lt;<span class="ident">str</span>&gt;,
-    <span class="ident">resume</span>: <span class="prelude-ty">Option</span>&lt;(<span class="ident">u64</span>, <span class="ident">Box</span>&lt;<span class="ident">str</span>&gt;)&gt;,
-    <span class="ident">wtx</span>: <span class="ident">WatchSender</span>&lt;<span class="ident">Arc</span>&lt;<span class="ident">Session</span>&gt;&gt;,
+<span class="doccomment">/// Runs in the background and processes incoming events, and then broadcasts
+/// to all listeners.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>ShardProcessor {
+    <span class="kw">pub </span>config: Arc&lt;Config&gt;,
+    <span class="kw">pub </span>emitter: Emitter,
+    <span class="kw">pub </span>rx: UnboundedReceiver&lt;Message&gt;,
+    <span class="kw">pub </span>session: Arc&lt;Session&gt;,
+    compression: Compression,
+    url: Box&lt;str&gt;,
+    resume: <span class="prelude-ty">Option</span>&lt;(u64, Box&lt;str&gt;)&gt;,
+    wtx: WatchSender&lt;Arc&lt;Session&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">ShardProcessor</span> {
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">config</span>: <span class="ident">Arc</span>&lt;<span class="ident">Config</span>&gt;,
-        <span class="ident">emitter</span>: <span class="ident">Emitter</span>,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="self">Self</span>, <span class="ident">WatchReceiver</span>&lt;<span class="ident">Arc</span>&lt;<span class="ident">Session</span>&gt;&gt;), <span class="ident">ConnectingError</span>&gt; {
-        <span class="comment">//if we got resume info we don&#39;t need to wait</span>
-        <span class="kw">let</span> <span class="ident">shard_id</span> = <span class="ident">config</span>.<span class="ident">shard</span>();
-        <span class="kw">let</span> <span class="ident">resumable</span> = <span class="ident">config</span>.<span class="ident">sequence</span>.<span class="ident">is_some</span>() &amp;&amp; <span class="ident">config</span>.<span class="ident">session_id</span>.<span class="ident">is_some</span>();
-        <span class="kw">if</span> !<span class="ident">resumable</span> {
+<span class="kw">impl </span>ShardProcessor {
+    <span class="kw">pub async fn </span>new(
+        config: Arc&lt;Config&gt;,
+        emitter: Emitter,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="self">Self</span>, WatchReceiver&lt;Arc&lt;Session&gt;&gt;), ConnectingError&gt; {
+        <span class="comment">//if we got resume info we don&#39;t need to wait
+        </span><span class="kw">let </span>shard_id = config.shard();
+        <span class="kw">let </span>resumable = config.sequence.is_some() &amp;&amp; config.session_id.is_some();
+        <span class="kw">if </span>!resumable {
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;shard {shard_id:?} is not resumable&quot;</span>);
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;shard {shard_id:?} queued&quot;</span>);
 
-            <span class="ident">config</span>.<span class="ident">queue</span>.<span class="ident">request</span>(<span class="ident">shard_id</span>).<span class="kw">await</span>;
+            config.queue.request(shard_id).<span class="kw">await</span>;
 
-            <span class="macro">tracing::debug!</span>(<span class="string">&quot;shard {:?} finished queue&quot;</span>, <span class="ident">config</span>.<span class="ident">shard</span>());
+            <span class="macro">tracing::debug!</span>(<span class="string">&quot;shard {:?} finished queue&quot;</span>, config.shard());
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">url</span> = <span class="ident">config</span>.<span class="ident">gateway_url</span>().<span class="ident">to_owned</span>();
+        <span class="kw">let </span><span class="kw-2">mut </span>url = config.gateway_url().to_owned();
 
-        <span class="ident">url</span>.<span class="ident">push_str</span>(<span class="string">&quot;?v=&quot;</span>);
-        <span class="ident">url</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">API_VERSION</span>.<span class="ident">to_string</span>());
+        url.push_str(<span class="string">&quot;?v=&quot;</span>);
+        url.push_str(<span class="kw-2">&amp;</span>API_VERSION.to_string());
 
-        <span class="comment">// Discord&#39;s documentation states:</span>
-        <span class="comment">//</span>
-        <span class="comment">// &quot;Generally, it is a good idea to explicitly pass the gateway version</span>
-        <span class="comment">// and encoding&quot;.</span>
-        <span class="comment">//</span>
-        <span class="comment">// &lt;https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-query-string-params&gt;</span>
-        <span class="ident">url</span>.<span class="ident">push_str</span>(<span class="string">&quot;&amp;encoding=json&quot;</span>);
+        <span class="comment">// Discord&#39;s documentation states:
+        //
+        // &quot;Generally, it is a good idea to explicitly pass the gateway version
+        // and encoding&quot;.
+        //
+        // &lt;https://discord.com/developers/docs/topics/gateway#connecting-gateway-url-query-string-params&gt;
+        </span>url.push_str(<span class="string">&quot;&amp;encoding=json&quot;</span>);
 
-        <span class="ident">compression::add_url_feature</span>(<span class="kw-2">&amp;mut</span> <span class="ident">url</span>);
+        compression::add_url_feature(<span class="kw-2">&amp;mut </span>url);
 
-        <span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardConnecting</span>(<span class="ident">Connecting</span> {
-            <span class="ident">gateway</span>: <span class="ident">url</span>.<span class="ident">clone</span>(),
-            <span class="ident">shard_id</span>: <span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+        emitter.event(Event::ShardConnecting(Connecting {
+            gateway: url.clone(),
+            shard_id: config.shard()[<span class="number">0</span>],
         }));
-        <span class="kw">let</span> <span class="ident">stream</span> = <span class="ident"><span class="self">Self</span>::connect</span>(
-            <span class="kw-2">&amp;</span><span class="ident">url</span>,
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-                <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-            ))]</span>
-            <span class="ident">config</span>.<span class="ident">tls</span>.<span class="ident">as_ref</span>(),
+        <span class="kw">let </span>stream = <span class="self">Self</span>::connect(
+            <span class="kw-2">&amp;</span>url,
+            <span class="attribute">#[cfg(any(
+                feature = <span class="string">&quot;native&quot;</span>,
+                feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+                feature = <span class="string">&quot;rustls-webpki-roots&quot;
+            </span>))]
+            </span>config.tls.as_ref(),
         )
         .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> (<span class="ident">forwarder</span>, <span class="ident">rx</span>, <span class="ident">tx</span>) = <span class="ident">SocketForwarder::new</span>(<span class="ident">stream</span>);
-        <span class="ident">tokio::spawn</span>(<span class="ident">forwarder</span>.<span class="ident">run</span>());
+        <span class="kw">let </span>(forwarder, rx, tx) = SocketForwarder::new(stream);
+        tokio::spawn(forwarder.run());
 
-        <span class="kw">let</span> <span class="ident">session</span> = <span class="ident">Arc::new</span>(<span class="ident">Session::new</span>(<span class="ident">tx</span>, <span class="ident">config</span>.<span class="ident">ratelimit_payloads</span>));
+        <span class="kw">let </span>session = Arc::new(Session::new(tx, config.ratelimit_payloads));
 
-        <span class="kw">if</span> <span class="ident">resumable</span> {
-            <span class="ident">session</span>.<span class="ident">set_id</span>(<span class="ident">config</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>().<span class="ident">unwrap</span>());
-            <span class="ident">session</span>
-                .<span class="ident">seq</span>
-                .<span class="ident">store</span>(<span class="ident">config</span>.<span class="ident">sequence</span>.<span class="ident">unwrap</span>(), <span class="ident">Ordering::Relaxed</span>)
+        <span class="kw">if </span>resumable {
+            session.set_id(config.session_id.clone().unwrap());
+            session
+                .seq
+                .store(config.sequence.unwrap(), Ordering::Relaxed)
         }
 
-        <span class="kw">let</span> (<span class="ident">wtx</span>, <span class="ident">wrx</span>) = <span class="ident">watch_channel</span>(<span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="ident">session</span>));
+        <span class="kw">let </span>(wtx, wrx) = watch_channel(Arc::clone(<span class="kw-2">&amp;</span>session));
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">processor</span> = <span class="self">Self</span> {
-            <span class="ident">compression</span>: <span class="ident">Compression::new</span>(<span class="ident">shard_id</span>),
-            <span class="ident">config</span>,
-            <span class="ident">emitter</span>,
-            <span class="ident">rx</span>,
-            <span class="ident">session</span>,
-            <span class="ident">url</span>: <span class="ident">url</span>.<span class="ident">into_boxed_str</span>(),
-            <span class="ident">resume</span>: <span class="prelude-val">None</span>,
-            <span class="ident">wtx</span>,
+        <span class="kw">let </span><span class="kw-2">mut </span>processor = <span class="self">Self </span>{
+            compression: Compression::new(shard_id),
+            config,
+            emitter,
+            rx,
+            session,
+            url: url.into_boxed_str(),
+            resume: <span class="prelude-val">None</span>,
+            wtx,
         };
 
-        <span class="kw">if</span> <span class="ident">resumable</span> {
+        <span class="kw">if </span>resumable {
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;resuming shard {shard_id:?}&quot;</span>);
 
-            <span class="ident">processor</span>.<span class="ident">resume</span>().<span class="kw">await</span>;
+            processor.resume().<span class="kw">await</span>;
         }
 
-        <span class="prelude-val">Ok</span>((<span class="ident">processor</span>, <span class="ident">wrx</span>))
+        <span class="prelude-val">Ok</span>((processor, wrx))
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">next_payload</span>().<span class="kw">await</span> {
+    <span class="kw">pub async fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>) {
+        <span class="kw">loop </span>{
+            <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.next_payload().<span class="kw">await </span>{
                 <span class="macro">tracing::warn!</span>(<span class="string">&quot;{source}&quot;</span>);
 
-                <span class="self">self</span>.<span class="ident">emit_disconnected</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
+                <span class="self">self</span>.emit_disconnected(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
 
-                <span class="kw">if</span> <span class="ident">source</span>.<span class="ident">fatal</span>() {
+                <span class="kw">if </span>source.fatal() {
                     <span class="kw">break</span>;
                 }
 
-                <span class="kw">if</span> <span class="ident">source</span>.<span class="ident">reconnectable</span>() {
-                    <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+                <span class="kw">if </span>source.reconnectable() {
+                    <span class="self">self</span>.reconnect().<span class="kw">await</span>;
                 }
 
-                <span class="kw">if</span> <span class="ident">source</span>.<span class="ident">resumable</span>() {
-                    <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span>;
+                <span class="kw">if </span>source.resumable() {
+                    <span class="self">self</span>.resume().<span class="kw">await</span>;
                 }
 
                 <span class="kw">continue</span>;
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">process</span>().<span class="kw">await</span> {
-                <span class="kw">if</span> <span class="macro">matches!</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>.<span class="ident">kind</span>, <span class="ident">ProcessErrorType::EventTypeUnknown</span> { .. }) {
+            <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.process().<span class="kw">await </span>{
+                <span class="kw">if </span><span class="macro">matches!</span>(<span class="kw-2">&amp;</span>source.kind, ProcessErrorType::EventTypeUnknown { .. }) {
                     <span class="macro">tracing::debug!</span>(
-                        <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
-                        <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
+                        shard_id = <span class="self">self</span>.config.shard()[<span class="number">0</span>],
+                        shard_total = <span class="self">self</span>.config.shard()[<span class="number">1</span>],
                         <span class="string">&quot;processing incoming event failed: {source:?}&quot;</span>,
                     );
-                } <span class="kw">else</span> {
+                } <span class="kw">else </span>{
                     <span class="macro">tracing::error!</span>(
-                        <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
-                        <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
+                        shard_id = <span class="self">self</span>.config.shard()[<span class="number">0</span>],
+                        shard_total = <span class="self">self</span>.config.shard()[<span class="number">1</span>],
                         <span class="string">&quot;processing incoming event failed: {source:?}&quot;</span>,
                     );
                 }
 
-                <span class="kw">if</span> <span class="ident">source</span>.<span class="ident">fatal</span>() {
+                <span class="kw">if </span>source.fatal() {
                     <span class="macro">tracing::debug!</span>(<span class="string">&quot;error processing event; reconnecting&quot;</span>);
-                    <span class="self">self</span>.<span class="ident">emit_disconnected</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
+                    <span class="self">self</span>.emit_disconnected(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
 
-                    <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+                    <span class="self">self</span>.reconnect().<span class="kw">await</span>;
                 }
             }
         }
     }
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_lines</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ProcessError</span>&gt; {
-        <span class="kw">let</span> (<span class="ident">op</span>, <span class="ident">seq</span>, <span class="ident">event_type</span>) = {
-            <span class="kw">let</span> <span class="ident">buffer</span> = <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">buffer_slice_mut</span>();
-            <span class="kw">let</span> <span class="ident">json</span> = <span class="ident">str::from_utf8_mut</span>(<span class="ident">buffer</span>).<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ProcessError</span> {
-                <span class="ident">kind</span>: <span class="ident">ProcessErrorType::PayloadNotUtf8</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+    <span class="attribute">#[allow(clippy::too_many_lines)]
+    </span><span class="kw">async fn </span>process(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProcessError&gt; {
+        <span class="kw">let </span>(op, seq, event_type) = {
+            <span class="kw">let </span>buffer = <span class="self">self</span>.compression.buffer_slice_mut();
+            <span class="kw">let </span>json = str::from_utf8_mut(buffer).map_err(|source| ProcessError {
+                kind: ProcessErrorType::PayloadNotUtf8,
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
             })<span class="question-mark">?</span>;
 
-            <span class="macro">tracing::trace!</span>(%<span class="ident">json</span>, <span class="string">&quot;Received JSON&quot;</span>);
+            <span class="macro">tracing::trace!</span>(%json, <span class="string">&quot;Received JSON&quot;</span>);
 
-            <span class="kw">let</span> <span class="ident">emitter</span> = <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">clone</span>();
+            <span class="kw">let </span>emitter = <span class="self">self</span>.emitter.clone();
 
-            <span class="kw">let</span> (<span class="ident">op</span>, <span class="ident">seq</span>, <span class="ident">event_type</span>) =
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">deserializer</span>) = <span class="ident">GatewayEventDeserializer::from_json</span>(<span class="ident">json</span>) {
-                    <span class="kw">let</span> (<span class="ident">op</span>, <span class="ident">seq</span>, <span class="ident">event_type</span>) = <span class="ident">deserializer</span>.<span class="ident">into_parts</span>();
+            <span class="kw">let </span>(op, seq, event_type) =
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(deserializer) = GatewayEventDeserializer::from_json(json) {
+                    <span class="kw">let </span>(op, seq, event_type) = deserializer.into_parts();
 
-                    <span class="comment">// Unfortunately lifetimes and mutability requirements</span>
-                    <span class="comment">// conflict here if we return an immutable reference to the</span>
-                    <span class="comment">// event type, so we&#39;re going to have to take ownership of</span>
-                    <span class="comment">// this if we don&#39;t want to do anything too dangerous. It</span>
-                    <span class="comment">// should be a good trade-off either way.</span>
-                    (<span class="ident">op</span>, <span class="ident">seq</span>, <span class="ident">event_type</span>.<span class="ident">map</span>(<span class="ident">ToOwned::to_owned</span>))
-                } <span class="kw">else</span> {
+                    <span class="comment">// Unfortunately lifetimes and mutability requirements
+                    // conflict here if we return an immutable reference to the
+                    // event type, so we&#39;re going to have to take ownership of
+                    // this if we don&#39;t want to do anything too dangerous. It
+                    // should be a good trade-off either way.
+                    </span>(op, seq, event_type.map(ToOwned::to_owned))
+                } <span class="kw">else </span>{
                     <span class="macro">tracing::error!</span>(
-                        <span class="ident">json</span> = <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">buffer_slice_mut</span>(),
-                        <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
-                        <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
-                        <span class="ident">seq</span> = <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">seq</span>(),
-                        <span class="ident">stage</span> = <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">session</span>.<span class="ident">stage</span>(),
+                        json = <span class="question-mark">?</span><span class="self">self</span>.compression.buffer_slice_mut(),
+                        shard_id = <span class="self">self</span>.config.shard()[<span class="number">0</span>],
+                        shard_total = <span class="self">self</span>.config.shard()[<span class="number">1</span>],
+                        seq = <span class="self">self</span>.session.seq(),
+                        stage = <span class="question-mark">?</span><span class="self">self</span>.session.stage(),
                         <span class="string">&quot;received payload without opcode&quot;</span>,
                     );
 
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ProcessError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ProcessErrorType::ParsingPayload</span>,
-                        <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">GatewayEventParsingError</span> {
-                            <span class="ident">kind</span>: <span class="ident">GatewayEventParsingErrorType::PayloadInvalid</span>,
-                            <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ProcessError {
+                        kind: ProcessErrorType::ParsingPayload,
+                        source: <span class="prelude-val">Some</span>(Box::new(GatewayEventParsingError {
+                            kind: GatewayEventParsingErrorType::PayloadInvalid,
+                            source: <span class="prelude-val">None</span>,
                         })),
                     });
                 };
 
-            <span class="comment">// We can do a few little optimization tricks here. For the</span>
-            <span class="comment">// &quot;heartbeat ack&quot; and &quot;reconnect&quot; opcodes we can construct</span>
-            <span class="comment">// the gateway events without needing to go through a serde</span>
-            <span class="comment">// context.</span>
-            <span class="comment">//</span>
-            <span class="comment">// Additionally, the processor cares about the &quot;resumed&quot;</span>
-            <span class="comment">// dispatch event type, which has no payload and can be constructed.</span>
-            <span class="comment">//</span>
-            <span class="comment">// This might not be shaving off entire milliseconds for these few</span>
-            <span class="comment">// events each time, but it certainly adds up.</span>
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">op</span>, <span class="number">1</span> | <span class="number">7</span> | <span class="number">9</span> | <span class="number">10</span> | <span class="number">11</span>) {
-                <span class="comment">// Have to use an if statement here if we want to use the OpCode</span>
-                <span class="comment">// enum, since matching with repr values isn&#39;t allowed.</span>
-                <span class="kw">let</span> <span class="ident">gateway_event</span> = <span class="kw">if</span> <span class="ident">op</span> == <span class="ident">OpCode::HeartbeatAck</span> <span class="kw">as</span> <span class="ident">u8</span> {
-                    <span class="ident">GatewayEvent::HeartbeatAck</span>
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">op</span> == <span class="ident">OpCode::Reconnect</span> <span class="kw">as</span> <span class="ident">u8</span> {
-                    <span class="ident">GatewayEvent::Reconnect</span>
-                } <span class="kw">else</span> {
-                    <span class="ident">json::parse_gateway_event</span>(<span class="ident">op</span>, <span class="ident">seq</span>, <span class="ident">event_type</span>.<span class="ident">as_deref</span>(), <span class="ident">buffer</span>).<span class="ident">map_err</span>(
-                        |<span class="ident">source</span>| <span class="ident">ProcessError</span> {
-                            <span class="ident">kind</span>: <span class="ident">ProcessErrorType::ParsingPayload</span>,
-                            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            <span class="comment">// We can do a few little optimization tricks here. For the
+            // &quot;heartbeat ack&quot; and &quot;reconnect&quot; opcodes we can construct
+            // the gateway events without needing to go through a serde
+            // context.
+            //
+            // Additionally, the processor cares about the &quot;resumed&quot;
+            // dispatch event type, which has no payload and can be constructed.
+            //
+            // This might not be shaving off entire milliseconds for these few
+            // events each time, but it certainly adds up.
+            </span><span class="kw">if </span><span class="macro">matches!</span>(op, <span class="number">1 </span>| <span class="number">7 </span>| <span class="number">9 </span>| <span class="number">10 </span>| <span class="number">11</span>) {
+                <span class="comment">// Have to use an if statement here if we want to use the OpCode
+                // enum, since matching with repr values isn&#39;t allowed.
+                </span><span class="kw">let </span>gateway_event = <span class="kw">if </span>op == OpCode::HeartbeatAck <span class="kw">as </span>u8 {
+                    GatewayEvent::HeartbeatAck
+                } <span class="kw">else if </span>op == OpCode::Reconnect <span class="kw">as </span>u8 {
+                    GatewayEvent::Reconnect
+                } <span class="kw">else </span>{
+                    json::parse_gateway_event(op, seq, event_type.as_deref(), buffer).map_err(
+                        |source| ProcessError {
+                            kind: ProcessErrorType::ParsingPayload,
+                            source: <span class="prelude-val">Some</span>(Box::new(source)),
                         },
-                    )<span class="question-mark">?</span>
-                };
+                    )<span class="question-mark">?
+                </span>};
 
-                <span class="self">self</span>.<span class="ident">process_gateway_event</span>(<span class="kw-2">&amp;</span><span class="ident">gateway_event</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::from</span>(<span class="ident">gateway_event</span>));
+                <span class="self">self</span>.process_gateway_event(<span class="kw-2">&amp;</span>gateway_event).<span class="kw">await</span><span class="question-mark">?</span>;
+                emitter.event(Event::from(gateway_event));
 
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">seq</span>) = <span class="ident">seq</span> {
-                    <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_seq</span>(<span class="ident">seq</span>);
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(seq) = seq {
+                    <span class="self">self</span>.session.set_seq(seq);
                 }
 
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
             }
 
-            <span class="kw">let</span> <span class="ident">seq</span> = <span class="ident">seq</span>.<span class="ident">ok_or</span>(<span class="ident">ProcessError</span> {
-                <span class="ident">kind</span>: <span class="ident">ProcessErrorType::SequenceMissing</span>,
-                <span class="ident">source</span>: <span class="prelude-val">None</span>,
+            <span class="kw">let </span>seq = seq.ok_or(ProcessError {
+                kind: ProcessErrorType::SequenceMissing,
+                source: <span class="prelude-val">None</span>,
             })<span class="question-mark">?</span>;
 
-            <span class="kw">if</span> <span class="ident">event_type</span>.<span class="ident">as_deref</span>() == <span class="prelude-val">Some</span>(<span class="string">&quot;RESUMED&quot;</span>) {
-                <span class="self">self</span>.<span class="ident">process_resumed</span>(<span class="ident">seq</span>);
+            <span class="kw">if </span>event_type.as_deref() == <span class="prelude-val">Some</span>(<span class="string">&quot;RESUMED&quot;</span>) {
+                <span class="self">self</span>.process_resumed(seq);
 
-                <span class="kw">if</span> <span class="ident">emitter</span>.<span class="ident">wants</span>(<span class="ident">EventTypeFlags::RESUMED</span>) {
-                    <span class="kw">let</span> <span class="ident">gateway_event</span> =
-                        <span class="ident">GatewayEvent::Dispatch</span>(<span class="ident">seq</span>, <span class="ident">Box::new</span>(<span class="ident">DispatchEvent::Resumed</span>));
+                <span class="kw">if </span>emitter.wants(EventTypeFlags::RESUMED) {
+                    <span class="kw">let </span>gateway_event =
+                        GatewayEvent::Dispatch(seq, Box::new(DispatchEvent::Resumed));
 
-                    <span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::from</span>(<span class="ident">gateway_event</span>));
+                    emitter.event(Event::from(gateway_event));
                 }
 
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">event_type</span>.<span class="ident">as_deref</span>() == <span class="prelude-val">Some</span>(<span class="string">&quot;READY&quot;</span>) {
-                <span class="kw">let</span> <span class="ident">ready</span> = <span class="ident">json::from_slice</span>::&lt;<span class="ident">ReadyMinimal</span>&gt;(<span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">buffer_slice_mut</span>())
-                    .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ProcessError</span> {
-                    <span class="ident">kind</span>: <span class="ident">ProcessErrorType::ParsingPayload</span>,
-                    <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">GatewayEventParsingError</span> {
-                        <span class="ident">kind</span>: <span class="ident">GatewayEventParsingErrorType::Deserializing</span>,
-                        <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+            } <span class="kw">else if </span>event_type.as_deref() == <span class="prelude-val">Some</span>(<span class="string">&quot;READY&quot;</span>) {
+                <span class="kw">let </span>ready = json::from_slice::&lt;ReadyMinimal&gt;(<span class="self">self</span>.compression.buffer_slice_mut())
+                    .map_err(|source| ProcessError {
+                    kind: ProcessErrorType::ParsingPayload,
+                    source: <span class="prelude-val">Some</span>(Box::new(GatewayEventParsingError {
+                        kind: GatewayEventParsingErrorType::Deserializing,
+                        source: <span class="prelude-val">Some</span>(Box::new(source)),
                     })),
                 })<span class="question-mark">?</span>;
 
-                <span class="self">self</span>.<span class="ident">process_ready</span>(<span class="kw-2">&amp;</span><span class="ident">ready</span>.<span class="ident">d</span>);
-                <span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::Ready</span>(<span class="ident">Box::new</span>(<span class="ident">ready</span>.<span class="ident">d</span>)));
+                <span class="self">self</span>.process_ready(<span class="kw-2">&amp;</span>ready.d);
+                emitter.event(Event::Ready(Box::new(ready.d)));
 
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
             }
 
-            <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_seq</span>(<span class="ident">seq</span>);
+            <span class="self">self</span>.session.set_seq(seq);
 
-            (<span class="ident">op</span>, <span class="ident">seq</span>, <span class="ident">event_type</span>)
+            (op, seq, event_type)
         };
 
-        <span class="kw">let</span> <span class="ident">buffer</span> = <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">buffer_slice_mut</span>();
+        <span class="kw">let </span>buffer = <span class="self">self</span>.compression.buffer_slice_mut();
 
-        <span class="self">self</span>.<span class="ident">emitter</span>
-            .<span class="ident">json</span>(<span class="ident">op</span>, <span class="prelude-val">Some</span>(<span class="ident">seq</span>), <span class="ident">event_type</span>.<span class="ident">as_deref</span>(), <span class="ident">buffer</span>)
-            .<span class="ident">map_err</span>(|<span class="ident">source</span>| {
-                <span class="kw">let</span> (<span class="ident">kind</span>, <span class="ident">source</span>) = <span class="ident">source</span>.<span class="ident">into_parts</span>();
+        <span class="self">self</span>.emitter
+            .json(op, <span class="prelude-val">Some</span>(seq), event_type.as_deref(), buffer)
+            .map_err(|source| {
+                <span class="kw">let </span>(kind, source) = source.into_parts();
 
-                <span class="kw">let</span> <span class="ident">new_kind</span> = <span class="kw">match</span> <span class="ident">kind</span> {
-                    <span class="ident">EmitJsonErrorType::Parsing</span> =&gt; <span class="ident">ProcessErrorType::ParsingPayload</span>,
-                    <span class="ident">EmitJsonErrorType::EventTypeUnknown</span> { <span class="ident">event_type</span>, <span class="ident">op</span> } =&gt; {
-                        <span class="ident">ProcessErrorType::EventTypeUnknown</span> { <span class="ident">event_type</span>, <span class="ident">op</span> }
+                <span class="kw">let </span>new_kind = <span class="kw">match </span>kind {
+                    EmitJsonErrorType::Parsing =&gt; ProcessErrorType::ParsingPayload,
+                    EmitJsonErrorType::EventTypeUnknown { event_type, op } =&gt; {
+                        ProcessErrorType::EventTypeUnknown { event_type, op }
                     }
                 };
 
-                <span class="ident">ProcessError</span> {
-                    <span class="ident">kind</span>: <span class="ident">new_kind</span>,
-                    <span class="ident">source</span>,
+                ProcessError {
+                    kind: new_kind,
+                    source,
                 }
             })
     }
 
-    <span class="kw">fn</span> <span class="ident">process_ready</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">ready</span>: <span class="kw-2">&amp;</span><span class="ident">Ready</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;Dispatch&quot;</span>);
+    <span class="kw">fn </span>process_ready(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ready: <span class="kw-2">&amp;</span>Ready) {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;Dispatch&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">Stage::Connected</span>);
-        <span class="self">self</span>.<span class="ident">session</span>
-            .<span class="ident">set_id</span>(<span class="ident">ready</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>().<span class="ident">into_boxed_str</span>());
+        <span class="self">self</span>.session.set_stage(Stage::Connected);
+        <span class="self">self</span>.session
+            .set_id(ready.session_id.clone().into_boxed_str());
 
-        <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardConnected</span>(<span class="ident">Connected</span> {
-            <span class="ident">heartbeat_interval</span>: <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">heartbeat_interval</span>(),
-            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+        <span class="self">self</span>.emitter.event(Event::ShardConnected(Connected {
+            heartbeat_interval: <span class="self">self</span>.session.heartbeat_interval(),
+            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
         }));
     }
 
-    <span class="kw">fn</span> <span class="ident">process_resumed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">seq</span>: <span class="ident">u64</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;Dispatch&quot;</span>);
+    <span class="kw">fn </span>process_resumed(<span class="kw-2">&amp;</span><span class="self">self</span>, seq: u64) {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;Dispatch&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_seq</span>(<span class="ident">seq</span>);
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">Stage::Connected</span>);
-        <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardConnected</span>(<span class="ident">Connected</span> {
-            <span class="ident">heartbeat_interval</span>: <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">heartbeat_interval</span>(),
-            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+        <span class="self">self</span>.session.set_seq(seq);
+        <span class="self">self</span>.session.set_stage(Stage::Connected);
+        <span class="self">self</span>.emitter.event(Event::ShardConnected(Connected {
+            heartbeat_interval: <span class="self">self</span>.session.heartbeat_interval(),
+            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
         }));
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">heartbeats</span>.<span class="ident">receive</span>();
+        <span class="self">self</span>.session.heartbeats.receive();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_gateway_event</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">GatewayEvent</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ProcessError</span>&gt; {
-        <span class="kw">match</span> <span class="ident">event</span> {
-            <span class="ident">GatewayEvent::Dispatch</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;dispatch events separately handled&quot;</span>),
-            <span class="ident">GatewayEvent::Heartbeat</span>(<span class="ident">seq</span>) =&gt; <span class="self">self</span>.<span class="ident">process_heartbeat</span>(<span class="kw-2">*</span><span class="ident">seq</span>).<span class="kw">await</span>,
-            <span class="ident">GatewayEvent::Hello</span>(<span class="ident">interval</span>) =&gt; <span class="self">self</span>.<span class="ident">process_hello</span>(<span class="kw-2">*</span><span class="ident">interval</span>).<span class="kw">await</span><span class="question-mark">?</span>,
-            <span class="ident">GatewayEvent::HeartbeatAck</span> =&gt; <span class="self">self</span>.<span class="ident">process_heartbeat_ack</span>(),
-            <span class="ident">GatewayEvent::InvalidateSession</span>(<span class="ident">resumable</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">process_invalidate_session</span>(<span class="kw-2">*</span><span class="ident">resumable</span>).<span class="kw">await</span>
-            }
-            <span class="ident">GatewayEvent::Reconnect</span> =&gt; <span class="self">self</span>.<span class="ident">process_reconnect</span>().<span class="kw">await</span><span class="question-mark">?</span>,
+    <span class="kw">async fn </span>process_gateway_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>GatewayEvent) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProcessError&gt; {
+        <span class="kw">match </span>event {
+            GatewayEvent::Dispatch(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;dispatch events separately handled&quot;</span>),
+            GatewayEvent::Heartbeat(seq) =&gt; <span class="self">self</span>.process_heartbeat(<span class="kw-2">*</span>seq).<span class="kw">await</span>,
+            GatewayEvent::Hello(interval) =&gt; <span class="self">self</span>.process_hello(<span class="kw-2">*</span>interval).<span class="kw">await</span><span class="question-mark">?</span>,
+            GatewayEvent::HeartbeatAck =&gt; <span class="self">self</span>.process_heartbeat_ack(),
+            GatewayEvent::InvalidateSession(resumable) =&gt; {
+                <span class="self">self</span>.process_invalidate_session(<span class="kw-2">*</span>resumable).<span class="kw">await
+            </span>}
+            GatewayEvent::Reconnect =&gt; <span class="self">self</span>.process_reconnect().<span class="kw">await</span><span class="question-mark">?</span>,
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">process_heartbeat_ack</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;HeartbeatAck&quot;</span>);
+    <span class="kw">fn </span>process_heartbeat_ack(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;HeartbeatAck&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">heartbeats</span>.<span class="ident">receive</span>();
+        <span class="self">self</span>.session.heartbeats.receive();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_heartbeat</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">seq</span>: <span class="ident">u64</span>) {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;Heartbeat&quot;</span>);
+    <span class="kw">async fn </span>process_heartbeat(<span class="kw-2">&amp;mut </span><span class="self">self</span>, seq: u64) {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;Heartbeat&quot;</span>);
 
-        <span class="kw">if</span> <span class="ident">seq</span> &gt; <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">seq</span>() + <span class="number">1</span> {
-            <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span>;
+        <span class="kw">if </span>seq &gt; <span class="self">self</span>.session.seq() + <span class="number">1 </span>{
+            <span class="self">self</span>.resume().<span class="kw">await</span>;
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">heartbeat</span>() {
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.session.heartbeat() {
             <span class="macro">tracing::warn!</span>(<span class="string">&quot;error sending heartbeat; reconnecting: {source}&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">emit_disconnected</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
+            <span class="self">self</span>.emit_disconnected(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
 
-            <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+            <span class="self">self</span>.reconnect().<span class="kw">await</span>;
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_hello</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">interval</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ProcessError</span>&gt; {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;Hello&quot;</span>);
+    <span class="kw">async fn </span>process_hello(<span class="kw-2">&amp;mut </span><span class="self">self</span>, interval: u64) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProcessError&gt; {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;Hello&quot;</span>);
 
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;got hello with interval {interval}&quot;</span>);
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">stage</span>() == <span class="ident">Stage::Resuming</span> &amp;&amp; <span class="self">self</span>.<span class="ident">resume</span>.<span class="ident">is_some</span>() {
-            <span class="comment">// Safe to unwrap so here as we have just checked that</span>
-            <span class="comment">// it is some.</span>
-            <span class="kw">let</span> (<span class="ident">seq</span>, <span class="ident">id</span>) = <span class="self">self</span>.<span class="ident">resume</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
+        <span class="kw">if </span><span class="self">self</span>.session.stage() == Stage::Resuming &amp;&amp; <span class="self">self</span>.resume.is_some() {
+            <span class="comment">// Safe to unwrap so here as we have just checked that
+            // it is some.
+            </span><span class="kw">let </span>(seq, id) = <span class="self">self</span>.resume.take().unwrap();
 
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;resuming with sequence {seq}, session id {id}&quot;</span>);
 
-            <span class="kw">let</span> <span class="ident">payload</span> = <span class="ident">Resume::new</span>(<span class="ident">seq</span>, <span class="ident">id</span>.<span class="ident">clone</span>().<span class="ident">into_string</span>(), <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">token</span>());
+            <span class="kw">let </span>payload = Resume::new(seq, id.clone().into_string(), <span class="self">self</span>.config.token());
 
-            <span class="comment">// Set id so it is correct for next resume.</span>
-            <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_id</span>(<span class="ident">id</span>);
+            <span class="comment">// Set id so it is correct for next resume.
+            </span><span class="self">self</span>.session.set_id(id);
 
-            <span class="kw">if</span> <span class="ident">interval</span> &gt; <span class="number">0</span> {
-                <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_heartbeat_interval</span>(<span class="ident">interval</span>);
-                <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">start_heartbeater</span>();
+            <span class="kw">if </span>interval &gt; <span class="number">0 </span>{
+                <span class="self">self</span>.session.set_heartbeat_interval(interval);
+                <span class="self">self</span>.session.start_heartbeater();
             }
 
-            <span class="self">self</span>.<span class="ident">send</span>(<span class="ident">payload</span>).<span class="kw">await</span>.<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ProcessError</span> {
-                <span class="ident">kind</span>: <span class="ident">ProcessErrorType::SessionSend</span>,
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            <span class="self">self</span>.send(payload).<span class="kw">await</span>.map_err(|source| ProcessError {
+                kind: ProcessErrorType::SessionSend,
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
             })<span class="question-mark">?</span>;
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">Stage::Identifying</span>);
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.session.set_stage(Stage::Identifying);
 
-            <span class="kw">if</span> <span class="ident">interval</span> &gt; <span class="number">0</span> {
-                <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_heartbeat_interval</span>(<span class="ident">interval</span>);
-                <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">start_heartbeater</span>();
+            <span class="kw">if </span>interval &gt; <span class="number">0 </span>{
+                <span class="self">self</span>.session.set_heartbeat_interval(interval);
+                <span class="self">self</span>.session.start_heartbeater();
             }
 
-            <span class="self">self</span>.<span class="ident">identify</span>().<span class="kw">await</span>.<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ProcessError</span> {
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-                <span class="ident">kind</span>: <span class="ident">ProcessErrorType::SessionSend</span>,
+            <span class="self">self</span>.identify().<span class="kw">await</span>.map_err(|source| ProcessError {
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
+                kind: ProcessErrorType::SessionSend,
             })<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_invalidate_session</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">resumable</span>: <span class="ident">bool</span>) {
-        <span class="self">self</span>.<span class="ident">emit_disconnected</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
+    <span class="kw">async fn </span>process_invalidate_session(<span class="kw-2">&amp;mut </span><span class="self">self</span>, resumable: bool) {
+        <span class="self">self</span>.emit_disconnected(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
 
-        <span class="kw">if</span> <span class="ident">resumable</span> {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-            <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;InvalidateSessionTrue&quot;</span>);
+        <span class="kw">if </span>resumable {
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+            </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;InvalidateSessionTrue&quot;</span>);
 
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;got request to resume the session&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span>;
-        } <span class="kw">else</span> {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-            <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;InvalidateSessionFalse&quot;</span>);
+            <span class="self">self</span>.resume().<span class="kw">await</span>;
+        } <span class="kw">else </span>{
+            <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+            </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;InvalidateSessionFalse&quot;</span>);
 
             <span class="macro">tracing::debug!</span>(<span class="string">&quot;got request to invalidate the session and reconnect&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+            <span class="self">self</span>.reconnect().<span class="kw">await</span>;
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_reconnect</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ProcessError</span>&gt; {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot;</span> =&gt; <span class="string">&quot;Reconnect&quot;</span>);
+    <span class="kw">async fn </span>process_reconnect(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProcessError&gt; {
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="macro">metrics::counter!</span>(<span class="string">&quot;GatewayEvent&quot;</span>, <span class="number">1</span>, <span class="string">&quot;GatewayEvent&quot; </span>=&gt; <span class="string">&quot;Reconnect&quot;</span>);
 
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;got request to reconnect&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">frame</span> = <span class="ident">CloseFrame</span> {
-            <span class="ident">code</span>: <span class="ident">CloseCode::Restart</span>,
-            <span class="ident">reason</span>: <span class="ident">Cow::Borrowed</span>(<span class="string">&quot;Reconnecting&quot;</span>),
+        <span class="kw">let </span>frame = CloseFrame {
+            code: CloseCode::Restart,
+            reason: Cow::Borrowed(<span class="string">&quot;Reconnecting&quot;</span>),
         };
-        <span class="self">self</span>.<span class="ident">session</span>
-            .<span class="ident">close</span>(<span class="prelude-val">Some</span>(<span class="ident">frame</span>.<span class="ident">clone</span>()))
-            .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ProcessError</span> {
-                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
-                <span class="ident">kind</span>: <span class="ident">ProcessErrorType::SendingClose</span>,
+        <span class="self">self</span>.session
+            .close(<span class="prelude-val">Some</span>(frame.clone()))
+            .map_err(|source| ProcessError {
+                source: <span class="prelude-val">Some</span>(Box::new(source)),
+                kind: ProcessErrorType::SendingClose,
             })<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">emit_disconnected</span>(<span class="prelude-val">Some</span>(<span class="ident">frame</span>.<span class="ident">code</span>.<span class="ident">into</span>()), <span class="prelude-val">Some</span>(<span class="ident">frame</span>.<span class="ident">reason</span>.<span class="ident">to_string</span>()))
+        <span class="self">self</span>.emit_disconnected(<span class="prelude-val">Some</span>(frame.code.into()), <span class="prelude-val">Some</span>(frame.reason.to_string()))
             .<span class="kw">await</span>;
-        <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span>;
+        <span class="self">self</span>.resume().<span class="kw">await</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">payload</span>: <span class="kw">impl</span> <span class="ident">Serialize</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">SessionSendError</span>&gt; {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">send</span>(<span class="ident">payload</span>) {
+    <span class="kw">pub async fn </span>send(<span class="kw-2">&amp;mut </span><span class="self">self</span>, payload: <span class="kw">impl </span>Serialize) -&gt; <span class="prelude-ty">Result</span>&lt;(), SessionSendError&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.session.send(payload) {
             <span class="macro">tracing::warn!</span>(<span class="string">&quot;sending message failed: {source:?}&quot;</span>);
 
-            <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">source</span>.<span class="ident">kind</span>(), <span class="ident">SessionSendErrorType::Sending</span> { .. }) {
-                <span class="self">self</span>.<span class="ident">emit_disconnected</span>(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
+            <span class="kw">if </span><span class="macro">matches!</span>(source.kind(), SessionSendErrorType::Sending { .. }) {
+                <span class="self">self</span>.emit_disconnected(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="kw">await</span>;
 
-                <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+                <span class="self">self</span>.reconnect().<span class="kw">await</span>;
             }
 
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>);
+            <span class="kw">return </span><span class="prelude-val">Err</span>(source);
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Wait for the next available complete event.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// When this resolves, the event buffer will be available in the inflater.</span>
-    <span class="doccomment">/// Calling this again will clear the inflater&#39;s buffer.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns a [`ReceivingEventErrorType::AuthorizationInvalid`] error type</span>
-    <span class="doccomment">/// if the provided authorization is invalid.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next_payload</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ReceivingEventError</span>&gt; {
-        <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">clear</span>();
+    <span class="doccomment">/// Wait for the next available complete event.
+    ///
+    /// When this resolves, the event buffer will be available in the inflater.
+    /// Calling this again will clear the inflater&#39;s buffer.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [`ReceivingEventErrorType::AuthorizationInvalid`] error type
+    /// if the provided authorization is invalid.
+    </span><span class="kw">async fn </span>next_payload(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ReceivingEventError&gt; {
+        <span class="self">self</span>.compression.clear();
 
-        <span class="kw">loop</span> {
-            <span class="comment">// Returns None when the socket forwarder has ended, meaning the</span>
-            <span class="comment">// connection was dropped.</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">msg</span> = <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">recv</span>().<span class="kw">await</span>.<span class="ident">ok_or</span>(<span class="ident">ReceivingEventError</span> {
-                <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::EventStreamEnded</span>,
-                <span class="ident">source</span>: <span class="prelude-val">None</span>,
+        <span class="kw">loop </span>{
+            <span class="comment">// Returns None when the socket forwarder has ended, meaning the
+            // connection was dropped.
+            </span><span class="kw">let </span><span class="kw-2">mut </span>msg = <span class="self">self</span>.rx.recv().<span class="kw">await</span>.ok_or(ReceivingEventError {
+                kind: ReceivingEventErrorType::EventStreamEnded,
+                source: <span class="prelude-val">None</span>,
             })<span class="question-mark">?</span>;
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">handle_message</span>(<span class="kw-2">&amp;mut</span> <span class="ident">msg</span>).<span class="kw">await</span><span class="question-mark">?</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+            <span class="kw">if </span><span class="self">self</span>.handle_message(<span class="kw-2">&amp;mut </span>msg).<span class="kw">await</span><span class="question-mark">? </span>{
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
             }
         }
     }
 
-    <span class="doccomment">/// Handle a received websocket message, returning whether a decompressed</span>
-    <span class="doccomment">/// message buffer is available in the inflater.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the message is a binary payload, then the bytes are added to the</span>
-    <span class="doccomment">/// inflater buffer. If the inflater determines that a message is ready,</span>
-    <span class="doccomment">/// then `true` is returned. The buffer can then be accessed via</span>
-    <span class="doccomment">/// `self.inflater.buffer_ref()` or `buffer_mut()`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If a close message is received then an error may be returned if fatal,</span>
-    <span class="doccomment">/// or the connection may be resumed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If a ping or pong are received, then they are ignored.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Text messages aren&#39;t sent by Discord, so they are left unhandled.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_message</span>&lt;<span class="lifetime">&#39;a</span>&gt;(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>,
-        <span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Message</span>,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">bool</span>, <span class="ident">ReceivingEventError</span>&gt; {
-        <span class="kw">match</span> <span class="ident">msg</span> {
-            <span class="ident">Message::Binary</span>(<span class="ident">json</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">extended</span> = <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">extend_binary</span>(<span class="ident">json</span>.<span class="ident">as_slice</span>());
+    <span class="doccomment">/// Handle a received websocket message, returning whether a decompressed
+    /// message buffer is available in the inflater.
+    ///
+    /// If the message is a binary payload, then the bytes are added to the
+    /// inflater buffer. If the inflater determines that a message is ready,
+    /// then `true` is returned. The buffer can then be accessed via
+    /// `self.inflater.buffer_ref()` or `buffer_mut()`.
+    ///
+    /// If a close message is received then an error may be returned if fatal,
+    /// or the connection may be resumed.
+    ///
+    /// If a ping or pong are received, then they are ignored.
+    ///
+    /// Text messages aren&#39;t sent by Discord, so they are left unhandled.
+    </span><span class="kw">async fn </span>handle_message&lt;<span class="lifetime">&#39;a</span>&gt;(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>,
+        msg: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Message,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, ReceivingEventError&gt; {
+        <span class="kw">match </span>msg {
+            Message::Binary(json) =&gt; {
+                <span class="kw">let </span>extended = <span class="self">self</span>.compression.extend_binary(json.as_slice());
 
-                <span class="kw">if</span> <span class="ident">extended</span> {
-                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">message_mut</span>() {
-                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">bytes</span>)) =&gt; <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">bytes</span>(<span class="ident">bytes</span>),
-                        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
-                        <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                                <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::Decompressing</span>,
-                                <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+                <span class="kw">if </span>extended {
+                    <span class="kw">match </span><span class="self">self</span>.compression.message_mut() {
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(bytes)) =&gt; <span class="self">self</span>.emitter.bytes(bytes),
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
+                        <span class="prelude-val">Err</span>(source) =&gt; {
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                                kind: ReceivingEventErrorType::Decompressing,
+                                source: <span class="prelude-val">Some</span>(Box::new(source)),
                             })
                         }
                     };
                 }
 
-                <span class="prelude-val">Ok</span>(<span class="ident">extended</span>)
+                <span class="prelude-val">Ok</span>(extended)
             }
-            <span class="ident">Message::Close</span>(<span class="ident">close_frame</span>) =&gt; {
-                <span class="self">self</span>.<span class="ident">handle_close</span>(<span class="ident">close_frame</span>.<span class="ident">as_ref</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+            Message::Close(close_frame) =&gt; {
+                <span class="self">self</span>.handle_close(close_frame.as_ref()).<span class="kw">await</span><span class="question-mark">?</span>;
 
                 <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
             }
-            <span class="ident">Message::Text</span>(<span class="ident">json</span>) =&gt; {
-                <span class="kw">let</span> <span class="ident">extended</span> = <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">extend_text</span>(<span class="ident">json</span>.<span class="ident">as_bytes</span>());
+            Message::Text(json) =&gt; {
+                <span class="kw">let </span>extended = <span class="self">self</span>.compression.extend_text(json.as_bytes());
 
-                <span class="kw">if</span> <span class="ident">extended</span> {
-                    <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">bytes</span>(<span class="ident">json</span>.<span class="ident">as_bytes</span>());
+                <span class="kw">if </span>extended {
+                    <span class="self">self</span>.emitter.bytes(json.as_bytes());
                 }
 
-                <span class="prelude-val">Ok</span>(<span class="ident">extended</span>)
+                <span class="prelude-val">Ok</span>(extended)
             }
-            <span class="comment">// Discord doesn&#39;t appear to send Text messages, so we can ignore</span>
-            <span class="comment">// these.</span>
-            <span class="comment">// Message::Frame is send-only and therefore falls into the same group,</span>
-            <span class="comment">// see https://docs.rs/tungstenite/latest/tungstenite/enum.Message.html#variant.Frame</span>
-            <span class="ident">Message::Ping</span>(<span class="kw">_</span>) | <span class="ident">Message::Pong</span>(<span class="kw">_</span>) | <span class="ident">Message::Frame</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
+            <span class="comment">// Discord doesn&#39;t appear to send Text messages, so we can ignore
+            // these.
+            // Message::Frame is send-only and therefore falls into the same group,
+            // see https://docs.rs/tungstenite/latest/tungstenite/enum.Message.html#variant.Frame
+            </span>Message::Ping(<span class="kw">_</span>) | Message::Pong(<span class="kw">_</span>) | Message::Frame(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_close</span>(
-        <span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-        <span class="ident">close_frame</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">CloseFrame</span>&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ReceivingEventError</span>&gt; {
+    <span class="kw">async fn </span>handle_close(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        close_frame: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>CloseFrame&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ReceivingEventError&gt; {
         <span class="macro">tracing::info!</span>(<span class="string">&quot;got close code: {close_frame:?}&quot;</span>);
 
-        <span class="self">self</span>.<span class="ident">emit_disconnected</span>(
-            <span class="ident">close_frame</span>.<span class="ident">map</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="ident">code</span>.<span class="ident">into</span>()),
-            <span class="ident">close_frame</span>.<span class="ident">map</span>(|<span class="ident">c</span>| <span class="ident">c</span>.<span class="ident">reason</span>.<span class="ident">to_string</span>()),
+        <span class="self">self</span>.emit_disconnected(
+            close_frame.map(|c| c.code.into()),
+            close_frame.map(|c| c.reason.to_string()),
         )
         .<span class="kw">await</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">close_frame</span>) = <span class="ident">close_frame</span> {
-            <span class="kw">match</span> <span class="ident">close_frame</span>.<span class="ident">code</span> {
-                <span class="ident">CloseCode::Library</span>(<span class="number">4004</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::AuthorizationInvalid</span> {
-                            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
-                            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">token</span>().<span class="ident">to_owned</span>(),
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(close_frame) = close_frame {
+            <span class="kw">match </span>close_frame.code {
+                CloseCode::Library(<span class="number">4004</span>) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                        kind: ReceivingEventErrorType::AuthorizationInvalid {
+                            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
+                            token: <span class="self">self</span>.config.token().to_owned(),
                         },
-                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                        source: <span class="prelude-val">None</span>,
                     });
                 }
-                <span class="ident">CloseCode::Library</span>(<span class="number">4010</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::InvalidShard</span> {
-                            <span class="ident">shard_count</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
-                            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+                CloseCode::Library(<span class="number">4010</span>) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                        kind: ReceivingEventErrorType::InvalidShard {
+                            shard_count: <span class="self">self</span>.config.shard()[<span class="number">1</span>],
+                            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
                         },
-                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                        source: <span class="prelude-val">None</span>,
                     });
                 }
-                <span class="ident">CloseCode::Library</span>(<span class="number">4011</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::ShardingRequired</span>,
-                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                CloseCode::Library(<span class="number">4011</span>) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                        kind: ReceivingEventErrorType::ShardingRequired,
+                        source: <span class="prelude-val">None</span>,
                     });
                 }
-                <span class="ident">CloseCode::Library</span>(<span class="number">4012</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::InvalidApiVersion</span>,
-                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                CloseCode::Library(<span class="number">4012</span>) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                        kind: ReceivingEventErrorType::InvalidApiVersion,
+                        source: <span class="prelude-val">None</span>,
                     });
                 }
-                <span class="ident">CloseCode::Library</span>(<span class="number">4013</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::IntentsInvalid</span> {
-                            <span class="ident">intents</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">intents</span>(),
-                            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+                CloseCode::Library(<span class="number">4013</span>) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                        kind: ReceivingEventErrorType::IntentsInvalid {
+                            intents: <span class="self">self</span>.config.intents(),
+                            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
                         },
-                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                        source: <span class="prelude-val">None</span>,
                     });
                 }
-                <span class="ident">CloseCode::Library</span>(<span class="number">4014</span>) =&gt; {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ReceivingEventError</span> {
-                        <span class="ident">kind</span>: <span class="ident">ReceivingEventErrorType::IntentsDisallowed</span> {
-                            <span class="ident">intents</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">intents</span>(),
-                            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+                CloseCode::Library(<span class="number">4014</span>) =&gt; {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(ReceivingEventError {
+                        kind: ReceivingEventErrorType::IntentsDisallowed {
+                            intents: <span class="self">self</span>.config.intents(),
+                            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
                         },
-                        <span class="ident">source</span>: <span class="prelude-val">None</span>,
+                        source: <span class="prelude-val">None</span>,
                     });
                 }
-                <span class="kw">_</span> =&gt; {}
+                <span class="kw">_ </span>=&gt; {}
             }
         }
 
-        <span class="self">self</span>.<span class="ident">resume</span>().<span class="kw">await</span>;
+        <span class="self">self</span>.resume().<span class="kw">await</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">connect</span>(
-        <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-            <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-            <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-            <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-        ))]</span>
-        <span class="ident">tls</span>: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="ident">TlsContainer</span>&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">ShardStream</span>, <span class="ident">ConnectingError</span>&gt; {
-        <span class="kw">let</span> <span class="ident">url</span> = <span class="ident">Url::parse</span>(<span class="ident">url</span>).<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ConnectingError</span> {
-            <span class="ident">kind</span>: <span class="ident">ConnectingErrorType::ParsingUrl</span> {
-                <span class="ident">url</span>: <span class="ident">url</span>.<span class="ident">to_owned</span>(),
+    <span class="kw">async fn </span>connect(
+        url: <span class="kw-2">&amp;</span>str,
+        <span class="attribute">#[cfg(any(
+            feature = <span class="string">&quot;native&quot;</span>,
+            feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+            feature = <span class="string">&quot;rustls-webpki-roots&quot;
+        </span>))]
+        </span>tls: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TlsContainer&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;ShardStream, ConnectingError&gt; {
+        <span class="kw">let </span>url = Url::parse(url).map_err(|source| ConnectingError {
+            kind: ConnectingErrorType::ParsingUrl {
+                url: url.to_owned(),
             },
-            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+            source: <span class="prelude-val">Some</span>(Box::new(source)),
         })<span class="question-mark">?</span>;
 
-        <span class="comment">// `max_frame_size` and `max_message_queue` limits are disabled because</span>
-        <span class="comment">// Discord is not a malicious actor.</span>
-        <span class="comment">//</span>
-        <span class="comment">// `accept_unmasked_frames` and `max_send_queue` are set to their</span>
-        <span class="comment">// defaults.</span>
-        <span class="kw">let</span> <span class="ident">config</span> = <span class="ident">WebSocketConfig</span> {
-            <span class="ident">accept_unmasked_frames</span>: <span class="bool-val">false</span>,
-            <span class="ident">max_frame_size</span>: <span class="prelude-val">None</span>,
-            <span class="ident">max_message_size</span>: <span class="prelude-val">None</span>,
-            <span class="ident">max_send_queue</span>: <span class="prelude-val">None</span>,
+        <span class="comment">// `max_frame_size` and `max_message_queue` limits are disabled because
+        // Discord is not a malicious actor.
+        //
+        // `accept_unmasked_frames` and `max_send_queue` are set to their
+        // defaults.
+        </span><span class="kw">let </span>config = WebSocketConfig {
+            accept_unmasked_frames: <span class="bool-val">false</span>,
+            max_frame_size: <span class="prelude-val">None</span>,
+            max_message_size: <span class="prelude-val">None</span>,
+            max_send_queue: <span class="prelude-val">None</span>,
         };
 
-        <span class="kw">let</span> (<span class="ident">stream</span>, <span class="kw">_</span>) = {
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(
-                <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-            )))]</span>
-            {
-                <span class="ident">tokio_tungstenite::connect_async_with_config</span>(<span class="ident">url</span>, <span class="prelude-val">Some</span>(<span class="ident">config</span>))
+        <span class="kw">let </span>(stream, <span class="kw">_</span>) = {
+            <span class="attribute">#[cfg(not(any(
+                feature = <span class="string">&quot;native&quot;</span>,
+                feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+                feature = <span class="string">&quot;rustls-webpki-roots&quot;
+            </span>)))]
+            </span>{
+                tokio_tungstenite::connect_async_with_config(url, <span class="prelude-val">Some</span>(config))
             }
 
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-                <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-            ))]</span>
-            {
-                <span class="ident">tokio_tungstenite::connect_async_tls_with_config</span>(
-                    <span class="ident">url</span>,
-                    <span class="prelude-val">Some</span>(<span class="ident">config</span>),
-                    <span class="ident">tls</span>.<span class="ident">map</span>(<span class="ident">TlsContainer::connector</span>),
+            <span class="attribute">#[cfg(any(
+                feature = <span class="string">&quot;native&quot;</span>,
+                feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+                feature = <span class="string">&quot;rustls-webpki-roots&quot;
+            </span>))]
+            </span>{
+                tokio_tungstenite::connect_async_tls_with_config(
+                    url,
+                    <span class="prelude-val">Some</span>(config),
+                    tls.map(TlsContainer::connector),
                 )
             }
         }
-        .<span class="kw">await</span>
-        .<span class="ident">map_err</span>(|<span class="ident">source</span>| <span class="ident">ConnectingError</span> {
-            <span class="ident">kind</span>: <span class="ident">ConnectingErrorType::Establishing</span>,
-            <span class="ident">source</span>: <span class="prelude-val">Some</span>(<span class="ident">Box::new</span>(<span class="ident">source</span>)),
+        .<span class="kw">await
+        </span>.map_err(|source| ConnectingError {
+            kind: ConnectingErrorType::Establishing,
+            source: <span class="prelude-val">Some</span>(Box::new(source)),
         })<span class="question-mark">?</span>;
 
         <span class="macro">tracing::debug!</span>(<span class="string">&quot;Shook hands with remote&quot;</span>);
 
-        <span class="prelude-val">Ok</span>(<span class="ident">stream</span>)
+        <span class="prelude-val">Ok</span>(stream)
     }
 
-    <span class="doccomment">/// Identifies with the gateway to create a new session.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">identify</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">SessionSendError</span>&gt; {
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">Stage::Identifying</span>);
+    <span class="doccomment">/// Identifies with the gateway to create a new session.
+    </span><span class="kw">async fn </span>identify(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), SessionSendError&gt; {
+        <span class="self">self</span>.session.set_stage(Stage::Identifying);
 
-        <span class="kw">let</span> <span class="ident">properties</span> = <span class="self">self</span>
-            .<span class="ident">config</span>
-            .<span class="ident">identify_properties</span>()
-            .<span class="ident">cloned</span>()
-            .<span class="ident">unwrap_or_else</span>(<span class="ident">default_identify_properties</span>);
+        <span class="kw">let </span>properties = <span class="self">self
+            </span>.config
+            .identify_properties()
+            .cloned()
+            .unwrap_or_else(default_identify_properties);
 
-        <span class="kw">let</span> <span class="ident">identify</span> = <span class="ident">Identify::new</span>(<span class="ident">IdentifyInfo</span> {
-            <span class="ident">compress</span>: <span class="bool-val">false</span>,
-            <span class="ident">large_threshold</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">large_threshold</span>(),
-            <span class="ident">intents</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">intents</span>(),
-            <span class="ident">properties</span>,
-            <span class="ident">shard</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()),
-            <span class="ident">presence</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">presence</span>().<span class="ident">cloned</span>(),
-            <span class="ident">token</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">token</span>().<span class="ident">to_owned</span>(),
+        <span class="kw">let </span>identify = Identify::new(IdentifyInfo {
+            compress: <span class="bool-val">false</span>,
+            large_threshold: <span class="self">self</span>.config.large_threshold(),
+            intents: <span class="self">self</span>.config.intents(),
+            properties,
+            shard: <span class="prelude-val">Some</span>(<span class="self">self</span>.config.shard()),
+            presence: <span class="self">self</span>.config.presence().cloned(),
+            token: <span class="self">self</span>.config.token().to_owned(),
         });
-        <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardIdentifying</span>(<span class="ident">Identifying</span> {
-            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
-            <span class="ident">shard_total</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
+        <span class="self">self</span>.emitter.event(Event::ShardIdentifying(Identifying {
+            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
+            shard_total: <span class="self">self</span>.config.shard()[<span class="number">1</span>],
         }));
 
-        <span class="self">self</span>.<span class="ident">send</span>(<span class="ident">identify</span>).<span class="kw">await</span>
-    }
+        <span class="self">self</span>.send(identify).<span class="kw">await
+    </span>}
 
-    <span class="doccomment">/// Perform a full reconnect to the gateway, instantiating a new session.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reconnect</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
+    <span class="doccomment">/// Perform a full reconnect to the gateway, instantiating a new session.
+    </span><span class="kw">async fn </span>reconnect(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="macro">tracing::info!</span>(<span class="string">&quot;reconnection started&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">wait</span> = <span class="ident">Duration::from_secs</span>(<span class="number">1</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>wait = Duration::from_secs(<span class="number">1</span>);
 
-        <span class="kw">loop</span> {
+        <span class="kw">loop </span>{
             <span class="macro">tracing::debug!</span>(
-                <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
-                <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">1</span>],
-                <span class="ident">wait_in_seconds</span> = <span class="ident">wait</span>.<span class="ident">as_secs</span>(),
+                shard_id = <span class="self">self</span>.config.shard()[<span class="number">0</span>],
+                shard_total = <span class="self">self</span>.config.shard()[<span class="number">1</span>],
+                wait_in_seconds = wait.as_secs(),
                 <span class="string">&quot;waiting before attempting a reconnect&quot;</span>,
             );
 
-            <span class="ident">tokio::time::sleep</span>(<span class="ident">wait</span>).<span class="kw">await</span>;
+            tokio::time::sleep(wait).<span class="kw">await</span>;
 
-            <span class="comment">// Await allowance when doing a full reconnect.</span>
-            <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">queue</span>.<span class="ident">request</span>(<span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()).<span class="kw">await</span>;
+            <span class="comment">// Await allowance when doing a full reconnect.
+            </span><span class="self">self</span>.config.queue.request(<span class="self">self</span>.config.shard()).<span class="kw">await</span>;
 
-            <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardReconnecting</span>(<span class="ident">Reconnecting</span> {
-                <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+            <span class="self">self</span>.emitter.event(Event::ShardReconnecting(Reconnecting {
+                shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
             }));
 
-            <span class="kw">let</span> <span class="ident">stream</span> = <span class="kw">match</span> <span class="ident"><span class="self">Self</span>::connect</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">url</span>,
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-                    <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-                    <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-                    <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-                ))]</span>
-                <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">tls</span>.<span class="ident">as_ref</span>(),
+            <span class="kw">let </span>stream = <span class="kw">match </span><span class="self">Self</span>::connect(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.url,
+                <span class="attribute">#[cfg(any(
+                    feature = <span class="string">&quot;native&quot;</span>,
+                    feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+                    feature = <span class="string">&quot;rustls-webpki-roots&quot;
+                </span>))]
+                </span><span class="self">self</span>.config.tls.as_ref(),
             )
-            .<span class="kw">await</span>
-            {
-                <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="ident">s</span>,
-                <span class="prelude-val">Err</span>(<span class="ident">source</span>) =&gt; {
+            .<span class="kw">await
+            </span>{
+                <span class="prelude-val">Ok</span>(s) =&gt; s,
+                <span class="prelude-val">Err</span>(source) =&gt; {
                     <span class="macro">tracing::warn!</span>(<span class="string">&quot;reconnecting failed: {source:?}&quot;</span>);
 
-                    <span class="kw">if</span> <span class="ident">wait</span> &lt; <span class="ident">Duration::from_secs</span>(<span class="number">128</span>) {
-                        <span class="ident">wait</span> <span class="kw-2">*</span>= <span class="number">2</span>;
+                    <span class="kw">if </span>wait &lt; Duration::from_secs(<span class="number">128</span>) {
+                        wait <span class="kw-2">*</span>= <span class="number">2</span>;
                     }
 
                     <span class="kw">continue</span>;
                 }
             };
 
-            <span class="self">self</span>.<span class="ident">set_session</span>(<span class="ident">stream</span>, <span class="ident">Stage::Connected</span>);
+            <span class="self">self</span>.set_session(stream, Stage::Connected);
 
             <span class="kw">break</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardConnecting</span>(<span class="ident">Connecting</span> {
-            <span class="ident">gateway</span>: <span class="self">self</span>.<span class="ident">url</span>.<span class="ident">clone</span>().<span class="ident">into_string</span>(),
-            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+        <span class="self">self</span>.emitter.event(Event::ShardConnecting(Connecting {
+            gateway: <span class="self">self</span>.url.clone().into_string(),
+            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
         }));
     }
 
-    <span class="doccomment">/// Resume a session if possible, defaulting to instantiating a new</span>
-    <span class="doccomment">/// connection.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resume</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="macro">tracing::debug!</span>(<span class="string">&quot;resuming shard {:?}&quot;</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>());
+    <span class="doccomment">/// Resume a session if possible, defaulting to instantiating a new
+    /// connection.
+    </span><span class="kw">async fn </span>resume(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="macro">tracing::debug!</span>(<span class="string">&quot;resuming shard {:?}&quot;</span>, <span class="self">self</span>.config.shard());
 
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">Stage::Resuming</span>);
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">stop_heartbeater</span>();
+        <span class="self">self</span>.session.set_stage(Stage::Resuming);
+        <span class="self">self</span>.session.stop_heartbeater();
 
-        <span class="kw">let</span> <span class="ident">seq</span> = <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">seq</span>();
+        <span class="kw">let </span>seq = <span class="self">self</span>.session.seq();
 
-        <span class="kw">let</span> <span class="ident">id</span> = <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) = <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">id</span>() {
-            <span class="ident">id</span>
-        } <span class="kw">else</span> {
+        <span class="kw">let </span>id = <span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="self">self</span>.session.id() {
+            id
+        } <span class="kw">else </span>{
             <span class="macro">tracing::info!</span>(<span class="string">&quot;session id unavailable, reconnecting&quot;</span>);
 
-            <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+            <span class="self">self</span>.reconnect().<span class="kw">await</span>;
             <span class="kw">return</span>;
         };
 
-        <span class="self">self</span>.<span class="ident">resume</span> = <span class="prelude-val">Some</span>((<span class="ident">seq</span>, <span class="ident">id</span>));
+        <span class="self">self</span>.resume = <span class="prelude-val">Some</span>((seq, id));
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">try_resume</span>().<span class="kw">await</span> {
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.try_resume().<span class="kw">await </span>{
             <span class="macro">tracing::warn!</span>(
-                <span class="ident">seq</span> = <span class="ident">seq</span>,
-                <span class="ident">session_id</span> = <span class="question-mark">?</span><span class="self">self</span>.<span class="ident">session</span>.<span class="ident">id</span>(),
-                <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+                seq = seq,
+                session_id = <span class="question-mark">?</span><span class="self">self</span>.session.id(),
+                shard_id = <span class="self">self</span>.config.shard()[<span class="number">0</span>],
                 <span class="string">&quot;failed to resume session: {source:?}&quot;</span>,
             );
 
-            <span class="self">self</span>.<span class="ident">reconnect</span>().<span class="kw">await</span>;
+            <span class="self">self</span>.reconnect().<span class="kw">await</span>;
         }
     }
 
-    <span class="doccomment">/// Attempt to resume a session.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">try_resume</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">ConnectingError</span>&gt; {
-        <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardResuming</span>(<span class="ident">Resuming</span> {
-            <span class="ident">seq</span>: <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">seq</span>(),
-            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+    <span class="doccomment">/// Attempt to resume a session.
+    </span><span class="kw">async fn </span>try_resume(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ConnectingError&gt; {
+        <span class="self">self</span>.emitter.event(Event::ShardResuming(Resuming {
+            seq: <span class="self">self</span>.session.seq(),
+            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
         }));
 
-        <span class="kw">let</span> <span class="ident">stream</span> = <span class="ident"><span class="self">Self</span>::connect</span>(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">url</span>,
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(
-                <span class="ident">feature</span> = <span class="string">&quot;native&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-native-roots&quot;</span>,
-                <span class="ident">feature</span> = <span class="string">&quot;rustls-webpki-roots&quot;</span>
-            ))]</span>
-            <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">tls</span>.<span class="ident">as_ref</span>(),
+        <span class="kw">let </span>stream = <span class="self">Self</span>::connect(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.url,
+            <span class="attribute">#[cfg(any(
+                feature = <span class="string">&quot;native&quot;</span>,
+                feature = <span class="string">&quot;rustls-native-roots&quot;</span>,
+                feature = <span class="string">&quot;rustls-webpki-roots&quot;
+            </span>))]
+            </span><span class="self">self</span>.config.tls.as_ref(),
         )
         .<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">set_session</span>(<span class="ident">stream</span>, <span class="ident">Stage::Resuming</span>);
+        <span class="self">self</span>.set_session(stream, Stage::Resuming);
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// Set the session with a new connection.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Set the session details and create and run a new socket forwarder for a</span>
-    <span class="doccomment">/// new websocket connection.</span>
-    <span class="kw">fn</span> <span class="ident">set_session</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">stream</span>: <span class="ident">ShardStream</span>, <span class="ident">stage</span>: <span class="ident">Stage</span>) {
-        <span class="kw">let</span> (<span class="ident">forwarder</span>, <span class="ident">rx</span>, <span class="ident">tx</span>) = <span class="ident">SocketForwarder::new</span>(<span class="ident">stream</span>);
+    <span class="doccomment">/// Set the session with a new connection.
+    ///
+    /// Set the session details and create and run a new socket forwarder for a
+    /// new websocket connection.
+    </span><span class="kw">fn </span>set_session(<span class="kw-2">&amp;mut </span><span class="self">self</span>, stream: ShardStream, stage: Stage) {
+        <span class="kw">let </span>(forwarder, rx, tx) = SocketForwarder::new(stream);
 
-        <span class="ident">tokio::spawn</span>(<span class="ident">forwarder</span>.<span class="ident">run</span>());
+        tokio::spawn(forwarder.run());
 
-        <span class="self">self</span>.<span class="ident">rx</span> = <span class="ident">rx</span>;
-        <span class="self">self</span>.<span class="ident">session</span> = <span class="ident">Arc::new</span>(<span class="ident">Session::new</span>(<span class="ident">tx</span>, <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">ratelimit_payloads</span>));
+        <span class="self">self</span>.rx = rx;
+        <span class="self">self</span>.session = Arc::new(Session::new(tx, <span class="self">self</span>.config.ratelimit_payloads));
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">source</span>) = <span class="self">self</span>.<span class="ident">wtx</span>.<span class="ident">send</span>(<span class="ident">Arc::clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">session</span>)) {
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(source) = <span class="self">self</span>.wtx.send(Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.session)) {
             <span class="macro">tracing::error!</span>(<span class="string">&quot;failed to broadcast new session: {source:?}&quot;</span>);
         }
 
-        <span class="self">self</span>.<span class="ident">session</span>.<span class="ident">set_stage</span>(<span class="ident">stage</span>);
-        <span class="self">self</span>.<span class="ident">compression</span>.<span class="ident">reset</span>();
+        <span class="self">self</span>.session.set_stage(stage);
+        <span class="self">self</span>.compression.reset();
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">emit_disconnected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">u16</span>&gt;, <span class="ident">reason</span>: <span class="prelude-ty">Option</span>&lt;<span class="ident">String</span>&gt;) {
-        <span class="self">self</span>.<span class="ident">emitter</span>.<span class="ident">event</span>(<span class="ident">Event::ShardDisconnected</span>(<span class="ident">Disconnected</span> {
-            <span class="ident">code</span>,
-            <span class="ident">reason</span>,
-            <span class="ident">shard_id</span>: <span class="self">self</span>.<span class="ident">config</span>.<span class="ident">shard</span>()[<span class="number">0</span>],
+    <span class="kw">async fn </span>emit_disconnected(<span class="kw-2">&amp;</span><span class="self">self</span>, code: <span class="prelude-ty">Option</span>&lt;u16&gt;, reason: <span class="prelude-ty">Option</span>&lt;String&gt;) {
+        <span class="self">self</span>.emitter.event(Event::ShardDisconnected(Disconnected {
+            code,
+            reason,
+            shard_id: <span class="self">self</span>.config.shard()[<span class="number">0</span>],
         }));
     }
 }
 
-<span class="doccomment">/// Default identify properties to use when the user has not customized it via</span>
-<span class="doccomment">/// [`ShardBuilder::identify_properties`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [`ShardBuilder::identify_properties`]: super::super::ShardBuilder::identify_properties</span>
-<span class="kw">fn</span> <span class="ident">default_identify_properties</span>() -&gt; <span class="ident">IdentifyProperties</span> {
-    <span class="ident">IdentifyProperties::new</span>(<span class="string">&quot;twilight.rs&quot;</span>, <span class="string">&quot;twilight.rs&quot;</span>, <span class="ident">OS</span>)
+<span class="doccomment">/// Default identify properties to use when the user has not customized it via
+/// [`ShardBuilder::identify_properties`].
+///
+/// [`ShardBuilder::identify_properties`]: super::super::ShardBuilder::identify_properties
+</span><span class="kw">fn </span>default_identify_properties() -&gt; IdentifyProperties {
+    IdentifyProperties::new(<span class="string">&quot;twilight.rs&quot;</span>, <span class="string">&quot;twilight.rs&quot;</span>, OS)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

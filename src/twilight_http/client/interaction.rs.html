@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/client/interaction.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>interaction.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-http/src/client/interaction.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>interaction.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_http/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_http/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -359,366 +359,366 @@
 <span id="359">359</span>
 <span id="360">360</span>
 <span id="361">361</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">request::application</span>::{
-        <span class="ident">command</span>::{
-            <span class="ident">CreateGlobalCommand</span>, <span class="ident">CreateGuildCommand</span>, <span class="ident">DeleteGlobalCommand</span>, <span class="ident">DeleteGuildCommand</span>,
-            <span class="ident">GetCommandPermissions</span>, <span class="ident">GetGlobalCommand</span>, <span class="ident">GetGlobalCommands</span>, <span class="ident">GetGuildCommand</span>,
-            <span class="ident">GetGuildCommandPermissions</span>, <span class="ident">GetGuildCommands</span>, <span class="ident">SetGlobalCommands</span>, <span class="ident">SetGuildCommands</span>,
-            <span class="ident">UpdateCommandPermissions</span>, <span class="ident">UpdateGlobalCommand</span>, <span class="ident">UpdateGuildCommand</span>,
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{
+    request::application::{
+        command::{
+            CreateGlobalCommand, CreateGuildCommand, DeleteGlobalCommand, DeleteGuildCommand,
+            GetCommandPermissions, GetGlobalCommand, GetGlobalCommands, GetGuildCommand,
+            GetGuildCommandPermissions, GetGuildCommands, SetGlobalCommands, SetGuildCommands,
+            UpdateCommandPermissions, UpdateGlobalCommand, UpdateGuildCommand,
         },
-        <span class="ident">interaction</span>::{
-            <span class="ident">CreateFollowup</span>, <span class="ident">CreateResponse</span>, <span class="ident">DeleteFollowup</span>, <span class="ident">DeleteResponse</span>, <span class="ident">GetFollowup</span>,
-            <span class="ident">GetResponse</span>, <span class="ident">UpdateFollowup</span>, <span class="ident">UpdateResponse</span>,
+        interaction::{
+            CreateFollowup, CreateResponse, DeleteFollowup, DeleteResponse, GetFollowup,
+            GetResponse, UpdateFollowup, UpdateResponse,
         },
     },
-    <span class="ident">Client</span>,
+    Client,
 };
-<span class="kw">use</span> <span class="ident">twilight_model</span>::{
-    <span class="ident">application::command</span>::{<span class="ident">permissions::CommandPermissions</span>, <span class="ident">Command</span>},
-    <span class="ident">http::interaction::InteractionResponse</span>,
-    <span class="ident">id</span>::{
-        <span class="ident">marker</span>::{<span class="ident">ApplicationMarker</span>, <span class="ident">CommandMarker</span>, <span class="ident">GuildMarker</span>, <span class="ident">InteractionMarker</span>, <span class="ident">MessageMarker</span>},
-        <span class="ident">Id</span>,
+<span class="kw">use </span>twilight_model::{
+    application::command::{permissions::CommandPermissions, Command},
+    http::interaction::InteractionResponse,
+    id::{
+        marker::{ApplicationMarker, CommandMarker, GuildMarker, InteractionMarker, MessageMarker},
+        Id,
     },
 };
-<span class="kw">use</span> <span class="ident">twilight_validate::command::CommandValidationError</span>;
+<span class="kw">use </span>twilight_validate::command::CommandValidationError;
 
-<span class="doccomment">/// Client interface for using interactions.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Retrieve the application ID and then use an interaction request:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```no_run</span>
-<span class="doccomment">/// # #[tokio::main]</span>
-<span class="doccomment">/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-<span class="doccomment">/// use std::env;</span>
-<span class="doccomment">/// use twilight_http::Client;</span>
-<span class="doccomment">/// use twilight_model::id::Id;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-<span class="doccomment">/// let application_id = Id::new(123);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let interaction_client = client.interaction(application_id);</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let commands = interaction_client</span>
-<span class="doccomment">///     .global_commands()</span>
-<span class="doccomment">///     .exec()</span>
-<span class="doccomment">///     .await?</span>
-<span class="doccomment">///     .models()</span>
-<span class="doccomment">///     .await?;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// println!(&quot;there are {} global commands&quot;, commands.len());</span>
-<span class="doccomment">/// # Ok(()) }</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InteractionClient</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="ident">application_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt;,
-    <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>,
+<span class="doccomment">/// Client interface for using interactions.
+///
+/// # Examples
+///
+/// Retrieve the application ID and then use an interaction request:
+///
+/// ```no_run
+/// # #[tokio::main]
+/// # async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+/// use std::env;
+/// use twilight_http::Client;
+/// use twilight_model::id::Id;
+///
+/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);
+/// let application_id = Id::new(123);
+///
+/// let interaction_client = client.interaction(application_id);
+///
+/// let commands = interaction_client
+///     .global_commands()
+///     .exec()
+///     .await?
+///     .models()
+///     .await?;
+///
+/// println!(&quot;there are {} global commands&quot;, commands.len());
+/// # Ok(()) }
+/// ```
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>InteractionClient&lt;<span class="lifetime">&#39;a</span>&gt; {
+    application_id: Id&lt;ApplicationMarker&gt;,
+    client: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Client,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; <span class="ident">InteractionClient</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="doccomment">/// Create a new interface for using interactions.</span>
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Client</span>, <span class="ident">application_id</span>: <span class="ident">Id</span>&lt;<span class="ident">ApplicationMarker</span>&gt;) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">application_id</span>,
-            <span class="ident">client</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; InteractionClient&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Create a new interface for using interactions.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const fn </span>new(client: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Client, application_id: Id&lt;ApplicationMarker&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            application_id,
+            client,
         }
     }
 
-    <span class="doccomment">/// Respond to an interaction, by its ID and token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// For variants of [`InteractionResponse`] that contain</span>
-    <span class="doccomment">/// [`InteractionResponseData`], there is an [associated builder] in the</span>
-    <span class="doccomment">/// [`twilight-util`] crate.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`InteractionResponseData`]: twilight_model::http::interaction::InteractionResponseData</span>
-    <span class="doccomment">/// [`twilight-util`]: https://docs.rs/twilight-util/latest/index.html</span>
-    <span class="doccomment">/// [associated builder]: https://docs.rs/twilight-util/latest/twilight_util/builder/struct.InteractionResponseDataBuilder.html</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">create_response</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">interaction_id</span>: <span class="ident">Id</span>&lt;<span class="ident">InteractionMarker</span>&gt;,
-        <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-        <span class="ident">response</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">InteractionResponse</span>,
-    ) -&gt; <span class="ident">CreateResponse</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">CreateResponse::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="ident">interaction_id</span>, <span class="ident">interaction_token</span>, <span class="ident">response</span>)
+    <span class="doccomment">/// Respond to an interaction, by its ID and token.
+    ///
+    /// For variants of [`InteractionResponse`] that contain
+    /// [`InteractionResponseData`], there is an [associated builder] in the
+    /// [`twilight-util`] crate.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    ///
+    /// [`InteractionResponseData`]: twilight_model::http::interaction::InteractionResponseData
+    /// [`twilight-util`]: https://docs.rs/twilight-util/latest/index.html
+    /// [associated builder]: https://docs.rs/twilight-util/latest/twilight_util/builder/struct.InteractionResponseDataBuilder.html
+    </span><span class="kw">pub const fn </span>create_response(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        interaction_id: Id&lt;InteractionMarker&gt;,
+        interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+        response: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>InteractionResponse,
+    ) -&gt; CreateResponse&lt;<span class="lifetime">&#39;a</span>&gt; {
+        CreateResponse::new(<span class="self">self</span>.client, interaction_id, interaction_token, response)
     }
 
-    <span class="doccomment">/// Delete the original message, by its token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">delete_response</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">DeleteResponse</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">DeleteResponse::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">interaction_token</span>)
+    <span class="doccomment">/// Delete the original message, by its token.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    </span><span class="kw">pub const fn </span>delete_response(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; DeleteResponse&lt;<span class="lifetime">&#39;a</span>&gt; {
+        DeleteResponse::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, interaction_token)
     }
 
-    <span class="doccomment">/// Get the original message, by its token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">response</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">GetResponse</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">GetResponse::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">interaction_token</span>)
+    <span class="doccomment">/// Get the original message, by its token.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    </span><span class="kw">pub const fn </span>response(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; GetResponse&lt;<span class="lifetime">&#39;a</span>&gt; {
+        GetResponse::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, interaction_token)
     }
 
-    <span class="doccomment">/// Edit the original message, by its token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_response</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">UpdateResponse</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">UpdateResponse::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">interaction_token</span>)
+    <span class="doccomment">/// Edit the original message, by its token.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    </span><span class="kw">pub const fn </span>update_response(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; UpdateResponse&lt;<span class="lifetime">&#39;a</span>&gt; {
+        UpdateResponse::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, interaction_token)
     }
 
-    <span class="doccomment">/// Create a followup message to an interaction, by its token.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The message must include at least one of [`attachments`], [`content`],</span>
-    <span class="doccomment">/// or [`embeds`].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Examples</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```no_run</span>
-    <span class="doccomment">/// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// use std::env;</span>
-    <span class="doccomment">/// use twilight_http::Client;</span>
-    <span class="doccomment">/// use twilight_model::id::Id;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);</span>
-    <span class="doccomment">/// let application_id = Id::new(1);</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// client</span>
-    <span class="doccomment">///     .interaction(application_id)</span>
-    <span class="doccomment">///     .create_followup(&quot;webhook token&quot;)</span>
-    <span class="doccomment">///     .content(&quot;Pinkie...&quot;)?</span>
-    <span class="doccomment">///     .exec()</span>
-    <span class="doccomment">///     .await?;</span>
-    <span class="doccomment">/// # Ok(()) }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`attachments`]: CreateFollowup::attachments</span>
-    <span class="doccomment">/// [`content`]: CreateFollowup::content</span>
-    <span class="doccomment">/// [`embeds`]: CreateFollowup::embeds</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">create_followup</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) -&gt; <span class="ident">CreateFollowup</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">CreateFollowup::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">interaction_token</span>)
+    <span class="doccomment">/// Create a followup message to an interaction, by its token.
+    ///
+    /// The message must include at least one of [`attachments`], [`content`],
+    /// or [`embeds`].
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// # #[tokio::main] async fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    /// use std::env;
+    /// use twilight_http::Client;
+    /// use twilight_model::id::Id;
+    ///
+    /// let client = Client::new(env::var(&quot;DISCORD_TOKEN&quot;)?);
+    /// let application_id = Id::new(1);
+    ///
+    /// client
+    ///     .interaction(application_id)
+    ///     .create_followup(&quot;webhook token&quot;)
+    ///     .content(&quot;Pinkie...&quot;)?
+    ///     .exec()
+    ///     .await?;
+    /// # Ok(()) }
+    /// ```
+    ///
+    /// [`attachments`]: CreateFollowup::attachments
+    /// [`content`]: CreateFollowup::content
+    /// [`embeds`]: CreateFollowup::embeds
+    </span><span class="kw">pub const fn </span>create_followup(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str) -&gt; CreateFollowup&lt;<span class="lifetime">&#39;a</span>&gt; {
+        CreateFollowup::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, interaction_token)
     }
 
-    <span class="doccomment">/// Delete a followup message to an interaction, by its token and message</span>
-    <span class="doccomment">/// ID.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">delete_followup</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
-    ) -&gt; <span class="ident">DeleteFollowup</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">DeleteFollowup::new</span>(
-            <span class="self">self</span>.<span class="ident">client</span>,
-            <span class="self">self</span>.<span class="ident">application_id</span>,
-            <span class="ident">interaction_token</span>,
-            <span class="ident">message_id</span>,
+    <span class="doccomment">/// Delete a followup message to an interaction, by its token and message
+    /// ID.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    </span><span class="kw">pub const fn </span>delete_followup(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+        message_id: Id&lt;MessageMarker&gt;,
+    ) -&gt; DeleteFollowup&lt;<span class="lifetime">&#39;a</span>&gt; {
+        DeleteFollowup::new(
+            <span class="self">self</span>.client,
+            <span class="self">self</span>.application_id,
+            interaction_token,
+            message_id,
         )
     }
 
-    <span class="doccomment">/// Get a followup message of an interaction, by its token and the message</span>
-    <span class="doccomment">/// ID.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">followup</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
-    ) -&gt; <span class="ident">GetFollowup</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">GetFollowup::new</span>(
-            <span class="self">self</span>.<span class="ident">client</span>,
-            <span class="self">self</span>.<span class="ident">application_id</span>,
-            <span class="ident">interaction_token</span>,
-            <span class="ident">message_id</span>,
+    <span class="doccomment">/// Get a followup message of an interaction, by its token and the message
+    /// ID.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    </span><span class="kw">pub const fn </span>followup(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+        message_id: Id&lt;MessageMarker&gt;,
+    ) -&gt; GetFollowup&lt;<span class="lifetime">&#39;a</span>&gt; {
+        GetFollowup::new(
+            <span class="self">self</span>.client,
+            <span class="self">self</span>.application_id,
+            interaction_token,
+            message_id,
         )
     }
 
-    <span class="doccomment">/// Edit a followup message of an interaction, by its token and the message</span>
-    <span class="doccomment">/// ID.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This endpoint is not bound to the application&#39;s global rate limit.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_followup</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">interaction_token</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
-        <span class="ident">message_id</span>: <span class="ident">Id</span>&lt;<span class="ident">MessageMarker</span>&gt;,
-    ) -&gt; <span class="ident">UpdateFollowup</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">UpdateFollowup::new</span>(
-            <span class="self">self</span>.<span class="ident">client</span>,
-            <span class="self">self</span>.<span class="ident">application_id</span>,
-            <span class="ident">interaction_token</span>,
-            <span class="ident">message_id</span>,
+    <span class="doccomment">/// Edit a followup message of an interaction, by its token and the message
+    /// ID.
+    ///
+    /// This endpoint is not bound to the application&#39;s global rate limit.
+    </span><span class="kw">pub const fn </span>update_followup(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        interaction_token: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+        message_id: Id&lt;MessageMarker&gt;,
+    ) -&gt; UpdateFollowup&lt;<span class="lifetime">&#39;a</span>&gt; {
+        UpdateFollowup::new(
+            <span class="self">self</span>.client,
+            <span class="self">self</span>.application_id,
+            interaction_token,
+            message_id,
         )
     }
 
-    <span class="doccomment">/// Create a new global command.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">create_global_command</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="ident">CreateGlobalCommand</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">CreateGlobalCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>)
+    <span class="doccomment">/// Create a new global command.
+    </span><span class="kw">pub const fn </span>create_global_command(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>) -&gt; CreateGlobalCommand&lt;<span class="lifetime">&#39;a</span>&gt; {
+        CreateGlobalCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id)
     }
 
-    <span class="doccomment">/// Delete a global command, by ID.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">delete_global_command</span>(
+    <span class="doccomment">/// Delete a global command, by ID.
+    </span><span class="kw">pub const fn </span>delete_global_command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-    ) -&gt; <span class="ident">DeleteGlobalCommand</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">DeleteGlobalCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">command_id</span>)
+        command_id: Id&lt;CommandMarker&gt;,
+    ) -&gt; DeleteGlobalCommand&lt;<span class="lifetime">&#39;_</span>&gt; {
+        DeleteGlobalCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, command_id)
     }
 
-    <span class="doccomment">/// Fetch a global command for your application.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">global_command</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;) -&gt; <span class="ident">GetGlobalCommand</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">GetGlobalCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">command_id</span>)
+    <span class="doccomment">/// Fetch a global command for your application.
+    </span><span class="kw">pub const fn </span>global_command(<span class="kw-2">&amp;</span><span class="self">self</span>, command_id: Id&lt;CommandMarker&gt;) -&gt; GetGlobalCommand&lt;<span class="lifetime">&#39;_</span>&gt; {
+        GetGlobalCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, command_id)
     }
 
-    <span class="doccomment">/// Fetch all global commands for your application.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">global_commands</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">GetGlobalCommands</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">GetGlobalCommands::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>)
+    <span class="doccomment">/// Fetch all global commands for your application.
+    </span><span class="kw">pub const fn </span>global_commands(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; GetGlobalCommands&lt;<span class="lifetime">&#39;_</span>&gt; {
+        GetGlobalCommands::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id)
     }
 
-    <span class="doccomment">/// Set global commands.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method is idempotent: it can be used on every start, without being</span>
-    <span class="doccomment">/// ratelimited if there aren&#39;t changes to the commands.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The [`Command`] struct has an [associated builder] in the</span>
-    <span class="doccomment">/// [`twilight-util`] crate.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`twilight-util`]: https://docs.rs/twilight-util/latest/index.html</span>
-    <span class="doccomment">/// [associated builder]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/struct.CommandBuilder.html</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">set_global_commands</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">commands</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Command</span>]) -&gt; <span class="ident">SetGlobalCommands</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">SetGlobalCommands::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">commands</span>)
+    <span class="doccomment">/// Set global commands.
+    ///
+    /// This method is idempotent: it can be used on every start, without being
+    /// ratelimited if there aren&#39;t changes to the commands.
+    ///
+    /// The [`Command`] struct has an [associated builder] in the
+    /// [`twilight-util`] crate.
+    ///
+    /// [`twilight-util`]: https://docs.rs/twilight-util/latest/index.html
+    /// [associated builder]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/struct.CommandBuilder.html
+    </span><span class="kw">pub const fn </span>set_global_commands(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, commands: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Command]) -&gt; SetGlobalCommands&lt;<span class="lifetime">&#39;a</span>&gt; {
+        SetGlobalCommands::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, commands)
     }
 
-    <span class="doccomment">/// Edit a global command, by ID.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You must specify a name and description. See</span>
-    <span class="doccomment">/// [Discord Docs/Edit Global Application Command].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [Discord Docs/Edit Global Application Command]: https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_global_command</span>(
+    <span class="doccomment">/// Edit a global command, by ID.
+    ///
+    /// You must specify a name and description. See
+    /// [Discord Docs/Edit Global Application Command].
+    ///
+    /// [Discord Docs/Edit Global Application Command]: https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
+    </span><span class="kw">pub const fn </span>update_global_command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-    ) -&gt; <span class="ident">UpdateGlobalCommand</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">UpdateGlobalCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">command_id</span>)
+        command_id: Id&lt;CommandMarker&gt;,
+    ) -&gt; UpdateGlobalCommand&lt;<span class="lifetime">&#39;_</span>&gt; {
+        UpdateGlobalCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, command_id)
     }
 
-    <span class="doccomment">/// Create a new command in a guild.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">create_guild_command</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-    ) -&gt; <span class="ident">CreateGuildCommand</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">CreateGuildCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>)
+    <span class="doccomment">/// Create a new command in a guild.
+    </span><span class="kw">pub const fn </span>create_guild_command(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        guild_id: Id&lt;GuildMarker&gt;,
+    ) -&gt; CreateGuildCommand&lt;<span class="lifetime">&#39;a</span>&gt; {
+        CreateGuildCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id)
     }
 
-    <span class="doccomment">/// Delete a command in a guild, by ID.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">delete_guild_command</span>(
+    <span class="doccomment">/// Delete a command in a guild, by ID.
+    </span><span class="kw">pub const fn </span>delete_guild_command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-    ) -&gt; <span class="ident">DeleteGuildCommand</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">DeleteGuildCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>, <span class="ident">command_id</span>)
+        guild_id: Id&lt;GuildMarker&gt;,
+        command_id: Id&lt;CommandMarker&gt;,
+    ) -&gt; DeleteGuildCommand&lt;<span class="lifetime">&#39;_</span>&gt; {
+        DeleteGuildCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id, command_id)
     }
 
-    <span class="doccomment">/// Fetch a guild command for your application.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_command</span>(
+    <span class="doccomment">/// Fetch a guild command for your application.
+    </span><span class="kw">pub const fn </span>guild_command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-    ) -&gt; <span class="ident">GetGuildCommand</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">GetGuildCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>, <span class="ident">command_id</span>)
+        guild_id: Id&lt;GuildMarker&gt;,
+        command_id: Id&lt;CommandMarker&gt;,
+    ) -&gt; GetGuildCommand&lt;<span class="lifetime">&#39;_</span>&gt; {
+        GetGuildCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id, command_id)
     }
 
-    <span class="doccomment">/// Fetch all commands for a guild, by ID.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_commands</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;) -&gt; <span class="ident">GetGuildCommands</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">GetGuildCommands::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>)
+    <span class="doccomment">/// Fetch all commands for a guild, by ID.
+    </span><span class="kw">pub const fn </span>guild_commands(<span class="kw-2">&amp;</span><span class="self">self</span>, guild_id: Id&lt;GuildMarker&gt;) -&gt; GetGuildCommands&lt;<span class="lifetime">&#39;_</span>&gt; {
+        GetGuildCommands::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id)
     }
 
-    <span class="doccomment">/// Set a guild&#39;s commands.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method is idempotent: it can be used on every start, without being</span>
-    <span class="doccomment">/// ratelimited if there aren&#39;t changes to the commands.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The [`Command`] struct has an [associated builder] in the</span>
-    <span class="doccomment">/// [`twilight-util`] crate.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`twilight-util`]: https://docs.rs/twilight_util/index.html</span>
-    <span class="doccomment">/// [associated builder]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/struct.CommandBuilder.html</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">set_guild_commands</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-        <span class="ident">commands</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">Command</span>],
-    ) -&gt; <span class="ident">SetGuildCommands</span>&lt;<span class="lifetime">&#39;a</span>&gt; {
-        <span class="ident">SetGuildCommands::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>, <span class="ident">commands</span>)
+    <span class="doccomment">/// Set a guild&#39;s commands.
+    ///
+    /// This method is idempotent: it can be used on every start, without being
+    /// ratelimited if there aren&#39;t changes to the commands.
+    ///
+    /// The [`Command`] struct has an [associated builder] in the
+    /// [`twilight-util`] crate.
+    ///
+    /// [`twilight-util`]: https://docs.rs/twilight_util/index.html
+    /// [associated builder]: https://docs.rs/twilight-util/latest/twilight_util/builder/command/struct.CommandBuilder.html
+    </span><span class="kw">pub const fn </span>set_guild_commands(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        guild_id: Id&lt;GuildMarker&gt;,
+        commands: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[Command],
+    ) -&gt; SetGuildCommands&lt;<span class="lifetime">&#39;a</span>&gt; {
+        SetGuildCommands::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id, commands)
     }
 
-    <span class="doccomment">/// Edit a command in a guild, by ID.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// You must specify a name and description. See</span>
-    <span class="doccomment">/// [Discord Docs/Edit Guild Application Command].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [Discord Docs/Edit Guild Application Command]: https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update_guild_command</span>(
+    <span class="doccomment">/// Edit a command in a guild, by ID.
+    ///
+    /// You must specify a name and description. See
+    /// [Discord Docs/Edit Guild Application Command].
+    ///
+    /// [Discord Docs/Edit Guild Application Command]: https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
+    </span><span class="kw">pub const fn </span>update_guild_command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-    ) -&gt; <span class="ident">UpdateGuildCommand</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">UpdateGuildCommand::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>, <span class="ident">command_id</span>)
+        guild_id: Id&lt;GuildMarker&gt;,
+        command_id: Id&lt;CommandMarker&gt;,
+    ) -&gt; UpdateGuildCommand&lt;<span class="lifetime">&#39;_</span>&gt; {
+        UpdateGuildCommand::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id, command_id)
     }
 
-    <span class="doccomment">/// Fetch command permissions for a command from the current application</span>
-    <span class="doccomment">/// in a guild.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">command_permissions</span>(
+    <span class="doccomment">/// Fetch command permissions for a command from the current application
+    /// in a guild.
+    </span><span class="kw">pub const fn </span>command_permissions(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-    ) -&gt; <span class="ident">GetCommandPermissions</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">GetCommandPermissions::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>, <span class="ident">command_id</span>)
+        guild_id: Id&lt;GuildMarker&gt;,
+        command_id: Id&lt;CommandMarker&gt;,
+    ) -&gt; GetCommandPermissions&lt;<span class="lifetime">&#39;_</span>&gt; {
+        GetCommandPermissions::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id, command_id)
     }
 
-    <span class="doccomment">/// Fetch command permissions for all commands from the current</span>
-    <span class="doccomment">/// application in a guild.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">guild_command_permissions</span>(
+    <span class="doccomment">/// Fetch command permissions for all commands from the current
+    /// application in a guild.
+    </span><span class="kw">pub const fn </span>guild_command_permissions(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-    ) -&gt; <span class="ident">GetGuildCommandPermissions</span>&lt;<span class="lifetime">&#39;_</span>&gt; {
-        <span class="ident">GetGuildCommandPermissions::new</span>(<span class="self">self</span>.<span class="ident">client</span>, <span class="self">self</span>.<span class="ident">application_id</span>, <span class="ident">guild_id</span>)
+        guild_id: Id&lt;GuildMarker&gt;,
+    ) -&gt; GetGuildCommandPermissions&lt;<span class="lifetime">&#39;_</span>&gt; {
+        GetGuildCommandPermissions::new(<span class="self">self</span>.client, <span class="self">self</span>.application_id, guild_id)
     }
 
-    <span class="doccomment">/// Update command permissions for a single command in a guild.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This overwrites the command permissions so the full set of permissions</span>
-    <span class="doccomment">/// have to be sent every time.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns an error of type [`PermissionsCountInvalid`] if the permissions</span>
-    <span class="doccomment">/// are invalid.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`PermissionsCountInvalid`]: twilight_validate::command::CommandValidationErrorType::PermissionsCountInvalid</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update_command_permissions</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">guild_id</span>: <span class="ident">Id</span>&lt;<span class="ident">GuildMarker</span>&gt;,
-        <span class="ident">command_id</span>: <span class="ident">Id</span>&lt;<span class="ident">CommandMarker</span>&gt;,
-        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">CommandPermissions</span>],
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">UpdateCommandPermissions</span>&lt;<span class="lifetime">&#39;a</span>&gt;, <span class="ident">CommandValidationError</span>&gt; {
-        <span class="ident">UpdateCommandPermissions::new</span>(
-            <span class="self">self</span>.<span class="ident">client</span>,
-            <span class="self">self</span>.<span class="ident">application_id</span>,
-            <span class="ident">guild_id</span>,
-            <span class="ident">command_id</span>,
-            <span class="ident">permissions</span>,
+    <span class="doccomment">/// Update command permissions for a single command in a guild.
+    ///
+    /// This overwrites the command permissions so the full set of permissions
+    /// have to be sent every time.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error of type [`PermissionsCountInvalid`] if the permissions
+    /// are invalid.
+    ///
+    /// [`PermissionsCountInvalid`]: twilight_validate::command::CommandValidationErrorType::PermissionsCountInvalid
+    </span><span class="kw">pub fn </span>update_command_permissions(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+        guild_id: Id&lt;GuildMarker&gt;,
+        command_id: Id&lt;CommandMarker&gt;,
+        permissions: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[CommandPermissions],
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;UpdateCommandPermissions&lt;<span class="lifetime">&#39;a</span>&gt;, CommandValidationError&gt; {
+        UpdateCommandPermissions::new(
+            <span class="self">self</span>.client,
+            <span class="self">self</span>.application_id,
+            guild_id,
+            command_id,
+            permissions,
         )
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::InteractionClient</span>;
-    <span class="kw">use</span> <span class="ident">static_assertions::assert_impl_all</span>;
-    <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::InteractionClient;
+    <span class="kw">use </span>static_assertions::assert_impl_all;
+    <span class="kw">use </span>std::fmt::Debug;
 
-    <span class="macro">assert_impl_all!</span>(<span class="ident">InteractionClient</span>&lt;<span class="lifetime">&#39;_</span>&gt;: <span class="ident">Debug</span>, <span class="ident">Send</span>, <span class="ident">Sync</span>);
+    <span class="macro">assert_impl_all!</span>(InteractionClient&lt;<span class="lifetime">&#39;_</span>&gt;: Debug, Send, Sync);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_http" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/processor/compression/inflater.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>inflater.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-gateway/src/shard/processor/compression/inflater.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>inflater.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../../normalize.css"><link rel="stylesheet" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../../dark.css" disabled><link rel="stylesheet" href="../../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../../storage.js"></script><script defer src="../../../../../source-script.js"></script><script defer src="../../../../../source-files.js"></script><script defer src="../../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../twilight_gateway/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../../twilight_gateway/index.html"><img class="rust-logo" src="../../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -245,194 +245,194 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">flate2</span>::{<span class="ident">Decompress</span>, <span class="ident">DecompressError</span>, <span class="ident">FlushDecompress</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">mem</span>, <span class="ident">time::Instant</span>};
+</pre><pre class="rust"><code><span class="kw">use </span>flate2::{Decompress, DecompressError, FlushDecompress};
+<span class="kw">use </span>std::{mem, time::Instant};
 
-<span class="kw">const</span> <span class="ident">ZLIB_SUFFIX</span>: [<span class="ident">u8</span>; <span class="number">4</span>] = [<span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xff</span>];
-<span class="kw">const</span> <span class="ident">INTERNAL_BUFFER_SIZE</span>: <span class="ident">usize</span> = <span class="number">32</span> * <span class="number">1024</span>;
+<span class="kw">const </span>ZLIB_SUFFIX: [u8; <span class="number">4</span>] = [<span class="number">0x00</span>, <span class="number">0x00</span>, <span class="number">0xff</span>, <span class="number">0xff</span>];
+<span class="kw">const </span>INTERNAL_BUFFER_SIZE: usize = <span class="number">32 </span>* <span class="number">1024</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Inflater</span> {
-    <span class="ident">decompress</span>: <span class="ident">Decompress</span>,
-    <span class="ident">compressed</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
-    <span class="ident">internal_buffer</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
-    <span class="ident">buffer</span>: <span class="ident">Vec</span>&lt;<span class="ident">u8</span>&gt;,
-    <span class="ident">last_resize</span>: <span class="ident">Instant</span>,
-    <span class="ident">shard</span>: [<span class="ident">u64</span>; <span class="number">2</span>],
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Inflater {
+    decompress: Decompress,
+    compressed: Vec&lt;u8&gt;,
+    internal_buffer: Vec&lt;u8&gt;,
+    buffer: Vec&lt;u8&gt;,
+    last_resize: Instant,
+    shard: [u64; <span class="number">2</span>],
 }
 
-<span class="kw">impl</span> <span class="ident">Inflater</span> {
-    <span class="doccomment">/// Create a new inflater for a shard.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">shard</span>: [<span class="ident">u64</span>; <span class="number">2</span>]) -&gt; <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">buffer</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">INTERNAL_BUFFER_SIZE</span>),
-            <span class="ident">compressed</span>: <span class="ident">Vec::new</span>(),
-            <span class="ident">decompress</span>: <span class="ident">Decompress::new</span>(<span class="bool-val">true</span>),
-            <span class="ident">internal_buffer</span>: <span class="ident">Vec::with_capacity</span>(<span class="ident">INTERNAL_BUFFER_SIZE</span>),
-            <span class="ident">last_resize</span>: <span class="ident">Instant::now</span>(),
-            <span class="ident">shard</span>,
+<span class="kw">impl </span>Inflater {
+    <span class="doccomment">/// Create a new inflater for a shard.
+    </span><span class="kw">pub fn </span>new(shard: [u64; <span class="number">2</span>]) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            buffer: Vec::with_capacity(INTERNAL_BUFFER_SIZE),
+            compressed: Vec::new(),
+            decompress: Decompress::new(<span class="bool-val">true</span>),
+            internal_buffer: Vec::with_capacity(INTERNAL_BUFFER_SIZE),
+            last_resize: Instant::now(),
+            shard,
         }
     }
 
-    <span class="doccomment">/// Return a mutable reference to the buffer.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>] {
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">as_mut_slice</span>()
+    <span class="doccomment">/// Return a mutable reference to the buffer.
+    </span><span class="kw">pub fn </span>buffer_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8] {
+        <span class="self">self</span>.buffer.as_mut_slice()
     }
 
-    <span class="doccomment">/// Extend the internal compressed buffer with bytes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extend</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">slice</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
-        <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">extend_from_slice</span>(<span class="ident">slice</span>);
+    <span class="doccomment">/// Extend the internal compressed buffer with bytes.
+    </span><span class="kw">pub fn </span>extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>, slice: <span class="kw-2">&amp;</span>[u8]) {
+        <span class="self">self</span>.compressed.extend_from_slice(slice);
     }
 
-    <span class="doccomment">/// Decompress the next message if a complete payload was received.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Returns `None` if an incomplete payload was received.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This returns `flate2`&#39;s `DecompressError` as its method&#39;s type signature</span>
-    <span class="doccomment">/// indicates it can return an error, however in reality in versions up to</span>
-    <span class="doccomment">/// 1.0.17 it won&#39;t.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> = <span class="string">&quot;trace&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">msg</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]&gt;, <span class="ident">DecompressError</span>&gt; {
-        <span class="kw">let</span> <span class="ident">length</span> = <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">len</span>();
+    <span class="doccomment">/// Decompress the next message if a complete payload was received.
+    ///
+    /// Returns `None` if an incomplete payload was received.
+    ///
+    /// # Errors
+    ///
+    /// This returns `flate2`&#39;s `DecompressError` as its method&#39;s type signature
+    /// indicates it can return an error, however in reality in versions up to
+    /// 1.0.17 it won&#39;t.
+    </span><span class="attribute">#[tracing::instrument(level = <span class="string">&quot;trace&quot;</span>)]
+    </span><span class="kw">pub fn </span>msg(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>[u8]&gt;, DecompressError&gt; {
+        <span class="kw">let </span>length = <span class="self">self</span>.compressed.len();
 
-        <span class="comment">// Check if a partial payload was received. If it was, we can just</span>
-        <span class="comment">// return that no decompressed message is available.</span>
-        <span class="kw">if</span> <span class="ident">length</span> &lt; <span class="number">4</span> || <span class="self">self</span>.<span class="ident">compressed</span>[(<span class="ident">length</span> - <span class="number">4</span>)..] != <span class="ident">ZLIB_SUFFIX</span> {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+        <span class="comment">// Check if a partial payload was received. If it was, we can just
+        // return that no decompressed message is available.
+        </span><span class="kw">if </span>length &lt; <span class="number">4 </span>|| <span class="self">self</span>.compressed[(length - <span class="number">4</span>)..] != ZLIB_SUFFIX {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">before</span> = <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_in</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">offset</span> = <span class="number">0</span>;
+        <span class="kw">let </span>before = <span class="self">self</span>.decompress.total_in();
+        <span class="kw">let </span><span class="kw-2">mut </span>offset = <span class="number">0</span>;
 
-        <span class="kw">loop</span> {
-            <span class="self">self</span>.<span class="ident">internal_buffer</span>.<span class="ident">clear</span>();
+        <span class="kw">loop </span>{
+            <span class="self">self</span>.internal_buffer.clear();
 
-            <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">decompress_vec</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">compressed</span>[<span class="ident">offset</span>..],
-                <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">internal_buffer</span>,
-                <span class="ident">FlushDecompress::Sync</span>,
+            <span class="self">self</span>.decompress.decompress_vec(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.compressed[offset..],
+                <span class="kw-2">&amp;mut </span><span class="self">self</span>.internal_buffer,
+                FlushDecompress::Sync,
             )<span class="question-mark">?</span>;
 
-            <span class="ident">offset</span> = (<span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_in</span>() - <span class="ident">before</span>)
-                .<span class="ident">try_into</span>()
-                .<span class="ident">unwrap_or_default</span>();
-            <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">internal_buffer</span>[..]);
+            offset = (<span class="self">self</span>.decompress.total_in() - before)
+                .try_into()
+                .unwrap_or_default();
+            <span class="self">self</span>.buffer.extend_from_slice(<span class="kw-2">&amp;</span><span class="self">self</span>.internal_buffer[..]);
 
-            <span class="kw">let</span> <span class="ident">not_at_capacity</span> = <span class="self">self</span>.<span class="ident">internal_buffer</span>.<span class="ident">len</span>() &lt; <span class="self">self</span>.<span class="ident">internal_buffer</span>.<span class="ident">capacity</span>();
+            <span class="kw">let </span>not_at_capacity = <span class="self">self</span>.internal_buffer.len() &lt; <span class="self">self</span>.internal_buffer.capacity();
 
-            <span class="kw">if</span> <span class="ident">not_at_capacity</span> || <span class="ident">offset</span> &gt; <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">len</span>() {
+            <span class="kw">if </span>not_at_capacity || offset &gt; <span class="self">self</span>.compressed.len() {
                 <span class="kw">break</span>;
             }
         }
 
         <span class="macro">tracing::trace!</span>(
-            <span class="ident">bytes_in</span> = <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">len</span>(),
-            <span class="ident">bytes_out</span> = <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">len</span>(),
-            <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>],
-            <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">1</span>],
+            bytes_in = <span class="self">self</span>.compressed.len(),
+            bytes_out = <span class="self">self</span>.buffer.len(),
+            shard_id = <span class="self">self</span>.shard[<span class="number">0</span>],
+            shard_total = <span class="self">self</span>.shard[<span class="number">1</span>],
             <span class="string">&quot;payload lengths&quot;</span>,
         );
 
-        <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">clear</span>();
+        <span class="self">self</span>.compressed.clear();
 
         {
-            <span class="comment">// It doesn&#39;t matter if we lose precision for logging.</span>
-            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_precision_loss</span>)]</span>
-            <span class="kw">let</span> <span class="ident">saved_percentage</span> =
-                <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_in</span>() <span class="kw">as</span> <span class="ident">f64</span> / <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_out</span>() <span class="kw">as</span> <span class="ident">f64</span>;
-            <span class="kw">let</span> <span class="ident">saved_percentage_readable</span> = <span class="ident">saved_percentage</span> * <span class="number">100.0</span>;
-            <span class="kw">let</span> <span class="ident">saved_kib</span> = (<span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_out</span>() - <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_in</span>()) / <span class="number">1_024</span>;
+            <span class="comment">// It doesn&#39;t matter if we lose precision for logging.
+            </span><span class="attribute">#[allow(clippy::cast_precision_loss)]
+            </span><span class="kw">let </span>saved_percentage =
+                <span class="self">self</span>.decompress.total_in() <span class="kw">as </span>f64 / <span class="self">self</span>.decompress.total_out() <span class="kw">as </span>f64;
+            <span class="kw">let </span>saved_percentage_readable = saved_percentage * <span class="number">100.0</span>;
+            <span class="kw">let </span>saved_kib = (<span class="self">self</span>.decompress.total_out() - <span class="self">self</span>.decompress.total_in()) / <span class="number">1_024</span>;
 
             <span class="macro">tracing::trace!</span>(
-                <span class="ident">saved_kib</span> = <span class="ident">saved_kib</span>,
-                <span class="ident">saved_percentage</span> = %<span class="ident">saved_percentage_readable</span>,
-                <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>],
-                <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">1</span>],
-                <span class="ident">total_in</span> = <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_in</span>(),
-                <span class="ident">total_out</span> = <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_out</span>(),
+                saved_kib = saved_kib,
+                saved_percentage = %saved_percentage_readable,
+                shard_id = <span class="self">self</span>.shard[<span class="number">0</span>],
+                shard_total = <span class="self">self</span>.shard[<span class="number">1</span>],
+                total_in = <span class="self">self</span>.decompress.total_in(),
+                total_out = <span class="self">self</span>.decompress.total_out(),
                 <span class="string">&quot;data saved&quot;</span>,
             );
         }
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-        <span class="self">self</span>.<span class="ident">inflater_metrics</span>();
+        <span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+        </span><span class="self">self</span>.inflater_metrics();
 
-        <span class="macro">tracing::trace!</span>(<span class="string">&quot;capacity: {}&quot;</span>, <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">capacity</span>());
+        <span class="macro">tracing::trace!</span>(<span class="string">&quot;capacity: {}&quot;</span>, <span class="self">self</span>.buffer.capacity());
 
-        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">buffer</span>))
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer))
     }
 
-    <span class="doccomment">/// Clear the buffer and shrink it if the capacity is too large.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If the capacity is 4 times larger than the buffer length then the</span>
-    <span class="doccomment">/// capacity will be shrunk to the length.</span>
-    <span class="attribute">#[<span class="ident">tracing::instrument</span>(<span class="ident">level</span> = <span class="string">&quot;trace&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">shrink</span>();
+    <span class="doccomment">/// Clear the buffer and shrink it if the capacity is too large.
+    ///
+    /// If the capacity is 4 times larger than the buffer length then the
+    /// capacity will be shrunk to the length.
+    </span><span class="attribute">#[tracing::instrument(level = <span class="string">&quot;trace&quot;</span>)]
+    </span><span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.shrink();
 
-        <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">internal_buffer</span>.<span class="ident">clear</span>();
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">clear</span>();
+        <span class="self">self</span>.compressed.clear();
+        <span class="self">self</span>.internal_buffer.clear();
+        <span class="self">self</span>.buffer.clear();
     }
 
-    <span class="doccomment">/// Reset the state of the inflater back to its default state.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">_old_inflater</span> = <span class="ident">mem::replace</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::new</span>(<span class="self">self</span>.<span class="ident">shard</span>));
+    <span class="doccomment">/// Reset the state of the inflater back to its default state.
+    </span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>_old_inflater = mem::replace(<span class="self">self</span>, <span class="self">Self</span>::new(<span class="self">self</span>.shard));
     }
 
-    <span class="doccomment">/// Log metrics about the inflater.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> = <span class="string">&quot;metrics&quot;</span>)]</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::cast_precision_loss</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">inflater_metrics</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="doccomment">/// Log metrics about the inflater.
+    </span><span class="attribute">#[cfg(feature = <span class="string">&quot;metrics&quot;</span>)]
+    #[allow(clippy::cast_precision_loss)]
+    </span><span class="kw">fn </span>inflater_metrics(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="macro">metrics::gauge!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;Inflater-Capacity-{}&quot;</span>, <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>]),
-            <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">capacity</span>() <span class="kw">as</span> <span class="ident">f64</span>
+            <span class="macro">format!</span>(<span class="string">&quot;Inflater-Capacity-{}&quot;</span>, <span class="self">self</span>.shard[<span class="number">0</span>]),
+            <span class="self">self</span>.buffer.capacity() <span class="kw">as </span>f64
         );
         <span class="macro">metrics::gauge!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;Inflater-In-{}&quot;</span>, <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>]),
-            <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_in</span>() <span class="kw">as</span> <span class="ident">f64</span>
+            <span class="macro">format!</span>(<span class="string">&quot;Inflater-In-{}&quot;</span>, <span class="self">self</span>.shard[<span class="number">0</span>]),
+            <span class="self">self</span>.decompress.total_in() <span class="kw">as </span>f64
         );
         <span class="macro">metrics::gauge!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;Inflater-Out-{}&quot;</span>, <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>]),
-            <span class="self">self</span>.<span class="ident">decompress</span>.<span class="ident">total_out</span>() <span class="kw">as</span> <span class="ident">f64</span>
+            <span class="macro">format!</span>(<span class="string">&quot;Inflater-Out-{}&quot;</span>, <span class="self">self</span>.shard[<span class="number">0</span>]),
+            <span class="self">self</span>.decompress.total_out() <span class="kw">as </span>f64
         );
     }
 
-    <span class="doccomment">/// Shrink the capacity of the compressed buffer and payload buffer if at</span>
-    <span class="doccomment">/// least 60 seconds have passed since the last shrink.</span>
-    <span class="kw">fn</span> <span class="ident">shrink</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_resize</span>.<span class="ident">elapsed</span>().<span class="ident">as_secs</span>() &lt; <span class="number">60</span> {
+    <span class="doccomment">/// Shrink the capacity of the compressed buffer and payload buffer if at
+    /// least 60 seconds have passed since the last shrink.
+    </span><span class="kw">fn </span>shrink(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="self">self</span>.last_resize.elapsed().as_secs() &lt; <span class="number">60 </span>{
             <span class="kw">return</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">shrink_to_fit</span>();
-        <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">shrink_to_fit</span>();
+        <span class="self">self</span>.compressed.shrink_to_fit();
+        <span class="self">self</span>.buffer.shrink_to_fit();
 
         <span class="macro">tracing::trace!</span>(
-            <span class="ident">capacity</span> = <span class="self">self</span>.<span class="ident">compressed</span>.<span class="ident">capacity</span>(),
-            <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>],
-            <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">1</span>],
+            capacity = <span class="self">self</span>.compressed.capacity(),
+            shard_id = <span class="self">self</span>.shard[<span class="number">0</span>],
+            shard_total = <span class="self">self</span>.shard[<span class="number">1</span>],
             <span class="string">&quot;compressed capacity&quot;</span>,
         );
         <span class="macro">tracing::trace!</span>(
-            <span class="ident">capacity</span> = <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">capacity</span>(),
-            <span class="ident">shard_id</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">0</span>],
-            <span class="ident">shard_total</span> = <span class="self">self</span>.<span class="ident">shard</span>[<span class="number">1</span>],
+            capacity = <span class="self">self</span>.buffer.capacity(),
+            shard_id = <span class="self">self</span>.shard[<span class="number">0</span>],
+            shard_total = <span class="self">self</span>.shard[<span class="number">1</span>],
             <span class="string">&quot;buffer capacity&quot;</span>,
         );
 
-        <span class="self">self</span>.<span class="ident">last_resize</span> = <span class="ident">Instant::now</span>();
+        <span class="self">self</span>.last_resize = Instant::now();
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Inflater</span>;
-    <span class="kw">use</span> <span class="ident">std::error::Error</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span><span class="kw">super</span>::Inflater;
+    <span class="kw">use </span>std::error::Error;
 
-    <span class="kw">const</span> <span class="ident">MESSAGE</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] = <span class="kw-2">&amp;</span>[
+    <span class="kw">const </span>MESSAGE: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>[
         <span class="number">120</span>, <span class="number">156</span>, <span class="number">52</span>, <span class="number">201</span>, <span class="number">65</span>, <span class="number">10</span>, <span class="number">131</span>, <span class="number">48</span>, <span class="number">16</span>, <span class="number">5</span>, <span class="number">208</span>, <span class="number">187</span>, <span class="number">252</span>, <span class="number">117</span>, <span class="number">82</span>, <span class="number">98</span>, <span class="number">169</span>, <span class="number">32</span>, <span class="number">115</span>, <span class="number">21</span>,
         <span class="number">35</span>, <span class="number">50</span>, <span class="number">53</span>, <span class="number">67</span>, <span class="number">27</span>, <span class="number">136</span>, <span class="number">81</span>, <span class="number">226</span>, <span class="number">216</span>, <span class="number">82</span>, <span class="number">66</span>, <span class="number">238</span>, <span class="number">222</span>, <span class="number">110</span>, <span class="number">186</span>, <span class="number">123</span>, <span class="number">240</span>, <span class="number">42</span>, <span class="number">20</span>, <span class="number">148</span>,
         <span class="number">207</span>, <span class="number">148</span>, <span class="number">12</span>, <span class="number">142</span>, <span class="number">63</span>, <span class="number">182</span>, <span class="number">29</span>, <span class="number">212</span>, <span class="number">57</span>, <span class="number">131</span>, <span class="number">0</span>, <span class="number">170</span>, <span class="number">120</span>, <span class="number">10</span>, <span class="number">23</span>, <span class="number">189</span>, <span class="number">11</span>, <span class="number">235</span>, <span class="number">28</span>, <span class="number">179</span>,
@@ -440,7 +440,7 @@
         <span class="number">187</span>, <span class="number">151</span>, <span class="number">96</span>, <span class="number">87</span>, <span class="number">142</span>, <span class="number">217</span>, <span class="number">14</span>, <span class="number">253</span>, <span class="number">16</span>, <span class="number">60</span>, <span class="number">76</span>, <span class="number">245</span>, <span class="number">88</span>, <span class="number">227</span>, <span class="number">82</span>, <span class="number">182</span>, <span class="number">195</span>, <span class="number">131</span>, <span class="number">220</span>, <span class="number">197</span>,
         <span class="number">181</span>, <span class="number">9</span>, <span class="number">83</span>, <span class="number">107</span>, <span class="number">95</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>, <span class="number">255</span>,
     ];
-    <span class="kw">const</span> <span class="ident">OUTPUT</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] = <span class="kw-2">&amp;</span>[
+    <span class="kw">const </span>OUTPUT: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>[
         <span class="number">123</span>, <span class="number">34</span>, <span class="number">116</span>, <span class="number">34</span>, <span class="number">58</span>, <span class="number">110</span>, <span class="number">117</span>, <span class="number">108</span>, <span class="number">108</span>, <span class="number">44</span>, <span class="number">34</span>, <span class="number">115</span>, <span class="number">34</span>, <span class="number">58</span>, <span class="number">110</span>, <span class="number">117</span>, <span class="number">108</span>, <span class="number">108</span>, <span class="number">44</span>, <span class="number">34</span>,
         <span class="number">111</span>, <span class="number">112</span>, <span class="number">34</span>, <span class="number">58</span>, <span class="number">49</span>, <span class="number">48</span>, <span class="number">44</span>, <span class="number">34</span>, <span class="number">100</span>, <span class="number">34</span>, <span class="number">58</span>, <span class="number">123</span>, <span class="number">34</span>, <span class="number">104</span>, <span class="number">101</span>, <span class="number">97</span>, <span class="number">114</span>, <span class="number">116</span>, <span class="number">98</span>, <span class="number">101</span>,
         <span class="number">97</span>, <span class="number">116</span>, <span class="number">95</span>, <span class="number">105</span>, <span class="number">110</span>, <span class="number">116</span>, <span class="number">101</span>, <span class="number">114</span>, <span class="number">118</span>, <span class="number">97</span>, <span class="number">108</span>, <span class="number">34</span>, <span class="number">58</span>, <span class="number">52</span>, <span class="number">49</span>, <span class="number">50</span>, <span class="number">53</span>, <span class="number">48</span>, <span class="number">44</span>, <span class="number">34</span>, <span class="number">95</span>,
@@ -448,49 +448,49 @@
         <span class="number">112</span>, <span class="number">114</span>, <span class="number">100</span>, <span class="number">45</span>, <span class="number">109</span>, <span class="number">97</span>, <span class="number">105</span>, <span class="number">110</span>, <span class="number">45</span>, <span class="number">56</span>, <span class="number">53</span>, <span class="number">56</span>, <span class="number">100</span>, <span class="number">92</span>, <span class="number">34</span>, <span class="number">44</span>, <span class="number">123</span>, <span class="number">92</span>, <span class="number">34</span>, <span class="number">109</span>,
         <span class="number">105</span>, <span class="number">99</span>, <span class="number">114</span>, <span class="number">111</span>, <span class="number">115</span>, <span class="number">92</span>, <span class="number">34</span>, <span class="number">58</span>, <span class="number">48</span>, <span class="number">46</span>, <span class="number">48</span>, <span class="number">125</span>, <span class="number">93</span>, <span class="number">34</span>, <span class="number">93</span>, <span class="number">125</span>, <span class="number">125</span>,
     ];
-    <span class="kw">const</span> <span class="ident">SHARD</span>: [<span class="ident">u64</span>; <span class="number">2</span>] = [<span class="number">2</span>, <span class="number">5</span>];
+    <span class="kw">const </span>SHARD: [u64; <span class="number">2</span>] = [<span class="number">2</span>, <span class="number">5</span>];
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">inflater</span>() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="ident">Box</span>&lt;<span class="kw">dyn</span> <span class="ident">Error</span>&gt;&gt; {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inflater</span> = <span class="ident">Inflater::new</span>(<span class="ident">SHARD</span>);
-        <span class="ident">inflater</span>.<span class="ident">extend</span>(<span class="kw-2">&amp;</span><span class="ident">MESSAGE</span>[<span class="number">0</span>..<span class="ident">MESSAGE</span>.<span class="ident">len</span>() - <span class="number">2</span>]);
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">inflater</span>.<span class="ident">msg</span>()<span class="question-mark">?</span>);
+    <span class="attribute">#[test]
+    </span><span class="kw">fn </span>inflater() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>inflater = Inflater::new(SHARD);
+        inflater.extend(<span class="kw-2">&amp;</span>MESSAGE[<span class="number">0</span>..MESSAGE.len() - <span class="number">2</span>]);
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, inflater.msg()<span class="question-mark">?</span>);
 
-        <span class="ident">inflater</span>.<span class="ident">reset</span>();
-        <span class="ident">inflater</span>.<span class="ident">extend</span>(<span class="ident">MESSAGE</span>);
+        inflater.reset();
+        inflater.extend(MESSAGE);
 
-        <span class="comment">// Check the state of fields.</span>
-        <span class="macro">assert!</span>(!<span class="ident">inflater</span>.<span class="ident">compressed</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">internal_buffer</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">buffer</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">OUTPUT</span>), <span class="ident">inflater</span>.<span class="ident">msg</span>()<span class="question-mark">?</span>.<span class="ident">as_deref</span>());
+        <span class="comment">// Check the state of fields.
+        </span><span class="macro">assert!</span>(!inflater.compressed.is_empty());
+        <span class="macro">assert!</span>(inflater.internal_buffer.is_empty());
+        <span class="macro">assert!</span>(inflater.buffer.is_empty());
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(OUTPUT), inflater.msg()<span class="question-mark">?</span>.as_deref());
 
-        <span class="comment">// Calling `msg` clears `compressed` and fills `buffer` and `internal_buffer`.</span>
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">compressed</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(!<span class="ident">inflater</span>.<span class="ident">buffer</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(!<span class="ident">inflater</span>.<span class="ident">internal_buffer</span>.<span class="ident">is_empty</span>());
+        <span class="comment">// Calling `msg` clears `compressed` and fills `buffer` and `internal_buffer`.
+        </span><span class="macro">assert!</span>(inflater.compressed.is_empty());
+        <span class="macro">assert!</span>(!inflater.buffer.is_empty());
+        <span class="macro">assert!</span>(!inflater.internal_buffer.is_empty());
 
-        <span class="macro">assert_eq!</span>(<span class="ident">OUTPUT</span>, <span class="ident">inflater</span>.<span class="ident">buffer_mut</span>());
+        <span class="macro">assert_eq!</span>(OUTPUT, inflater.buffer_mut());
 
-        <span class="comment">// Check to make sure `buffer` and `internal_buffer` haven&#39;t been cleared.</span>
-        <span class="macro">assert!</span>(!<span class="ident">inflater</span>.<span class="ident">internal_buffer</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(!<span class="ident">inflater</span>.<span class="ident">buffer</span>.<span class="ident">is_empty</span>());
+        <span class="comment">// Check to make sure `buffer` and `internal_buffer` haven&#39;t been cleared.
+        </span><span class="macro">assert!</span>(!inflater.internal_buffer.is_empty());
+        <span class="macro">assert!</span>(!inflater.buffer.is_empty());
 
-        <span class="comment">// Now clear the inflater and make sure all buffers are empty.</span>
-        <span class="ident">inflater</span>.<span class="ident">clear</span>();
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">compressed</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">internal_buffer</span>.<span class="ident">is_empty</span>());
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">buffer</span>.<span class="ident">is_empty</span>());
+        <span class="comment">// Now clear the inflater and make sure all buffers are empty.
+        </span>inflater.clear();
+        <span class="macro">assert!</span>(inflater.compressed.is_empty());
+        <span class="macro">assert!</span>(inflater.internal_buffer.is_empty());
+        <span class="macro">assert!</span>(inflater.buffer.is_empty());
 
-        <span class="comment">// Reset the inflater after extending it, bringing it back to a default</span>
-        <span class="comment">// state.</span>
-        <span class="ident">inflater</span>.<span class="ident">extend</span>(<span class="string">b&quot;test&quot;</span>);
-        <span class="macro">assert!</span>(!<span class="ident">inflater</span>.<span class="ident">compressed</span>.<span class="ident">is_empty</span>());
-        <span class="ident">inflater</span>.<span class="ident">reset</span>();
-        <span class="macro">assert!</span>(<span class="ident">inflater</span>.<span class="ident">compressed</span>.<span class="ident">is_empty</span>());
+        <span class="comment">// Reset the inflater after extending it, bringing it back to a default
+        // state.
+        </span>inflater.extend(<span class="string">b&quot;test&quot;</span>);
+        <span class="macro">assert!</span>(!inflater.compressed.is_empty());
+        inflater.reset();
+        <span class="macro">assert!</span>(inflater.compressed.is_empty());
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="twilight_gateway" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>

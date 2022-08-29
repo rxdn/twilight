@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-model/src/gateway/intents.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>intents.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_model/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `twilight-model/src/gateway/intents.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>intents.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../twilight_model/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../twilight_model/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -276,283 +276,283 @@
 <span id="276">276</span>
 <span id="277">277</span>
 <span id="278">278</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{
-    <span class="ident">de</span>::{<span class="ident">Deserialize</span>, <span class="ident">Deserializer</span>},
-    <span class="ident">ser</span>::{<span class="ident">Serialize</span>, <span class="ident">Serializer</span>},
+</pre><pre class="rust"><code><span class="kw">use </span>bitflags::bitflags;
+<span class="kw">use </span>serde::{
+    de::{Deserialize, Deserializer},
+    ser::{Serialize, Serializer},
 };
 
-<span class="macro">bitflags!</span> {
-    <span class="doccomment">/// Gateway intents.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Developers must specify intents when connecting to the gateway. The</span>
-    <span class="doccomment">/// intents specified correspond with the events received. To specify</span>
-    <span class="doccomment">/// multiple intents, create a union using the `|` operator. See</span>
-    <span class="doccomment">/// [Discord Docs/Gateway Intents].</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [Discord Docs/Gateway Intents]: https://discord.com/developers/docs/topics/gateway#gateway-intents</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Intents</span>: <span class="ident">u64</span> {
-        <span class="doccomment">/// Guilds intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`GUILD_CREATE`]</span>
-        <span class="doccomment">///  - [`GUILD_UPDATE`]</span>
-        <span class="doccomment">///  - [`GUILD_DELETE`]</span>
-        <span class="doccomment">///  - [`GUILD_ROLE_CREATE`]</span>
-        <span class="doccomment">///  - [`GUILD_ROLE_UPDATE`]</span>
-        <span class="doccomment">///  - [`GUILD_ROLE_DELETE`]</span>
-        <span class="doccomment">///  - [`CHANNEL_CREATE`]</span>
-        <span class="doccomment">///  - [`CHANNEL_UPDATE`]</span>
-        <span class="doccomment">///  - [`CHANNEL_DELETE`]</span>
-        <span class="doccomment">///  - [`CHANNEL_PINS_UPDATE`]</span>
-        <span class="doccomment">///  - [`THREAD_CREATE`]</span>
-        <span class="doccomment">///  - [`THREAD_UPDATE`]</span>
-        <span class="doccomment">///  - [`THREAD_DELETE`]</span>
-        <span class="doccomment">///  - [`THREAD_LIST_SYNC`]</span>
-        <span class="doccomment">///  - [`THREAD_MEMBER_UPDATE`]</span>
-        <span class="doccomment">///  - [`THREAD_MEMBERS_UPDATE`]</span>
-        <span class="doccomment">///  - [`STAGE_INSTANCE_CREATE`]</span>
-        <span class="doccomment">///  - [`STAGE_INSTANCE_UPDATE`]</span>
-        <span class="doccomment">///  - [`STAGE_INSTANCE_DELETE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`GUILD_CREATE`]: super::event::Event::GuildCreate</span>
-        <span class="doccomment">/// [`GUILD_UPDATE`]: super::event::Event::GuildUpdate</span>
-        <span class="doccomment">/// [`GUILD_DELETE`]: super::event::Event::GuildDelete</span>
-        <span class="doccomment">/// [`GUILD_ROLE_CREATE`]: super::event::Event::RoleCreate</span>
-        <span class="doccomment">/// [`GUILD_ROLE_UPDATE`]: super::event::Event::RoleUpdate</span>
-        <span class="doccomment">/// [`GUILD_ROLE_DELETE`]: super::event::Event::RoleDelete</span>
-        <span class="doccomment">/// [`CHANNEL_CREATE`]: super::event::Event::ChannelCreate</span>
-        <span class="doccomment">/// [`CHANNEL_UPDATE`]: super::event::Event::ChannelUpdate</span>
-        <span class="doccomment">/// [`CHANNEL_DELETE`]: super::event::Event::ChannelDelete</span>
-        <span class="doccomment">/// [`CHANNEL_PINS_UPDATE`]: super::event::Event::ChannelPinsUpdate</span>
-        <span class="doccomment">/// [`THREAD_CREATE`]: super::event::Event::ThreadCreate</span>
-        <span class="doccomment">/// [`THREAD_UPDATE`]: super::event::Event::ThreadUpdate</span>
-        <span class="doccomment">/// [`THREAD_DELETE`]: super::event::Event::ThreadDelete</span>
-        <span class="doccomment">/// [`THREAD_LIST_SYNC`]: super::event::Event::ThreadListSync</span>
-        <span class="doccomment">/// [`THREAD_MEMBER_UPDATE`]: super::event::Event::ThreadMemberUpdate</span>
-        <span class="doccomment">/// [`THREAD_MEMBERS_UPDATE`]: super::event::Event::ThreadMembersUpdate</span>
-        <span class="doccomment">/// [`STAGE_INSTANCE_CREATE`]: super::event::Event::StageInstanceCreate</span>
-        <span class="doccomment">/// [`STAGE_INSTANCE_UPDATE`]: super::event::Event::StageInstanceUpdate</span>
-        <span class="doccomment">/// [`STAGE_INSTANCE_DELETE`]: super::event::Event::StageInstanceDelete</span>
-        <span class="kw">const</span> <span class="ident">GUILDS</span> = <span class="number">1</span>;
-        <span class="doccomment">/// Guild members intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This intent is privileged. See [Discord Docs/Privileged Intents].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`GUILD_MEMBER_ADD`]</span>
-        <span class="doccomment">///  - [`GUILD_MEMBER_UPDATE`]</span>
-        <span class="doccomment">///  - [`GUILD_MEMBER_REMOVE`]</span>
-        <span class="doccomment">///  - [`THREAD_MEMBERS_UPDATE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [Discord Docs/Privileged Intents]: https://discord.com/developers/docs/topics/gateway#privileged-intents</span>
-        <span class="doccomment">/// [`GUILD_MEMBER_ADD`]: super::event::Event::MemberAdd</span>
-        <span class="doccomment">/// [`GUILD_MEMBER_UPDATE`]: super::event::Event::MemberUpdate</span>
-        <span class="doccomment">/// [`GUILD_MEMBER_REMOVE`]: super::event::Event::MemberRemove</span>
-        <span class="doccomment">/// [`THREAD_MEMBERS_UPDATE`]: super::event::Event::ThreadMembersUpdate</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MEMBERS</span> = <span class="number">1</span> &lt;&lt; <span class="number">1</span>;
-        <span class="doccomment">/// Guild bans intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`GUILD_BAN_ADD`]</span>
-        <span class="doccomment">///  - [`GUILD_BAN_REMOVE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`GUILD_BAN_ADD`]: super::event::Event::BanAdd</span>
-        <span class="doccomment">/// [`GUILD_BAN_REMOVE`]: super::event::Event::BanRemove</span>
-        <span class="kw">const</span> <span class="ident">GUILD_BANS</span> = <span class="number">1</span> &lt;&lt; <span class="number">2</span>;
-        <span class="doccomment">/// Guild emojis and stickers intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`GUILD_EMOJIS_UPDATE`]</span>
-        <span class="doccomment">///  - [`GUILD_STICKERS_UPDATE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`GUILD_EMOJIS_UPDATE`]: super::event::Event::GuildEmojisUpdate</span>
-        <span class="doccomment">/// [`GUILD_STICKERS_UPDATE`]: super::event::Event::GuildStickersUpdate</span>
-        <span class="kw">const</span> <span class="ident">GUILD_EMOJIS_AND_STICKERS</span> = <span class="number">1</span> &lt;&lt; <span class="number">3</span>;
-        <span class="doccomment">/// Guild integrations intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`GUILD_INTEGRATIONS_UPDATE`]</span>
-        <span class="doccomment">///  - [`INTEGRATION_CREATE`]</span>
-        <span class="doccomment">///  - [`INTEGRATION_UPDATE`]</span>
-        <span class="doccomment">///  - [`INTEGRATION_DELETE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`GUILD_INTEGRATIONS_UPDATE`]: super::event::Event::GuildIntegrationsUpdate</span>
-        <span class="doccomment">/// [`INTEGRATION_CREATE`]: super::event::Event::IntegrationCreate</span>
-        <span class="doccomment">/// [`INTEGRATION_UPDATE`]: super::event::Event::IntegrationUpdate</span>
-        <span class="doccomment">/// [`INTEGRATION_DELETE`]: super::event::Event::IntegrationDelete</span>
-        <span class="kw">const</span> <span class="ident">GUILD_INTEGRATIONS</span> = <span class="number">1</span> &lt;&lt; <span class="number">4</span>;
-        <span class="doccomment">/// Guild webhooks intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`WEBHOOKS_UPDATE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`WEBHOOKS_UPDATE`]: super::event::Event::WebhooksUpdate</span>
-        <span class="kw">const</span> <span class="ident">GUILD_WEBHOOKS</span> = <span class="number">1</span> &lt;&lt; <span class="number">5</span>;
-        <span class="doccomment">/// Guild invites intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`INVITE_CREATE`]</span>
-        <span class="doccomment">///  - [`INVITE_DELETE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`INVITE_CREATE`]: super::event::Event::InviteCreate</span>
-        <span class="doccomment">/// [`INVITE_DELETE`]: super::event::Event::InviteDelete</span>
-        <span class="kw">const</span> <span class="ident">GUILD_INVITES</span> = <span class="number">1</span> &lt;&lt; <span class="number">6</span>;
-        <span class="doccomment">/// Guild voice states intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`VOICE_STATE_UPDATE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`VOICE_STATE_UPDATE`]: super::event::Event::VoiceStateUpdate</span>
-        <span class="kw">const</span> <span class="ident">GUILD_VOICE_STATES</span> = <span class="number">1</span> &lt;&lt; <span class="number">7</span>;
-        <span class="doccomment">/// Guild presences intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This intent is privileged. See [Discord Docs/Privileged Intents].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`PRESENCE_UPDATE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [Discord Docs/Privileged Intents]: https://discord.com/developers/docs/topics/gateway#privileged-intents</span>
-        <span class="doccomment">/// [`PRESENCE_UPDATE`]: super::event::Event::PresenceUpdate</span>
-        <span class="kw">const</span> <span class="ident">GUILD_PRESENCES</span> = <span class="number">1</span> &lt;&lt; <span class="number">8</span>;
-        <span class="doccomment">/// Guild messages intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`MESSAGE_CREATE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_UPDATE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_DELETE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_DELETE_BULK`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`MESSAGE_CREATE`]: super::event::Event::MessageCreate</span>
-        <span class="doccomment">/// [`MESSAGE_UPDATE`]: super::event::Event::MessageUpdate</span>
-        <span class="doccomment">/// [`MESSAGE_DELETE`]: super::event::Event::MessageDelete</span>
-        <span class="doccomment">/// [`MESSAGE_DELETE_BULK`]: super::event::Event::MessageDeleteBulk</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MESSAGES</span> = <span class="number">1</span> &lt;&lt; <span class="number">9</span>;
-        <span class="doccomment">/// Guild message reactions intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_ADD`]</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_REMOVE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_REMOVE_ALL`]</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_REMOVE_EMOJI`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_ADD`]: super::event::Event::ReactionAdd</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_REMOVE`]: super::event::Event::ReactionRemove</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_REMOVE_ALL`]: super::event::Event::ReactionRemoveAll</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_REMOVE_EMOJI`]: super::event::Event::ReactionRemoveEmoji</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MESSAGE_REACTIONS</span> = <span class="number">1</span> &lt;&lt; <span class="number">10</span>;
-        <span class="doccomment">/// Guild message typing intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`TYPING_START`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`TYPING_START`]: super::event::Event::TypingStart</span>
-        <span class="kw">const</span> <span class="ident">GUILD_MESSAGE_TYPING</span> = <span class="number">1</span> &lt;&lt; <span class="number">11</span>;
-        <span class="doccomment">/// Direct messages intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`MESSAGE_CREATE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_UPDATE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_DELETE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_DELETE_BULK`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This is different from the [`GUILD_MESSAGES`] intent in that the bot</span>
-        <span class="doccomment">/// will receive message events from locations other than guilds.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`MESSAGE_CREATE`]: super::event::Event::MessageCreate</span>
-        <span class="doccomment">/// [`MESSAGE_UPDATE`]: super::event::Event::MessageUpdate</span>
-        <span class="doccomment">/// [`MESSAGE_DELETE`]: super::event::Event::MessageDelete</span>
-        <span class="doccomment">/// [`MESSAGE_DELETE_BULK`]: super::event::Event::MessageDeleteBulk</span>
-        <span class="doccomment">/// [`GUILD_MESSAGES`]: Self::GUILD_MESSAGES</span>
-        <span class="kw">const</span> <span class="ident">DIRECT_MESSAGES</span> = <span class="number">1</span> &lt;&lt; <span class="number">12</span>;
-        <span class="doccomment">/// Direct message reactions intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_ADD`]</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_REMOVE`]</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_REMOVE_ALL`]</span>
-        <span class="doccomment">///  - [`MESSAGE_REACTION_REMOVE_EMOJI`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This is different from the [`GUILD_MESSAGE_REACTIONS`] event in that</span>
-        <span class="doccomment">/// the bot will receive message reaction events from locations other</span>
-        <span class="doccomment">/// than guilds.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_ADD`]: super::event::Event::ReactionAdd</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_REMOVE`]: super::event::Event::ReactionRemove</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_REMOVE_ALL`]: super::event::Event::ReactionRemoveAll</span>
-        <span class="doccomment">/// [`MESSAGE_REACTION_REMOVE_EMOJI`]: super::event::Event::ReactionRemoveEmoji</span>
-        <span class="doccomment">/// [`GUILD_MESSAGE_REACTIONS`]: Self::GUILD_MESSAGE_REACTIONS</span>
-        <span class="kw">const</span> <span class="ident">DIRECT_MESSAGE_REACTIONS</span> = <span class="number">1</span> &lt;&lt; <span class="number">13</span>;
-        <span class="doccomment">/// Direct message typing intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///  - [`TYPING_START`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This is different from the [`GUILD_MESSAGE_TYPING`] intent in that</span>
-        <span class="doccomment">/// the bot will receive typing start events from locations other than</span>
-        <span class="doccomment">/// guilds.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`TYPING_START`]: super::event::Event::TypingStart</span>
-        <span class="doccomment">/// [`GUILD_MESSAGE_TYPING`]: Self::GUILD_MESSAGE_TYPING</span>
-        <span class="kw">const</span> <span class="ident">DIRECT_MESSAGE_TYPING</span> = <span class="number">1</span> &lt;&lt; <span class="number">14</span>;
-        <span class="doccomment">/// Message content intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This intent is privileged. See [Discord Docs/Privileged Intents].</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// This intent allows you to receive the contents of all messages.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [Discord Docs/Privileged Intents]: https://discord.com/developers/docs/topics/gateway#privileged-intents</span>
-        <span class="kw">const</span> <span class="ident">MESSAGE_CONTENT</span> = <span class="number">1</span> &lt;&lt; <span class="number">15</span>;
-        <span class="doccomment">/// Guild scheduled events intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// - [`GUILD_SCHEDULED_EVENT_CREATE`]</span>
-        <span class="doccomment">/// - [`GUILD_SCHEDULED_EVENT_UPDATE`]</span>
-        <span class="doccomment">/// - [`GUILD_SCHEDULED_EVENT_DELETE`]</span>
-        <span class="doccomment">/// - [`GUILD_SCHEDULED_EVENT_USER_ADD`]</span>
-        <span class="doccomment">/// - [`GUILD_SCHEDULED_EVENT_USER_REMOVE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`GUILD_SCHEDULED_EVENT_CREATE`]: super::event::Event::GuildScheduledEventCreate</span>
-        <span class="doccomment">/// [`GUILD_SCHEDULED_EVENT_UPDATE`]: super::event::Event::GuildScheduledEventDelete</span>
-        <span class="doccomment">/// [`GUILD_SCHEDULED_EVENT_DELETE`]: super::event::Event::GuildScheduledEventUpdate</span>
-        <span class="doccomment">/// [`GUILD_SCHEDULED_EVENT_USER_ADD`]: super::event::Event::GuildScheduledEventUserAdd</span>
-        <span class="doccomment">/// [`GUILD_SCHEDULED_EVENT_USER_REMOVE`]: super::event::Event::GuildScheduledEventUserRemove</span>
-        <span class="kw">const</span> <span class="ident">GUILD_SCHEDULED_EVENTS</span> = <span class="number">1</span> &lt;&lt; <span class="number">16</span>;
-        <span class="doccomment">/// Auto moderation configuration intent.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">/// - [`AUTO_MODERATION_RULE_CREATE`]</span>
-        <span class="doccomment">/// - [`AUTO_MODERATION_RULE_DELETE`]</span>
-        <span class="doccomment">/// - [`AUTO_MODERATION_RULE_UPDATE`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`AUTO_MODERATION_RULE_CREATE`]: super::event::Event::AutoModerationRuleCreate</span>
-        <span class="doccomment">/// [`AUTO_MODERATION_RULE_DELETE`]: super::event::Event::AutoModerationRuleDelete</span>
-        <span class="doccomment">/// [`AUTO_MODERATION_RULE_UPDATE`]: super::event::Event::AutoModerationRuleUpdate</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_CONFIGURATION</span> = <span class="number">1</span> &lt;&lt; <span class="number">20</span>;
-        <span class="doccomment">/// Auto moderation execution event.</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// Event(s) received:</span>
-        <span class="doccomment">/// - [`AUTO_MODERATION_ACTION_EXECUTION`]</span>
-        <span class="doccomment">///</span>
-        <span class="doccomment">/// [`AUTO_MODERATION_ACTION_EXECUTION`]: super::event::Event::AutoModerationActionExecution</span>
-        <span class="kw">const</span> <span class="ident">AUTO_MODERATION_EXECUTION</span> = <span class="number">1</span> &lt;&lt; <span class="number">21</span>;
+<span class="macro">bitflags! </span>{
+    <span class="doccomment">/// Gateway intents.
+    ///
+    /// Developers must specify intents when connecting to the gateway. The
+    /// intents specified correspond with the events received. To specify
+    /// multiple intents, create a union using the `|` operator. See
+    /// [Discord Docs/Gateway Intents].
+    ///
+    /// [Discord Docs/Gateway Intents]: https://discord.com/developers/docs/topics/gateway#gateway-intents
+    </span><span class="kw">pub struct </span>Intents: u64 {
+        <span class="doccomment">/// Guilds intent.
+        ///
+        /// Event(s) received:
+        ///  - [`GUILD_CREATE`]
+        ///  - [`GUILD_UPDATE`]
+        ///  - [`GUILD_DELETE`]
+        ///  - [`GUILD_ROLE_CREATE`]
+        ///  - [`GUILD_ROLE_UPDATE`]
+        ///  - [`GUILD_ROLE_DELETE`]
+        ///  - [`CHANNEL_CREATE`]
+        ///  - [`CHANNEL_UPDATE`]
+        ///  - [`CHANNEL_DELETE`]
+        ///  - [`CHANNEL_PINS_UPDATE`]
+        ///  - [`THREAD_CREATE`]
+        ///  - [`THREAD_UPDATE`]
+        ///  - [`THREAD_DELETE`]
+        ///  - [`THREAD_LIST_SYNC`]
+        ///  - [`THREAD_MEMBER_UPDATE`]
+        ///  - [`THREAD_MEMBERS_UPDATE`]
+        ///  - [`STAGE_INSTANCE_CREATE`]
+        ///  - [`STAGE_INSTANCE_UPDATE`]
+        ///  - [`STAGE_INSTANCE_DELETE`]
+        ///
+        /// [`GUILD_CREATE`]: super::event::Event::GuildCreate
+        /// [`GUILD_UPDATE`]: super::event::Event::GuildUpdate
+        /// [`GUILD_DELETE`]: super::event::Event::GuildDelete
+        /// [`GUILD_ROLE_CREATE`]: super::event::Event::RoleCreate
+        /// [`GUILD_ROLE_UPDATE`]: super::event::Event::RoleUpdate
+        /// [`GUILD_ROLE_DELETE`]: super::event::Event::RoleDelete
+        /// [`CHANNEL_CREATE`]: super::event::Event::ChannelCreate
+        /// [`CHANNEL_UPDATE`]: super::event::Event::ChannelUpdate
+        /// [`CHANNEL_DELETE`]: super::event::Event::ChannelDelete
+        /// [`CHANNEL_PINS_UPDATE`]: super::event::Event::ChannelPinsUpdate
+        /// [`THREAD_CREATE`]: super::event::Event::ThreadCreate
+        /// [`THREAD_UPDATE`]: super::event::Event::ThreadUpdate
+        /// [`THREAD_DELETE`]: super::event::Event::ThreadDelete
+        /// [`THREAD_LIST_SYNC`]: super::event::Event::ThreadListSync
+        /// [`THREAD_MEMBER_UPDATE`]: super::event::Event::ThreadMemberUpdate
+        /// [`THREAD_MEMBERS_UPDATE`]: super::event::Event::ThreadMembersUpdate
+        /// [`STAGE_INSTANCE_CREATE`]: super::event::Event::StageInstanceCreate
+        /// [`STAGE_INSTANCE_UPDATE`]: super::event::Event::StageInstanceUpdate
+        /// [`STAGE_INSTANCE_DELETE`]: super::event::Event::StageInstanceDelete
+        </span><span class="kw">const </span>GUILDS = <span class="number">1</span>;
+        <span class="doccomment">/// Guild members intent.
+        ///
+        /// This intent is privileged. See [Discord Docs/Privileged Intents].
+        ///
+        /// Event(s) received:
+        ///  - [`GUILD_MEMBER_ADD`]
+        ///  - [`GUILD_MEMBER_UPDATE`]
+        ///  - [`GUILD_MEMBER_REMOVE`]
+        ///  - [`THREAD_MEMBERS_UPDATE`]
+        ///
+        /// [Discord Docs/Privileged Intents]: https://discord.com/developers/docs/topics/gateway#privileged-intents
+        /// [`GUILD_MEMBER_ADD`]: super::event::Event::MemberAdd
+        /// [`GUILD_MEMBER_UPDATE`]: super::event::Event::MemberUpdate
+        /// [`GUILD_MEMBER_REMOVE`]: super::event::Event::MemberRemove
+        /// [`THREAD_MEMBERS_UPDATE`]: super::event::Event::ThreadMembersUpdate
+        </span><span class="kw">const </span>GUILD_MEMBERS = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
+        <span class="doccomment">/// Guild bans intent.
+        ///
+        /// Event(s) received:
+        ///  - [`GUILD_BAN_ADD`]
+        ///  - [`GUILD_BAN_REMOVE`]
+        ///
+        /// [`GUILD_BAN_ADD`]: super::event::Event::BanAdd
+        /// [`GUILD_BAN_REMOVE`]: super::event::Event::BanRemove
+        </span><span class="kw">const </span>GUILD_BANS = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
+        <span class="doccomment">/// Guild emojis and stickers intent.
+        ///
+        /// Event(s) received:
+        ///  - [`GUILD_EMOJIS_UPDATE`]
+        ///  - [`GUILD_STICKERS_UPDATE`]
+        ///
+        /// [`GUILD_EMOJIS_UPDATE`]: super::event::Event::GuildEmojisUpdate
+        /// [`GUILD_STICKERS_UPDATE`]: super::event::Event::GuildStickersUpdate
+        </span><span class="kw">const </span>GUILD_EMOJIS_AND_STICKERS = <span class="number">1 </span>&lt;&lt; <span class="number">3</span>;
+        <span class="doccomment">/// Guild integrations intent.
+        ///
+        /// Event(s) received:
+        ///  - [`GUILD_INTEGRATIONS_UPDATE`]
+        ///  - [`INTEGRATION_CREATE`]
+        ///  - [`INTEGRATION_UPDATE`]
+        ///  - [`INTEGRATION_DELETE`]
+        ///
+        /// [`GUILD_INTEGRATIONS_UPDATE`]: super::event::Event::GuildIntegrationsUpdate
+        /// [`INTEGRATION_CREATE`]: super::event::Event::IntegrationCreate
+        /// [`INTEGRATION_UPDATE`]: super::event::Event::IntegrationUpdate
+        /// [`INTEGRATION_DELETE`]: super::event::Event::IntegrationDelete
+        </span><span class="kw">const </span>GUILD_INTEGRATIONS = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
+        <span class="doccomment">/// Guild webhooks intent.
+        ///
+        /// Event(s) received:
+        ///  - [`WEBHOOKS_UPDATE`]
+        ///
+        /// [`WEBHOOKS_UPDATE`]: super::event::Event::WebhooksUpdate
+        </span><span class="kw">const </span>GUILD_WEBHOOKS = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
+        <span class="doccomment">/// Guild invites intent.
+        ///
+        /// Event(s) received:
+        ///  - [`INVITE_CREATE`]
+        ///  - [`INVITE_DELETE`]
+        ///
+        /// [`INVITE_CREATE`]: super::event::Event::InviteCreate
+        /// [`INVITE_DELETE`]: super::event::Event::InviteDelete
+        </span><span class="kw">const </span>GUILD_INVITES = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
+        <span class="doccomment">/// Guild voice states intent.
+        ///
+        /// Event(s) received:
+        ///  - [`VOICE_STATE_UPDATE`]
+        ///
+        /// [`VOICE_STATE_UPDATE`]: super::event::Event::VoiceStateUpdate
+        </span><span class="kw">const </span>GUILD_VOICE_STATES = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
+        <span class="doccomment">/// Guild presences intent.
+        ///
+        /// This intent is privileged. See [Discord Docs/Privileged Intents].
+        ///
+        /// Event(s) received:
+        ///  - [`PRESENCE_UPDATE`]
+        ///
+        /// [Discord Docs/Privileged Intents]: https://discord.com/developers/docs/topics/gateway#privileged-intents
+        /// [`PRESENCE_UPDATE`]: super::event::Event::PresenceUpdate
+        </span><span class="kw">const </span>GUILD_PRESENCES = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
+        <span class="doccomment">/// Guild messages intent.
+        ///
+        /// Event(s) received:
+        ///  - [`MESSAGE_CREATE`]
+        ///  - [`MESSAGE_UPDATE`]
+        ///  - [`MESSAGE_DELETE`]
+        ///  - [`MESSAGE_DELETE_BULK`]
+        ///
+        /// [`MESSAGE_CREATE`]: super::event::Event::MessageCreate
+        /// [`MESSAGE_UPDATE`]: super::event::Event::MessageUpdate
+        /// [`MESSAGE_DELETE`]: super::event::Event::MessageDelete
+        /// [`MESSAGE_DELETE_BULK`]: super::event::Event::MessageDeleteBulk
+        </span><span class="kw">const </span>GUILD_MESSAGES = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
+        <span class="doccomment">/// Guild message reactions intent.
+        ///
+        /// Event(s) received:
+        ///  - [`MESSAGE_REACTION_ADD`]
+        ///  - [`MESSAGE_REACTION_REMOVE`]
+        ///  - [`MESSAGE_REACTION_REMOVE_ALL`]
+        ///  - [`MESSAGE_REACTION_REMOVE_EMOJI`]
+        ///
+        /// [`MESSAGE_REACTION_ADD`]: super::event::Event::ReactionAdd
+        /// [`MESSAGE_REACTION_REMOVE`]: super::event::Event::ReactionRemove
+        /// [`MESSAGE_REACTION_REMOVE_ALL`]: super::event::Event::ReactionRemoveAll
+        /// [`MESSAGE_REACTION_REMOVE_EMOJI`]: super::event::Event::ReactionRemoveEmoji
+        </span><span class="kw">const </span>GUILD_MESSAGE_REACTIONS = <span class="number">1 </span>&lt;&lt; <span class="number">10</span>;
+        <span class="doccomment">/// Guild message typing intent.
+        ///
+        /// Event(s) received:
+        ///  - [`TYPING_START`]
+        ///
+        /// [`TYPING_START`]: super::event::Event::TypingStart
+        </span><span class="kw">const </span>GUILD_MESSAGE_TYPING = <span class="number">1 </span>&lt;&lt; <span class="number">11</span>;
+        <span class="doccomment">/// Direct messages intent.
+        ///
+        /// Event(s) received:
+        ///  - [`MESSAGE_CREATE`]
+        ///  - [`MESSAGE_UPDATE`]
+        ///  - [`MESSAGE_DELETE`]
+        ///  - [`MESSAGE_DELETE_BULK`]
+        ///
+        /// This is different from the [`GUILD_MESSAGES`] intent in that the bot
+        /// will receive message events from locations other than guilds.
+        ///
+        /// [`MESSAGE_CREATE`]: super::event::Event::MessageCreate
+        /// [`MESSAGE_UPDATE`]: super::event::Event::MessageUpdate
+        /// [`MESSAGE_DELETE`]: super::event::Event::MessageDelete
+        /// [`MESSAGE_DELETE_BULK`]: super::event::Event::MessageDeleteBulk
+        /// [`GUILD_MESSAGES`]: Self::GUILD_MESSAGES
+        </span><span class="kw">const </span>DIRECT_MESSAGES = <span class="number">1 </span>&lt;&lt; <span class="number">12</span>;
+        <span class="doccomment">/// Direct message reactions intent.
+        ///
+        /// Event(s) received:
+        ///  - [`MESSAGE_REACTION_ADD`]
+        ///  - [`MESSAGE_REACTION_REMOVE`]
+        ///  - [`MESSAGE_REACTION_REMOVE_ALL`]
+        ///  - [`MESSAGE_REACTION_REMOVE_EMOJI`]
+        ///
+        /// This is different from the [`GUILD_MESSAGE_REACTIONS`] event in that
+        /// the bot will receive message reaction events from locations other
+        /// than guilds.
+        ///
+        /// [`MESSAGE_REACTION_ADD`]: super::event::Event::ReactionAdd
+        /// [`MESSAGE_REACTION_REMOVE`]: super::event::Event::ReactionRemove
+        /// [`MESSAGE_REACTION_REMOVE_ALL`]: super::event::Event::ReactionRemoveAll
+        /// [`MESSAGE_REACTION_REMOVE_EMOJI`]: super::event::Event::ReactionRemoveEmoji
+        /// [`GUILD_MESSAGE_REACTIONS`]: Self::GUILD_MESSAGE_REACTIONS
+        </span><span class="kw">const </span>DIRECT_MESSAGE_REACTIONS = <span class="number">1 </span>&lt;&lt; <span class="number">13</span>;
+        <span class="doccomment">/// Direct message typing intent.
+        ///
+        /// Event(s) received:
+        ///  - [`TYPING_START`]
+        ///
+        /// This is different from the [`GUILD_MESSAGE_TYPING`] intent in that
+        /// the bot will receive typing start events from locations other than
+        /// guilds.
+        ///
+        /// [`TYPING_START`]: super::event::Event::TypingStart
+        /// [`GUILD_MESSAGE_TYPING`]: Self::GUILD_MESSAGE_TYPING
+        </span><span class="kw">const </span>DIRECT_MESSAGE_TYPING = <span class="number">1 </span>&lt;&lt; <span class="number">14</span>;
+        <span class="doccomment">/// Message content intent.
+        ///
+        /// This intent is privileged. See [Discord Docs/Privileged Intents].
+        ///
+        /// This intent allows you to receive the contents of all messages.
+        ///
+        /// [Discord Docs/Privileged Intents]: https://discord.com/developers/docs/topics/gateway#privileged-intents
+        </span><span class="kw">const </span>MESSAGE_CONTENT = <span class="number">1 </span>&lt;&lt; <span class="number">15</span>;
+        <span class="doccomment">/// Guild scheduled events intent.
+        ///
+        /// Event(s) received:
+        ///
+        /// - [`GUILD_SCHEDULED_EVENT_CREATE`]
+        /// - [`GUILD_SCHEDULED_EVENT_UPDATE`]
+        /// - [`GUILD_SCHEDULED_EVENT_DELETE`]
+        /// - [`GUILD_SCHEDULED_EVENT_USER_ADD`]
+        /// - [`GUILD_SCHEDULED_EVENT_USER_REMOVE`]
+        ///
+        /// [`GUILD_SCHEDULED_EVENT_CREATE`]: super::event::Event::GuildScheduledEventCreate
+        /// [`GUILD_SCHEDULED_EVENT_UPDATE`]: super::event::Event::GuildScheduledEventDelete
+        /// [`GUILD_SCHEDULED_EVENT_DELETE`]: super::event::Event::GuildScheduledEventUpdate
+        /// [`GUILD_SCHEDULED_EVENT_USER_ADD`]: super::event::Event::GuildScheduledEventUserAdd
+        /// [`GUILD_SCHEDULED_EVENT_USER_REMOVE`]: super::event::Event::GuildScheduledEventUserRemove
+        </span><span class="kw">const </span>GUILD_SCHEDULED_EVENTS = <span class="number">1 </span>&lt;&lt; <span class="number">16</span>;
+        <span class="doccomment">/// Auto moderation configuration intent.
+        ///
+        /// Event(s) received:
+        /// - [`AUTO_MODERATION_RULE_CREATE`]
+        /// - [`AUTO_MODERATION_RULE_DELETE`]
+        /// - [`AUTO_MODERATION_RULE_UPDATE`]
+        ///
+        /// [`AUTO_MODERATION_RULE_CREATE`]: super::event::Event::AutoModerationRuleCreate
+        /// [`AUTO_MODERATION_RULE_DELETE`]: super::event::Event::AutoModerationRuleDelete
+        /// [`AUTO_MODERATION_RULE_UPDATE`]: super::event::Event::AutoModerationRuleUpdate
+        </span><span class="kw">const </span>AUTO_MODERATION_CONFIGURATION = <span class="number">1 </span>&lt;&lt; <span class="number">20</span>;
+        <span class="doccomment">/// Auto moderation execution event.
+        ///
+        /// Event(s) received:
+        /// - [`AUTO_MODERATION_ACTION_EXECUTION`]
+        ///
+        /// [`AUTO_MODERATION_ACTION_EXECUTION`]: super::event::Event::AutoModerationActionExecution
+        </span><span class="kw">const </span>AUTO_MODERATION_EXECUTION = <span class="number">1 </span>&lt;&lt; <span class="number">21</span>;
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="ident">Deserialize</span>&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for</span> <span class="ident">Intents</span> {
-    <span class="kw">fn</span> <span class="ident">deserialize</span>&lt;<span class="ident">D</span>: <span class="ident">Deserializer</span>&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="ident">D::Error</span>&gt; {
-        <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::from_bits_truncate</span>(<span class="ident">u64::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>))
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span>Intents {
+    <span class="kw">fn </span>deserialize&lt;D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, D::Error&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">Self</span>::from_bits_truncate(u64::deserialize(deserializer)<span class="question-mark">?</span>))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">Intents</span> {
-    <span class="kw">fn</span> <span class="ident">serialize</span>&lt;<span class="ident">S</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="ident">S::Ok</span>, <span class="ident">S::Error</span>&gt;
-    <span class="kw">where</span>
-        <span class="ident">S</span>: <span class="ident">Serializer</span>,
+<span class="kw">impl </span>Serialize <span class="kw">for </span>Intents {
+    <span class="kw">fn </span>serialize&lt;S&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, serializer: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt;
+    <span class="kw">where
+        </span>S: Serializer,
     {
-        <span class="ident">serializer</span>.<span class="ident">serialize_u64</span>(<span class="self">self</span>.<span class="ident">bits</span>())
+        serializer.serialize_u64(<span class="self">self</span>.bits())
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (f22819bcc 2022-08-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="twilight_model" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (eaadb8947 2022-08-27)" ></div></body></html>
